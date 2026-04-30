@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cisco Firewall Toolkit | ASA / IOS / NX-OS</title>
+<style>
+/* ========== EXACT SAME STYLES AS FORTIGATE TOOLKIT ========== */
+:root{--a:#1D9E75;--ad:#0F6E56;--bg:#0d1117;--b2:#161b22;--b3:#21262d;--br:#30363d;--t:#e6edf3;--t2:#8b949e;--t3:#484f58;--g:#3fb950;--y:#d29922;--r:#f85149;--bl:#58a6ff;--mono:'Courier New',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;background:transparent}
+#matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;pointer-events:none;background:#000000}
+.login-overlay, .terms-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);z-index:10000;display:flex;justify-content:center;align-items:center}
+.login-card, .terms-card{background:rgba(22,27,34,0.96);backdrop-filter:blur(8px);border:1px solid rgba(29,158,117,0.4);border-radius:28px;padding:32px 28px;width:460px;max-width:94%;text-align:center;box-shadow:0 25px 45px rgba(0,0,0,0.6);transition:transform 0.2s ease}
+.terms-card{width:540px;text-align:left;max-height:85vh;overflow-y:auto}
+.terms-card h3{font-size:22px;margin-bottom:12px;color:var(--a);text-align:center}
+.terms-card .terms-text{font-size:14px;color:var(--t2);line-height:1.6;margin:16px 0 20px;border-left:2px solid var(--a);padding-left:16px;max-height:380px;overflow-y:auto}
+.terms-card .terms-text strong{color:var(--t);font-weight:700}
+.terms-card .terms-text p{margin-bottom:12px}
+.terms-card hr{margin:14px 0;border-color:var(--br)}
+.login-card h2{margin-bottom:28px;font-size:26px;font-weight:600;background:linear-gradient(135deg,#e6edf3 0%,#8b949e 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.login-card input{width:100%;margin-bottom:18px;padding:14px 16px;background:rgba(13,17,23,0.9);border:1px solid var(--br);border-radius:40px;color:var(--t);font-size:15px;transition:all 0.2s}
+.login-card input:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px rgba(29,158,117,0.2);background:#0d1117}
+.login-card button,.terms-card button{background:linear-gradient(90deg,var(--a),var(--ad));border:none;padding:12px 24px;border-radius:40px;font-weight:700;font-size:15px;cursor:pointer;transition:all 0.2s;margin:8px 8px 0 0}
+.login-card button:hover,.terms-card button:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(29,158,117,0.3)}
+.btn-secondary{background:linear-gradient(90deg,#3b4b5e,#2c3e45);}
+.error{color:var(--r);margin-top:12px;font-size:13px}
+.shell{max-width:95%;width:1400px;margin:20px auto;border:1px solid var(--br);border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5);position:relative;z-index:1;background:rgba(13,17,23,0.88);backdrop-filter:blur(2px)}
+.tbar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--b2);border-bottom:1px solid var(--br)}
+.dot{width:12px;height:12px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#ffbd2e}.dot.g{background:#28c840}
+.ttxt{font-family:var(--mono);font-size:14px;color:var(--t);margin-left:6px;font-weight:700}
+.ver{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--t3)}
+.kbar{display:flex;align-items:center;gap:8px;padding:7px 16px;background:var(--b2);border-bottom:1px solid var(--br)}
+.kbar label{font-size:12px;color:var(--t2);white-space:nowrap}
+.kbar input{flex:1;font-size:12px;padding:5px 10px;border-radius:5px;border:1px solid var(--br);background:var(--bg);color:var(--t);font-family:var(--mono);outline:none}
+.kbar input:focus{border-color:var(--a)}
+.sbtn{font-size:12px;padding:5px 12px;border-radius:5px;background:var(--a);color:white;border:none;cursor:pointer;font-weight:600}
+.sbtn:hover{background:var(--ad)}
+.kst{font-size:11px;white-space:nowrap}
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:75vh}
+.sidebar{background:var(--b2);border-right:1px solid var(--br);padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;max-height:calc(75vh - 20px)}
+.slbl{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;padding:10px 10px 4px}
+.cb{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;font-size:13px;cursor:pointer;border:none;background:none;width:100%;text-align:left;color:var(--t2);transition:all .1s}
+.cb:hover{background:var(--b3);color:var(--t)}
+.cb.active{background:rgba(29,158,117,.15);color:var(--a);font-weight:700;border-left:2px solid var(--a);padding-left:8px}
+.cb .ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
+.main{display:flex;flex-direction:column;overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--br);padding:0 14px;background:rgba(13,17,23,0.7);overflow-x:auto}
+.tab{padding:9px 14px;font-size:13px;cursor:pointer;border:none;background:none;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .1s}
+.tab:hover{color:var(--t)}
+.tab.active{color:var(--a);border-bottom-color:var(--a);font-weight:700}
+.content{flex:1;overflow-y:auto;padding:16px;max-height:calc(75vh - 80px)}
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.stitle{font-size:15px;font-weight:700;color:var(--t)}
+.sev{font-size:11px;padding:3px 9px;border-radius:4px;font-weight:600}
+.sev.high{background:rgba(248,81,73,.15);color:#f85149;border:1px solid rgba(248,81,73,.3)}
+.sev.med{background:rgba(210,153,34,.15);color:#d29922;border:1px solid rgba(210,153,34,.3)}
+.sev.low{background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.3)}
+.sev.info{background:rgba(88,166,255,.15);color:#58a6ff;border:1px solid rgba(88,166,255,.3)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chip{font-size:12px;padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid var(--br);background:var(--b2);color:var(--t2);transition:all .1s}
+.chip:hover{border-color:var(--a);color:var(--a)}
+.cblock{background:var(--b2);border:1px solid var(--br);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.cblock.danger{border-color:rgba(248,81,73,.4)}
+.cblock.warn{border-color:rgba(210,153,34,.4)}
+.chdr{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--br)}
+.chdr-l{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--t)}
+.snum{width:20px;height:20px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cbody{padding:10px 14px}
+.clines{font-family:var(--mono);font-size:12px;line-height:1.8;white-space:pre-wrap;word-break:break-all;color:var(--g)}
+.explanation{font-size:12px;color:var(--t2);margin-left:12px;margin-bottom:8px}
+.cnote{font-size:12px;color:var(--t2);margin-top:8px;line-height:1.6;border-left:2px solid var(--br);padding-left:8px}
+.cwarn{font-size:12px;color:var(--y);margin-bottom:8px;line-height:1.6;padding:8px;border-radius:4px;background:rgba(210,153,34,.07);border-left:2px solid var(--y)}
+.cdanger{font-size:12px;color:var(--r);margin-bottom:8px;line-height:1.6;padding:8px;border-radius:4px;background:rgba(248,81,73,.07);border-left:2px solid var(--r)}
+.cbadge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;white-space:nowrap}
+.cbadge.ro{background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.3)}
+.cbadge.danger{background:rgba(248,81,73,.15);color:#f85149;border:1px solid rgba(248,81,73,.3)}
+.cbadge.caution{background:rgba(210,153,34,.15);color:#d29922;border:1px solid rgba(210,153,34,.3)}
+.copybtn{font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;border:1px solid var(--br);background:var(--b3);color:var(--t2);transition:all .1s}
+.copybtn:hover{border-color:var(--a);color:var(--a)}
+.messages{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;min-height:350px;max-height:480px}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg.user{flex-direction:row-reverse}
+.av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.av.ai{background:rgba(29,158,117,.2);color:var(--a)}
+.av.usr{background:rgba(88,166,255,.2);color:var(--bl)}
+.bubble{max-width:82%;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.7;border:1px solid var(--br);background:var(--b2);color:var(--t)}
+.msg.user .bubble{background:var(--b3)}
+.bubble code{font-family:var(--mono);font-size:11px;background:var(--b3);padding:1px 5px;border-radius:3px;color:var(--g)}
+.bubble pre{font-family:var(--mono);font-size:11px;color:var(--g);background:var(--bg);padding:10px;border-radius:6px;margin-top:8px;overflow-x:auto;white-space:pre-wrap;border:1px solid var(--br)}
+.bubble strong{color:var(--t);font-weight:700}
+.irow{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--br);background:var(--b2)}
+.irow input{flex:1;font-size:13px;padding:8px 12px;border-radius:6px;border:1px solid var(--br);background:var(--bg);color:var(--t);outline:none}
+.irow input:focus{border-color:var(--a)}
+.ibtn{padding:8px 16px;border-radius:6px;background:var(--a);color:white;border:none;cursor:pointer;font-size:13px;font-weight:700}
+.ibtn:hover{background:var(--ad)}
+.ibtn:disabled{opacity:.4;cursor:not-allowed}
+.empty{text-align:center;padding:50px 20px;color:var(--t3);font-size:13px}
+.typing{display:flex;gap:4px;align-items:center;padding:4px 0}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--t3);animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+select{font-size:12px;padding:6px 10px;border-radius:5px;border:1px solid var(--br);background:var(--b2);color:var(--t);outline:none}
+textarea{outline:none;resize:vertical}
+.mask-input-group{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.mask-input-group input{flex:1;min-width:150px}
+.ip-mask-table{font-family:var(--mono);font-size:11px;border-collapse:collapse;width:100%}
+.ip-mask-table th{text-align:left;padding:6px 4px;color:var(--t2) !important;border-bottom:1px solid var(--br);background:transparent}
+.ip-mask-table td{padding:6px 4px;border-bottom:1px solid var(--br);color:var(--t)}
+.ip-mask-table td:first-child{color:#f85149}
+.ip-mask-table td:nth-child(2){color:#3fb950}
+.analyzer-container{display:flex;flex-direction:column;gap:12px}
+.analyzer-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.analyzer-row label{font-size:12px;font-weight:600;color:var(--t2)}
+.analyzer-row input, .analyzer-row select{flex:1;min-width:200px;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:6px}
+.analyzer-response{background:var(--b2) !important;color:var(--t) !important;border:1px solid var(--br);border-radius:8px;padding:12px;white-space:pre-wrap;font-family:var(--mono);font-size:12px;margin-top:8px;max-height:400px;overflow-y:auto}
+.analyzer-response pre, .analyzer-response code{color:var(--g) !important;background:#0d1117 !important;border-radius:6px;font-family:var(--mono)}
+.analyzer-response pre{padding:8px;overflow-x:auto;border:1px solid var(--br);margin:4px 0}
+.analyzer-response strong{color:var(--bl)}
+textarea#groqPrompt{background:#0d1117 !important;color:#e6edf3 !important;border:1px solid var(--br);border-radius:6px;font-family:var(--mono);font-size:13px;padding:10px;width:100%}
+textarea#groqPrompt::placeholder{color:#8b949e !important}
+.vendor-section{margin-bottom:28px;border-left:3px solid var(--a);padding-left:16px}
+.vendor-title{font-size:18px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.subnet-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.subnet-card{background:var(--b2);border-radius:8px;padding:12px;border:1px solid var(--br)}
+.subnet-label{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:0.5px}
+.subnet-value{font-family:var(--mono);font-size:14px;color:var(--g);word-break:break-all}
+.subnet-explanation{background:rgba(29,158,117,.08);border-left:3px solid var(--a);padding:12px;margin-top:16px;border-radius:6px}
+.vendor-section .clines{color:var(--g)}
+.vendor-section .explanation{color:var(--t2);margin-left:16px;margin-bottom:12px}
+@media(max-width:700px){.layout{grid-template-columns:1fr}.rgrid{grid-template-columns:1fr}.subnet-result-grid{grid-template-columns:1fr}}
+.mask-preview{background:#010409;border-radius:12px;padding:16px;margin-top:12px;font-family:var(--mono);font-size:13px;white-space:pre-wrap;overflow:auto;min-height:300px;max-height:500px;border:1px solid var(--br);color:var(--g)}
+.ai-container{display:flex;flex-direction:column;height:100%;min-height:500px;background:var(--b2);border-radius:12px;overflow:hidden}
+.ai-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px;background:var(--bg)}
+.ai-message{display:flex;gap:12px;align-items:flex-start}
+.ai-message.user{flex-direction:row-reverse}
+.ai-avatar{width:32px;height:32px;border-radius:50%;background:rgba(29,158,117,.15);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.ai-avatar.user{background:rgba(88,166,255,.15);color:var(--bl)}
+.ai-avatar.assistant{background:rgba(29,158,117,.2);color:var(--a)}
+.ai-bubble{max-width:80%;padding:10px 14px;border-radius:12px;background:var(--b2);border:1px solid var(--br);color:var(--t) !important;font-size:13px;line-height:1.5}
+.ai-message.user .ai-bubble{background:var(--b3);border-color:var(--a)}
+.ai-bubble pre{background:#0d1117;padding:8px;border-radius:6px;overflow-x:auto;margin:8px 0;color:var(--g) !important;font-family:var(--mono);font-size:11px}
+.ai-bubble code{background:#0d1117;padding:2px 5px;border-radius:4px;color:var(--g) !important;font-family:var(--mono);font-size:11px}
+.ai-bubble strong{color:var(--bl)}
+.ai-input-area{display:flex;gap:8px;padding:12px;background:var(--b2);border-top:1px solid var(--br)}
+.ai-input-area input{flex:1;background:var(--bg);border:1px solid var(--br);border-radius:20px;padding:10px 14px;color:var(--t);font-family:var(--mono);font-size:13px;outline:none}
+.ai-input-area input:focus{border-color:var(--a)}
+.ai-input-area button{background:var(--a);border:none;border-radius:20px;padding:0 18px;color:white;font-weight:600;cursor:pointer}
+.ai-typing{display:flex;gap:4px;align-items:center;padding:8px 0}
+.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--t3);animation:blink 1.2s infinite}
+.ai-typing span:nth-child(2){animation-delay:.2s}
+.ai-typing span:nth-child(3){animation-delay:.4s}
+</style>
+</head>
+<body>
+<canvas id="matrixCanvas"></canvas>
+<div id="toolkitContainer" style="display:none;">
+<div class="shell">
+  <div class="tbar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="ttxt">🟡 Cisco Firewall Toolkit</span><span class="ver">ASA / IOS / NX-OS / FTD</span><button id="switchVendorBtn" class="sbtn" style="background:#4a5568; margin-left:12px;">🔄 Switch to FortiGate</button></div>
+  <div class="kbar"><label>🔑 Groq API Key (free):</label><input type="password" id="apikey" placeholder="gsk_..."/><button class="sbtn" onclick="saveKey()">Save</button><span class="kst" id="kst" style="color:var(--t3)">not set</span></div>
+  <div class="layout">
+    <div class="sidebar"></div>
+    <div class="main">
+      <div class="tabs">
+        <button class="tab active" onclick="stab('guide')" id="tab-guide">Guided Steps</button>
+        <button class="tab" onclick="stab('analyze')" id="tab-analyze">📊 Analyze Output</button>
+        <button class="tab" onclick="stab('ai')" id="tab-ai">AI Assistant</button>
+        <button class="tab" onclick="stab('ref')" id="tab-ref">Quick Ref</button>
+        <button class="tab" onclick="stab('masking')" id="tab-masking">🎭 IP Masking</button>
+        <button class="tab" onclick="stab('freeai')" id="tab-freeai">🧠 CLI Analyzer (Free AI)</button>
+        <button class="tab" onclick="stab('multivendor')" id="tab-multivendor">🌐 Multi‑Vendor CLI</button>
+        <button class="tab" onclick="stab('bulkAnon')" id="tab-bulkAnon">🔄 Bulk IP Anonymizer</button>
+        <button class="tab" onclick="stab('subnetcalc')" id="tab-subnetcalc">🧮 Subnet Calculator</button>
+        <button class="tab" onclick="stab('advdiag')" id="tab-advdiag">🔬 Advanced Diag</button>
+      </div>
+      <div class="content" id="mc"></div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+// ====================== MATRIX RAIN ======================
+const matrixCanvas = document.getElementById('matrixCanvas');
+let matrixCtx = matrixCanvas.getContext('2d');
+let matrixDrops = [];
+const matrixFontSize = 20;
+const matrixChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:<>?~";
+function initMatrixRain() { let w=window.innerWidth,h=window.innerHeight; matrixCanvas.width=w; matrixCanvas.height=h; let cols=Math.floor(w/matrixFontSize); matrixDrops=new Array(cols).fill(1); }
+function drawMatrixRain() { matrixCtx.fillStyle="rgba(0,0,0,0.05)"; matrixCtx.fillRect(0,0,matrixCanvas.width,matrixCanvas.height); matrixCtx.fillStyle="#0f8"; matrixCtx.font=matrixFontSize+"px monospace"; for(let i=0;i<matrixDrops.length;i++){ let text=matrixChars[Math.floor(Math.random()*matrixChars.length)]; let x=i*matrixFontSize; let y=matrixDrops[i]*matrixFontSize; matrixCtx.fillText(text,x,y); if(y>matrixCanvas.height && Math.random()>0.975) matrixDrops[i]=0; matrixDrops[i]++; } }
+window.addEventListener('resize',()=>initMatrixRain()); initMatrixRain(); setInterval(drawMatrixRain,40);
+
+// ====================== TERMS OF USE (same as FortiGate) ======================
+function showTermsModal(onAccept) {
+    const existing = document.querySelector('.terms-overlay');
+    if (existing) existing.remove();
+    const modalDiv = document.createElement('div');
+    modalDiv.className = 'terms-overlay';
+    modalDiv.innerHTML = `
+        <div class="terms-card">
+            <h3>📜 Terms of Use & Legal Notice</h3>
+            <div class="terms-text">
+                <p><strong>🔰 TRAINING PURPOSE ONLY</strong><br>This Cisco Firewall Toolkit is strictly intended for <strong>educational and training purposes</strong> in controlled lab environments.</p>
+                <p><strong>⚖️ YOUR RESPONSIBILITY</strong><br>Any use outside of training is entirely at your own risk. <strong>You will be the sole responsible party for any damages, data loss, service interruptions, or legal consequences.</strong></p>
+                <p><strong>⚠️ DISCLAIMER & INDEMNIFICATION</strong><br>Provided “AS IS”. The creators disclaim all liability. By accepting, you agree to indemnify the provider.</p>
+                <p><strong>🏛️ COMPLIANCE</strong><br>You agree to comply with all applicable laws. Unauthorized access or malicious use is prohibited.</p>
+                <hr>
+                <p style="font-size:12px;">✅ By clicking “I ACCEPT”, you confirm you have read and agreed to these terms.</p>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:8px;">
+                <button id="termsDeclineBtn" class="btn-secondary" style="background:#4a5568;">❌ Decline</button>
+                <button id="termsAcceptBtn" style="background:var(--a);">✅ I ACCEPT</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modalDiv);
+    const acceptBtn = document.getElementById('termsAcceptBtn');
+    const declineBtn = document.getElementById('termsDeclineBtn');
+    const cleanup = () => { if(modalDiv && modalDiv.parentNode) modalDiv.remove(); };
+    acceptBtn.onclick = () => { sessionStorage.setItem('cisco_terms_accepted', 'true'); cleanup(); if(onAccept) onAccept(); };
+    declineBtn.onclick = () => { sessionStorage.removeItem('cisco_logged_in'); sessionStorage.removeItem('cisco_terms_accepted'); cleanup(); showLoginScreen(); };
+}
+
+// ====================== LOGIN ======================
+function showLoginScreen() { 
+    const loginHTML = `<div class="login-overlay" id="loginOverlay"><div class="login-card"><h2>🔐 Cisco Toolkit</h2><input type="text" id="loginUsername" placeholder="Username"><input type="password" id="loginPassword" placeholder="Password"><button id="loginBtn">Login</button><div id="loginError" class="error"></div></div></div>`; 
+    document.body.insertAdjacentHTML('beforeend', loginHTML); 
+    document.getElementById('loginBtn').addEventListener('click', () => { 
+        if (document.getElementById('loginUsername').value === 'Administrator' && document.getElementById('loginPassword').value === 'Mcit@1993Mcit@1993') { 
+            sessionStorage.setItem('cisco_logged_in', 'true'); 
+            document.getElementById('loginOverlay').remove(); 
+            showTermsModal(() => {
+                document.getElementById('toolkitContainer').style.display = 'block'; 
+                initSidebar(); 
+                render(); 
+            });
+        } else { 
+            document.getElementById('loginError').innerText = 'Invalid credentials'; 
+        } 
+    }); 
+}
+
+if (sessionStorage.getItem('cisco_logged_in') === 'true' && sessionStorage.getItem('cisco_terms_accepted') === 'true') { 
+    document.getElementById('toolkitContainer').style.display = 'block'; 
+    initSidebar(); 
+    render(); 
+} else if (sessionStorage.getItem('cisco_logged_in') === 'true') {
+    showTermsModal(() => { document.getElementById('toolkitContainer').style.display = 'block'; initSidebar(); render(); });
+} else { 
+    showLoginScreen(); 
+}
+
+// ====================== SWITCH VENDOR BUTTON ======================
+document.getElementById('switchVendorBtn').addEventListener('click', () => {
+    window.location.href = 'index.html';
+});
+
+// ====================== CORE HELPERS ======================
+let cur='vpn', tab='guide', chat=[], loading=false;
+let groqApiKey = localStorage.getItem('groq_key') || '';
+function saveKey(){ const v=document.getElementById('apikey').value.trim(); if(!v)return; groqApiKey=v; localStorage.setItem('groq_key',v); document.getElementById('apikey').value=''; setKst('✓ saved','#3fb950'); }
+window.addEventListener('load',()=>{ if(groqApiKey) setKst('✓ key loaded','#3fb950'); });
+function setKst(t,c){const el=document.getElementById('kst');el.textContent=t;el.style.color=c;}
+function sel(c){ cur=c; document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active')); if(document.getElementById('cat-'+c)) document.getElementById('cat-'+c).classList.add('active'); render(); }
+function stab(t){ tab=t; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); if(document.getElementById('tab-'+t)) document.getElementById('tab-'+t).classList.add('active'); render(); }
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmt(t){ return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'); }
+function copyAll(btn,key,idx){ const step=D[cur].steps?D[cur].steps[idx]:D[cur].sections[idx]; const cmds=(step.cmds||[]).filter(c=>!c.startsWith('(')); navigator.clipboard.writeText(cmds.join('\n')).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy all',1500);}); }
+function copyRef(btn,ci,si){ navigator.clipboard.writeText(QREF[ci].cmds[si]).then(()=>{btn.textContent='✓';setTimeout(()=>btn.textContent='Copy',1200);}); }
+function askAI(q){stab('ai');setTimeout(()=>{const i=document.getElementById('chi');if(i){i.value=q;i.focus();}},50);}
+
+// ====================== CISCO DATA (EXTENSIVE) ======================
+const D = {
+vpn:{t:'Cisco VPN (AnyConnect / IPsec) troubleshooting',s:'high',type:'trouble',chips:['AnyConnect fails','IPsec tunnel down','Certificate error','Split tunnel issue','L2TP over IPsec'],steps:[{t:'Show VPN sessions',cmds:['show vpn-sessiondb anyconnect','show vpn-sessiondb l2l','show crypto ipsec sa','show crypto isakmp sa']},{t:'Debug IKE/IPSEC',note:'Use with caution, high CPU impact.',cmds:['debug crypto ipsec','debug crypto isakmp','terminal monitor','undebug all']},{t:'Check tunnel-group & group-policy',cmds:['show running-config tunnel-group','show group-policy','show crypto dynamic-map']},{t:'Test AAA authentication',cmds:['test aaa-server authentication <SERVER> host <IP> username <USER> password <PASS>']},{t:'View VPN logs',cmds:['show log | include VPN','show logging | include IKE']}]},
+acl:{t:'ACL & NAT troubleshooting',s:'med',type:'trouble',chips:['Traffic denied','NAT not working','PAT exhaustion','Missing permission'],steps:[{t:'Show access-lists',cmds:['show access-list','show run access-list','show access-list <NAME>']},{t:'Check NAT rules',cmds:['show xlate','show nat detail','show run nat','show ip nat translations']},{t:'Packet tracer (ASA)',cmds:['packet-tracer input inside tcp <SRC_IP> <PORT> <DST_IP> <PORT> detailed']},{t:'Clear connections',cmds:['clear local-host <IP>','clear xlate','clear ip nat translation *']}]},
+routing:{t:'Routing (OSPF/EIGRP/BGP/Static)',s:'med',type:'trouble',chips:['OSPF neighbor down','BGP not advertising','EIGRP stuck in active','Missing route'],steps:[{t:'Show routing table',cmds:['show route','show ip route','show ip route ospf','show ip route bgp']},{t:'OSPF neighbors & database',cmds:['show ospf neighbor','show ospf interface','show ospf database']},{t:'EIGRP neighbors',cmds:['show ip eigrp neighbors','show ip eigrp topology']},{t:'BGP summary',cmds:['show bgp summary','show bgp neighbors','show bgp advertised-routes']}]},
+asa:{t:'ASA Configuration',s:'info',type:'config',sections:[{t:'Basic interface config',icon:'🌐',cmds:['interface gigabitethernet0/0','nameif outside','security-level 0','ip address dhcp','no shutdown']},{t:'NAT (dynamic PAT)',cmds:['object network INSIDE-NET','subnet 192.168.1.0 255.255.255.0','nat (inside,outside) dynamic interface']},{t:'Access rule',cmds:['access-list outside-in extended permit tcp any host <PUBLIC_IP> eq 443','access-group outside-in in interface outside']},{t:'SSH access',cmds:['crypto key generate rsa modulus 2048','ssh 0.0.0.0 0.0.0.0 outside','ssh timeout 30','aaa authentication ssh console LOCAL']},{t:'Failover setup',cmds:['failover lan unit primary','failover lan interface folink gigabitethernet0/3','failover interface ip folink 10.10.10.1 255.255.255.0 standby 10.10.10.2']}]},
+ios:{t:'IOS / IOS‑XE Router Configuration',s:'info',type:'config',sections:[{t:'Basic interface & routing',icon:'⚙️',cmds:['enable','configure terminal','hostname R1','interface gig0/0','ip address 192.168.1.1 255.255.255.0','no shutdown','ip route 0.0.0.0 0.0.0.0 <GW>']},{t:'SSH & management',cmds:['ip domain-name lab.local','crypto key generate rsa','username admin secret cisco','line vty 0 4','transport input ssh','login local']},{t:'VLAN & SVI',cmds:['vlan 100','name Sales','interface vlan 100','ip address 10.10.10.1 255.255.255.0']},{t:'OSPF config',cmds:['router ospf 1','router-id 1.1.1.1','network 192.168.1.0 0.0.0.255 area 0']}]},
+nxos:{t:'NX‑OS (Cisco Nexus) Configuration',s:'info',type:'config',sections:[{t:'Basic switch config',icon:'🔷',cmds:['configure terminal','hostname NEXUS-1','interface Ethernet1/1','no switchport','ip address 10.10.10.1/24','no shutdown']},{t:'VLAN & VRF',cmds:['vlan 200','name Production','interface vlan 200','ip address 192.168.200.1/24','vrf context tenant-A']},{t:'Port-channel & vPC',cmds:['interface port-channel10','switchport mode trunk','vpc 10','interface Ethernet1/2','channel-group 10 mode active']}]},
+ftd:{t:'FTD (Firepower Threat Defense) CLI',s:'info',type:'config',sections:[{t:'Basic FTD CLI',icon:'🔥',cmds:['configure network ipv4 manual','configure network dns 8.8.8.8','configure user admin password','show network']},{t:'Policy via CLI (limited)',cmds:['show access-control-config','show nat-config','show running-config']}]},
+dmvpn:{t:'DMVPN troubleshooting',s:'med',type:'trouble',chips:['Tunnel not coming up','NHRP registration fails','Spoke-to-spoke issue'],steps:[{t:'Check DMVPN tunnel',cmds:['show ip nhrp','show crypto ipsec sa','show dmvpn','show interfaces tunnel <num>']},{t:'Debug NHRP',cmds:['debug nhrp','debug crypto ipsec','debug crypto isakmp']}]},
+failover:{t:'ASA Failover troubleshooting',s:'med',type:'trouble',chips:['Failover not active','Sync issues','Secondary failed'],steps:[{t:'Show failover status',cmds:['show failover','show failover state','show failover statistics']},{t:'Force failover',cmds:['failover active','no failover active']}]},
+sysdiag:{t:'System Diagnostics',s:'low',type:'trouble',chips:['High CPU','Memory leak','Crashinfo','Interface errors'],steps:[{t:'Show processes',cmds:['show processes cpu','show processes memory','show version','show crashinfo']},{t:'Interface counters',cmds:['show interface','show interface summary','clear counters']},{t:'Logging',cmds:['show log','show logging','logging enable']}]},
+multivendor:{t:'Multi-Vendor CLI (Aruba/Huawei/Juniper)',s:'info',type:'config',sections:[{t:'ArubaOS-CX',icon:'🟢',cmds:['show interface brief','configure terminal','interface 1/1/1','ip address 10.10.10.1/24','no shutdown']},{t:'Huawei VRP',icon:'🔴',cmds:['display ip interface brief','system-view','interface GigabitEthernet0/0/1','ip address 192.168.1.1 24','undo shutdown']},{t:'Juniper JunOS',icon:'🔷',cmds:['show interfaces terse','configure','set interfaces ge-0/0/0 unit 0 family inet address 192.168.1.1/24','commit']}]}
+};
+const QREF = [
+{cat:'ASA quick',cmds:['show failover','show vpn-sessiondb','show conn count','show access-list','show xlate','show running-config']},
+{cat:'IOS quick',cmds:['show ip route','show ip interface brief','show running-config','show processes cpu','show logging']},
+{cat:'NX-OS quick',cmds:['show vlan brief','show port-channel summary','show ip route vrf all','show interface status']},
+{cat:'General diag',cmds:['show version','show clock','show inventory','show environment']}
+];
+
+// ====================== RENDER FUNCTIONS ======================
+function render(){ const el=document.getElementById('mc'); if(tab==='guide'){ const d=D[cur]; if(d.type==='config') renderCfg(el,d); else renderGuide(el,d); } else if(tab==='analyze') renderAnalyze(el); else if(tab==='ai') renderAI(el); else if(tab==='ref') renderRef(el); else if(tab==='masking') renderMaskingTab(el); else if(tab==='freeai') renderFreeAITab(el); else if(tab==='multivendor') renderMultiVendorTab(el); else if(tab==='bulkAnon') renderBulkAnonTab(el); else if(tab==='subnetcalc') renderSubnetCalc(el); else if(tab==='advdiag') renderAdvDiag(el); }
+
+function renderGuide(el,d){ let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev '+d.s+'">P1 common</span></div>'; h+='<div class="chips">'+d.chips.map(c=>'<span class="chip" onclick="askAI(\''+c.replace(/'/g,"\\'")+'\')">'+c+' ↗</span>').join('')+'</div>'; d.steps.forEach((s,i)=>{ const real=s.cmds.filter(c=>!c.startsWith('(')); const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':''; h+='<div class="cblock '+risk+'"><div class="chdr"><div class="chdr-l"><div class="snum">'+(i+1)+'</div>'+s.t+'</div><div style="display:flex;gap:6px;">'+(risk==='danger'?'<span class="cbadge danger">⚠️ service impact</span>':risk==='warn'?'<span class="cbadge caution">⚠️ config change</span>':'<span class="cbadge ro">read-only</span>')+'<button class="copybtn" onclick="copyAll(this,\''+cur+'\','+i+')">Copy all</button></div></div><div class="cbody">'+(risk==='danger'?'<div class="cdanger">⚠️ One or more commands below will impact live traffic or sessions. Use with caution in production.</div>':risk==='warn'?'<div class="cwarn">⚠️ One or more commands below will make configuration changes to the device.</div>':'')+'<div class="clines">'+s.cmds.map(c=>{if(c.startsWith('(')) return '<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>\n'; const sv=cmdSafety(c); let col='var(--g)'; if(sv==='danger') col='var(--r)'; else if(sv==='caution') col='var(--y)'; return '<span style="color:'+col+'">'+esc(c)+'</span>'+(sv==='danger'?' <span style="font-size:10px;color:var(--r);">⚠️CAUTION</span>':'')+'\n';}).join('')+'</div>'+(s.note?'<div class="cnote">'+s.note+'</div>':'')+'</div></div>'; }); el.innerHTML=h; }
+function renderCfg(el,d){ let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev info">Config Guide</span></div>'; d.sections.forEach((s,i)=>{ const real=s.cmds.filter(c=>!c.startsWith('(')); const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':''; h+='<div class="cblock '+risk+'"><div class="chdr"><div class="chdr-l"><span style="margin-right:4px">'+(s.icon||'📄')+'</span>'+s.t+'</div><div style="display:flex;gap:6px;">'+(risk==='danger'?'<span class="cbadge danger">⚠️ service impact</span>':risk==='warn'?'<span class="cbadge caution">⚠️ config change</span>':'')+'<button class="copybtn" onclick="copyAll(this,\''+cur+'\','+i+')">Copy all</button></div></div><div class="cbody">'+(s.warn?'<div class="cdanger">⚠️ '+s.warn+'</div>':'')+(risk==='danger'&&!s.warn?'<div class="cdanger">⚠️ One or more commands will impact live traffic or sessions.</div>':risk==='warn'?'<div class="cwarn">⚠️ One or more commands will make configuration changes.</div>':'')+'<div class="clines">'+s.cmds.map(c=>{if(c.startsWith('(')) return '<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>\n'; const sv=cmdSafety(c); let col='var(--g)'; if(sv==='danger') col='var(--r)'; else if(sv==='caution') col='var(--y)'; return '<span style="color:'+col+'">'+esc(c)+'</span>'+(sv==='danger'?' <span style="font-size:10px;color:var(--r);">⚠️CAUTION</span>':'')+'\n';}).join('')+'</div>'+(s.note?'<div class="cnote">'+s.note+'</div>':'')+'</div></div>'; }); el.innerHTML=h; }
+function renderRef(el){ let h='<div class="rgrid">'; QREF.forEach((s,ci)=>{ h+='<div class="cblock"><div class="chdr"><span style="font-weight:700;font-size:13px;">'+s.cat+'</span></div><div class="cbody">'; s.cmds.forEach((c,si)=>{ const sv=cmdSafety(c); let col='var(--g)'; if(sv==='danger') col='var(--r)'; else if(sv==='caution') col='var(--y)'; h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--br);"><span style="font-family:var(--mono);font-size:11px;color:'+col+';">'+esc(c)+'</span><button class="copybtn" style="margin-left:8px;" onclick="copyRef(this,'+ci+','+si+')">Copy</button></div>'; }); h+='</div></div>'; }); h+='</div>'; el.innerHTML=h; }
+function renderAI(el){ let msgs=''; if(!chat.length) msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about Cisco firewalls and routers.<br><br>Tip: click any chip to auto-fill a question.<br><br>✨ Powered by Groq (free tier)</div>'; else { chat.forEach(m=>{const u=m.role==='user'; msgs+='<div class="msg '+(u?'user':'')+'"><div class="av '+(u?'usr':'ai')+'">'+(u?'U':'AI')+'</div><div class="bubble">'+fmt(m.content)+'</div></div>';}); if(loading) msgs+='<div class="msg"><div class="av ai">AI</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>';} el.innerHTML='<div class="messages" id="chatm">'+msgs+'</div><div class="irow"><input type="text" id="chi" placeholder="e.g. How to debug BGP on IOS?" onkeydown="if(event.key===\'Enter\')sendMsg()"/><button class="ibtn" onclick="sendMsg()" '+(loading?'disabled':'')+'>Send ↗</button></div>'; const cm=document.getElementById('chatm');if(cm)cm.scrollTop=cm.scrollHeight; }
+async function sendMsg(){ const inp=document.getElementById('chi'); if(!inp||loading)return; const text=inp.value.trim(); if(!text)return; inp.value=''; chat.push({role:'user',content:text}); loading=true; render(); const sys='You are a senior Cisco network engineer (ASA, IOS, NX-OS, FTD). Current category: "'+D[cur].t+'". Give concise, practical CLI commands. Use backticks.'; try{ if(!groqApiKey) throw new Error('no-key'); const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{ method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`}, body:JSON.stringify({ model:'llama-3.3-70b-versatile', max_tokens:1200, messages:[{role:'system',content:sys}, ...chat] }) }); const data=await resp.json(); if(data.error) throw new Error(data.error.message); chat.push({role:'assistant',content:data.choices[0].message.content}); }catch(e){ chat.push({role:'assistant',content:e.message==='no-key'?'No Groq API key set. Enter your Groq API key at the top.':'Error: '+e.message}); } loading=false; render(); }
+function renderAnalyze(el){ el.innerHTML='<div style="margin-bottom:10px;"><div style="font-size:15px;font-weight:700;">Paste CLI output for AI analysis</div><div style="font-size:12px;color:var(--t2);">Mask IPs before sending.</div></div><div style="display:flex;gap:8px;margin-bottom:8px;"><select id="acat" style="font-size:12px;padding:6px;background:var(--b2);"><option value="">-- Context --</option>'+Object.keys(D).map(k=>'<option value="'+k+'">'+D[k].t+'</option>').join('')+'</select><input type="text" id="acmd" placeholder="Command you ran" style="flex:1;font-size:12px;padding:6px;background:var(--bg);"/></div><textarea id="aout" placeholder="Paste raw Cisco CLI output..." style="width:100%;height:160px;font-family:var(--mono);font-size:12px;padding:12px;background:var(--bg);color:var(--g);"></textarea><div style="display:flex;gap:8px;margin-top:8px;"><button onclick="alert(\'Auto-mask feature available in IP Masking tab.\')" style="padding:7px 14px;background:rgba(210,153,34,.1);color:#d29922;">🎭 Auto-Mask IPs</button><button onclick="alert(\'Custom replace available.\')" style="padding:7px 14px;background:var(--b2);">+ Custom Replace</button><button onclick="document.getElementById(\'aout\').value=\'\'">Clear</button></div><div id="ares" style="margin-top:12px;"></div>'; }
+let ipMappings = []; function generateFakeIP(real){ let hash=0; for(let i=0;i<real.length;i++) hash=((hash<<5)-hash)+real.charCodeAt(i); hash=Math.abs(hash); let last=(hash%254)+1; let r=hash%3; if(r===0) return `192.0.2.${last}`; if(r===1) return `198.51.100.${last}`; return `203.0.113.${last}`; }
+function saveMappings(){ localStorage.setItem("cisco_masks",JSON.stringify(ipMappings)); renderMaskTableStandalone(); }
+function loadMappingsStandalone(){ let s=localStorage.getItem("cisco_masks"); if(s){ try{ ipMappings=JSON.parse(s); }catch(e){ ipMappings=[]; } } else ipMappings=[]; renderMaskTableStandalone(); }
+function renderMaskTableStandalone(){ const cont=document.getElementById("maskTableStandalone"); if(!cont) return; if(!ipMappings.length){ cont.innerHTML="<div style='color:#FCD34D;'>✨ No IP mappings. Add a real IP → automatic fake IP (one row per IP).</div>"; return; } let html="<table class='ip-mask-table'><thead><tr><th>Real IP</th><th>Fake IP</th><th>Description</th><th>Action</th></tr></thead><tbody>"; ipMappings.forEach(m=>{ html+=`<tr><td>${escapeHtml(m.real)}</span></td><td style='color:#3fb950;'>${escapeHtml(m.fake)}</span></td><td>${escapeHtml(m.desc||'')}</td><td><button class='delMaskBtn' data-real='${m.real}' style='background:#B91C1C; color:white; border:none; border-radius:20px; padding:2px 8px; cursor:pointer;'>❌ Delete</button></td></tr>`; }); html+="</tbody></table><div class='cnote' style='margin-top:8px;'>Total mappings: "+ipMappings.length+"</div>"; cont.innerHTML=html; document.querySelectorAll('.delMaskBtn').forEach(btn=>{ btn.addEventListener('click',(e)=>{ let real=btn.getAttribute('data-real'); ipMappings=ipMappings.filter(m=>m.real!==real); saveMappings(); }); }); }
+function addMappingStandalone(real,desc){ if(ipMappings.find(m=>m.real===real)){ alert("IP already mapped"); return false; } ipMappings.push({real, fake:generateFakeIP(real), desc:desc||""}); saveMappings(); return true; }
+function deleteAllMappingsStandalone(){ if(confirm("Delete ALL mappings?")){ ipMappings=[]; saveMappings(); } }
+function maskTextStandalone(input){ let out=input; ipMappings.forEach(m=>{ let regex=new RegExp(m.real.replace(/\./g,'\\.'),'g'); out=out.replace(regex,m.fake); }); return out; }
+function exportMappingsStandalone(){ let content="# Cisco IP Masking Report\n\nReal → Fake:\n"; ipMappings.forEach(m=>{ content+=`${m.real} → ${m.fake} (${m.desc||''})\n`; }); let blob=new Blob([content],{type:"text/plain"}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`cisco_mask_${Date.now()}.txt`; a.click(); URL.revokeObjectURL(a.href); }
+function renderMaskingTab(el){ el.innerHTML=`<div class="card" style="background:var(--b2);border-radius:12px;padding:16px;"><div class="stitle" style="margin-bottom:12px;">🎭 IP Masking – Real → Fake (one row per IP)</div><div class="mask-input-group"><input type="text" id="realIpMask" placeholder="Real IP (e.g., 192.168.1.100)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><input type="text" id="descMask" placeholder="Description (e.g., inside-server)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><button class="sbtn" id="addMaskBtn" style="background:var(--a);">➕ Add mapping</button></div><div id="maskTableStandalone" style="background:#010409; border-radius:12px; padding:12px; margin:12px 0; overflow-x:auto;"></div><div style="display:flex; gap:8px; margin-bottom:16px;"><button class="sbtn" id="deleteAllMaskBtn" style="background:#B91C1C;">🗑️ Delete all mappings</button><button class="sbtn" id="exportMaskBtn" style="background:#15803D;">📄 Export masked report</button></div><div style="margin-top:12px;"><textarea id="rawTextMask" rows="12" placeholder="Paste any Cisco output with real IPs:&#10;src=192.168.1.100 dst=8.8.8.8" style="width:100%; background:var(--bg); color:var(--t); border:1px solid var(--br); border-radius:6px; padding:10px; font-family:var(--mono); font-size:12px;"></textarea><button class="sbtn" id="applyMaskBtn" style="background:var(--a); margin-top:6px;">🎭 Mask this text</button><pre id="maskedPreview" class="mask-preview">Masked output will appear here.</pre></div><div class="cnote">💾 Mappings stored in browser localStorage. Clear after session.</div></div>`; loadMappingsStandalone(); document.getElementById("addMaskBtn")?.addEventListener('click',()=>{ let real=document.getElementById("realIpMask").value.trim(); let desc=document.getElementById("descMask").value.trim(); if(real) addMappingStandalone(real,desc); document.getElementById("realIpMask").value=""; document.getElementById("descMask").value=""; }); document.getElementById("deleteAllMaskBtn")?.addEventListener('click',deleteAllMappingsStandalone); document.getElementById("exportMaskBtn")?.addEventListener('click',exportMappingsStandalone); document.getElementById("applyMaskBtn")?.addEventListener('click',()=>{ let raw=document.getElementById("rawTextMask").value; let masked=maskTextStandalone(raw); document.getElementById("maskedPreview").innerText=masked||"(nothing to mask)"; }); }
+function escapeHtml(s){ return String(s).replace(/[&<>]/g,function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; return '&gt;';}); }
+let groqApiKeyFree = localStorage.getItem('groq_key') || '';
+function renderFreeAITab(el) { el.innerHTML = `<div class="analyzer-container"><div class="analyzer-row"><label>🔑 Groq API Key (free tier):</label><input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}" style="flex:2"><button class="sbtn" id="saveGroqKeyBtn">Save Key</button><a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl)">Get free key →</a></div><div class="analyzer-row"><label>🤖 Model:</label><select id="groqModelSelect"><option value="llama-3.3-70b-versatile">Llama 3.3 70B (recommended)</option><option value="mixtral-8x7b-32768">Mixtral 8x7B (fast)</option><option value="llama-3.1-8b-instant">Llama 3.1 8B (very fast)</option></select></div><div><label>📄 CLI Output / Question:</label><textarea id="groqPrompt" rows="12" placeholder="Paste Cisco CLI output or ask a question..." style="background:#000000; color:#e6edf3; border:1px solid var(--br); border-radius:6px; font-family:var(--mono); font-size:13px; width:100%; padding:10px;"></textarea></div><div class="analyzer-row"><button class="sbtn" id="analyzeGroqBtn">🚀 Analyze with Groq (Free)</button><button class="sbtn" id="exampleGroqBtn">📋 Use Example</button><button class="sbtn" id="copyGroqResponseBtn" style="background:#15803D;">📋 Copy Response</button></div><div><div class="stitle" style="margin-bottom:6px;">🤖 AI Analysis:</div><div id="groqResponse" class="analyzer-response">Click "Analyze" to see AI analysis.</div></div><div class="cnote">✨ Groq free tier: thousands of requests/day, no credit card required. Your API key is stored locally.</div></div>`; const keyInput = document.getElementById('groqApiKeyInput'); const saveBtn = document.getElementById('saveGroqKeyBtn'); const analyzeBtn = document.getElementById('analyzeGroqBtn'); const exampleBtn = document.getElementById('exampleGroqBtn'); const copyBtn = document.getElementById('copyGroqResponseBtn'); const modelSelect = document.getElementById('groqModelSelect'); const promptArea = document.getElementById('groqPrompt'); const responseDiv = document.getElementById('groqResponse'); saveBtn.onclick = () => { const newKey = keyInput.value.trim(); if (newKey) { localStorage.setItem('groq_key', newKey); groqApiKeyFree = newKey; groqApiKey = newKey; responseDiv.innerHTML = '<span style="color:var(--g);">✅ Groq API key saved locally.</span>'; } else { localStorage.removeItem('groq_key'); groqApiKeyFree = ''; groqApiKey = ''; responseDiv.innerHTML = '<span style="color:var(--y);">⚠️ API key removed.</span>'; } }; exampleBtn.onclick = () => { promptArea.value = `show ip route\nGateway of last resort is 10.0.0.1 to network 0.0.0.0\nS*   0.0.0.0/0 [1/0] via 10.0.0.1\nC    192.168.1.0/24 is directly connected, GigabitEthernet0/1`; responseDiv.innerHTML = 'Example loaded. Click "Analyze" to diagnose.'; }; analyzeBtn.onclick = async () => { const userPrompt = promptArea.value.trim(); if (!userPrompt) { responseDiv.innerHTML = '<span style="color:var(--r);">❌ Please paste some CLI output or ask a question.</span>'; return; } if (!groqApiKeyFree) { responseDiv.innerHTML = '<span style="color:var(--r);">❌ Please enter your Groq API key and click "Save Key".</span>'; return; } const selectedModel = modelSelect.value; responseDiv.innerHTML = '<div class="typing"><span></span><span></span><span></span></div> Analyzing with Groq...'; const systemPrompt = "You are a senior Cisco network engineer (ASA, IOS, NX-OS, FTD). Analyze the following CLI output or question. Provide a clear diagnosis, possible root causes, and recommended CLI commands. Use backticks for commands."; try { const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${groqApiKeyFree}` }, body: JSON.stringify({ model: selectedModel, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userPrompt }], temperature: 0.3, max_tokens: 1500 }) }); const data = await resp.json(); if (data.error) throw new Error(data.error.message); responseDiv.innerHTML = fmt(data.choices[0].message.content); } catch (err) { responseDiv.innerHTML = `<span style="color:var(--r);">❌ Error: ${err.message}</span>`; } }; copyBtn.onclick = () => { const text = responseDiv.innerText; if (text && text !== "Click \"Analyze\" to see AI analysis...") { navigator.clipboard.writeText(text); copyBtn.textContent = "✓ Copied!"; setTimeout(() => copyBtn.textContent = "📋 Copy Response", 1500); } else { alert("Nothing to copy yet."); } }; }
+function renderMultiVendorTab(el){ el.innerHTML = `<div class="vendor-section"><div class="vendor-title">🟢 ArubaOS-CX (Aruba switches)</div><div class="cblock"><div class="chdr"><div class="chdr-l">🔧 Configuration Examples</div></div><div class="cbody"><div class="clines">configure terminal</div><div class="explanation">Enter config mode.</div><div class="clines">interface 1/1/1</div><div class="explanation">Enter interface (CX syntax).</div><div class="clines">ip address 10.10.10.1/24</div><div class="explanation">Set IP with CIDR.</div><div class="clines">no shutdown</div><div class="explanation">Enable interface.</div><div class="clines">write memory</div><div class="explanation">Save configuration (CX).</div></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">🩺 Troubleshooting Commands</div></div><div class="cbody"><div class="clines">show interface brief</div><div class="explanation">Interface status summary.</div><div class="clines">show vlan</div><div class="explanation">VLAN list and port membership.</div><div class="clines">show ip route</div><div class="explanation">Routing table.</div><div class="clines">show arp</div><div class="explanation">ARP cache.</div></div></div></div><div class="vendor-section"><div class="vendor-title">🔴 Huawei VRP (AR / S series routers & switches)</div><div class="cblock"><div class="chdr"><div class="chdr-l">🔧 Configuration Examples</div></div><div class="cbody"><div class="clines">system-view</div><div class="explanation">Enter system view.</div><div class="clines">interface GigabitEthernet0/0/1</div><div class="explanation">Enter interface view.</div><div class="clines">ip address 192.168.1.1 24</div><div class="explanation">Set IP address (CIDR).</div><div class="clines">undo shutdown</div><div class="explanation">Enable interface.</div><div class="clines">save</div><div class="explanation">Save configuration.</div></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">🩺 Troubleshooting Commands</div></div><div class="cbody"><div class="clines">display ip interface brief</div><div class="explanation">Quick interface status.</div><div class="clines">display ip routing-table</div><div class="explanation">Routing table.</div><div class="clines">display arp</div><div class="explanation">ARP table.</div><div class="clines">display logbuffer</div><div class="explanation">System logs.</div></div></div></div><div class="vendor-section"><div class="vendor-title">🔷 Juniper JunOS</div><div class="cblock"><div class="chdr"><div class="chdr-l">🔧 Configuration Examples</div></div><div class="cbody"><div class="clines">configure</div><div class="explanation">Enter configuration mode.</div><div class="clines">set interfaces ge-0/0/0 unit 0 family inet address 192.168.1.1/24</div><div class="explanation">Assign IP to interface.</div><div class="clines">set interfaces ge-0/0/0 unit 0 family inet</div><div class="explanation">Enable IPv4 on interface.</div><div class="clines">commit</div><div class="explanation">Apply configuration.</div></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">🩺 Troubleshooting Commands</div></div><div class="cbody"><div class="clines">show interfaces terse</div><div class="explanation">Quick interface status.</div><div class="clines">show route</div><div class="explanation">Routing table.</div><div class="clines">show arp</div><div class="explanation">ARP table.</div><div class="clines">show log messages | match error</div><div class="explanation">View system errors.</div></div></div></div><div class="cnote">📌 Explanation appears below each command. Always test in lab first.</div>`; }
+function isValidIPv4(str) { const parts = str.split('.'); if (parts.length !== 4) return false; for (let i=0;i<4;i++) { const num = parseInt(parts[i],10); if (isNaN(num) || num<0 || num>255) return false; } return true; }
+function extractUniqueIPs(text) { const ipv4Regex = /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g; const matches = text.match(ipv4Regex) || []; const validIPs = matches.filter(ip => isValidIPv4(ip)); const unique = [...new Set(validIPs)]; unique.sort((a,b)=>{ const ipToInt = ip => ip.split('.').reduce((acc,oct)=>(acc<<8)+parseInt(oct,10),0)>>>0; return ipToInt(a)-ipToInt(b); }); return unique; }
+const DOC_NETWORKS = ["203.0.113.", "198.51.100.", "192.0.2."]; const MAX_IPS_PER_NET = 254;
+function generateFakeIPs(uniqueRealIPs) { const maxTotal = DOC_NETWORKS.length * MAX_IPS_PER_NET; if (uniqueRealIPs.length > maxTotal) { throw new Error(`Too many unique IPs (${uniqueRealIPs.length}). Max ${maxTotal}.`); } const mapping = new Map(); for (let idx = 0; idx < uniqueRealIPs.length; idx++) { const realIP = uniqueRealIPs[idx]; const netIndex = Math.floor(idx / MAX_IPS_PER_NET); const hostOffset = (idx % MAX_IPS_PER_NET) + 1; const fakeIP = DOC_NETWORKS[netIndex] + hostOffset; mapping.set(realIP, fakeIP); } return mapping; }
+function replaceIPsInText(text, mapping) { let result = text; for (const [realIP, fakeIP] of mapping.entries()) { const escaped = realIP.replace(/\./g, '\\.'); const re = new RegExp('\\b' + escaped + '\\b', 'g'); result = result.replace(re, fakeIP); } return result; }
+function renderMappingTableHTML(mapping) { if (!mapping || mapping.size === 0) { return '<div class="cnote">No IPv4 addresses found.</div>'; } const sorted = Array.from(mapping.entries()).sort((a,b)=>{ const ipToInt = ip => ip.split('.').reduce((acc,oct)=>(acc<<8)+parseInt(oct,10),0)>>>0; return ipToInt(a[0])-ipToInt(b[0]); }); let html = `<table style="width:100%; border-collapse:collapse; font-family:var(--mono); font-size:11px;"><thead><tr><th style="text-align:left; border-bottom:1px solid var(--br);">Real IP</th><th style="text-align:left; border-bottom:1px solid var(--br);">➡️ Fake IP</th></tr></thead><tbody>`; for (const [real, fake] of sorted) { html += `<tr><td style="padding:4px 0; color:var(--r);">${escapeHtml(real)}</span></td><td style="padding:4px 0; color:var(--g);">${escapeHtml(fake)}</span><tr>`; } html += `</tbody></table><div class="cnote">Total unique IPs mapped: ${mapping.size}</div>`; return html; }
+function anonymizeFullCLI(inputText) { if (!inputText.trim()) { return { converted: "", mapping: new Map(), uniqueCount: 0 }; } const uniqueIPs = extractUniqueIPs(inputText); if (uniqueIPs.length === 0) { return { converted: inputText, mapping: new Map(), uniqueCount: 0 }; } const mapping = generateFakeIPs(uniqueIPs); const converted = replaceIPsInText(inputText, mapping); return { converted, mapping, uniqueCount: uniqueIPs.length }; }
+function renderBulkAnonTab(el) { el.innerHTML = `<div class="cblock"><div class="chdr"><div class="chdr-l">📋 Full Cisco CLI (paste any troubleshoot output)</div></div><div class="cbody"><textarea id="bulkAnonInput" rows="12" style="width:100%; background:var(--bg); color:var(--t); font-family:var(--mono); font-size:11px; border:1px solid var(--br); border-radius:6px; padding:10px;" placeholder="Paste your full Cisco CLI output with real IPs..."></textarea><div style="display:flex; gap:12px; margin-top:12px; flex-wrap:wrap;"><button class="sbtn" id="bulkAnonConvertBtn">✨ Convert & Anonymize</button><button class="sbtn" id="bulkAnonCopyBtn" style="background:#15803D;">📋 Copy Anonymized CLI</button><button class="sbtn" id="bulkAnonClearBtn" style="background:#4b5563;">🗑️ Clear</button></div></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">🔄 Anonymized Output (fake IPs)</div></div><div class="cbody"><pre id="bulkAnonOutput" style="background:#010409; border-radius:8px; padding:12px; font-family:var(--mono); font-size:11px; white-space:pre-wrap; overflow-x:auto; max-height:400px;">— Output will appear here —</pre></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">🔍 IP Mapping Table (Real → Fake)</div></div><div class="cbody" id="bulkAnonMappingContainer"><div class="cnote">Run conversion to see mapping.</div></div></div><div class="cnote">💡 All IPv4 addresses are replaced with RFC 5737 documentation ranges.</div>`; const inputArea = document.getElementById('bulkAnonInput'); const outputPre = document.getElementById('bulkAnonOutput'); const mappingDiv = document.getElementById('bulkAnonMappingContainer'); const convertBtn = document.getElementById('bulkAnonConvertBtn'); const copyBtn = document.getElementById('bulkAnonCopyBtn'); const clearBtn = document.getElementById('bulkAnonClearBtn'); function updateConversion() { const raw = inputArea.value; const result = anonymizeFullCLI(raw); if (result.converted === "") { outputPre.innerText = "— No input —"; mappingDiv.innerHTML = '<div class="cnote">No input provided.</div>'; } else { outputPre.innerText = result.converted; mappingDiv.innerHTML = renderMappingTableHTML(result.mapping); } } convertBtn.onclick = updateConversion; copyBtn.onclick = () => { const text = outputPre.innerText; if (text && text !== "— No input —" && text !== "— Output will appear here —") { navigator.clipboard.writeText(text); copyBtn.innerText = "✓ Copied!"; setTimeout(() => copyBtn.innerText = "📋 Copy Anonymized CLI", 1500); } else { alert("Nothing to copy. Convert first."); } }; clearBtn.onclick = () => { inputArea.value = ""; outputPre.innerText = "— Output will appear here —"; mappingDiv.innerHTML = '<div class="cnote">Run conversion to see mapping.</div>'; }; }
+function calculateSubnet(ipCidr) { let input = ipCidr.trim(); if (!input.includes('/')) return { error: "Use CIDR format: IP/prefix (e.g., 192.168.1.0/24)" }; let [ip, prefix] = input.split('/'); let maskBits = parseInt(prefix,10); if (isNaN(maskBits) || maskBits < 0 || maskBits > 32) return { error: "Prefix must be 0-32" }; let ipParts = ip.split('.'); if (ipParts.length !== 4) return { error: "Invalid IPv4 address" }; for (let p of ipParts) { let n = parseInt(p,10); if (isNaN(n) || n<0 || n>255) return { error: "Invalid IP octet" }; } let ipInt = ((parseInt(ipParts[0])<<24) | (parseInt(ipParts[1])<<16) | (parseInt(ipParts[2])<<8) | parseInt(ipParts[3])) >>> 0; let maskInt = ((1 << maskBits) - 1) << (32 - maskBits); let networkInt = ipInt & maskInt; let broadcastInt = networkInt | (~maskInt >>> 0); let firstHostInt = networkInt + 1; let lastHostInt = broadcastInt - 1; let totalHosts = Math.pow(2, 32 - maskBits) - 2; if (maskBits === 31) totalHosts = 2; if (maskBits === 32) totalHosts = 1; if (maskBits === 31) { firstHostInt = networkInt; lastHostInt = broadcastInt; } if (maskBits === 32) { firstHostInt = lastHostInt = networkInt; } let wildcardInt = (~maskInt) >>> 0; function intToIp(i) { return ((i>>>24)&0xFF)+'.'+((i>>>16)&0xFF)+'.'+((i>>>8)&0xFF)+'.'+(i&0xFF); } return { network: intToIp(networkInt), broadcast: intToIp(broadcastInt), firstUsable: maskBits >= 31 ? (maskBits===31 ? intToIp(firstHostInt)+" / "+intToIp(lastHostInt) : intToIp(firstHostInt)) : intToIp(firstHostInt), lastUsable: maskBits >= 31 ? "N/A (point-to-point)" : intToIp(lastHostInt), mask: intToIp(maskInt), cidr: maskBits, wildcard: intToIp(wildcardInt), totalHosts: totalHosts, binaryIp: ipInt.toString(2).padStart(32,'0'), binaryMask: maskInt.toString(2).padStart(32,'0'), binaryNetwork: networkInt.toString(2).padStart(32,'0'), error: null }; }
+function renderSubnetCalc(el) { el.innerHTML = `<div class="cblock"><div class="chdr"><div class="chdr-l">🧮 IPv4 Subnet Calculator</div></div><div class="cbody"><div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;"><input type="text" id="subnetInput" placeholder="e.g., 192.168.1.0/24 or 10.0.0.0/16" style="flex:2; padding:8px; background:var(--bg); border:1px solid var(--br); border-radius:6px; color:var(--t); font-family:var(--mono);"><button class="sbtn" id="calcSubnetBtn">Calculate</button><button class="sbtn" id="exampleSubnetBtn" style="background:var(--b3);">📋 Example /24</button></div><div id="subnetResult"><div class="cnote">Enter an IPv4 address with CIDR prefix.</div></div></div></div>`; function update() { let input = document.getElementById('subnetInput').value; let info = calculateSubnet(input); if (info.error) { document.getElementById('subnetResult').innerHTML = `<div class="cdanger">⚠️ ${info.error}</div>`; return; } let hostsDisp = info.totalHosts; if (info.cidr === 31) hostsDisp = "2 (point-to-point)"; if (info.cidr === 32) hostsDisp = "1 (single host)"; let rangeDisp = (info.cidr <= 30) ? `${info.firstUsable} – ${info.lastUsable}` : (info.cidr===31 ? `Both IPs usable (point-to-point)` : `Only this host`); let html = `<div class="subnet-result-grid"><div class="subnet-card"><div class="subnet-label">Network Address</div><div class="subnet-value">${info.network}</div></div><div class="subnet-card"><div class="subnet-label">Broadcast Address</div><div class="subnet-value">${info.broadcast}</div></div><div class="subnet-card"><div class="subnet-label">First Usable IP</div><div class="subnet-value">${info.firstUsable}</div></div><div class="subnet-card"><div class="subnet-label">Last Usable IP</div><div class="subnet-value">${info.lastUsable}</div></div><div class="subnet-card"><div class="subnet-label">Netmask</div><div class="subnet-value">${info.mask} (/${info.cidr})</div></div><div class="subnet-card"><div class="subnet-label">Wildcard Mask</div><div class="subnet-value">${info.wildcard}</div></div><div class="subnet-card"><div class="subnet-label">Total Hosts</div><div class="subnet-value">${hostsDisp}</div></div><div class="subnet-card"><div class="subnet-label">Usable Range</div><div class="subnet-value">${rangeDisp}</div></div></div><div class="subnet-explanation"><strong>📘 Subnet Explanation</strong><br>• <strong>CIDR:</strong> /${info.cidr} means ${info.cidr} bits for network, ${32-info.cidr} bits for hosts.<br>• <strong>Netmask binary:</strong> ${info.binaryMask.match(/.{1,8}/g).join('.')}<br>• <strong>Network address:</strong> all host bits 0 → ${info.network}<br>• <strong>Broadcast address:</strong> all host bits 1 → ${info.broadcast}<br>• <strong>Wildcard mask:</strong> ${info.wildcard} (used in ACLs)<br>• <strong>Binary view:</strong><br>&nbsp;&nbsp;IP:   ${info.binaryIp.match(/.{1,8}/g).join('.')}<br>&nbsp;&nbsp;Mask: ${info.binaryMask.match(/.{1,8}/g).join('.')}<br>&nbsp;&nbsp;Net:  ${info.binaryNetwork.match(/.{1,8}/g).join('.')}</div>`; document.getElementById('subnetResult').innerHTML = html; } document.getElementById('calcSubnetBtn').onclick = update; document.getElementById('exampleSubnetBtn').onclick = () => { document.getElementById('subnetInput').value = "192.168.1.0/24"; update(); }; document.getElementById('subnetInput').addEventListener('keypress', e => { if(e.key==='Enter') update(); }); update(); }
+function renderAdvDiag(el) { const sections = [ { title: "🩺 System Health & Performance", icon: "📊", commands: [ { cmd: "show processes cpu", exp: "CPU utilization per process.", safety: "ro" }, { cmd: "show memory", exp: "Memory usage summary.", safety: "ro" }, { cmd: "show version", exp: "Software version, uptime, hardware.", safety: "ro" }, { cmd: "show inventory", exp: "Hardware inventory.", safety: "ro" } ] }, { title: "🔧 Troubleshooting Tools", icon: "🔧", commands: [ { cmd: "show tech-support", exp: "Gather all diagnostic info (large output).", safety: "ro" }, { cmd: "show logging", exp: "System log messages.", safety: "ro" }, { cmd: "debug ip packet (use with ACL)", exp: "Live packet debug – high impact.", safety: "caution" }, { cmd: "clear counters", exp: "Clear interface counters.", safety: "caution" } ] } ]; let html = `<div class="sh"><span class="stitle">🔬 Advanced Diagnostics</span><span class="sev info">Expert‑level commands</span></div>`; html += `<div class="cnote">⚠️ Many commands below are advanced and can impact performance.</div>`; for (let sect of sections) { html += `<div class="cblock"><div class="chdr"><div class="chdr-l"><span style="margin-right:4px">${sect.icon}</span>${sect.title}</div></div><div class="cbody">`; for (let item of sect.commands) { let badge = (item.safety === 'ro') ? '<span class="cbadge ro">🟢 read‑only</span>' : (item.safety === 'caution') ? '<span class="cbadge caution">🟡 caution</span>' : '<span class="cbadge danger">🔴 dangerous</span>'; html += `<div class="clines" style="margin-bottom:6px;">${escapeHtml(item.cmd)}</div><div class="explanation">📝 ${item.exp} ${badge}</div>`; } html += `</div></div>`; } el.innerHTML = html; }
+function initSidebar(){ let sidebar=document.querySelector('.sidebar'); let categories=[ {section:"Troubleshoot", items:["vpn","acl","routing","dmvpn","failover","sysdiag"]}, {section:"Config Guides", items:["asa","ios","nxos","ftd"]}, {section:"Multi‑Vendor", items:["multivendor"]} ]; let labelMap={ vpn:"🔐 VPN (AnyConnect/IPsec)", acl:"🛡️ ACL & NAT", routing:"🌐 Routing", dmvpn:"🔄 DMVPN", failover:"🔄 ASA Failover", sysdiag:"📊 System Diagnostics", asa:"📘 ASA Config", ios:"📘 IOS / IOS‑XE", nxos:"🔷 NX‑OS Config", ftd:"🔥 FTD Config", multivendor:"🌐 Multi‑Vendor CLI" }; let html=''; for(let cat of categories){ html+=`<div class="slbl">${cat.section}</div>`; for(let id of cat.items){ html+=`<button class="cb ${cur===id?'active':''}" onclick="sel('${id}')" id="cat-${id}"><span class="ic">${labelMap[id][0]}</span>${labelMap[id]}</button>`; } } sidebar.innerHTML=html; }
+let cmdSafety = function(cmd){ const c=cmd.trim().toLowerCase(); if(c.startsWith('debug')) return 'danger'; if(c.startsWith('clear ')||c.startsWith('reload')) return 'danger'; if(c.startsWith('configure terminal')||c.startsWith('enable')) return 'caution'; return 'ro'; };
+let hasHighRisk = (cmds)=>cmds.some(c=>cmdSafety(c)==='danger');
+let hasCaution = (cmds)=>cmds.some(c=>cmdSafety(c)==='caution');
+</script>
+</body>
+</html>
