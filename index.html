@@ -214,6 +214,34 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
 .tos-btn-accept{background:linear-gradient(90deg,var(--a),var(--ad));border:none;border-radius:20px;padding:9px 24px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s}.tos-btn-accept:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(29,158,117,.3)}
 .tos-btn-close{background:transparent;border:1px solid var(--br);border-radius:20px;padding:9px 20px;font-size:13px;color:var(--t2);cursor:pointer;transition:all .15s}.tos-btn-close:hover{border-color:var(--t2);color:var(--t)}
 .toast{position:fixed;bottom:26px;right:26px;background:var(--b2);border:1px solid var(--a);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--t);z-index:9999;transform:translateY(70px);opacity:0;transition:all .3s;max-width:300px;line-height:1.5}.toast.show{transform:translateY(0);opacity:1}
+
+.anim-scene{animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.anim-step-card{background:rgba(22,27,34,.7);border:1px solid rgba(255,255,255,.06);border-radius:9px;margin-bottom:10px;overflow:hidden;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.anim-step-card.show{opacity:1;transform:translateY(0)}
+.anim-step-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04);background:rgba(0,0,0,.2)}
+.anim-step-title{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:7px}
+.anim-step-num{width:19px;height:19px;border-radius:50%;background:rgba(29,158,117,.2);color:#1D9E75;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(29,158,117,.2);font-family:var(--mono)}
+.anim-badge{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;font-family:var(--mono)}
+.anim-badge.ro{background:rgba(63,185,80,.1);color:#3fb950;border:1px solid rgba(63,185,80,.2)}
+.anim-badge.warn{background:rgba(210,153,34,.1);color:#d29922;border:1px solid rgba(210,153,34,.2)}
+.anim-badge.danger{background:rgba(248,81,73,.1);color:#f85149;border:1px solid rgba(248,81,73,.2)}
+.anim-cmds{padding:10px 14px;font-family:var(--mono);font-size:11.5px;line-height:2;background:rgba(0,0,0,.25)}
+.anim-cmd{display:block}.anim-cmd.ro{color:#3fb950}.anim-cmd.warn{color:#d29922}.anim-cmd.danger{color:#f85149}.anim-cmd.note{color:rgba(255,255,255,.22);font-style:italic}
+.anim-note{font-size:10.5px;color:rgba(255,255,255,.35);padding:7px 14px 10px;border-top:1px solid rgba(255,255,255,.04);line-height:1.5;background:rgba(29,158,117,.03)}
+.anim-dot{width:5px;height:5px;border-radius:50%;background:#1D9E75;display:inline-block;animation:blink 1.2s infinite}
+@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
+.sub-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:9px 12px;transition:opacity .35s,transform .35s;transform:scale(.97)}
+.sub-card.show{opacity:1!important;transform:scale(1)}
+.sub-lbl{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em;font-family:var(--mono);margin-bottom:3px}
+.sub-val{font-family:var(--mono);font-size:13px;font-weight:700}
+.qref-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
+.qref-title{font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.05);letter-spacing:.06em;background:rgba(29,158,117,.05)}
+.qref-cmd{font-family:var(--mono);font-size:10px;padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;justify-content:space-between;align-items:center;gap:4px}
+.qref-cmd:last-child{border-bottom:none}
+.qref-copy{font-size:9px;padding:1px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.35);cursor:pointer;font-family:var(--mono);flex-shrink:0}
+.qref-copy:hover{border-color:#1D9E75;color:#1D9E75}
+.demo-sitem.visited{color:rgba(255,255,255,.4)}
 </style>
 </head>
 <body>
@@ -358,38 +386,282 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
 <section class="demo-section" id="demo">
   <div class="demo-inner">
     <div style="text-align:center;margin-bottom:48px">
-      <div class="section-label">Live interactive demo</div>
+      <div class="section-label">Live animated demo</div>
       <h2 class="section-title">See the toolkit in action</h2>
-      <p class="section-sub" style="text-align:center;margin:0 auto">Click any category — every command, badge and note is real. This is exactly what subscribers see.</p>
+      <p class="section-sub" style="text-align:center;margin:0 auto">Every command, badge, and result is real — this is exactly what subscribers get access to.</p>
       <div class="demo-feature-pills">
         <span class="demo-pill">🔒 50+ Playbooks</span>
-        <span class="demo-pill">🤖 AI Analysis</span>
-        <span class="demo-pill">🎭 IP Masking</span>
+        <span class="demo-pill">🤖 AI Analyzer</span>
+        <span class="demo-pill">🎭 IP Anonymizer</span>
         <span class="demo-pill">🧮 Subnet Calc</span>
         <span class="demo-pill">📡 Quick Ref</span>
         <span class="demo-pill">🌐 Multi-Vendor</span>
+        <span class="demo-pill">⚙️ HA / Cluster</span>
+        <span class="demo-pill">🌐 SD-WAN</span>
       </div>
     </div>
-    <div class="demo-shell">
+
+    <div class="demo-shell" id="animatedDemo">
       <div class="demo-tbar">
         <div class="dot2 r"></div><div class="dot2 y"></div><div class="dot2 g"></div>
-        <span class="demo-tbar-title">🐺 NetWolf Pro &nbsp;·&nbsp; FortiOS 6.x / 7.x &nbsp;·&nbsp; netwolffortigate.com</span>
+        <span class="demo-tbar-title">🐺 NetWolf Pro &nbsp;·&nbsp; netwolffortigate.com &nbsp;·&nbsp; FortiOS 6.x / 7.x</span>
         <span class="demo-tbar-badge">LIVE PREVIEW</span>
       </div>
-      <div class="demo-tabs-bar">
-        <button class="demo-tab active" onclick="switchTab('guide',this)">📋 Guided Steps</button>
-        <button class="demo-tab" onclick="switchTab('analyze',this)">🤖 AI Analyzer</button>
-        <button class="demo-tab" onclick="switchTab('ref',this)">⚡ Quick Ref</button>
-        <button class="demo-tab" onclick="switchTab('subnet',this)">🧮 Subnet Calc</button>
+
+      <!-- scene tabs -->
+      <div class="demo-tabs-bar" id="demoTabBar">
+        <div class="demo-tab active" id="dtab0">📋 Guided Steps</div>
+        <div class="demo-tab" id="dtab1">🤖 AI Analyzer</div>
+        <div class="demo-tab" id="dtab2">🎭 IP Anonymizer</div>
+        <div class="demo-tab" id="dtab3">🧮 Subnet Calc</div>
+        <div class="demo-tab" id="dtab4">⚡ Quick Ref</div>
       </div>
+
       <div class="demo-layout">
-        <div class="demo-sidebar" id="demoSidebar"></div>
-        <div class="demo-content" id="demoContent"></div>
+        <!-- sidebar -->
+        <div class="demo-sidebar" id="animSidebar">
+          <div class="demo-slbl">Troubleshoot</div>
+          <div class="demo-sitem active" id="asi0"><span>🔒</span><span>VPN / IPsec</span></div>
+          <div class="demo-sitem" id="asi1"><span>🕵️</span><span>SSL VPN</span></div>
+          <div class="demo-sitem" id="asi2"><span>📃</span><span>Policy / NAT</span></div>
+          <div class="demo-sitem" id="asi3"><span>⚙️</span><span>HA Cluster</span></div>
+          <div class="demo-sitem" id="asi4"><span>🌐</span><span>SD-WAN</span></div>
+          <div class="demo-sitem" id="asi5"><span>🔧</span><span>Routing</span></div>
+          <div class="demo-sitem" id="asi6"><span>🔑</span><span>Auth / LDAP</span></div>
+          <div class="demo-slbl" style="margin-top:8px">Config Guides</div>
+          <div class="demo-sitem" id="asi7"><span>🚀</span><span>Initial Setup</span></div>
+          <div class="demo-sitem" id="asi8"><span>🛡️</span><span>ZTNA Config</span></div>
+          <div class="demo-sitem" id="asi9"><span>💻</span><span>SSL VPN Full</span></div>
+          <div class="demo-slbl" style="margin-top:8px">Tools</div>
+          <div class="demo-sitem" id="asi10"><span>🎭</span><span>IP Anonymizer</span></div>
+          <div class="demo-sitem" id="asi11"><span>🧮</span><span>Subnet Calc</span></div>
+          <div class="demo-sitem" id="asi12"><span>📡</span><span>Quick Ref</span></div>
+        </div>
+
+        <!-- content area -->
+        <div class="demo-content" id="animContent" style="padding:0;position:relative;overflow:hidden">
+
+          <!-- SCENE 1: Guided Steps - VPN -->
+          <div class="anim-scene" id="ascene0" style="padding:18px 20px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <span style="font-size:16px">🔒</span>
+              <span style="font-size:13px;font-weight:700;color:#e6edf3">IPsec VPN Troubleshooting</span>
+              <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono);margin-left:auto">4 steps</span>
+            </div>
+            <div class="anim-step-card" id="asc0">
+              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">1</div>Check tunnel status</div><span class="anim-badge ro">read-only</span></div>
+              <div class="anim-cmds" id="acmds0"></div>
+              <div class="anim-note">💡 Look for "established" in both phases. Missing = tunnel never came up.</div>
+            </div>
+            <div class="anim-step-card" id="asc1">
+              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">2</div>Live IKE negotiation debug</div><span class="anim-badge warn">⚠ config</span></div>
+              <div class="anim-cmds" id="acmds1"></div>
+              <div class="anim-note">💡 Look for: NO_PROPOSAL_CHOSEN · AUTH_FAILED · PAYLOAD_MALFORMED</div>
+            </div>
+            <div class="anim-step-card" id="asc2">
+              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">3</div>Compare phase proposals</div><span class="anim-badge ro">read-only</span></div>
+              <div class="anim-cmds" id="acmds2"></div>
+              <div class="anim-note">💡 Encryption, DH group and lifetime must match exactly on both peers.</div>
+            </div>
+            <div class="anim-step-card" id="asc3">
+              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">4</div>Check routing to remote subnet</div><span class="anim-badge ro">read-only</span></div>
+              <div class="anim-cmds" id="acmds3"></div>
+              <div class="anim-note">💡 Missing static route = traffic blackholed before reaching tunnel.</div>
+            </div>
+          </div>
+
+          <!-- SCENE 2: HA Cluster -->
+          <div class="anim-scene" id="ascene1" style="padding:18px 20px;display:none">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <span style="font-size:16px">⚙️</span>
+              <span style="font-size:13px;font-weight:700;color:#e6edf3">HA / Cluster Troubleshooting</span>
+              <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono);margin-left:auto">3 steps</span>
+            </div>
+            <div class="anim-step-card show">
+              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">1</div>Check HA cluster status</div><span class="anim-badge ro">read-only</span></div>
+              <div class="anim-cmds"><span class="anim-cmd ro">get system ha status</span><br><span class="anim-cmd ro">diagnose sys ha status</span><br><span class="anim-cmd ro">diagnose sys ha dump-by vcluster</span></div>
+              <div class="anim-note">💡 Shows primary/secondary role, uptime, sync state, heartbeat link health.</div>
+            </div>
+            <div class="anim-step-card show">
+              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">2</div>Verify synchronization</div><span class="anim-badge warn">⚠ config</span></div>
+              <div class="anim-cmds"><span class="anim-cmd warn">diagnose sys ha checksum show</span><br><span class="anim-cmd warn">diagnose sys ha checksum recalculate</span><br><span class="anim-cmd warn">execute ha synchronize start</span></div>
+              <div class="anim-note">💡 Checksum mismatch = config divergence. Force sync to resolve.</div>
+            </div>
+            <div class="anim-step-card show">
+              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">3</div>Force manual failover</div><span class="anim-badge danger">⚠ impact</span></div>
+              <div class="anim-cmds"><span class="anim-cmd danger">execute ha failover set 1</span><br><span class="anim-cmd ro">get system ha status</span><br><span class="anim-cmd danger">execute ha failover unset 1</span></div>
+              <div class="anim-note">💡 ⚠️ Brief traffic interruption expected. Confirm new primary role after.</div>
+            </div>
+          </div>
+
+          <!-- SCENE 3: AI Analyzer -->
+          <div class="anim-scene" id="ascene2" style="padding:18px 20px;display:none">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <span style="font-size:13px;font-weight:700;color:#e6edf3">🤖 AI CLI Analyzer</span>
+              <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">Groq LLaMA 3.3 70B</span>
+            </div>
+            <div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:12px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.5);line-height:1.9;margin-bottom:12px">
+              <div style="font-size:9px;color:rgba(255,255,255,.25);margin-bottom:8px;letter-spacing:.06em">▸ PASTED CLI OUTPUT</div>
+              <span style="color:rgba(255,255,255,.3)"># get vpn ipsec tunnel summary</span><br>
+              <span style="color:#e6edf3">Tunnel name &nbsp;: SiteA-HQ</span><br>
+              <span style="color:#f85149">Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: down</span><br>
+              <span style="color:rgba(255,255,255,.4)">Local IP &nbsp;&nbsp;&nbsp;&nbsp;: 203.0.113.1 &nbsp;&nbsp;Remote: 198.51.100.5</span><br>
+              <span style="color:#d29922">Last error &nbsp;&nbsp;: no proposal chosen</span><br>
+              <span style="color:rgba(255,255,255,.3)">Npu-flag &nbsp;&nbsp;&nbsp;&nbsp;: 00 &nbsp;&nbsp;Proxyid: 1</span>
+            </div>
+            <div id="aiThinking" style="padding:8px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:8px">
+              <div style="display:flex;gap:4px"><span class="anim-dot"></span><span class="anim-dot" style="animation-delay:.2s"></span><span class="anim-dot" style="animation-delay:.4s"></span></div>
+              Analyzing output with AI...
+            </div>
+            <div id="aiResult" style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:9px;padding:14px;font-size:12px;color:rgba(255,255,255,.8);line-height:1.8;display:none">
+              <div style="font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:#1D9E75;display:inline-block"></span>AI Diagnosis — LLaMA 3.3 70B</div>
+              <strong style="color:#58a6ff">Root cause:</strong> Phase 1 IKE proposal mismatch. The error <span style="font-family:var(--mono);font-size:10px;background:rgba(0,0,0,.4);padding:1px 5px;border-radius:3px;color:#3fb950">no proposal chosen</span> means the initiator is advertising encryption/DH-group combinations the remote peer cannot accept.<br><br>
+              <strong style="color:#58a6ff">Fix commands:</strong><br>
+              <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950;display:block;margin:3px 0">show vpn ipsec phase1-interface SiteA-HQ</span>
+              <span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug application ike -1</span>
+              <span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug enable</span><br>
+              <strong style="color:#58a6ff">Resolution:</strong> Align <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set proposal aes256-sha256</span> and <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set dhgrp 14</span> on both peers. Switch to IKEv2.
+            </div>
+          </div>
+
+          <!-- SCENE 4: IP Anonymizer -->
+          <div class="anim-scene" id="ascene3" style="padding:18px 20px;display:none">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <span style="font-size:13px;font-weight:700;color:#e6edf3">🎭 IP Anonymizer</span>
+              <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">RFC 5737 safe IPs</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+              <div>
+                <div style="font-size:9px;color:rgba(255,255,255,.25);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px">▸ ORIGINAL CLI OUTPUT</div>
+                <div style="background:rgba(0,0,0,.4);border:1px solid rgba(248,81,73,.15);border-radius:8px;padding:12px;font-family:var(--mono);font-size:10.5px;line-height:1.9;color:rgba(255,255,255,.5)">
+                  <span style="color:#f85149">src=192.168.10.50</span><br>
+                  <span style="color:#f85149">dst=10.0.0.1</span><br>
+                  <span style="color:rgba(255,255,255,.4)">proto=6 sport=52441</span><br>
+                  <span style="color:#f85149">gw=172.16.1.254</span><br>
+                  <span style="color:rgba(255,255,255,.4)">policy-id=42 nat</span><br>
+                  <span style="color:#f85149">SNAT 192.168.10.50</span><br>
+                  <span style="color:#f85149">&nbsp;&nbsp;->203.88.12.1</span><br>
+                  <span style="color:rgba(255,255,255,.4)">state=may_dirty</span>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:9px;color:rgba(255,255,255,.25);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px">▸ ANONYMIZED OUTPUT</div>
+                <div style="background:rgba(0,0,0,.4);border:1px solid rgba(63,185,80,.15);border-radius:8px;padding:12px;font-family:var(--mono);font-size:10.5px;line-height:1.9;color:rgba(255,255,255,.5)">
+                  <span style="color:#3fb950">src=192.0.2.1</span><br>
+                  <span style="color:#3fb950">dst=192.0.2.2</span><br>
+                  <span style="color:rgba(255,255,255,.4)">proto=6 sport=52441</span><br>
+                  <span style="color:#3fb950">gw=192.0.2.3</span><br>
+                  <span style="color:rgba(255,255,255,.4)">policy-id=42 nat</span><br>
+                  <span style="color:#3fb950">SNAT 192.0.2.1</span><br>
+                  <span style="color:#3fb950">&nbsp;&nbsp;->198.51.100.1</span><br>
+                  <span style="color:rgba(255,255,255,.4)">state=may_dirty</span>
+                </div>
+              </div>
+            </div>
+            <div style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:8px;padding:12px 14px;margin-bottom:10px">
+              <div style="font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);letter-spacing:.07em;margin-bottom:8px">IP MAPPING TABLE</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;font-family:var(--mono);font-size:10.5px">
+                <span style="color:rgba(255,255,255,.3)">Real IP</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:rgba(255,255,255,.3)">Safe IP</span>
+                <span style="color:#f85149">192.168.10.50</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.1</span>
+                <span style="color:#f85149">10.0.0.1</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.2</span>
+                <span style="color:#f85149">172.16.1.254</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.3</span>
+                <span style="color:#f85149">203.88.12.1</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">198.51.100.1</span>
+              </div>
+            </div>
+            <div style="font-size:10.5px;color:rgba(255,255,255,.3);font-family:var(--mono)">✓ 4 unique IPs replaced · RFC 5737 ranges · Safe to share with vendor</div>
+          </div>
+
+          <!-- SCENE 5: Subnet Calc -->
+          <div class="anim-scene" id="ascene4" style="padding:18px 20px;display:none">
+            <div style="font-size:13px;font-weight:700;color:#e6edf3;margin-bottom:14px">🧮 IPv4 Subnet Calculator</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px">
+              <span style="font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.3)">$</span>
+              <span id="subTyping" style="font-family:var(--mono);font-size:12px;color:#e6edf3"></span>
+              <span id="subCursor" style="font-family:var(--mono);font-size:12px;color:#1D9E75;animation:cur .6s infinite">▊</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="subCards">
+              <div class="sub-card" style="opacity:0"><div class="sub-lbl">Network Address</div><div class="sub-val" style="color:#58a6ff">172.16.0.0</div></div>
+              <div class="sub-card" style="opacity:0"><div class="sub-lbl">Broadcast Address</div><div class="sub-val" style="color:#d29922">172.16.15.255</div></div>
+              <div class="sub-card" style="opacity:0"><div class="sub-lbl">First Usable IP</div><div class="sub-val" style="color:#3fb950">172.16.0.1</div></div>
+              <div class="sub-card" style="opacity:0"><div class="sub-lbl">Last Usable IP</div><div class="sub-val" style="color:#3fb950">172.16.15.254</div></div>
+              <div class="sub-card" style="opacity:0"><div class="sub-lbl">Subnet Mask</div><div class="sub-val" style="color:rgba(255,255,255,.75)">255.255.240.0</div></div>
+              <div class="sub-card" style="opacity:0"><div class="sub-lbl">Wildcard Mask</div><div class="sub-val" style="color:rgba(255,255,255,.75)">0.0.15.255</div></div>
+              <div class="sub-card" style="opacity:0"><div class="sub-lbl">Usable Hosts</div><div class="sub-val" style="color:#1D9E75;font-size:18px">4,094</div></div>
+              <div class="sub-card" style="opacity:0"><div class="sub-lbl">CIDR Prefix</div><div class="sub-val" style="color:rgba(255,255,255,.75)">/20</div></div>
+            </div>
+            <div style="margin-top:10px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35);line-height:1.8;opacity:0;transition:opacity .6s" id="subBinary">
+              Binary breakdown:<br>
+              IP:&nbsp;&nbsp; 10101100.00010000.00000000.00000000<br>
+              Mask: 11111111.11111111.11110000.00000000<br>
+              Net:&nbsp; 10101100.00010000.00000000.00000000
+            </div>
+          </div>
+
+          <!-- SCENE 6: Quick Ref -->
+          <div class="anim-scene" id="ascene5" style="padding:18px 20px;display:none">
+            <div style="font-size:13px;font-weight:700;color:#e6edf3;margin-bottom:14px">⚡ Quick Reference — Most Used Commands</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div class="qref-card">
+                <div class="qref-title">Session Table</div>
+                <div class="qref-cmd"><span style="color:#3fb950">get system session list</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#3fb950">diagnose sys session full-stat</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#d29922">diagnose sys session clear</span><button class="qref-copy">Copy</button></div>
+              </div>
+              <div class="qref-card">
+                <div class="qref-title">VPN Quick Check</div>
+                <div class="qref-cmd"><span style="color:#3fb950">get vpn ipsec tunnel summary</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#3fb950">get vpn ssl monitor</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#3fb950">diagnose vpn ssl statistics</span><button class="qref-copy">Copy</button></div>
+              </div>
+              <div class="qref-card">
+                <div class="qref-title">Routing</div>
+                <div class="qref-cmd"><span style="color:#3fb950">get router info routing-table all</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#3fb950">diagnose ip route get &lt;IP&gt;</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#3fb950">get router info ospf neighbor</span><button class="qref-copy">Copy</button></div>
+              </div>
+              <div class="qref-card">
+                <div class="qref-title">CPU & Memory</div>
+                <div class="qref-cmd"><span style="color:#3fb950">get system performance status</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#3fb950">diagnose sys top</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#3fb950">diagnose hardware sysinfo conserve</span><button class="qref-copy">Copy</button></div>
+              </div>
+              <div class="qref-card">
+                <div class="qref-title">Auth & Users</div>
+                <div class="qref-cmd"><span style="color:#d29922">diagnose test authserver ldap &lt;SRV&gt;</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#3fb950">diagnose firewall auth list</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#d29922">diagnose debug application fnbamd -1</span><button class="qref-copy">Copy</button></div>
+              </div>
+              <div class="qref-card">
+                <div class="qref-title">HA Cluster</div>
+                <div class="qref-cmd"><span style="color:#3fb950">get system ha status</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#d29922">diagnose sys ha checksum show</span><button class="qref-copy">Copy</button></div>
+                <div class="qref-cmd"><span style="color:#f85149">execute ha failover set 1</span><button class="qref-copy">Copy</button></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- bottom progress bar -->
+      <div style="height:2px;background:rgba(255,255,255,.05)"><div id="animProgress" style="height:100%;background:linear-gradient(90deg,#1D9E75,#52d6b0);width:0;transition:width .1s linear"></div></div>
+
+      <!-- status bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 18px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.05)">
+        <span id="animStatus" style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.3)">FortiOS 7.4 · 50+ playbooks · AI-powered</span>
+        <span style="font-family:var(--mono);font-size:10px;color:#1D9E75;display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:#3fb950;display:inline-block"></span>netwolffortigate.com</span>
+      </div>
+
+      <!-- CTA strip -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(29,158,117,.05);border-top:1px solid rgba(29,158,117,.12);flex-wrap:wrap;gap:10px">
+        <div style="font-size:12px;color:rgba(255,255,255,.5)"><strong style="color:rgba(255,255,255,.8)">NetWolf Pro</strong> — Professional FortiGate CLI toolkit for network engineers</div>
+        <a href="#order" style="background:linear-gradient(90deg,#1D9E75,#0F6E56);border:none;border-radius:20px;padding:9px 22px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;text-decoration:none;white-space:nowrap">Subscribe — €10/month →</a>
       </div>
     </div>
-    <div style="text-align:center;margin-top:36px;display:flex;flex-direction:column;align-items:center;gap:12px">
-      <a href="#order" class="btn-primary" style="font-size:16px;padding:15px 36px">Subscribe & Get Instant Access →</a>
-      <span style="font-size:12px;color:var(--t3)">€10/month · Cancel anytime · Credentials delivered instantly</span>
+
+    <div style="text-align:center;margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <a href="#order" class="btn-primary" style="font-size:16px;padding:15px 36px">Get Instant Access →</a>
+      <span style="font-size:12px;color:var(--t3)">€10/month · Cancel anytime · Credentials delivered instantly via Firebase</span>
     </div>
   </div>
 </section>
@@ -691,115 +963,202 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
   showToast('✅ Account created! You can log in now.');
 });
 
-/* ══════════════════════════════════════════════
-   INTERACTIVE DEMO
-══════════════════════════════════════════════ */
+/* ══ INTERACTIVE DEMO ══ */
 const DEMO={
-  vpn:{label:'🔒 VPN / IPsec',steps:[
-    {t:'Check tunnel status',b:'ro',cmds:[{c:'get vpn ipsec tunnel summary',cl:'cmd-ro'},{c:'diagnose vpn tunnel list name <TUNNEL_NAME>',cl:'cmd-ro'}],note:'Look for "established" in both phases. Missing = tunnel never came up.'},
-    {t:'Live IKE negotiation debug',b:'warn',cmds:[{c:'diagnose debug reset',cl:'cmd-warn'},{c:'diagnose debug application ike -1',cl:'cmd-warn'},{c:'diagnose debug enable',cl:'cmd-warn'},{c:'(wait 30s — reproduce the issue)',cl:'cmd-note'},{c:'diagnose debug disable',cl:'cmd-warn'},{c:'diagnose debug reset',cl:'cmd-warn'}],note:'Look for: NO_PROPOSAL_CHOSEN · AUTH_FAILED · PAYLOAD_MALFORMED'},
-    {t:'Compare phase proposals',b:'ro',cmds:[{c:'show vpn ipsec phase1-interface',cl:'cmd-ro'},{c:'show vpn ipsec phase2-interface',cl:'cmd-ro'}],note:'Match encryption algorithm, DH group, and lifetime on both peers.'},
-    {t:'Check routing to remote subnet',b:'ro',cmds:[{c:'get router info routing-table all',cl:'cmd-ro'},{c:'diagnose ip route get <REMOTE_IP>',cl:'cmd-ro'}],note:'Missing static route = traffic blackholed before reaching tunnel interface.'},
+  vpn:{label:'🔒 VPN / IPsec',color:'#f85149',steps:[
+    {t:'Check tunnel status',b:'ro',cmds:[{c:'get vpn ipsec tunnel summary',cl:'cmd-ro'},{c:'diagnose vpn tunnel list name <TUNNEL_NAME>',cl:'cmd-ro'},{c:'get vpn ipsec tunnel details',cl:'cmd-ro'}],note:'Look for "established" in both phases. Missing entry = tunnel never came up at all.'},
+    {t:'Live IKE negotiation debug',b:'warn',cmds:[{c:'diagnose debug reset',cl:'cmd-warn'},{c:'diagnose debug application ike -1',cl:'cmd-warn'},{c:'diagnose debug enable',cl:'cmd-warn'},{c:'(wait 30s — reproduce the issue)',cl:'cmd-note'},{c:'diagnose debug disable',cl:'cmd-warn'},{c:'diagnose debug reset',cl:'cmd-warn'}],note:'Key errors: NO_PROPOSAL_CHOSEN · AUTH_FAILED · PAYLOAD_MALFORMED · TS_UNACCEPTABLE'},
+    {t:'Compare phase proposals',b:'ro',cmds:[{c:'show vpn ipsec phase1-interface <NAME>',cl:'cmd-ro'},{c:'show vpn ipsec phase2-interface <NAME>',cl:'cmd-ro'}],note:'Encryption algo, DH group, and lifetime must match exactly on both peers.'},
+    {t:'Check routing to remote subnet',b:'ro',cmds:[{c:'get router info routing-table all',cl:'cmd-ro'},{c:'diagnose ip route get <REMOTE_IP>',cl:'cmd-ro'}],note:'Missing static route = traffic blackholed before reaching the tunnel interface.'},
   ]},
-  ssl:{label:'🕵️ SSL VPN',steps:[
-    {t:'Check SSL VPN active sessions',b:'ro',cmds:[{c:'get vpn ssl monitor',cl:'cmd-ro'},{c:'diagnose vpn ssl list',cl:'cmd-ro'}],note:'Shows connected clients, portals assigned, and tunnel/web mode status.'},
+  ssl:{label:'🕵️ SSL VPN',color:'#58a6ff',steps:[
+    {t:'Check active SSL VPN sessions',b:'ro',cmds:[{c:'get vpn ssl monitor',cl:'cmd-ro'},{c:'diagnose vpn ssl list',cl:'cmd-ro'},{c:'diagnose vpn ssl statistics',cl:'cmd-ro'}],note:'Shows connected clients, portals assigned, tunnel/web mode, and IP pool usage.'},
     {t:'Debug authentication flow',b:'warn',cmds:[{c:'diagnose debug reset',cl:'cmd-warn'},{c:'diagnose debug application sslvpn -1',cl:'cmd-warn'},{c:'diagnose debug enable',cl:'cmd-warn'},{c:'(reproduce login attempt)',cl:'cmd-note'},{c:'diagnose test authserver ldap <SERVER> <USER> <PASS>',cl:'cmd-warn'}],note:'Look for group-match failures. Run test authserver to isolate LDAP bind vs group issue.'},
-    {t:'Review settings and portal config',b:'ro',cmds:[{c:'show vpn ssl settings',cl:'cmd-ro'},{c:'show vpn ssl web portal <PORTAL_NAME>',cl:'cmd-ro'}],note:'Verify source-interface, port, tunnel IP pool, and portal assignment.'},
+    {t:'Check geo-IP source restrictions',b:'ro',cmds:[{c:'show firewall policy <INBOUND_ID>',cl:'cmd-ro'},{c:'show firewall address',cl:'cmd-ro'},{c:'diagnose firewall iprope lookup <CLIENT_IP> <FGTWAN_IP> 6 0 443 <WAN_INTF>',cl:'cmd-ro'}],note:'Inbound policy may block foreign IPs. Check address objects on policy source.'},
   ]},
-  policy:{label:'📃 Policy / NAT',steps:[
-    {t:'Debug flow trace — full sequence',b:'warn',cmds:[{c:'diagnose debug reset',cl:'cmd-warn'},{c:'diagnose debug flow filter addr <SRC_IP>',cl:'cmd-warn'},{c:'diagnose debug flow filter dport <PORT>',cl:'cmd-warn'},{c:'diagnose debug flow show function-name enable',cl:'cmd-warn'},{c:'diagnose debug flow trace start 20',cl:'cmd-warn'},{c:'diagnose debug enable',cl:'cmd-warn'}],note:'Key messages: "Allowed by policy-id X" · "denied by forward policy" · "DNAT" · "SNAT"'},
-    {t:'Session table inspection',b:'ro',cmds:[{c:'diagnose sys session filter src <IP>',cl:'cmd-ro'},{c:'diagnose sys session list',cl:'cmd-ro'}],note:'Confirms session established and shows NAT translation applied.'},
-    {t:'Policy lookup via kernel',b:'ro',cmds:[{c:'diagnose firewall iprope lookup <SRC> <DST> <PROTO> <SPORT> <DPORT> <INTF>',cl:'cmd-ro'}],note:'Queries kernel policy table directly — faster and more reliable than reading config.'},
+  policy:{label:'📃 Policy / NAT',color:'#d29922',steps:[
+    {t:'Debug flow trace — full sequence',b:'warn',cmds:[{c:'diagnose debug reset',cl:'cmd-warn'},{c:'diagnose debug flow filter addr <SRC_IP>',cl:'cmd-warn'},{c:'diagnose debug flow filter dport <PORT>',cl:'cmd-warn'},{c:'diagnose debug flow show function-name enable',cl:'cmd-warn'},{c:'diagnose debug flow trace start 50',cl:'cmd-warn'},{c:'diagnose debug enable',cl:'cmd-warn'}],note:'Key output: "Allowed by policy-id X" · "denied by forward policy" · "DNAT" · "SNAT"'},
+    {t:'Policy lookup via kernel',b:'ro',cmds:[{c:'diagnose firewall iprope lookup <SRC> <DST> <PROTO> <SPORT> <DPORT> <INTF>',cl:'cmd-ro'},{c:'diagnose firewall iprope show 100004 <POLICY_ID>',cl:'cmd-ro'}],note:'Queries kernel policy table directly — faster and more reliable than reading config.'},
+    {t:'Session table inspection',b:'ro',cmds:[{c:'diagnose sys session filter src <IP>',cl:'cmd-ro'},{c:'diagnose sys session filter dport <PORT>',cl:'cmd-ro'},{c:'diagnose sys session list',cl:'cmd-ro'}],note:'Confirms session was established and shows NAT translation currently applied.'},
   ]},
-  ha:{label:'⚙️ HA / Cluster',steps:[
-    {t:'Check HA status',b:'ro',cmds:[{c:'get system ha status',cl:'cmd-ro'},{c:'diagnose sys ha status',cl:'cmd-ro'}],note:'Shows primary/secondary role, uptime, sync state, and heartbeat link health.'},
+  ha:{label:'⚙️ HA Cluster',color:'#3fb950',steps:[
+    {t:'Check HA cluster status',b:'ro',cmds:[{c:'get system ha status',cl:'cmd-ro'},{c:'diagnose sys ha status',cl:'cmd-ro'},{c:'diagnose sys ha dump-by vcluster',cl:'cmd-ro'}],note:'Shows primary/secondary role, uptime, sync state, and heartbeat link health.'},
     {t:'Verify synchronization',b:'warn',cmds:[{c:'diagnose sys ha checksum show',cl:'cmd-warn'},{c:'diagnose sys ha checksum recalculate',cl:'cmd-warn'},{c:'execute ha synchronize start',cl:'cmd-warn'}],note:'Checksum mismatch between units = config divergence. Force sync to resolve.'},
-    {t:'Force manual failover',b:'danger',cmds:[{c:'execute ha failover set 1',cl:'cmd-danger'},{c:'diagnose sys ha reset-uptime',cl:'cmd-danger'}],note:'⚠️ Brief traffic interruption expected. Confirm role with "get system ha status" after.'},
+    {t:'Force manual failover',b:'danger',cmds:[{c:'execute ha failover set 1',cl:'cmd-danger'},{c:'get system ha status',cl:'cmd-ro'},{c:'execute ha failover unset 1',cl:'cmd-danger'}],note:'⚠️ Brief traffic interruption expected. Confirm new primary role after.'},
   ]},
-  routing:{label:'🔧 Routing',steps:[
-    {t:'Check routing table',b:'ro',cmds:[{c:'get router info routing-table all',cl:'cmd-ro'},{c:'diagnose ip route get <DST_IP>',cl:'cmd-ro'}],note:'Shows active routes with metric, distance, and next-hop interface.'},
-    {t:'OSPF neighbour status',b:'ro',cmds:[{c:'get router info ospf neighbor',cl:'cmd-ro'},{c:'get router info ospf database router',cl:'cmd-ro'}],note:'FULL = healthy. EXSTART/EXCHANGE stuck = MTU mismatch. DOWN = no hello.'},
-    {t:'BGP peer summary',b:'ro',cmds:[{c:'get router info bgp summary',cl:'cmd-ro'},{c:'get router info bgp neighbors <PEER_IP>',cl:'cmd-ro'}],note:'"Established" with non-zero prefix count = healthy. Idle/Active = session not forming.'},
+  sdwan:{label:'🌐 SD-WAN',color:'#1D9E75',steps:[
+    {t:'Check member status and SLA',b:'ro',cmds:[{c:'get router info sdwan health-check',cl:'cmd-ro'},{c:'diagnose sys sdwan member list',cl:'cmd-ro'},{c:'diagnose sys sdwan intf-sla-log',cl:'cmd-ro'}],note:'Shows which links are passing/failing latency/jitter/loss SLA thresholds.'},
+    {t:'Trace preferred member',b:'ro',cmds:[{c:'diagnose sys sdwan prefer-interface <SRC> <DST> <PROTO> <PORT>',cl:'cmd-ro'},{c:'get router info sdwan service',cl:'cmd-ro'}],note:'Confirms which WAN link is selected for a specific flow by the steering rules.'},
   ]},
-  sdwan:{label:'🌐 SD-WAN',steps:[
-    {t:'Check member status and SLA',b:'ro',cmds:[{c:'get router info sdwan health-check',cl:'cmd-ro'},{c:'diagnose sys sdwan member list',cl:'cmd-ro'}],note:'Shows which links are passing/failing SLA thresholds.'},
-    {t:'Trace preferred member for traffic',b:'ro',cmds:[{c:'diagnose sys sdwan prefer-interface <SRC> <DST> <PROTO> <PORT>',cl:'cmd-ro'},{c:'get router info sdwan service',cl:'cmd-ro'}],note:'Confirms which WAN link is selected for a specific flow by the steering rules.'},
+  routing:{label:'🔧 Routing',color:'#58a6ff',steps:[
+    {t:'Check routing table',b:'ro',cmds:[{c:'get router info routing-table all',cl:'cmd-ro'},{c:'diagnose ip route get <DST_IP>',cl:'cmd-ro'},{c:'get router info kernel',cl:'cmd-ro'}],note:'Shows active routes with metric, admin distance, and next-hop interface.'},
+    {t:'OSPF neighbour and database',b:'ro',cmds:[{c:'get router info ospf neighbor',cl:'cmd-ro'},{c:'get router info ospf database router',cl:'cmd-ro'},{c:'get router info ospf interface',cl:'cmd-ro'}],note:'FULL = healthy. EXSTART/EXCHANGE = MTU mismatch. DOWN = no hello received.'},
+    {t:'BGP peers and prefixes',b:'ro',cmds:[{c:'get router info bgp summary',cl:'cmd-ro'},{c:'get router info bgp neighbors <PEER_IP>',cl:'cmd-ro'},{c:'get router info bgp neighbors <PEER_IP> advertised-routes',cl:'cmd-ro'}],note:'"Established" + non-zero prefix count = healthy. Idle/Active = session not forming.'},
   ]},
 };
+
 const QREF=[
-  {cat:'Session table',cmds:['get system session list','diagnose sys session full-stat','diagnose sys session filter src <IP>','diagnose sys session clear']},
+  {cat:'Session Table',cmds:['get system session list','diagnose sys session full-stat','diagnose sys session filter src <IP>','diagnose sys session clear']},
   {cat:'Routing',cmds:['get router info routing-table all','diagnose ip route get <IP>','get router info kernel','get router info ospf neighbor']},
   {cat:'Interface',cmds:['get system interface physical','get hardware nic <INTF>','diagnose netlink ifconfig list','fnsysctl ifconfig']},
-  {cat:'CPU & Memory',cmds:['get system performance status','diagnose sys top','diagnose hardware sysinfo memory','diagnose hardware sysinfo cpu']},
+  {cat:'CPU & Memory',cmds:['get system performance status','diagnose sys top','diagnose hardware sysinfo memory','diagnose hardware sysinfo conserve']},
   {cat:'Auth & Users',cmds:['diagnose test authserver ldap <SRV> <USER> <PASS>','diagnose firewall auth list','diagnose debug application fnbamd -1']},
-  {cat:'VPN quick check',cmds:['get vpn ipsec tunnel summary','diagnose vpn tunnel list','get vpn ssl monitor','diagnose vpn ssl list']},
+  {cat:'VPN Quick',cmds:['get vpn ipsec tunnel summary','diagnose vpn tunnel list','get vpn ssl monitor','diagnose vpn ssl statistics']},
 ];
 
 let dCat='vpn',dTab='guide';
+
 function initDemo(){renderSidebar();renderContent();}
+
 function renderSidebar(){
   let h='<div class="demo-slbl">Troubleshoot</div>';
-  Object.keys(DEMO).forEach(k=>{h+=`<div class="demo-sitem ${dCat===k&&dTab==='guide'?'active':''}" onclick="selCat('${k}')">${DEMO[k].label}</div>`;});
+  Object.keys(DEMO).forEach(k=>{
+    const d=DEMO[k];
+    const active=dCat===k&&dTab==='guide';
+    h+=`<div class="demo-sitem ${active?'active':''}" onclick="selCat('${k}')">`+
+      `<span style="color:${active?'var(--a)':d.color};font-size:13px">${d.label.split(' ')[0]}</span>`+
+      `<span>${d.label.split(' ').slice(1).join(' ')}</span></div>`;
+  });
   document.getElementById('demoSidebar').innerHTML=h;
 }
-function selCat(k){dCat=k;dTab='guide';document.querySelectorAll('.demo-tab').forEach((b,i)=>{b.classList.toggle('active',i===0);});renderSidebar();renderContent();}
-function switchTab(t,btn){dTab=t;document.querySelectorAll('.demo-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderSidebar();renderContent();}
+
+function selCat(k){
+  dCat=k;dTab='guide';
+  document.querySelectorAll('.demo-tab').forEach((b,i)=>{b.classList.toggle('active',i===0);});
+  renderSidebar();renderContent();
+}
+
+function switchTab(t,btn){
+  dTab=t;
+  document.querySelectorAll('.demo-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSidebar();renderContent();
+}
+
+function demoCopy(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='✓ Copied';btn.style.color='var(--a)';
+    setTimeout(()=>{btn.textContent='Copy';btn.style.color='';},1500);
+  });
+}
+
 function renderContent(){
   const el=document.getElementById('demoContent');
+  if(!el)return;
+
   if(dTab==='guide'){
     const d=DEMO[dCat];
-    let h=`<div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--t)">${d.label}</div>`;
+    let h=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <span style="font-size:18px">${d.label.split(' ')[0]}</span>
+      <span style="font-size:14px;font-weight:700;color:#e6edf3">${d.label.split(' ').slice(1).join(' ')}</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono);margin-left:auto">${d.steps.length} steps</span>
+    </div>`;
     d.steps.forEach((s,i)=>{
-      const bh=s.b==='ro'?'<span class="badge-ro">read-only</span>':s.b==='warn'?'<span class="badge-warn">⚠ config change</span>':'<span class="badge-danger">⚠ service impact</span>';
-      h+=`<div class="demo-step"><div class="demo-step-hdr"><div class="demo-step-title"><div class="step-num">${i+1}</div>${s.t}</div>${bh}</div><div class="demo-cmds">${s.cmds.map(c=>`<span class="${c.cl}">${c.c}</span><br>`).join('')}</div>${s.note?`<div class="demo-note">💡 ${s.note}</div>`:''}</div>`;
+      const bh=s.b==='ro'?'<span class="badge-ro">read-only</span>':s.b==='warn'?'<span class="badge-warn">⚠ config</span>':'<span class="badge-danger">⚠ impact</span>';
+      const allCmds=s.cmds.filter(c=>c.cl!=='cmd-note').map(c=>c.c).join('\n');
+      h+=`<div class="demo-step">
+        <div class="demo-step-hdr">
+          <div class="demo-step-title"><div class="step-num">${i+1}</div>${s.t}</div>
+          <div style="display:flex;gap:6px;align-items:center">${bh}<button class="demo-copy-btn" onclick="demoCopy(this,'${allCmds.replace(/'/g,"\'")}')">Copy</button></div>
+        </div>
+        <div class="demo-cmds">${s.cmds.map(c=>`<span class="${c.cl}">${c.c}</span><br>`).join('')}</div>
+        ${s.note?`<div class="demo-note">💡 ${s.note}</div>`:''}
+      </div>`;
     });
     el.innerHTML=h;
+
   } else if(dTab==='analyze'){
-    el.innerHTML=`<div style="font-size:13px;font-weight:700;margin-bottom:10px">📊 CLI Output Analyzer</div>
-<div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:14px;font-family:var(--mono);font-size:11.5px;color:var(--t2);line-height:1.9;margin-bottom:12px">
-<span style="color:var(--t3)"># get vpn ipsec tunnel summary</span><br>
-<span style="color:var(--t)">Tunnel name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: SiteA-SiteB</span><br>
-<span style="color:var(--r)">Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: down</span><br>
-<span style="color:var(--t3)">Local IP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 203.0.113.1</span><br>
-<span style="color:var(--t3)">Remote IP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 198.51.100.5</span><br>
-<span style="color:var(--y)">Last error &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: no proposal chosen</span>
-</div>
-<div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.15);border-radius:8px;padding:14px;font-size:12px;line-height:1.8;color:var(--t)">
-<strong style="color:var(--a)">🤖 AI Diagnosis (LLaMA 3.3 70B):</strong><br><br>
-The error <code style="background:var(--b2);padding:1px 5px;border-radius:3px;color:var(--g);font-size:11px">no proposal chosen</code> means Phase 1 IKE proposals do not match between peers. The initiator is sending encryption/hashing/DH-group combinations the remote peer cannot accept.<br><br>
-<strong style="color:var(--t)">Diagnostic steps:</strong><br>
-<span style="color:var(--g)">show vpn ipsec phase1-interface SiteA-SiteB</span><br>
-<span style="color:var(--y)">diagnose debug application ike -1</span><br>
-<span style="color:var(--y)">diagnose debug enable</span><br><br>
-<strong style="color:var(--t)">Common fix:</strong> Align <code style="color:var(--g);font-size:11px">set proposal</code> and <code style="color:var(--g);font-size:11px">set dhgrp</code> values to match peer config. IKEv2 is recommended.
-</div>
-<div style="margin-top:10px;font-size:11px;color:var(--t3)">✨ Full AI Analyzer with Groq API key available after subscribing</div>`;
+    el.innerHTML=`
+    <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:13px;font-weight:700;color:#e6edf3">🤖 AI CLI Analyzer</div>
+      <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">Powered by Groq LLaMA 3.3 70B</span>
+    </div>
+    <div class="demo-ai-box">
+      <div style="font-size:9px;color:rgba(255,255,255,.3);font-family:var(--mono);margin-bottom:8px;letter-spacing:.06em">▸ FORTIGATE CLI OUTPUT</div>
+      <span style="color:rgba(255,255,255,.3)"># get vpn ipsec tunnel summary</span><br>
+      <span style="color:#e6edf3">Tunnel name &nbsp;&nbsp;&nbsp;: SiteA-HQ</span><br>
+      <span style="color:#f85149">Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: down</span><br>
+      <span style="color:rgba(255,255,255,.4)">Local &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 203.0.113.1 &nbsp;&nbsp;Remote: 198.51.100.5</span><br>
+      <span style="color:#d29922">Last error &nbsp;&nbsp;&nbsp;: no proposal chosen</span><br>
+      <span style="color:rgba(255,255,255,.3)">Npu-flag &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 00</span>
+    </div>
+    <div class="demo-ai-response">
+      <div class="demo-ai-label">AI Diagnosis — LLaMA 3.3 70B</div>
+      <strong style="color:#58a6ff">Root cause:</strong> Phase 1 IKE proposal mismatch. The error <span style="font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.4);padding:1px 6px;border-radius:4px;color:#3fb950">no proposal chosen</span> means the initiator is advertising encryption/hashing/DH-group combinations the remote peer cannot accept.<br><br>
+      <strong style="color:#58a6ff">Diagnostic commands:</strong><br>
+      <span style="font-family:var(--mono);font-size:11px;color:#3fb950;display:block;margin:4px 0">show vpn ipsec phase1-interface SiteA-HQ</span>
+      <span style="font-family:var(--mono);font-size:11px;color:#d29922;display:block;margin:4px 0">diagnose debug application ike -1</span>
+      <span style="font-family:var(--mono);font-size:11px;color:#d29922;display:block;margin:4px 0">diagnose debug enable</span><br>
+      <strong style="color:#58a6ff">Fix:</strong> Align <span style="font-family:var(--mono);font-size:11px;color:#3fb950">set proposal</span> and <span style="font-family:var(--mono);font-size:11px;color:#3fb950">set dhgrp</span> on both peers. Recommend <span style="font-family:var(--mono);font-size:11px;color:#3fb950">aes256-sha256</span> with DH group 14 and IKEv2.
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,.25);font-family:var(--mono);text-align:center">⚡ Full analyzer supports any FortiGate CLI output · Available after subscribing</div>`;
+
   } else if(dTab==='ref'){
-    let h='<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">';
-    QREF.forEach(s=>{h+=`<div class="demo-step"><div class="demo-step-hdr"><div class="demo-step-title">${s.cat}</div></div><div class="demo-cmds" style="padding:8px 13px">${s.cmds.map(c=>`<span class="cmd-ro" style="display:block;padding:2px 0;border-bottom:1px solid var(--br);font-size:11px">${c}</span>`).join('')}</div></div>`;});
-    h+='</div>';el.innerHTML=h;
+    let h='<div class="demo-ref-grid">';
+    QREF.forEach(s=>{
+      h+=`<div class="demo-ref-card"><div class="demo-ref-title">${s.cat}</div>`;
+      s.cmds.forEach(c=>{
+        h+=`<div class="demo-ref-cmd"><span style="color:#3fb950;font-size:10.5px">${c}</span><button class="demo-copy-btn" onclick="demoCopy(this,'${c.replace(/'/g,"\'")}')">Copy</button></div>`;
+      });
+      h+=`</div>`;
+    });
+    h+='</div>';
+    el.innerHTML=h;
+
   } else if(dTab==='subnet'){
-    el.innerHTML=`<div style="font-size:13px;font-weight:700;margin-bottom:12px">🧮 IPv4 Subnet Calculator</div>
-<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-<input id="dsi" type="text" value="10.10.20.0/23" style="flex:2;min-width:160px;background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:7px 12px;font-family:var(--mono);font-size:12px;color:var(--t);outline:none">
-<button onclick="dCalc()" style="background:var(--a);border:none;border-radius:6px;padding:7px 16px;color:#fff;font-weight:700;font-size:12px;cursor:pointer">Calculate</button>
-</div><div id="dsr"></div>`;dCalc();
+    el.innerHTML=`
+    <div style="font-size:13px;font-weight:700;color:#e6edf3;margin-bottom:16px">🧮 IPv4 Subnet Calculator</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <input id="dsi" type="text" value="10.10.20.0/23"
+        style="flex:2;min-width:180px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 14px;font-family:var(--mono);font-size:13px;color:#e6edf3;outline:none;transition:border-color .2s"
+        onfocus="this.style.borderColor='var(--a)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+      <button onclick="dCalc()"
+        style="background:linear-gradient(90deg,var(--a),var(--ad));border:none;border-radius:8px;padding:9px 20px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">
+        Calculate
+      </button>
+    </div>
+    <div id="dsr"></div>`;
+    dCalc();
   }
 }
+
 function dCalc(){
-  const el=document.getElementById('dsr');const v=document.getElementById('dsi')?.value.trim();
+  const el=document.getElementById('dsr');
+  const v=document.getElementById('dsi')?.value.trim();
   if(!v||!el)return;
-  const p=v.split('/');if(p.length!==2){el.innerHTML='<div style="color:var(--r);font-size:12px">Use format: 192.168.1.0/24</div>';return;}
+  const p=v.split('/');
+  if(p.length!==2){el.innerHTML='<div style="color:#f85149;font-size:12px;font-family:var(--mono)">⚠ Use format: 192.168.1.0/24</div>';return;}
   const mb=parseInt(p[1]),ip=p[0].split('.').map(Number);
-  if(ip.length!==4||isNaN(mb)||mb<0||mb>32){el.innerHTML='<div style="color:var(--r);font-size:12px">Invalid CIDR</div>';return;}
+  if(ip.length!==4||isNaN(mb)||mb<0||mb>32){el.innerHTML='<div style="color:#f85149;font-size:12px">Invalid CIDR notation</div>';return;}
   const ipI=((ip[0]<<24)|(ip[1]<<16)|(ip[2]<<8)|ip[3])>>>0;
   const mI=(mb===0?0:((1<<mb)-1)<<(32-mb))>>>0;
   const nI=(ipI&mI)>>>0,bI=(nI|(~mI>>>0))>>>0;
   const itp=i=>((i>>>24)&255)+'.'+((i>>>16)&255)+'.'+((i>>>8)&255)+'.'+(i&255);
-  const h=mb>=31?0:Math.pow(2,32-mb)-2;
-  const rows=[['Network',itp(nI),'var(--bl)'],['Broadcast',itp(bI),'var(--y)'],['First usable',mb<=30?itp(nI+1):'N/A','var(--g)'],['Last usable',mb<=30?itp(bI-1):'N/A','var(--g)'],['Netmask',itp(mI),'var(--t)'],['Wildcard',itp(~mI>>>0),'var(--t)'],['Usable hosts',h.toLocaleString(),'var(--a)'],['CIDR','/'+mb,'var(--t)']];
-  el.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">'+rows.map(([l,v,c])=>`<div style="background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:8px 11px"><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em">${l}</div><div style="font-family:var(--mono);font-size:13px;color:${c};margin-top:2px">${v}</div></div>`).join('')+'</div>';
+  const h=mb>=31?Math.pow(2,32-mb):Math.pow(2,32-mb)-2;
+  const rows=[
+    ['Network Address',itp(nI),'#58a6ff'],
+    ['Broadcast Address',itp(bI),'#d29922'],
+    ['First Usable IP',mb<=30?itp(nI+1):'N/A','#3fb950'],
+    ['Last Usable IP',mb<=30?itp(bI-1):'N/A','#3fb950'],
+    ['Subnet Mask',itp(mI),'#e6edf3'],
+    ['Wildcard Mask',itp((~mI)>>>0),'#e6edf3'],
+    ['Usable Hosts',h.toLocaleString(),'#1D9E75'],
+    ['CIDR Prefix','/'+mb,'#e6edf3'],
+  ];
+  el.innerHTML='<div class="demo-subnet-grid">'+
+    rows.map(([l,v,c])=>`<div class="demo-subnet-card">
+      <div class="demo-subnet-label">${l}</div>
+      <div class="demo-subnet-value" style="color:${c}">${v}</div>
+    </div>`).join('')+
+  '</div>'+
+  `<div style="margin-top:12px;background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.1);border-radius:8px;padding:12px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.4);line-height:1.8">
+    <span style="color:rgba(255,255,255,.6)">Binary:</span><br>
+    IP:&nbsp;&nbsp; ${ipI.toString(2).padStart(32,'0').match(/.{8}/g).join('.')}<br>
+    Mask: ${mI.toString(2).padStart(32,'0').match(/.{8}/g).join('.')}<br>
+    Net:&nbsp; ${nI.toString(2).padStart(32,'0').match(/.{8}/g).join('.')}
+  </div>`;
 }
+
 initDemo();
 
 /* ── TERMS OF SERVICE MODAL ── */
@@ -807,6 +1166,61 @@ function openTos(e){if(e)e.preventDefault();document.getElementById('tosOverlay'
 function closeTos(){document.getElementById('tosOverlay').classList.remove('open');document.body.style.overflow='';}
 function acceptTos(){document.getElementById('terms').checked=true;closeTos();showToast('Terms accepted — checkbox ticked!');}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeTos();});
+
+
+
+/* ══ ANIMATED DEMO ENGINE ══ */
+(function(){
+const STEPS=[
+  {cmds:[{t:'get vpn ipsec tunnel summary',cl:'ro'},{t:'diagnose vpn tunnel list name <TUNNEL_NAME>',cl:'ro'},{t:'get vpn ipsec tunnel details',cl:'ro'}]},
+  {cmds:[{t:'diagnose debug reset',cl:'warn'},{t:'diagnose debug application ike -1',cl:'warn'},{t:'diagnose debug enable',cl:'warn'},{t:'(wait 30s)',cl:'note'},{t:'diagnose debug disable',cl:'warn'},{t:'diagnose debug reset',cl:'warn'}]},
+  {cmds:[{t:'show vpn ipsec phase1-interface <NAME>',cl:'ro'},{t:'show vpn ipsec phase2-interface <NAME>',cl:'ro'}]},
+  {cmds:[{t:'get router info routing-table all',cl:'ro'},{t:'diagnose ip route get <REMOTE_IP>',cl:'ro'}]},
+];
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function setTab(i){for(let j=0;j<5;j++){const t=document.getElementById('dtab'+j);if(t)t.classList.toggle('active',j===i);}}
+function setSidebar(i){for(let j=0;j<13;j++){const s=document.getElementById('asi'+j);if(!s)continue;s.classList.remove('active','visited');if(i!==null&&j<i)s.classList.add('visited');}if(i!==null){const a=document.getElementById('asi'+i);if(a)a.classList.add('active');}}
+function showScene(id){document.querySelectorAll('.anim-scene').forEach(s=>{s.style.display='none';});const sc=document.getElementById(id);if(sc)sc.style.display='block';}
+function setStatus(txt){const el=document.getElementById('animStatus');if(el)el.textContent=txt;}
+async function typeText(el,text,delay){el.textContent='';for(let i=0;i<=text.length;i++){el.textContent=text.slice(0,i);await sleep(delay||35);}}
+async function typeCmd(container,text,cls){const span=document.createElement('span');span.className='anim-cmd '+cls;container.appendChild(span);const delay=cls==='note'?10:22;for(let i=0;i<=text.length;i++){span.textContent=text.slice(0,i)||' ';if(i<text.length)await sleep(delay);}span.textContent=text;container.appendChild(document.createElement('br'));}
+async function runGuideScene(){
+  showScene('ascene0');setTab(0);setSidebar(0);setStatus('IPsec VPN Troubleshooting · Step-by-step playbook');
+  document.querySelectorAll('.anim-step-card').forEach(c=>c.classList.remove('show'));
+  for(let si=0;si<STEPS.length;si++){
+    const card=document.getElementById('asc'+si);const cmdsDiv=document.getElementById('acmds'+si);
+    if(!card||!cmdsDiv)continue;
+    cmdsDiv.innerHTML='';await sleep(200);card.classList.add('show');await sleep(150);
+    for(let cmd of STEPS[si].cmds){await typeCmd(cmdsDiv,cmd.t,cmd.cl);await sleep(cmd.cl==='note'?300:200);}
+    await sleep(500);
+  }
+  await sleep(1800);
+}
+async function runHAScene(){showScene('ascene1');setTab(0);setSidebar(3);setStatus('HA Cluster · Failover and sync verification');await sleep(3000);}
+async function runAIScene(){
+  showScene('ascene2');setTab(1);setSidebar(null);setStatus('AI Analyzer · Paste any CLI output for instant diagnosis');
+  const thinking=document.getElementById('aiThinking');const result=document.getElementById('aiResult');
+  if(thinking)thinking.style.display='flex';if(result)result.style.display='none';
+  await sleep(1800);if(thinking)thinking.style.display='none';if(result)result.style.display='block';
+  await sleep(3200);
+}
+async function runAnonScene(){showScene('ascene3');setTab(2);setSidebar(10);setStatus('IP Anonymizer · Replace real IPs with RFC 5737 safe addresses');await sleep(3500);}
+async function runSubnetScene(){
+  showScene('ascene4');setTab(3);setSidebar(11);setStatus('Subnet Calculator · Full CIDR breakdown with binary view');
+  const typing=document.getElementById('subTyping');const cursor=document.getElementById('subCursor');
+  const cards=document.querySelectorAll('#subCards .sub-card');const binary=document.getElementById('subBinary');
+  cards.forEach(c=>c.classList.remove('show'));if(binary)binary.style.opacity='0';
+  if(typing)await typeText(typing,'172.16.0.0/20',40);
+  if(cursor)cursor.style.display='none';await sleep(400);
+  for(let i=0;i<cards.length;i++){cards[i].classList.add('show');await sleep(110);}
+  await sleep(500);if(binary)binary.style.opacity='1';await sleep(2500);if(cursor)cursor.style.display='inline';
+}
+async function runRefScene(){showScene('ascene5');setTab(4);setSidebar(12);setStatus('Quick Ref · Copy any command in one click');await sleep(3200);}
+async function runLoop(){while(true){await runGuideScene();await runHAScene();await runAIScene();await runAnonScene();await runSubnetScene();await runRefScene();}}
+function startProgress(){const fill=document.getElementById('animProgress');if(!fill)return;const cycle=24000;const start=Date.now();function tick(){fill.style.width=((Date.now()-start)%cycle)/cycle*100+'%';requestAnimationFrame(tick);}requestAnimationFrame(tick);}
+if(document.getElementById('animatedDemo')){runLoop();startProgress();}
+})();
+
 </script>
 
 <!-- TERMS OF USE MODAL -->
