@@ -934,11 +934,11 @@ function generateConfig(){
     const wanMask=cidrToMask(g('wan_ip')||'203.0.113.1/24');
     const wanGw=g('wan_gw')||'203.0.113.254';
 
-    cfg = `# ═══════════════════════════════════════════
+    cfg = `// ═══════════════════════════════════════════
 # NetWolf Config Generator — Initial Setup
 # Hostname: ${hostname}
 # Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
-# ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
 
 # 1. System global settings
 config system global
@@ -1066,11 +1066,11 @@ end`;
     const remoteNet=cidrToIp(remoteSubnet);
     const remoteMask=cidrToMask(remoteSubnet);
 
-    cfg = `# ═══════════════════════════════════════════
+    cfg = `// ═══════════════════════════════════════════
 # NetWolf Config Generator — IPsec Site-to-Site VPN
 # Tunnel: ${name}  Peer: ${peerIp}
 # Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
-# ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
 
 # 1. Phase 1 — IKE
 config vpn ipsec phase1-interface
@@ -1170,11 +1170,11 @@ end
     const vpnGroup=g('vpn_group')||'CN=VPN-Users,OU=Groups,DC=corp,DC=local';
     const wanIntf=g('wan_intf_ssl')||'wan1';
 
-    cfg = `# ═══════════════════════════════════════════
+    cfg = `// ═══════════════════════════════════════════
 # NetWolf Config Generator — SSL VPN
 # Port: ${port}  LDAP: ${ldapServer}
 # Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
-# ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
 
 # 1. SSL VPN portal
 config vpn ssl web portal
@@ -1267,11 +1267,11 @@ end`;
     const dns1=g('vlan_dns1')||'8.8.8.8';
     const lease=g('vlan_lease')||'86400';
 
-    cfg = `# ═══════════════════════════════════════════
+    cfg = `// ═══════════════════════════════════════════
 # NetWolf Config Generator — VLAN + DHCP
 # VLAN ${vlanId}: ${vlanName}
 # Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
-# ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
 
 # 1. VLAN interface
 config system interface
@@ -1332,11 +1332,11 @@ end`;
     const lanIntf=g('lan_intf_vip')||'lan';
     const lanSubnet=g('lan_subnet_vip')||'LAN-SUBNET';
 
-    cfg = `# ═══════════════════════════════════════════
+    cfg = `// ═══════════════════════════════════════════
 # NetWolf Config Generator — Port Forwarding (VIP)
 # ${extIp}:${extPort} → ${intIp}:${intPort}
 # Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
-# ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
 
 # 1. VIP object
 config firewall vip
@@ -1400,11 +1400,11 @@ end
     const mgmtMask=cidrToMask(g('ha_pri_mgmt')||'10.0.0.1/24');
     const mgmtGw=g('ha_mgmt_gw')||'10.0.0.254';
 
-    cfg = `# ═══════════════════════════════════════════
+    cfg = `// ═══════════════════════════════════════════
 # NetWolf Config Generator — HA Active-Passive
 # Group: ${group}  ID: ${groupId}
 # Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
-# ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
 
 # ── PRIMARY UNIT ──────────────────────────
 
@@ -1478,11 +1478,11 @@ end
     const loss=g('sdwan_loss')||'5';
     const lan=g('sdwan_lan')||'lan';
 
-    cfg = `# ═══════════════════════════════════════════
+    cfg = `// ═══════════════════════════════════════════
 # NetWolf Config Generator — SD-WAN
 # WAN1: ${wan1}  WAN2: ${wan2}
 # Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
-# ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
 
 # 1. Enable SD-WAN and add members
 config system sdwan
@@ -1570,179 +1570,460 @@ function copyCfgOutput(){
   });
 }
 
-/* ══ CONFIG MIGRATOR ══ */
+/* ══ CONFIG MIGRATOR — SMART VERSION ══ */
 function renderCfgMigrate(el){
   el.innerHTML=`
-  <div class="sh"><span class="stitle">🔄 Config Migrator</span><span class="sev info">Upload config → replace details → download new config</span></div>
-  <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6">Upload an existing FortiGate config file (.conf or .txt), enter the new device details below, and the tool will replace all matching values and generate a ready-to-use config for the new FortiGate.</p>
+  <div class="sh"><span class="stitle">🔄 FortiGate Config Migrator</span><span class="sev info">Smart auto-detect + replace</span></div>
+  <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6">
+    Upload a FortiGate backup config (.conf / .txt). The tool <strong style="color:var(--t)">automatically detects</strong> all 
+    hostnames, interface IPs, gateway IPs, DHCP settings, VPN peers, LDAP servers, HA settings and more — 
+    then presents them in organised sections for you to update. Click Generate to get the migrated config.
+  </p>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-    <div>
-      <div class="cblock">
-        <div class="chdr"><div class="chdr-l">📁 Step 1 — Upload existing config</div></div>
-        <div class="cbody">
-          <input type="file" id="cfgFile" accept=".conf,.txt,.cfg" style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px;font-size:12px;color:var(--t);margin-bottom:10px">
-          <div class="cnote">Supported: .conf .txt .cfg — FortiGate backup files</div>
-          <div id="cfgFileStatus" style="font-size:11px;color:var(--t3);margin-top:6px"></div>
-        </div>
-      </div>
-
-      <div class="cblock" style="margin-top:10px">
-        <div class="chdr"><div class="chdr-l">✏️ Step 2 — New device details</div></div>
-        <div class="cbody">
-          <div style="font-size:11px;color:var(--y);background:rgba(210,153,34,.08);border-left:2px solid var(--y);padding:8px;border-radius:4px;margin-bottom:12px;line-height:1.5">
-            ⚠️ Leave fields blank to keep the original value. Only filled fields will be replaced.
-          </div>
-
-          <div style="font-size:11px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px;text-transform:uppercase">System</div>
-          <div class="mig-row"><label>New hostname</label><input type="text" id="mig_hostname" placeholder="FGT-NEWSITE-01"></div>
-          <div class="mig-row"><label>New admin password</label><input type="password" id="mig_adminpass" placeholder="NewAdmin@123"></div>
-
-          <div style="font-size:11px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin:14px 0 8px;text-transform:uppercase">Network — Find & Replace IPs</div>
-          <div class="cnote" style="margin-bottom:10px">Add IP replacements — old IP on left, new IP on right</div>
-          <div id="migIpRows">
-            <div class="mig-ip-row">
-              <input type="text" placeholder="Old IP (e.g. 192.168.1.1)" class="mig-old-ip" style="font-family:var(--mono)">
-              <span style="color:var(--t3);font-size:14px;flex-shrink:0">→</span>
-              <input type="text" placeholder="New IP (e.g. 10.10.1.1)" class="mig-new-ip" style="font-family:var(--mono)">
-              <button onclick="removeMigRow(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);color:var(--r);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;flex-shrink:0">✕</button>
-            </div>
-          </div>
-          <button onclick="addMigRow()" class="sbtn" style="background:var(--b3);margin-top:8px;font-size:11px">+ Add IP replacement</button>
-
-          <div style="font-size:11px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin:14px 0 8px;text-transform:uppercase">Text replacements</div>
-          <div id="migTextRows">
-            <div class="mig-ip-row">
-              <input type="text" placeholder="Old text (e.g. OLD-SITE)" class="mig-old-txt">
-              <span style="color:var(--t3);font-size:14px;flex-shrink:0">→</span>
-              <input type="text" placeholder="New text (e.g. NEW-SITE)" class="mig-new-txt">
-              <button onclick="removeMigRow(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);color:var(--r);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;flex-shrink:0">✕</button>
-            </div>
-          </div>
-          <button onclick="addMigTextRow()" class="sbtn" style="background:var(--b3);margin-top:8px;font-size:11px">+ Add text replacement</button>
-        </div>
-      </div>
-
-      <button class="sbtn" onclick="runMigration()" style="margin-top:12px;width:100%;padding:10px;font-size:14px">🔄 Generate Migrated Config</button>
-      <button class="sbtn" onclick="downloadMigrated()" style="margin-top:6px;width:100%;padding:10px;font-size:14px;background:#15803D">💾 Download New Config</button>
+  <div class="cblock" style="margin-bottom:12px">
+    <div class="chdr"><div class="chdr-l">📁 Step 1 — Upload FortiGate backup config</div></div>
+    <div class="cbody" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <input type="file" id="cfgMigFile" accept=".conf,.txt,.cfg"
+        style="flex:2;min-width:200px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px;font-size:12px;color:var(--t)">
+      <button class="sbtn" onclick="parseCfgFile()" style="padding:8px 20px">🔍 Scan Config</button>
+      <span id="migScanStatus" style="font-size:12px;color:var(--t3)">No file loaded</span>
     </div>
+  </div>
 
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div id="migFormArea" style="overflow-y:auto;max-height:600px">
+      <div style="text-align:center;padding:40px 20px;color:var(--t3);font-size:13px">
+        📁 Upload a config file and click Scan to detect all replaceable fields
+      </div>
+    </div>
     <div>
       <div style="font-size:11px;color:var(--t2);margin-bottom:6px;font-family:var(--mono)">▸ MIGRATED CONFIG OUTPUT</div>
-      <pre id="migOutput" style="background:#010409;border:1px solid var(--br);border-radius:8px;padding:14px;font-family:var(--mono);font-size:11px;color:var(--g);white-space:pre-wrap;overflow-x:auto;min-height:500px;max-height:700px;overflow-y:auto">— Upload a config file and click Generate —</pre>
+      <pre id="migOutput" style="background:#010409;border:1px solid var(--br);border-radius:8px;padding:14px;font-family:var(--mono);font-size:11px;color:var(--g);white-space:pre-wrap;overflow-x:auto;min-height:500px;max-height:600px;overflow-y:auto">— Scan a config file to begin —</pre>
       <div id="migStats" style="font-size:11px;color:var(--t3);margin-top:6px"></div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="sbtn" onclick="runSmartMigration()" style="flex:1;padding:10px;font-size:13px">🔄 Generate Migrated Config</button>
+        <button class="sbtn" onclick="downloadMigrated()" style="flex:1;padding:10px;font-size:13px;background:#15803D">💾 Download .conf</button>
+      </div>
     </div>
   </div>`;
 
-  // Inject CSS for migrator rows
-  if(!document.getElementById('migCSS')){
-    const style=document.createElement('style');
-    style.id='migCSS';
-    style.textContent=`.mig-row{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}.mig-row label{font-size:11px;font-weight:600;color:var(--t2)}.mig-row input{background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:inherit;outline:none}.mig-ip-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}.mig-ip-row input{flex:1;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-size:11px;color:var(--t);outline:none}`;
-    document.head.appendChild(style);
-  }
-
-  // File upload handler
-  document.getElementById('cfgFile').onchange = function(){
-    const file=this.files[0];
-    if(file){
-      const status=document.getElementById('cfgFileStatus');
-      status.textContent=`✓ Loaded: ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
-      status.style.color='var(--g)';
-    }
+  document.getElementById('cfgMigFile').onchange = function(){
+    const f=this.files[0];
+    if(f) document.getElementById('migScanStatus').textContent=`✓ Loaded: ${f.name} (${(f.size/1024).toFixed(1)} KB)`;
   };
 }
 
-function addMigRow(){
-  const container=document.getElementById('migIpRows');
-  const row=document.createElement('div');
-  row.className='mig-ip-row';
-  row.innerHTML=`<input type="text" placeholder="Old IP" class="mig-old-ip" style="font-family:var(--mono)"><span style="color:var(--t3);font-size:14px;flex-shrink:0">→</span><input type="text" placeholder="New IP" class="mig-new-ip" style="font-family:var(--mono)"><button onclick="removeMigRow(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);color:var(--r);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;flex-shrink:0">✕</button>`;
-  container.appendChild(row);
+let originalCfg = '';
+let detectedFields = {};
+
+function parseCfgFile(){
+  const fileInput = document.getElementById('cfgMigFile');
+  const statusEl = document.getElementById('migScanStatus');
+  const formArea = document.getElementById('migFormArea');
+  if(!fileInput.files.length){ showToast('⚠️ Please upload a config file first.'); return; }
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e){
+    originalCfg = e.target.result;
+    statusEl.textContent = `✓ Scanned: ${file.name}`;
+    statusEl.style.color = 'var(--g)';
+    const detected = detectAllFields(originalCfg);
+    detectedFields = detected;
+    renderMigForm(formArea, detected);
+    showToast(`✅ Detected ${countFields(detected)} replaceable fields`);
+  };
+  reader.readAsText(file);
 }
 
-function addMigTextRow(){
-  const container=document.getElementById('migTextRows');
-  const row=document.createElement('div');
-  row.className='mig-ip-row';
-  row.innerHTML=`<input type="text" placeholder="Old text" class="mig-old-txt"><span style="color:var(--t3);font-size:14px;flex-shrink:0">→</span><input type="text" placeholder="New text" class="mig-new-txt"><button onclick="removeMigRow(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);color:var(--r);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;flex-shrink:0">✕</button>`;
-  container.appendChild(row);
+function countFields(detected){
+  return Object.values(detected).reduce((a,s)=>a+Object.keys(s).length,0);
 }
 
-function removeMigRow(btn){ btn.parentElement.remove(); }
+function detectAllFields(cfg){
+  const fields = {
+    system: {},
+    interfaces: {},
+    routes: {},
+    dhcp: {},
+    dns: {},
+    vpn_ipsec: {},
+    vpn_ssl: {},
+    ldap_radius: {},
+    ha: {},
+    sdwan: {},
+    syslog_snmp: {},
+    fortimanager: {},
+    bgp_ospf: {},
+  };
+
+  // ── SYSTEM ──
+  const hostname = cfg.match(/set hostname (.+)/);
+  if(hostname) fields.system['hostname'] = { label:'Hostname', old: hostname[1].trim(), type:'text' };
+
+  const adminPass = cfg.match(/set password ENC (.+)/);
+  if(adminPass) fields.system['admin_password'] = { label:'Admin password (new plain text)', old: '(encrypted — enter new)', type:'password', forceNew:true };
+
+  // ── INTERFACES ──
+  const intfBlocks = cfg.matchAll(/edit "?([^"\n]+)"?\s[\s\S]*?set ip (\d+\.\d+\.\d+\.\d+) (\d+\.\d+\.\d+\.\d+)[\s\S]*?next/gm);
+  let intfIdx = 0;
+  for(const m of intfBlocks){
+    const name = m[1].trim();
+    if(['ssl.root','naf.root'].includes(name)) continue;
+    fields.interfaces[`intf_ip_${intfIdx}`] = { label:`${name} — IP`, old: m[2], mask: m[3], type:'ip', intf:name };
+    intfIdx++;
+  }
+
+  // ── STATIC ROUTES ──
+  const gwMatches = cfg.matchAll(/set gateway (\d+\.\d+\.\d+\.\d+)/gm);
+  let gwIdx = 0;
+  const seenGws = new Set();
+  for(const m of gwMatches){
+    if(!seenGws.has(m[1])){
+      seenGws.add(m[1]);
+      fields.routes[`gw_${gwIdx}`] = { label:`Gateway IP #${gwIdx+1}`, old: m[1], type:'ip' };
+      gwIdx++;
+    }
+  }
+
+  // ── DHCP ──
+  const dhcpGw = cfg.matchAll(/set default-gateway (\d+\.\d+\.\d+\.\d+)/gm);
+  let dhcpIdx = 0;
+  for(const m of dhcpGw){
+    fields.dhcp[`dhcp_gw_${dhcpIdx}`] = { label:`DHCP default-gateway #${dhcpIdx+1}`, old: m[1], type:'ip' };
+    dhcpIdx++;
+  }
+  const dhcpStart = cfg.matchAll(/set start-ip (\d+\.\d+\.\d+\.\d+)/gm);
+  let dsIdx=0;
+  for(const m of dhcpStart){ fields.dhcp[`dhcp_start_${dsIdx}`]={label:`DHCP pool start #${dsIdx+1}`,old:m[1],type:'ip'};dsIdx++; }
+  const dhcpEnd = cfg.matchAll(/set end-ip (\d+\.\d+\.\d+\.\d+)/gm);
+  let deIdx=0;
+  for(const m of dhcpEnd){ fields.dhcp[`dhcp_end_${deIdx}`]={label:`DHCP pool end #${deIdx+1}`,old:m[1],type:'ip'};deIdx++; }
+
+  // ── DNS ──
+  const dns1 = cfg.match(/config system dns[\s\S]*?set primary (\d+\.\d+\.\d+\.\d+)/m);
+  if(dns1) fields.dns['dns_primary'] = { label:'Primary DNS', old: dns1[1], type:'ip' };
+  const dns2 = cfg.match(/config system dns[\s\S]*?set secondary (\d+\.\d+\.\d+\.\d+)/m);
+  if(dns2) fields.dns['dns_secondary'] = { label:'Secondary DNS', old: dns2[1], type:'ip' };
+
+  // ── IPSEC VPN ──
+  const remoteGw = cfg.matchAll(/set remote-gw (\d+\.\d+\.\d+\.\d+)/gm);
+  let rgIdx=0;
+  for(const m of remoteGw){ fields.vpn_ipsec[`remote_gw_${rgIdx}`]={label:`IPsec remote-gw #${rgIdx+1}`,old:m[1],type:'ip'};rgIdx++; }
+  const psk = cfg.matchAll(/set psksecret (.+)/gm);
+  let pskIdx=0;
+  for(const m of psk){ fields.vpn_ipsec[`psk_${pskIdx}`]={label:`Pre-shared key #${pskIdx+1}`,old:m[1].trim(),type:'password'};pskIdx++; }
+  const srcSubnet = cfg.matchAll(/set src-subnet (\d+\.\d+\.\d+\.\d+) (\d+\.\d+\.\d+\.\d+)/gm);
+  let ssIdx=0;
+  for(const m of srcSubnet){ fields.vpn_ipsec[`src_subnet_${ssIdx}`]={label:`IPsec src-subnet #${ssIdx+1}`,old:`${m[1]} ${m[2]}`,type:'text'};ssIdx++; }
+  const dstSubnet = cfg.matchAll(/set dst-subnet (\d+\.\d+\.\d+\.\d+) (\d+\.\d+\.\d+\.\d+)/gm);
+  let dsub=0;
+  for(const m of dstSubnet){ fields.vpn_ipsec[`dst_subnet_${dsub}`]={label:`IPsec dst-subnet #${dsub+1}`,old:`${m[1]} ${m[2]}`,type:'text'};dsub++; }
+
+  // ── SSL VPN ──
+  const sslPort = cfg.match(/config vpn ssl settings[\s\S]*?set port (\d+)/m);
+  if(sslPort) fields.vpn_ssl['ssl_port'] = { label:'SSL VPN port', old: sslPort[1], type:'text' };
+  const sslCert = cfg.match(/config vpn ssl settings[\s\S]*?set servercert "?([^"\n]+)"?/m);
+  if(sslCert) fields.vpn_ssl['ssl_cert'] = { label:'SSL VPN certificate', old: sslCert[1].trim(), type:'text' };
+  const poolStart = cfg.match(/config firewall address[\s\S]*?SSLVPN[\s\S]*?set start-ip (\d+\.\d+\.\d+\.\d+)/m);
+  if(poolStart) fields.vpn_ssl['ssl_pool_start'] = { label:'SSL VPN pool start', old: poolStart[1], type:'ip' };
+  const poolEnd = cfg.match(/config firewall address[\s\S]*?SSLVPN[\s\S]*?set end-ip (\d+\.\d+\.\d+\.\d+)/m);
+  if(poolEnd) fields.vpn_ssl['ssl_pool_end'] = { label:'SSL VPN pool end', old: poolEnd[1], type:'ip' };
+
+  // ── LDAP / RADIUS ──
+  const ldapServers = cfg.matchAll(/config user ldap[\s\S]*?edit "?([^"\n]+)"?[\s\S]*?set server (\d+\.\d+\.\d+\.\d+)/gm);
+  let ldapIdx=0;
+  for(const m of ldapServers){ fields.ldap_radius[`ldap_${ldapIdx}`]={label:`LDAP server "${m[1]}"`,old:m[2],type:'ip'};ldapIdx++; }
+  const radiusServers = cfg.matchAll(/config user radius[\s\S]*?edit "?([^"\n]+)"?[\s\S]*?set server (\d+\.\d+\.\d+\.\d+)/gm);
+  let radIdx=0;
+  for(const m of radiusServers){ fields.ldap_radius[`radius_${radIdx}`]={label:`RADIUS server "${m[1]}"`,old:m[2],type:'ip'};radIdx++; }
+
+  // ── HA ──
+  const haGroup = cfg.match(/config system ha[\s\S]*?set group-name "?([^"\n]+)"?/m);
+  if(haGroup) fields.ha['ha_group'] = { label:'HA group name', old: haGroup[1].trim().replace(/"/g,''), type:'text' };
+  const haPass = cfg.match(/config system ha[\s\S]*?set password (.+)/m);
+  if(haPass) fields.ha['ha_pass'] = { label:'HA password', old: haPass[1].trim(), type:'password' };
+  const haPri = cfg.match(/config system ha[\s\S]*?set priority (\d+)/m);
+  if(haPri) fields.ha['ha_priority'] = { label:'HA priority', old: haPri[1], type:'text' };
+
+  // ── SD-WAN ──
+  const sdwanGw = cfg.matchAll(/config system sdwan[\s\S]*?set gateway (\d+\.\d+\.\d+\.\d+)/gm);
+  let swIdx=0;
+  for(const m of sdwanGw){ fields.sdwan[`sdwan_gw_${swIdx}`]={label:`SD-WAN gateway #${swIdx+1}`,old:m[1],type:'ip'};swIdx++; }
+  const hcServer = cfg.matchAll(/set server "?(\d+\.\d+\.\d+\.\d+)"?/gm);
+  let hcIdx=0;
+  const seenHc=new Set();
+  for(const m of hcServer){ if(!seenHc.has(m[1])){seenHc.add(m[1]);fields.sdwan[`hc_server_${hcIdx}`]={label:`Health-check server #${hcIdx+1}`,old:m[1],type:'ip'};hcIdx++;} }
+
+  // ── SYSLOG / SNMP ──
+  const syslogServer = cfg.match(/config log syslogd setting[\s\S]*?set server "?(\d+\.\d+\.\d+\.\d+)"?/m);
+  if(syslogServer) fields.syslog_snmp['syslog'] = { label:'Syslog server IP', old: syslogServer[1], type:'ip' };
+  const snmpHosts = cfg.matchAll(/set ha (\d+\.\d+\.\d+\.\d+)/gm);
+  let snmpIdx=0;
+  for(const m of snmpHosts){ fields.syslog_snmp[`snmp_${snmpIdx}`]={label:`SNMP host #${snmpIdx+1}`,old:m[1],type:'ip'};snmpIdx++; }
+
+  // ── FORTIMANAGER / FAZ ──
+  const fmgr = cfg.match(/set central-management-server "?(\d+\.\d+\.\d+\.\d+)"?/m);
+  if(fmgr) fields.fortimanager['fmgr_ip'] = { label:'FortiManager server IP', old: fmgr[1], type:'ip' };
+  const faz = cfg.match(/config log fortianalyzer setting[\s\S]*?set server "?(\d+\.\d+\.\d+\.\d+)"?/m);
+  if(faz) fields.fortimanager['faz_ip'] = { label:'FortiAnalyzer server IP', old: faz[1], type:'ip' };
+
+  // ── BGP / OSPF ──
+  const routerId = cfg.match(/set router-id (\d+\.\d+\.\d+\.\d+)/m);
+  if(routerId) fields.bgp_ospf['router_id'] = { label:'Router ID', old: routerId[1], type:'ip' };
+  const bgpNeighbors = cfg.matchAll(/config neighbor[\s\S]*?edit (\d+\.\d+\.\d+\.\d+)/gm);
+  let bnIdx=0;
+  for(const m of bgpNeighbors){ fields.bgp_ospf[`bgp_neighbor_${bnIdx}`]={label:`BGP neighbor #${bnIdx+1}`,old:m[1],type:'ip'};bnIdx++; }
+
+  // Remove empty sections
+  Object.keys(fields).forEach(k=>{ if(Object.keys(fields[k]).length===0) delete fields[k]; });
+  return fields;
+}
+
+const SECTION_LABELS = {
+  system: '🖥️ System Identity & Admin',
+  interfaces: '🔌 Interface IP Addresses',
+  routes: '🔀 Static Routes & Gateways',
+  dhcp: '📡 DHCP Server Settings',
+  dns: '🌐 DNS Servers',
+  vpn_ipsec: '🔒 IPsec VPN Settings',
+  vpn_ssl: '🕵️ SSL VPN Settings',
+  ldap_radius: '🔑 LDAP / RADIUS Servers',
+  ha: '⚙️ HA Cluster Settings',
+  sdwan: '🌐 SD-WAN Members & Health Checks',
+  syslog_snmp: '📜 Syslog & SNMP',
+  fortimanager: '☁️ FortiManager & FortiAnalyzer',
+  bgp_ospf: '🔧 BGP / OSPF Routing',
+};
+
+function renderMigForm(container, detected){
+  if(Object.keys(detected).length===0){
+    container.innerHTML='<div style="color:var(--y);font-size:12px;padding:20px">⚠️ No replaceable fields detected. Make sure this is a valid FortiGate config file.</div>';
+    return;
+  }
+  let h = `<div style="font-size:11px;color:var(--t2);margin-bottom:14px;line-height:1.6">
+    <strong style="color:var(--a)">✓ Auto-detected fields below.</strong> 
+    The old value is shown in each field. Enter the new value — leave blank to keep original.
+  </div>`;
+
+  Object.entries(detected).forEach(([section, fields])=>{
+    const label = SECTION_LABELS[section] || section;
+    const count = Object.keys(fields).length;
+    h += `<div class="cblock" style="margin-bottom:10px">
+      <div class="chdr"><div class="chdr-l" style="font-size:12px">${label} <span style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-left:6px">${count} field${count>1?'s':''}</span></div></div>
+      <div class="cbody" style="padding:10px 14px">`;
+
+    Object.entries(fields).forEach(([key, field])=>{
+      const inputType = field.type==='password' ? 'password' : 'text';
+      const oldDisplay = field.forceNew ? '' : field.old;
+      h += `<div style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:3px">${field.label}</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="flex:1;background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.15);border-radius:6px;padding:6px 10px;font-family:var(--mono);font-size:11px;color:var(--r);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${field.old}">${field.old}</div>
+          <span style="color:var(--t3);font-size:14px;flex-shrink:0">→</span>
+          <input type="${inputType}" id="mig_field_${key}" placeholder="${field.forceNew?'Enter new value':('New: leave blank to keep')}" value="${oldDisplay}"
+            style="flex:1;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-family:var(--mono);font-size:11px;color:var(--t);outline:none">
+        </div>
+      </div>`;
+    });
+    h += `</div></div>`;
+  });
+
+  // Add "missing sections" panel at the bottom
+  h += `<div class="cblock" style="margin-top:14px;border-color:rgba(88,166,255,.2)">
+    <div class="chdr" style="background:rgba(88,166,255,.05)">
+      <div class="chdr-l" style="font-size:12px;color:var(--bl)">➕ Add settings not in original config</div>
+    </div>
+    <div class="cbody" style="padding:10px 14px">
+      <p style="font-size:11.5px;color:var(--t2);margin-bottom:12px;line-height:1.6">
+        These sections were <strong style="color:var(--t)">not found</strong> in your config. Fill in any you want to add to the migrated output — leave blank to skip.
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+
+        <div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px">☁️ FORTIMANAGER</div>
+          <div class="mig-add-row"><label>FortiManager IP</label><input type="text" id="add_fmgr_ip" placeholder="e.g. 10.0.0.100"></div>
+          <div class="mig-add-row"><label>Serial number (optional)</label><input type="text" id="add_fmgr_sn" placeholder="FMG-VMTM000000"></div>
+        </div>
+
+        <div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px">📊 FORTIANALYZER</div>
+          <div class="mig-add-row"><label>FortiAnalyzer IP</label><input type="text" id="add_faz_ip" placeholder="e.g. 10.0.0.101"></div>
+          <div class="mig-add-row"><label>Status</label>
+            <select id="add_faz_status" style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px;font-size:11px;color:var(--t)">
+              <option value="enable">Enable</option><option value="disable">Disable</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px">📜 SYSLOG SERVER</div>
+          <div class="mig-add-row"><label>Syslog server IP</label><input type="text" id="add_syslog_ip" placeholder="e.g. 10.0.0.200"></div>
+          <div class="mig-add-row"><label>Port</label><input type="text" id="add_syslog_port" placeholder="514" value="514"></div>
+          <div class="mig-add-row"><label>Facility</label>
+            <select id="add_syslog_fac" style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px;font-size:11px;color:var(--t)">
+              <option value="local0">local0</option><option value="local1">local1</option><option value="local7">local7</option><option value="syslog">syslog</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px">📡 SNMP COMMUNITY</div>
+          <div class="mig-add-row"><label>Community name</label><input type="text" id="add_snmp_community" placeholder="public"></div>
+          <div class="mig-add-row"><label>SNMP host IP</label><input type="text" id="add_snmp_host" placeholder="e.g. 10.0.0.50"></div>
+        </div>
+
+        <div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px">⏱️ NTP SERVER</div>
+          <div class="mig-add-row"><label>NTP server</label><input type="text" id="add_ntp_server" placeholder="pool.ntp.org"></div>
+        </div>
+
+        <div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px">🌐 DNS SERVERS</div>
+          <div class="mig-add-row"><label>Primary DNS</label><input type="text" id="add_dns1" placeholder="8.8.8.8"></div>
+          <div class="mig-add-row"><label>Secondary DNS</label><input type="text" id="add_dns2" placeholder="1.1.1.1"></div>
+        </div>
+
+        <div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px">🔒 ADMIN SETTINGS</div>
+          <div class="mig-add-row"><label>HTTPS admin port</label><input type="text" id="add_admin_port" placeholder="8443"></div>
+          <div class="mig-add-row"><label>Admin timeout (min)</label><input type="text" id="add_admin_timeout" placeholder="30"></div>
+        </div>
+
+        <div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px">📝 FREE TEXT BLOCK</div>
+          <div class="mig-add-row"><label>Add custom CLI lines at end</label>
+            <textarea id="add_custom_cli" rows="3" placeholder="config system ...
+    set ...
+end" style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px;font-size:11px;color:var(--t);font-family:var(--mono);resize:vertical"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>`;
+
+  container.innerHTML = h;
+
+  // inject CSS for add rows
+  if(!document.getElementById('migAddCSS')){
+    const style=document.createElement('style');
+    style.id='migAddCSS';
+    style.textContent=`.mig-add-row{margin-bottom:8px}.mig-add-row label{font-size:10.5px;font-weight:600;color:var(--t2);display:block;margin-bottom:3px}.mig-add-row input{width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-size:11px;color:var(--t);font-family:var(--mono);outline:none}`;
+    document.head.appendChild(style);
+  }
+}
 
 let migratedConfig='';
 
-function runMigration(){
-  const fileInput=document.getElementById('cfgFile');
-  const out=document.getElementById('migOutput');
-  const stats=document.getElementById('migStats');
-  if(!fileInput.files.length){ showToast('⚠️ Please upload a config file first.'); return; }
-  const file=fileInput.files[0];
-  const reader=new FileReader();
-  reader.onload=function(e){
-    let cfg=e.target.result;
-    let replacements=0;
+function runSmartMigration(){
+  if(!originalCfg){ showToast('Please upload and scan a config file first.'); return; }
+  let cfg = originalCfg;
+  let replacements = 0;
 
-    // Hostname replacement
-    const newHostname=document.getElementById('mig_hostname')?.value.trim();
-    if(newHostname){
-      cfg=cfg.replace(/set hostname .+/g,`set hostname ${newHostname}`);
-      replacements++;
-    }
-
-    // Admin password replacement
-    const newPass=document.getElementById('mig_adminpass')?.value.trim();
-    if(newPass){
-      cfg=cfg.replace(/set password ENC .+/g,`set password ${newPass}`);
-      cfg=cfg.replace(/(edit admin[\s\S]*?set password )[^\n]+/g,`$1${newPass}`);
-      replacements++;
-    }
-
-    // IP replacements
-    document.querySelectorAll('.mig-old-ip').forEach((oldEl,i)=>{
-      const newEl=document.querySelectorAll('.mig-new-ip')[i];
-      const oldIp=oldEl.value.trim();
-      const newIp=newEl?.value.trim();
-      if(oldIp&&newIp){
-        const regex=new RegExp(oldIp.replace(/\./g,'\\.'),'g');
-        const count=(cfg.match(regex)||[]).length;
-        cfg=cfg.replace(regex,newIp);
-        replacements+=count;
+  Object.entries(detectedFields).forEach(function(entry){
+    const section = entry[0]; const fields = entry[1];
+    Object.entries(fields).forEach(function(fe){
+      const key = fe[0]; const field = fe[1];
+      const inputEl = document.getElementById('mig_field_'+key);
+      if(!inputEl) return;
+      const newVal = inputEl.value.trim();
+      if(!newVal || newVal === field.old) return;
+      const oldVal = field.old;
+      if(section === 'system' && key === 'admin_password'){
+        cfg = cfg.replace(/set password ENC .+/g, 'set password '+newVal);
+        replacements++;
+      } else if(section === 'system' && key === 'hostname'){
+        cfg = cfg.replace(/set hostname .+/g, 'set hostname '+newVal);
+        replacements++;
+      } else {
+        const escaped = oldVal.split('.').join('\\.').split('+').join('\\+').split('*').join('\\*');
+        const regex = new RegExp(escaped, 'g');
+        const count = (cfg.match(regex)||[]).length;
+        if(count > 0){ cfg = cfg.replace(regex, newVal); replacements += count; }
       }
     });
+  });
 
-    // Text replacements
-    document.querySelectorAll('.mig-old-txt').forEach((oldEl,i)=>{
-      const newEl=document.querySelectorAll('.mig-new-txt')[i];
-      const oldTxt=oldEl.value.trim();
-      const newTxt=newEl?.value.trim();
-      if(oldTxt&&newTxt){
-        const count=(cfg.split(oldTxt).length-1);
-        cfg=cfg.split(oldTxt).join(newTxt);
-        replacements+=count;
-      }
-    });
+  // BUILD ADDED SECTIONS
+  let addedSections = '';
+  const ga = function(id){ const el=document.getElementById(id); return el?el.value.trim():''; };
+  const nl = '\n';
 
-    // Add migration header
-    const header=`# ═══════════════════════════════════════════
-# NetWolf Config Migrator — Migrated Config
-# Original file: ${file.name}
-# Migration date: ${new Date().toISOString().slice(0,19).replace('T',' ')}
-# Total replacements made: ${replacements}
-# ═══════════════════════════════════════════
-# ⚠️ REVIEW CAREFULLY before applying to production
-# Test in a lab environment first
-# ═══════════════════════════════════════════
+  const fmgrIp=ga('add_fmgr_ip'), fmgrSn=ga('add_fmgr_sn');
+  if(fmgrIp){
+    const lines=['config system central-management','    set type fortimanager','    set fmg '+fmgrIp];
+    if(fmgrSn) lines.push('    set serial-number '+fmgrSn);
+    lines.push('end');
+    addedSections += nl+lines.join(nl)+nl;
+  }
 
-`;
-    migratedConfig=header+cfg;
-    out.textContent=migratedConfig;
-    stats.textContent=`✓ Migration complete — ${replacements} replacements made · ${(migratedConfig.length/1024).toFixed(1)} KB`;
-    stats.style.color='var(--g)';
-    showToast(`✅ Migration done — ${replacements} replacements made`);
-  };
-  reader.readAsText(file);
+  const fazIp=ga('add_faz_ip');
+  const fazStatus=(document.getElementById('add_faz_status')||{value:'enable'}).value;
+  if(fazIp){
+    addedSections += nl+['config log fortianalyzer setting','    set status '+fazStatus,'    set server '+fazIp,'end'].join(nl)+nl;
+  }
+
+  const syslogIp=ga('add_syslog_ip'), syslogPort=ga('add_syslog_port')||'514';
+  const syslogFac=(document.getElementById('add_syslog_fac')||{value:'local0'}).value;
+  if(syslogIp){
+    addedSections += nl+['config log syslogd setting','    set status enable','    set server '+syslogIp,'    set port '+syslogPort,'    set facility '+syslogFac,'end'].join(nl)+nl;
+  }
+
+  const snmpCom=ga('add_snmp_community'), snmpHost=ga('add_snmp_host')||'0.0.0.0';
+  if(snmpCom){
+    addedSections += nl+['config system snmp sysinfo','    set status enable','end','config system snmp community','    edit 1','        set name '+snmpCom,'        config hosts','            edit 1','                set ip '+snmpHost+' 255.255.255.255','            next','        end','    next','end'].join(nl)+nl;
+  }
+
+  const ntpSrv=ga('add_ntp_server');
+  if(ntpSrv){
+    addedSections += nl+['config system ntp','    set ntpsync enable','    set type custom','    config ntpserver','        edit 1','            set server '+ntpSrv,'        next','    end','end'].join(nl)+nl;
+  }
+
+  const dns1=ga('add_dns1'), dns2=ga('add_dns2');
+  if(dns1){
+    const dnsLines=['config system dns','    set primary '+dns1];
+    if(dns2) dnsLines.push('    set secondary '+dns2);
+    dnsLines.push('end');
+    addedSections += nl+dnsLines.join(nl)+nl;
+  }
+
+  const adminPort=ga('add_admin_port'), adminTimeout=ga('add_admin_timeout');
+  if(adminPort||adminTimeout){
+    const aLines=['config system global'];
+    if(adminPort) aLines.push('    set admin-sport '+adminPort);
+    if(adminTimeout) aLines.push('    set admintimeout '+adminTimeout);
+    aLines.push('end');
+    addedSections += nl+aLines.join(nl)+nl;
+  }
+
+  const customCli=ga('add_custom_cli');
+  if(customCli){ addedSections += nl+customCli+nl; }
+
+    if(addedSections){
+    cfg += nl+nl + addedSections;
+    replacements += addedSections.split(nl).filter(function(l){return l.trim()&&!l.startsWith('config')&&!l.startsWith('end')&&!l.startsWith('next')&&!l.startsWith('edit');}).length;
+  }
+
+  const now = new Date().toISOString().slice(0,19).replace('T',' ');
+  const headerLines=['NetWolf Config Migrator - Smart Migration','Migration date: '+now,'Replacements made: '+replacements,'WARNING: Review carefully before applying to production','',''];
+  const header = headerLines.join(nl);
+  migratedConfig = header + cfg;
+  document.getElementById('migOutput').textContent = migratedConfig;
+  const statsEl = document.getElementById('migStats');
+  if(statsEl){ statsEl.textContent = 'Migration complete - '+replacements+' replacements - '+(migratedConfig.length/1024).toFixed(1)+' KB'; statsEl.style.color='var(--g)'; }
+  showToast('Migration done - '+replacements+' replacements made');
+}
+
+function downloadMigrated(){
+  if(!migratedConfig){ showToast('⚠️ Generate a migrated config first.'); return; }
+  const blob=new Blob([migratedConfig],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`netwolf_migrated_${Date.now()}.conf`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('💾 Config downloaded!');
 }
 
 function downloadMigrated(){
