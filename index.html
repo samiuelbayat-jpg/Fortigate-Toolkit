@@ -10,54 +10,19 @@
 <meta name="author" content="NetWolf">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#1D9E75">
-
-<!-- Open Graph / Social -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://netwolffortigate.com/">
 <meta property="og:title" content="🐺 NetWolf | FortiGate Pro Toolkit">
 <meta property="og:description" content="Professional FortiGate troubleshooting toolkit for network engineers. 50+ CLI playbooks, AI analysis, IP masking and more.">
-<meta property="og:image" content="https://netwolffortigate.com/og-image.png">
-
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://netwolffortigate.com/">
 <meta name="twitter:title" content="🐺 NetWolf | FortiGate Pro Toolkit">
-<meta name="twitter:description" content="Professional FortiGate troubleshooting toolkit for network engineers. 50+ CLI playbooks, AI analysis, IP masking and more.">
-
-<!-- Canonical -->
+<meta name="twitter:description" content="Professional FortiGate troubleshooting toolkit for network engineers.">
 <link rel="canonical" href="https://netwolffortigate.com/">
-
-<!-- Schema.org structured data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "NetWolf Pro Toolkit",
-  "description": "Professional FortiGate CLI troubleshooting toolkit for network engineers. Features 50+ guided playbooks, AI-powered CLI analysis, IP masking, subnet calculator and multi-vendor CLI reference.",
-  "url": "https://netwolffortigate.com",
-  "applicationCategory": "NetworkingApplication",
-  "operatingSystem": "Web Browser",
-  "offers": {
-    "@type": "Offer",
-    "price": "10.00",
-    "priceCurrency": "EUR",
-    "priceSpecification": {
-      "@type": "UnitPriceSpecification",
-      "price": "10.00",
-      "priceCurrency": "EUR",
-      "unitText": "MONTH"
-    }
-  },
-  "author": {
-    "@type": "Organization",
-    "name": "NetWolf",
-    "url": "https://netwolffortigate.com"
-  }
-}
-</script>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"NetWolf Pro Toolkit","description":"Professional FortiGate CLI troubleshooting toolkit for network engineers.","url":"https://netwolffortigate.com","applicationCategory":"NetworkingApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"10.00","priceCurrency":"EUR"}}</script>
 <style>
 :root{--a:#1D9E75;--ad:#0F6E56;--bg:#0d1117;--b2:#161b22;--b3:#21262d;--br:#30363d;--t:#e6edf3;--t2:#8b949e;--t3:#484f58;--g:#3fb950;--y:#d29922;--r:#f85149;--bl:#58a6ff;--mono:'Courier New',monospace}
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
@@ -67,7 +32,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,17,23,.9)
 .logo{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--t)}.logo span{color:var(--a)}
 .nav-links{display:flex;align-items:center;gap:22px}
 .nav-links a{font-size:13px;color:var(--t2);text-decoration:none;transition:color .15s}.nav-links a:hover{color:var(--t)}
-.btn-nav{background:var(--a);color:#fff !important;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:700;transition:all .2s}.btn-nav:hover{background:var(--ad)!important;transform:translateY(-1px)}
+.btn-nav{background:var(--a);color:#fff!important;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:700;transition:all .2s}.btn-nav:hover{background:var(--ad)!important;transform:translateY(-1px)}
 section{position:relative;z-index:1}
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px}
 .hero-inner{max-width:780px}
@@ -104,7 +69,7 @@ h1 .accent{background:linear-gradient(90deg,var(--a),#52d6b0);-webkit-background
 .demo-layout{display:grid;grid-template-columns:220px 1fr;min-height:480px}
 @media(max-width:700px){.demo-layout{grid-template-columns:1fr}}
 .demo-sidebar{background:rgba(10,14,20,.8);border-right:1px solid rgba(255,255,255,.05);padding:12px 8px;overflow-y:auto}
-.demo-sitem{padding:8px 12px;border-radius:8px;font-size:12px;color:rgba(255,255,255,.35);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px;margin-bottom:2px;font-family:var(--mono)}.demo-sitem:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.7)}.demo-sitem.active{background:rgba(29,158,117,.1);color:var(--a);font-weight:700;border-left:2px solid var(--a);padding-left:10px;box-shadow:inset 0 0 20px rgba(29,158,117,.05)}
+.demo-sitem{padding:8px 12px;border-radius:8px;font-size:12px;color:rgba(255,255,255,.35);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px;margin-bottom:2px;font-family:var(--mono)}.demo-sitem:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.7)}.demo-sitem.active{background:rgba(29,158,117,.1);color:var(--a);font-weight:700;border-left:2px solid var(--a);padding-left:10px}.demo-sitem.visited{color:rgba(255,255,255,.4)}
 .demo-slbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:.12em;text-transform:uppercase;padding:12px 12px 5px;font-family:var(--mono)}
 .demo-content{padding:20px 24px;overflow-y:auto;max-height:480px;background:rgba(6,10,15,.5)}
 .demo-step{background:rgba(22,27,34,.6);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}.demo-step:hover{border-color:rgba(29,158,117,.2)}
@@ -118,38 +83,58 @@ h1 .accent{background:linear-gradient(90deg,var(--a),#52d6b0);-webkit-background
 .cmd-ro{color:#3fb950}.cmd-warn{color:#d29922}.cmd-danger{color:#f85149}.cmd-note{color:rgba(255,255,255,.25);font-style:italic}
 .demo-note{font-size:11px;color:rgba(255,255,255,.4);padding:8px 16px 12px;border-top:1px solid rgba(255,255,255,.04);line-height:1.6;background:rgba(29,158,117,.03)}
 .demo-copy-btn{font-size:10px;padding:2px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:rgba(255,255,255,.4);cursor:pointer;font-family:var(--mono);transition:all .15s}.demo-copy-btn:hover{border-color:var(--a);color:var(--a)}
-.demo-ai-box{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px 16px;font-family:var(--mono);font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.9;margin-bottom:12px}
-.demo-ai-response{background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.15);border-radius:10px;padding:16px;font-size:12.5px;color:#e6edf3;line-height:1.8;margin-top:12px}
-.demo-ai-label{font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.demo-ai-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);animation:pulse 2s infinite}
-.demo-subnet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.demo-ai-box{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:12px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.5);line-height:1.9;margin-bottom:12px}
+.demo-ai-response{background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.15);border-radius:9px;padding:14px;font-size:12.5px;color:#e6edf3;line-height:1.8}
+.demo-ai-label{font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.demo-subnet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .demo-subnet-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 14px}
 .demo-subnet-label{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin-bottom:4px}
 .demo-subnet-value{font-family:var(--mono);font-size:14px;font-weight:700}
 .demo-ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .demo-ref-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
 .demo-ref-title{font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);letter-spacing:.06em;background:rgba(29,158,117,.05)}
-.demo-ref-cmd{font-family:var(--mono);font-size:10.5px;color:#3fb950;padding:4px 12px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;justify-content:space-between;align-items:center}.demo-ref-cmd:last-child{border-bottom:none}
-.demo-typing{display:inline-flex;gap:3px;align-items:center}.demo-typing span{width:5px;height:5px;border-radius:50%;background:var(--a);animation:blink 1.2s infinite}.demo-typing span:nth-child(2){animation-delay:.2s}.demo-typing span:nth-child(3){animation-delay:.4s}
+.demo-ref-cmd{font-family:var(--mono);font-size:10.5px;color:#3fb950;padding:5px 12px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;justify-content:space-between;align-items:center}.demo-ref-cmd:last-child{border-bottom:none}
 .demo-feature-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;justify-content:center}
 .demo-pill{font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(29,158,117,.08);color:rgba(255,255,255,.5);border:1px solid rgba(29,158,117,.15);font-family:var(--mono)}
+.anim-scene{animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.anim-step-card{background:rgba(22,27,34,.7);border:1px solid rgba(255,255,255,.06);border-radius:9px;margin-bottom:10px;overflow:hidden;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.anim-step-card.show{opacity:1;transform:translateY(0)}
+.anim-step-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04);background:rgba(0,0,0,.2)}
+.anim-step-title{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:7px}
+.anim-step-num{width:19px;height:19px;border-radius:50%;background:rgba(29,158,117,.2);color:#1D9E75;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(29,158,117,.2);font-family:var(--mono)}
+.anim-badge{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;font-family:var(--mono)}
+.anim-badge.ro{background:rgba(63,185,80,.1);color:#3fb950;border:1px solid rgba(63,185,80,.2)}
+.anim-badge.warn{background:rgba(210,153,34,.1);color:#d29922;border:1px solid rgba(210,153,34,.2)}
+.anim-badge.danger{background:rgba(248,81,73,.1);color:#f85149;border:1px solid rgba(248,81,73,.2)}
+.anim-cmds{padding:10px 14px;font-family:var(--mono);font-size:11.5px;line-height:2;background:rgba(0,0,0,.25)}
+.anim-cmd{display:block}.anim-cmd.ro{color:#3fb950}.anim-cmd.warn{color:#d29922}.anim-cmd.danger{color:#f85149}.anim-cmd.note{color:rgba(255,255,255,.22);font-style:italic}
+.anim-note{font-size:10.5px;color:rgba(255,255,255,.35);padding:7px 14px 10px;border-top:1px solid rgba(255,255,255,.04);line-height:1.5;background:rgba(29,158,117,.03)}
+.anim-dot{width:5px;height:5px;border-radius:50%;background:#1D9E75;display:inline-block;animation:blink 1.2s infinite}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
+.sub-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:9px 12px;transition:opacity .35s,transform .35s;transform:scale(.97)}
+.sub-card.show{opacity:1!important;transform:scale(1)}
+.sub-lbl{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em;font-family:var(--mono);margin-bottom:3px}
+.sub-val{font-family:var(--mono);font-size:13px;font-weight:700}
+.qref-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
+.qref-title{font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.05);letter-spacing:.06em;background:rgba(29,158,117,.05)}
+.qref-cmd{font-family:var(--mono);font-size:10px;padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;justify-content:space-between;align-items:center;gap:4px}.qref-cmd:last-child{border-bottom:none}
+.qref-copy{font-size:9px;padding:1px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.35);cursor:pointer;font-family:var(--mono);flex-shrink:0}.qref-copy:hover{border-color:#1D9E75;color:#1D9E75}
 .pricing-section{padding:90px 24px}
 .pricing-inner{max-width:820px;margin:0 auto}
-.price-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:0}
+.price-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media(max-width:640px){.price-cards{grid-template-columns:1fr}}
 .price-card{background:var(--b2);border:1px solid var(--br);border-radius:18px;padding:32px 28px;position:relative;transition:all .2s}.price-card:hover{transform:translateY(-3px)}.price-card.featured{border:2px solid var(--a);background:#111a14}
 .featured-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--a);color:#fff;font-size:10px;font-weight:700;padding:4px 16px;border-radius:20px;letter-spacing:.07em;white-space:nowrap}
 .price-name{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--a);font-family:var(--mono);margin-bottom:14px}
 .price-amount{display:flex;align-items:flex-start;gap:4px;margin-bottom:6px}
 .price-cur{font-size:20px;font-weight:700;color:var(--t);padding-top:10px}.price-num{font-size:58px;font-weight:700;color:var(--t);line-height:1;letter-spacing:-2px}
-.price-period{font-size:13px;color:var(--t2);margin-bottom:22px}
-.price-feats{list-style:none;margin-bottom:26px;display:flex;flex-direction:column;gap:10px}
+.price-period{font-size:13px;color:var(--t2);margin-bottom:8px}
+.price-feats{list-style:none;margin-bottom:4px;display:flex;flex-direction:column;gap:9px}
 .price-feats li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--t)}
 .price-feats li::before{content:'✓';width:18px;height:18px;border-radius:50%;background:rgba(29,158,117,.15);color:var(--a);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
 .price-note{font-size:11px;color:var(--t3);text-align:center;margin-top:12px}
-.price-section-label{font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;margin:18px 0 8px;padding-bottom:6px;border-bottom:1px solid rgba(29,158,117,.15)}
-.price-feats li{font-size:12.5px}
-
 .order-section{padding:90px 24px;background:var(--b2);border-top:1px solid var(--br)}
 .order-inner{max-width:700px;margin:0 auto}
 .form-card{background:var(--bg);border:1px solid var(--br);border-radius:16px;padding:36px 32px}
@@ -185,25 +170,11 @@ h1 .accent{background:linear-gradient(90deg,var(--a),#52d6b0);-webkit-background
 .btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
 .stripe-powered{display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;color:var(--t3);margin-top:10px}
 .form-err{color:var(--r);font-size:12.5px;margin:10px 0;display:none}
-.tos-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);z-index:9000;align-items:center;justify-content:center}
-.tos-overlay.open{display:flex}
-.tos-card{background:var(--b2);border:1px solid rgba(29,158,117,.35);border-radius:20px;padding:32px 28px;width:620px;max-width:94%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 30px 60px rgba(0,0,0,.7)}
-.tos-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-shrink:0}
-.tos-hdr h3{font-size:17px;font-weight:700;color:var(--t)}
-.tos-close{background:var(--b3);border:1px solid var(--br);border-radius:8px;padding:5px 12px;font-size:13px;color:var(--t2);cursor:pointer;transition:all .15s}.tos-close:hover{border-color:var(--r);color:var(--r)}
-.tos-body{overflow-y:auto;flex:1;font-size:13px;color:var(--t2);line-height:1.8;padding-right:8px}
-.tos-body h4{font-size:13px;font-weight:700;color:var(--a);margin:18px 0 7px;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase}.tos-body h4:first-child{margin-top:0}
-.tos-body p{margin-bottom:10px}.tos-body strong{color:var(--t)}
-.tos-foot{flex-shrink:0;margin-top:18px;padding-top:16px;border-top:1px solid var(--br);display:flex;gap:10px;justify-content:flex-end}
-.tos-btn-accept{background:linear-gradient(90deg,var(--a),var(--ad));border:none;border-radius:20px;padding:9px 24px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s}.tos-btn-accept:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(29,158,117,.3)}
-.tos-btn-close{background:transparent;border:1px solid var(--br);border-radius:20px;padding:9px 20px;font-size:13px;color:var(--t2);cursor:pointer;transition:all .15s}.tos-btn-close:hover{border-color:var(--t2);color:var(--t)}
 .success-msg{display:none;text-align:center;padding:44px 20px}
 .success-check{width:68px;height:68px;border-radius:50%;background:rgba(63,185,80,.12);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 20px}
 .success-msg h3{font-size:21px;margin-bottom:10px}.success-msg p{color:var(--t2);font-size:14px;line-height:1.75;max-width:420px;margin:0 auto}
 .success-creds{background:var(--b2);border:1px solid var(--a);border-radius:10px;padding:16px 20px;margin:20px auto 0;max-width:380px;font-family:var(--mono);font-size:13px;text-align:left}
 .success-creds div{margin-bottom:7px;color:var(--t2)}.success-creds span{color:var(--g)}
-footer{padding:32px 24px;border-top:1px solid var(--br);text-align:center}
-footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration:none;transition:color .15s}footer a:hover{color:var(--a)}
 .tos-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);z-index:9000;align-items:center;justify-content:center}
 .tos-overlay.open{display:flex}
 .tos-card{background:var(--b2);border:1px solid rgba(29,158,117,.35);border-radius:20px;padding:32px 28px;width:620px;max-width:94%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 30px 60px rgba(0,0,0,.7)}
@@ -216,35 +187,9 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
 .tos-foot{flex-shrink:0;margin-top:18px;padding-top:16px;border-top:1px solid var(--br);display:flex;gap:10px;justify-content:flex-end}
 .tos-btn-accept{background:linear-gradient(90deg,var(--a),var(--ad));border:none;border-radius:20px;padding:9px 24px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s}.tos-btn-accept:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(29,158,117,.3)}
 .tos-btn-close{background:transparent;border:1px solid var(--br);border-radius:20px;padding:9px 20px;font-size:13px;color:var(--t2);cursor:pointer;transition:all .15s}.tos-btn-close:hover{border-color:var(--t2);color:var(--t)}
+footer{padding:32px 24px;border-top:1px solid var(--br);text-align:center}
+footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration:none;transition:color .15s}footer a:hover{color:var(--a)}
 .toast{position:fixed;bottom:26px;right:26px;background:var(--b2);border:1px solid var(--a);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--t);z-index:9999;transform:translateY(70px);opacity:0;transition:all .3s;max-width:300px;line-height:1.5}.toast.show{transform:translateY(0);opacity:1}
-
-.anim-scene{animation:fadeIn .4s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.anim-step-card{background:rgba(22,27,34,.7);border:1px solid rgba(255,255,255,.06);border-radius:9px;margin-bottom:10px;overflow:hidden;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
-.anim-step-card.show{opacity:1;transform:translateY(0)}
-.anim-step-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04);background:rgba(0,0,0,.2)}
-.anim-step-title{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:7px}
-.anim-step-num{width:19px;height:19px;border-radius:50%;background:rgba(29,158,117,.2);color:#1D9E75;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(29,158,117,.2);font-family:var(--mono)}
-.anim-badge{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;font-family:var(--mono)}
-.anim-badge.ro{background:rgba(63,185,80,.1);color:#3fb950;border:1px solid rgba(63,185,80,.2)}
-.anim-badge.warn{background:rgba(210,153,34,.1);color:#d29922;border:1px solid rgba(210,153,34,.2)}
-.anim-badge.danger{background:rgba(248,81,73,.1);color:#f85149;border:1px solid rgba(248,81,73,.2)}
-.anim-cmds{padding:10px 14px;font-family:var(--mono);font-size:11.5px;line-height:2;background:rgba(0,0,0,.25)}
-.anim-cmd{display:block}.anim-cmd.ro{color:#3fb950}.anim-cmd.warn{color:#d29922}.anim-cmd.danger{color:#f85149}.anim-cmd.note{color:rgba(255,255,255,.22);font-style:italic}
-.anim-note{font-size:10.5px;color:rgba(255,255,255,.35);padding:7px 14px 10px;border-top:1px solid rgba(255,255,255,.04);line-height:1.5;background:rgba(29,158,117,.03)}
-.anim-dot{width:5px;height:5px;border-radius:50%;background:#1D9E75;display:inline-block;animation:blink 1.2s infinite}
-@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
-.sub-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:9px 12px;transition:opacity .35s,transform .35s;transform:scale(.97)}
-.sub-card.show{opacity:1!important;transform:scale(1)}
-.sub-lbl{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em;font-family:var(--mono);margin-bottom:3px}
-.sub-val{font-family:var(--mono);font-size:13px;font-weight:700}
-.qref-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
-.qref-title{font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.05);letter-spacing:.06em;background:rgba(29,158,117,.05)}
-.qref-cmd{font-family:var(--mono);font-size:10px;padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;justify-content:space-between;align-items:center;gap:4px}
-.qref-cmd:last-child{border-bottom:none}
-.qref-copy{font-size:9px;padding:1px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.35);cursor:pointer;font-family:var(--mono);flex-shrink:0}
-.qref-copy:hover{border-color:#1D9E75;color:#1D9E75}
-.demo-sitem.visited{color:rgba(255,255,255,.4)}
 </style>
 </head>
 <body>
@@ -265,7 +210,7 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   <div class="hero-inner">
     <div class="hero-badge">🐺 NetWolf | Fortigate Pro Toolkit</div>
     <h1>The Engineer's<br><span class="accent">FortiGate Command Centre</span></h1>
-    <p class="hero-sub">50+ guided troubleshoot playbooks, AI-powered CLI analysis, IP masking, subnet calculator, and multi-vendor CLI reference — all in a single browser-based toolkit built for network engineers.</p>
+    <p class="hero-sub">50+ guided troubleshoot playbooks, AI-powered CLI analysis, IP masking, subnet calculator, and multi-vendor CLI reference — built for network engineers.</p>
     <div class="hero-cta">
       <a href="#demo" class="btn-primary">▶ Interactive Demo</a>
       <a href="#pricing" class="btn-ghost">View Pricing</a>
@@ -275,7 +220,7 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
 
 <section class="stats-bar">
   <div class="stat"><div class="stat-num">50+</div><div class="stat-lbl">Guided playbooks</div></div>
-  <div class="stat"><div class="stat-num">15</div><div class="stat-lbl">Trouble categories</div></div>
+  <div class="stat"><div class="stat-num">26</div><div class="stat-lbl">Trouble categories</div></div>
   <div class="stat"><div class="stat-num">10</div><div class="stat-lbl">Config templates</div></div>
   <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">Vendor CLIs</div></div>
   <div class="stat"><div class="stat-num">AI</div><div class="stat-lbl">Groq LLaMA 3.3</div></div>
@@ -286,102 +231,20 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   <h2 class="section-title">Every tool a FortiGate engineer needs</h2>
   <p class="section-sub">Built from real-world troubleshooting experience across IPsec, SD-WAN, HA clusters, VDOM architectures, and enterprise security stacks.</p>
   <div class="feat-grid">
-    <div class="feat-card">
-      <div class="feat-icon">🔒</div>
-      <div class="feat-title">IPsec &amp; SSL VPN Troubleshooting</div>
-      <div class="feat-desc">Step-by-step playbooks for Phase 1/Phase 2 failures, NO_PROPOSAL_CHOSEN errors, DPD drops, unstable tunnels, dead peers, SSL VPN login loops, client cert errors, tunnel mode mismatches, and geo-IP source restrictions. Includes live IKE debug sequences, proposal comparison, and DPD inspection commands.</div>
-      <div class="feat-tags"><span class="feat-tag">ike -1 debug</span><span class="feat-tag">phase1/phase2</span><span class="feat-tag">ssl monitor</span><span class="feat-tag">cert-cache</span><span class="feat-tag">DPD</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">📃</div>
-      <div class="feat-title">Firewall Policy &amp; NAT Diagnostics</div>
-      <div class="feat-desc">Full debug-flow trace sequences (filter by source IP, port, protocol), policy lookup via iprope, NAT decision inspection, session table filtering, implicit deny detection, and UTM profile block analysis. Covers both SNAT and DNAT troubleshooting paths including port forwarding VIPs and hairpin NAT.</div>
-      <div class="feat-tags"><span class="feat-tag">debug flow</span><span class="feat-tag">iprope lookup</span><span class="feat-tag">session filter</span><span class="feat-tag">SNAT/DNAT</span><span class="feat-tag">VIP</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🌐</div>
-      <div class="feat-title">SD-WAN Health &amp; Steering</div>
-      <div class="feat-desc">Member status and SLA inspection, health check daemon debug, service rule matching, preferred-interface tracing, and failover verification. Covers latency/jitter/packetloss SLA thresholds, load-balancing rules, and default route validation via SD-WAN members.</div>
-      <div class="feat-tags"><span class="feat-tag">sdwan sla</span><span class="feat-tag">health-check</span><span class="feat-tag">prefer-interface</span><span class="feat-tag">failover</span><span class="feat-tag">members</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🔧</div>
-      <div class="feat-title">Routing — Static, OSPF, BGP, PBR</div>
-      <div class="feat-desc">Kernel routing table inspection, per-destination route lookups, OSPF neighbour and database queries, BGP peer summary and advertised-route inspection, policy-based routing (PBR) debug with proute list, and multicast PIM/IGMP group monitoring.</div>
-      <div class="feat-tags"><span class="feat-tag">ospf neighbor</span><span class="feat-tag">bgp summary</span><span class="feat-tag">proute list</span><span class="feat-tag">kernel route</span><span class="feat-tag">PIM/IGMP</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">⚙️</div>
-      <div class="feat-title">HA / Cluster Troubleshooting</div>
-      <div class="feat-desc">Heartbeat link monitoring, HA checksum sync verification, split-brain detection, forced manual failover, per-unit management IP setup, and full HA daemon debugging (hasync, hatalk). Covers Active-Passive failover events, uptime reset, and recovery procedures.</div>
-      <div class="feat-tags"><span class="feat-tag">ha status</span><span class="feat-tag">checksum</span><span class="feat-tag">hasync</span><span class="feat-tag">failover</span><span class="feat-tag">split-brain</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🏢</div>
-      <div class="feat-title">VDOM &amp; Inter-VDOM Routing</div>
-      <div class="feat-desc">Multi-VDOM context switching, VDOM link pair setup and status verification, per-VDOM routing and firewall policy inspection, cross-VDOM debug-flow tracing, and complete inter-VDOM static route configuration examples with /30 link subnets.</div>
-      <div class="feat-tags"><span class="feat-tag">vdom-link</span><span class="feat-tag">context switch</span><span class="feat-tag">inter-vdom route</span><span class="feat-tag">multi-tenant</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🔑</div>
-      <div class="feat-title">Authentication — LDAP, RADIUS, FSSO</div>
-      <div class="feat-desc">Live LDAP bind and connectivity tests (test authserver), RADIUS PAP authentication debug, fnbamd daemon real-time logging, FSSO agent sync troubleshooting, FortiAuthenticator integration commands, and authenticated user session inspection with group-match verification.</div>
-      <div class="feat-tags"><span class="feat-tag">fnbamd -1</span><span class="feat-tag">test authserver</span><span class="feat-tag">FSSO debug</span><span class="feat-tag">auth list</span><span class="feat-tag">FAC</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🛡️</div>
-      <div class="feat-title">UTM, IPS, Web Filter &amp; SSL Inspection</div>
-      <div class="feat-desc">Application control log inspection, FortiGuard URL rating tests, SSL deep-inspection profile verification, IPS sensor and anomaly lookup, antivirus outbreak-prevention config, web filter inspection-mode setup, and certificate CA chain validation for SSL inspection.</div>
-      <div class="feat-tags"><span class="feat-tag">av-profile</span><span class="feat-tag">ips-sensor</span><span class="feat-tag">ssl-ssh-profile</span><span class="feat-tag">fortiguard rating</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🤖</div>
-      <div class="feat-title">AI CLI Analyzer — Groq Powered</div>
-      <div class="feat-desc">Paste any raw FortiGate CLI output and receive instant AI-driven diagnosis using LLaMA 3.3 70B via the free Groq API. Also supports Mixtral 8x7B and LLaMA 3.1 8B. Returns root cause, recommended fix commands, and clear explanation — no guesswork or manual searching.</div>
-      <div class="feat-tags"><span class="feat-tag">LLaMA 3.3 70B</span><span class="feat-tag">Mixtral 8x7B</span><span class="feat-tag">Groq free API</span><span class="feat-tag">output parser</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🎭</div>
-      <div class="feat-title">IP Masking &amp; Bulk Anonymizer</div>
-      <div class="feat-desc">Automatically detect and replace all real IPv4 addresses in any CLI output with RFC 5737 documentation IPs (192.0.2.x, 198.51.100.x, 203.0.113.x). Generates a sortable real→fake mapping table. Export masked reports as text for vendor tickets, peer review, or knowledge base articles.</div>
-      <div class="feat-tags"><span class="feat-tag">RFC 5737</span><span class="feat-tag">bulk replace</span><span class="feat-tag">mapping table</span><span class="feat-tag">export report</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🧮</div>
-      <div class="feat-title">IPv4 Subnet Calculator</div>
-      <div class="feat-desc">CIDR-based subnet calculator returning network and broadcast addresses, first/last usable hosts, netmask, wildcard mask, usable host count, and full binary breakdown of IP/mask/network. Perfect for designing VIP ranges, DHCP scopes, policy address objects, and OSPF network statements.</div>
-      <div class="feat-tags"><span class="feat-tag">CIDR</span><span class="feat-tag">wildcard mask</span><span class="feat-tag">binary view</span><span class="feat-tag">usable hosts</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🌍</div>
-      <div class="feat-title">Multi-Vendor CLI Reference</div>
-      <div class="feat-desc">Side-by-side CLI command reference for Cisco IOS/IOS-XE, ArubaOS-CX, and Huawei VRP — covering interface config, VLAN and SVI setup, routing, ACLs, OSPF/BGP adjacency, and troubleshooting commands. Every command has an inline explanation and read-only/caution/danger safety badge.</div>
-      <div class="feat-tags"><span class="feat-tag">Cisco IOS-XE</span><span class="feat-tag">ArubaOS-CX</span><span class="feat-tag">Huawei VRP</span><span class="feat-tag">side-by-side</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">📡</div>
-      <div class="feat-title">Packet Sniffer &amp; Deep Flow Trace</div>
-      <div class="feat-desc">Pre-built sniffer filter templates (host, port, ICMP, dual-side capture) with verbosity level guidance, and complete debug-flow sequences with function-name and iprope-set-detail flags. Includes key output patterns to identify DNAT, SNAT, policy match, routing decision, and implicit deny.</div>
-      <div class="feat-tags"><span class="feat-tag">sniffer packet</span><span class="feat-tag">flow trace</span><span class="feat-tag">dual-side</span><span class="feat-tag">iprope-set-detail</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🔬</div>
-      <div class="feat-title">Advanced Diagnostics &amp; Kernel Access</div>
-      <div class="feat-desc">Expert-level tools: fnsysctl kernel commands (ifconfig, df, top, ls), daemon debug via diagnose test application (WAD, fnbamd, IPS engine, DNS proxy), control-plane local-in policy inspection, DoS policy counter monitoring, conserve-mode memory threshold status, and live session count queries.</div>
-      <div class="feat-tags"><span class="feat-tag">fnsysctl</span><span class="feat-tag">daemon debug</span><span class="feat-tag">local-in</span><span class="feat-tag">conserve mode</span><span class="feat-tag">DoS policy</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">📜</div>
-      <div class="feat-title">10 Full Configuration Templates</div>
-      <div class="feat-desc">Copy-ready config guides: initial FortiGate setup from scratch, multi-VDOM tenant setup, IPsec site-to-site VPN, SSL VPN with LDAP user group, SD-WAN with health checks and SLA rules, HA Active-Passive cluster, inter-VDOM routing, port-forwarding VIPs, OSPF/BGP redistribution, and full UTM security profile stack.</div>
-      <div class="feat-tags"><span class="feat-tag">initial setup</span><span class="feat-tag">HA cluster</span><span class="feat-tag">SSL VPN LDAP</span><span class="feat-tag">SD-WAN SLA</span><span class="feat-tag">UTM stack</span></div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">☁️</div>
-      <div class="feat-title">FortiGuard, FortiManager &amp; FortiAnalyzer</div>
-      <div class="feat-desc">FortiGuard connectivity and rating tests, AV/IPS/web-filter signature update triggers, license status inspection, FortiManager FGFM tunnel and DVM diagnostics, FortiAnalyzer connectivity debug, syslog config verification, SNMP community checks, and NTP sync status — all in one place.</div>
-      <div class="feat-tags"><span class="feat-tag">fortiguard</span><span class="feat-tag">FortiManager</span><span class="feat-tag">FortiAnalyzer</span><span class="feat-tag">autoupdate</span><span class="feat-tag">SNMP</span></div>
-    </div>
+    <div class="feat-card"><div class="feat-icon">🔒</div><div class="feat-title">IPsec &amp; SSL VPN Troubleshooting</div><div class="feat-desc">Step-by-step playbooks for Phase 1/2 failures, NO_PROPOSAL_CHOSEN, DPD drops, SSL VPN login loops, geo-IP blocks, cert errors, and tunnel mode mismatches. Live IKE debug sequences included.</div><div class="feat-tags"><span class="feat-tag">ike -1 debug</span><span class="feat-tag">phase1/2</span><span class="feat-tag">ssl monitor</span><span class="feat-tag">DPD</span></div></div>
+    <div class="feat-card"><div class="feat-icon">📃</div><div class="feat-title">Firewall Policy &amp; NAT Diagnostics</div><div class="feat-desc">Full debug-flow trace sequences, policy lookup via iprope, NAT decision inspection, session table filtering, implicit deny detection, and UTM profile block analysis. Covers SNAT, DNAT, VIP, and hairpin NAT.</div><div class="feat-tags"><span class="feat-tag">debug flow</span><span class="feat-tag">iprope lookup</span><span class="feat-tag">session filter</span><span class="feat-tag">SNAT/DNAT</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🌐</div><div class="feat-title">SD-WAN Health &amp; Steering</div><div class="feat-desc">Member status and SLA inspection, health check daemon debug, service rule matching, preferred-interface tracing, and failover verification. Covers latency, jitter, packet loss thresholds and load-balancing rules.</div><div class="feat-tags"><span class="feat-tag">sdwan sla</span><span class="feat-tag">health-check</span><span class="feat-tag">prefer-interface</span><span class="feat-tag">failover</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🔧</div><div class="feat-title">Routing — Static, OSPF, BGP, PBR</div><div class="feat-desc">Kernel routing table inspection, OSPF neighbour and database queries, BGP peer summary and advertised-route inspection, PBR debug with proute list, and multicast PIM/IGMP group monitoring.</div><div class="feat-tags"><span class="feat-tag">ospf neighbor</span><span class="feat-tag">bgp summary</span><span class="feat-tag">proute list</span><span class="feat-tag">kernel route</span></div></div>
+    <div class="feat-card"><div class="feat-icon">⚙️</div><div class="feat-title">HA / Cluster Troubleshooting</div><div class="feat-desc">Heartbeat link monitoring, checksum sync verification, split-brain detection, forced manual failover, per-unit management IP setup, and full HA daemon debugging covering hasync and hatalk.</div><div class="feat-tags"><span class="feat-tag">ha status</span><span class="feat-tag">checksum</span><span class="feat-tag">hasync</span><span class="feat-tag">failover</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🤖</div><div class="feat-title">AI CLI Analyzer — Groq Powered</div><div class="feat-desc">Paste any raw FortiGate CLI output and get instant AI-driven diagnosis using LLaMA 3.3 70B via the free Groq API. Also supports Mixtral 8x7B and LLaMA 3.1 8B. Returns root cause, fix commands, and explanation.</div><div class="feat-tags"><span class="feat-tag">LLaMA 3.3 70B</span><span class="feat-tag">Mixtral 8x7B</span><span class="feat-tag">Groq free API</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🎭</div><div class="feat-title">IP Masking &amp; Bulk Anonymizer</div><div class="feat-desc">Automatically detect and replace all real IPv4 addresses in any CLI output with RFC 5737 documentation IPs. Generates a sortable real→fake mapping table. Export masked reports for vendor tickets or peer review.</div><div class="feat-tags"><span class="feat-tag">RFC 5737</span><span class="feat-tag">bulk replace</span><span class="feat-tag">mapping table</span><span class="feat-tag">export</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🧮</div><div class="feat-title">IPv4 Subnet Calculator</div><div class="feat-desc">CIDR-based subnet calculator returning network/broadcast addresses, first/last usable hosts, netmask, wildcard mask, usable host count, and full binary breakdown. Perfect for VIP ranges, DHCP scopes, and policy objects.</div><div class="feat-tags"><span class="feat-tag">CIDR</span><span class="feat-tag">wildcard mask</span><span class="feat-tag">binary view</span><span class="feat-tag">usable hosts</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🌍</div><div class="feat-title">Multi-Vendor CLI Reference</div><div class="feat-desc">Side-by-side CLI for Cisco IOS/IOS-XE, ArubaOS-CX, and Huawei VRP — interface config, VLAN setup, routing, ACLs, OSPF/BGP. Every command has an inline explanation and read-only/caution/danger safety badge.</div><div class="feat-tags"><span class="feat-tag">Cisco IOS-XE</span><span class="feat-tag">ArubaOS-CX</span><span class="feat-tag">Huawei VRP</span></div></div>
+    <div class="feat-card"><div class="feat-icon">⚙️</div><div class="feat-title">Config Generator — 7 Templates</div><div class="feat-desc">Fill a form with your network details and get complete, ready-to-paste FortiGate CLI. Covers Initial Setup, IPsec VPN, SSL VPN, VLAN+DHCP, Port Forwarding, HA Cluster, and SD-WAN — all with correct syntax.</div><div class="feat-tags"><span class="feat-tag">IPsec</span><span class="feat-tag">SSL VPN</span><span class="feat-tag">HA Cluster</span><span class="feat-tag">SD-WAN</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🔄</div><div class="feat-title">Config Migrator</div><div class="feat-desc">Upload an existing FortiGate backup config, enter new hostname, IPs, and text replacements — the tool generates a fully updated config ready to apply to the new device. Download as .conf file.</div><div class="feat-tags"><span class="feat-tag">upload .conf</span><span class="feat-tag">IP replace</span><span class="feat-tag">hostname</span><span class="feat-tag">download</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🔬</div><div class="feat-title">Advanced Diagnostics &amp; Kernel</div><div class="feat-desc">fnsysctl kernel commands, daemon debug via diagnose test application, local-in and DoS policy inspection, config transaction safe-change workflow, backup/restore/firmware procedures, and conserve mode monitoring.</div><div class="feat-tags"><span class="feat-tag">fnsysctl</span><span class="feat-tag">daemon debug</span><span class="feat-tag">config tx</span><span class="feat-tag">backup/restore</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🛡️</div><div class="feat-title">ZTNA, FortiSwitch &amp; FortiAP</div><div class="feat-desc">ZTNA EMS connectivity, tag cache and access proxy debug. FortiSwitch managed port/VLAN and CAPWAP troubleshooting. FortiAP wireless client inspection, SSID config, rogue AP detection, and AP firmware management.</div><div class="feat-tags"><span class="feat-tag">ZTNA fcnacd</span><span class="feat-tag">FortiSwitch</span><span class="feat-tag">CAPWAP</span><span class="feat-tag">FortiAP</span></div></div>
+    <div class="feat-card"><div class="feat-icon">🔗</div><div class="feat-title">Security Fabric &amp; More</div><div class="feat-desc">Security Fabric CSF neighbour and automation debug. SIP/VoIP ALG and RTP troubleshooting. IPv6 routing, DHCPv6, NAT64. Traffic shaping QoS. FortiManager FGFM and FortiAnalyzer log delivery diagnostics.</div><div class="feat-tags"><span class="feat-tag">CSF</span><span class="feat-tag">SIP ALG</span><span class="feat-tag">IPv6</span><span class="feat-tag">FortiManager</span></div></div>
   </div>
 </section>
 
@@ -398,20 +261,17 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
         <span class="demo-pill">🎭 IP Anonymizer</span>
         <span class="demo-pill">🧮 Subnet Calc</span>
         <span class="demo-pill">📡 Quick Ref</span>
+        <span class="demo-pill">⚙️ Config Generator</span>
+        <span class="demo-pill">🔄 Config Migrator</span>
         <span class="demo-pill">🌐 Multi-Vendor</span>
-        <span class="demo-pill">⚙️ HA / Cluster</span>
-        <span class="demo-pill">🌐 SD-WAN</span>
       </div>
     </div>
-
     <div class="demo-shell" id="animatedDemo">
       <div class="demo-tbar">
         <div class="dot2 r"></div><div class="dot2 y"></div><div class="dot2 g"></div>
         <span class="demo-tbar-title">🐺 NetWolf Pro &nbsp;·&nbsp; netwolffortigate.com &nbsp;·&nbsp; FortiOS 6.x / 7.x</span>
         <span class="demo-tbar-badge">LIVE PREVIEW</span>
       </div>
-
-      <!-- scene tabs -->
       <div class="demo-tabs-bar" id="demoTabBar">
         <div class="demo-tab active" id="dtab0">📋 Guided Steps</div>
         <div class="demo-tab" id="dtab1">🤖 AI Analyzer</div>
@@ -419,9 +279,7 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
         <div class="demo-tab" id="dtab3">🧮 Subnet Calc</div>
         <div class="demo-tab" id="dtab4">⚡ Quick Ref</div>
       </div>
-
       <div class="demo-layout">
-        <!-- sidebar -->
         <div class="demo-sidebar" id="animSidebar">
           <div class="demo-slbl">Troubleshoot</div>
           <div class="demo-sitem active" id="asi0"><span>🔒</span><span>VPN / IPsec</span></div>
@@ -440,148 +298,38 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
           <div class="demo-sitem" id="asi11"><span>🧮</span><span>Subnet Calc</span></div>
           <div class="demo-sitem" id="asi12"><span>📡</span><span>Quick Ref</span></div>
         </div>
-
-        <!-- content area -->
         <div class="demo-content" id="animContent" style="padding:0;position:relative;overflow:hidden">
-
-          <!-- SCENE 1: Guided Steps - VPN -->
           <div class="anim-scene" id="ascene0" style="padding:18px 20px">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-              <span style="font-size:16px">🔒</span>
-              <span style="font-size:13px;font-weight:700;color:#e6edf3">IPsec VPN Troubleshooting</span>
-              <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono);margin-left:auto">4 steps</span>
-            </div>
-            <div class="anim-step-card" id="asc0">
-              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">1</div>Check tunnel status</div><span class="anim-badge ro">read-only</span></div>
-              <div class="anim-cmds" id="acmds0"></div>
-              <div class="anim-note">💡 Look for "established" in both phases. Missing = tunnel never came up.</div>
-            </div>
-            <div class="anim-step-card" id="asc1">
-              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">2</div>Live IKE negotiation debug</div><span class="anim-badge warn">⚠ config</span></div>
-              <div class="anim-cmds" id="acmds1"></div>
-              <div class="anim-note">💡 Look for: NO_PROPOSAL_CHOSEN · AUTH_FAILED · PAYLOAD_MALFORMED</div>
-            </div>
-            <div class="anim-step-card" id="asc2">
-              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">3</div>Compare phase proposals</div><span class="anim-badge ro">read-only</span></div>
-              <div class="anim-cmds" id="acmds2"></div>
-              <div class="anim-note">💡 Encryption, DH group and lifetime must match exactly on both peers.</div>
-            </div>
-            <div class="anim-step-card" id="asc3">
-              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">4</div>Check routing to remote subnet</div><span class="anim-badge ro">read-only</span></div>
-              <div class="anim-cmds" id="acmds3"></div>
-              <div class="anim-note">💡 Missing static route = traffic blackholed before reaching tunnel.</div>
-            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:16px">🔒</span><span style="font-size:13px;font-weight:700;color:#e6edf3">IPsec VPN Troubleshooting</span><span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono);margin-left:auto">4 steps</span></div>
+            <div class="anim-step-card" id="asc0"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">1</div>Check tunnel status</div><span class="anim-badge ro">read-only</span></div><div class="anim-cmds" id="acmds0"></div><div class="anim-note">💡 Look for "established" in both phases. Missing = tunnel never came up.</div></div>
+            <div class="anim-step-card" id="asc1"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">2</div>Live IKE negotiation debug</div><span class="anim-badge warn">⚠ config</span></div><div class="anim-cmds" id="acmds1"></div><div class="anim-note">💡 Look for: NO_PROPOSAL_CHOSEN · AUTH_FAILED · PAYLOAD_MALFORMED</div></div>
+            <div class="anim-step-card" id="asc2"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">3</div>Compare phase proposals</div><span class="anim-badge ro">read-only</span></div><div class="anim-cmds" id="acmds2"></div><div class="anim-note">💡 Encryption, DH group and lifetime must match exactly on both peers.</div></div>
+            <div class="anim-step-card" id="asc3"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">4</div>Check routing to remote subnet</div><span class="anim-badge ro">read-only</span></div><div class="anim-cmds" id="acmds3"></div><div class="anim-note">💡 Missing static route = traffic blackholed before reaching tunnel.</div></div>
           </div>
-
-          <!-- SCENE 2: HA Cluster -->
           <div class="anim-scene" id="ascene1" style="padding:18px 20px;display:none">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-              <span style="font-size:16px">⚙️</span>
-              <span style="font-size:13px;font-weight:700;color:#e6edf3">HA / Cluster Troubleshooting</span>
-              <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono);margin-left:auto">3 steps</span>
-            </div>
-            <div class="anim-step-card show">
-              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">1</div>Check HA cluster status</div><span class="anim-badge ro">read-only</span></div>
-              <div class="anim-cmds"><span class="anim-cmd ro">get system ha status</span><br><span class="anim-cmd ro">diagnose sys ha status</span><br><span class="anim-cmd ro">diagnose sys ha dump-by vcluster</span></div>
-              <div class="anim-note">💡 Shows primary/secondary role, uptime, sync state, heartbeat link health.</div>
-            </div>
-            <div class="anim-step-card show">
-              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">2</div>Verify synchronization</div><span class="anim-badge warn">⚠ config</span></div>
-              <div class="anim-cmds"><span class="anim-cmd warn">diagnose sys ha checksum show</span><br><span class="anim-cmd warn">diagnose sys ha checksum recalculate</span><br><span class="anim-cmd warn">execute ha synchronize start</span></div>
-              <div class="anim-note">💡 Checksum mismatch = config divergence. Force sync to resolve.</div>
-            </div>
-            <div class="anim-step-card show">
-              <div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">3</div>Force manual failover</div><span class="anim-badge danger">⚠ impact</span></div>
-              <div class="anim-cmds"><span class="anim-cmd danger">execute ha failover set 1</span><br><span class="anim-cmd ro">get system ha status</span><br><span class="anim-cmd danger">execute ha failover unset 1</span></div>
-              <div class="anim-note">💡 ⚠️ Brief traffic interruption expected. Confirm new primary role after.</div>
-            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:16px">⚙️</span><span style="font-size:13px;font-weight:700;color:#e6edf3">HA / Cluster Troubleshooting</span></div>
+            <div class="anim-step-card show"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">1</div>Check HA cluster status</div><span class="anim-badge ro">read-only</span></div><div class="anim-cmds"><span class="anim-cmd ro">get system ha status</span><br><span class="anim-cmd ro">diagnose sys ha status</span><br><span class="anim-cmd ro">diagnose sys ha dump-by vcluster</span></div><div class="anim-note">💡 Shows primary/secondary role, uptime, sync state, heartbeat link health.</div></div>
+            <div class="anim-step-card show"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">2</div>Verify synchronization</div><span class="anim-badge warn">⚠ config</span></div><div class="anim-cmds"><span class="anim-cmd warn">diagnose sys ha checksum show</span><br><span class="anim-cmd warn">diagnose sys ha checksum recalculate</span><br><span class="anim-cmd warn">execute ha synchronize start</span></div><div class="anim-note">💡 Checksum mismatch = config divergence. Force sync to resolve.</div></div>
+            <div class="anim-step-card show"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">3</div>Force manual failover</div><span class="anim-badge danger">⚠ impact</span></div><div class="anim-cmds"><span class="anim-cmd danger">execute ha failover set 1</span><br><span class="anim-cmd ro">get system ha status</span><br><span class="anim-cmd danger">execute ha failover unset 1</span></div><div class="anim-note">💡 ⚠️ Brief traffic interruption expected. Confirm new primary role after.</div></div>
           </div>
-
-          <!-- SCENE 3: AI Analyzer -->
           <div class="anim-scene" id="ascene2" style="padding:18px 20px;display:none">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-              <span style="font-size:13px;font-weight:700;color:#e6edf3">🤖 AI CLI Analyzer</span>
-              <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">Groq LLaMA 3.3 70B</span>
-            </div>
-            <div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:12px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.5);line-height:1.9;margin-bottom:12px">
-              <div style="font-size:9px;color:rgba(255,255,255,.25);margin-bottom:8px;letter-spacing:.06em">▸ PASTED CLI OUTPUT</div>
-              <span style="color:rgba(255,255,255,.3)"># get vpn ipsec tunnel summary</span><br>
-              <span style="color:#e6edf3">Tunnel name &nbsp;: SiteA-HQ</span><br>
-              <span style="color:#f85149">Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: down</span><br>
-              <span style="color:rgba(255,255,255,.4)">Local IP &nbsp;&nbsp;&nbsp;&nbsp;: 203.0.113.1 &nbsp;&nbsp;Remote: 198.51.100.5</span><br>
-              <span style="color:#d29922">Last error &nbsp;&nbsp;: no proposal chosen</span><br>
-              <span style="color:rgba(255,255,255,.3)">Npu-flag &nbsp;&nbsp;&nbsp;&nbsp;: 00 &nbsp;&nbsp;Proxyid: 1</span>
-            </div>
-            <div id="aiThinking" style="padding:8px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:8px">
-              <div style="display:flex;gap:4px"><span class="anim-dot"></span><span class="anim-dot" style="animation-delay:.2s"></span><span class="anim-dot" style="animation-delay:.4s"></span></div>
-              Analyzing output with AI...
-            </div>
-            <div id="aiResult" style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:9px;padding:14px;font-size:12px;color:rgba(255,255,255,.8);line-height:1.8;display:none">
-              <div style="font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:#1D9E75;display:inline-block"></span>AI Diagnosis — LLaMA 3.3 70B</div>
-              <strong style="color:#58a6ff">Root cause:</strong> Phase 1 IKE proposal mismatch. The error <span style="font-family:var(--mono);font-size:10px;background:rgba(0,0,0,.4);padding:1px 5px;border-radius:3px;color:#3fb950">no proposal chosen</span> means the initiator is advertising encryption/DH-group combinations the remote peer cannot accept.<br><br>
-              <strong style="color:#58a6ff">Fix commands:</strong><br>
-              <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950;display:block;margin:3px 0">show vpn ipsec phase1-interface SiteA-HQ</span>
-              <span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug application ike -1</span>
-              <span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug enable</span><br>
-              <strong style="color:#58a6ff">Resolution:</strong> Align <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set proposal aes256-sha256</span> and <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set dhgrp 14</span> on both peers. Switch to IKEv2.
-            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:13px;font-weight:700;color:#e6edf3">🤖 AI CLI Analyzer</span><span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">Groq LLaMA 3.3 70B</span></div>
+            <div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:12px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.5);line-height:1.9;margin-bottom:12px"><div style="font-size:9px;color:rgba(255,255,255,.25);margin-bottom:8px;letter-spacing:.06em">▸ PASTED CLI OUTPUT</div><span style="color:rgba(255,255,255,.3)"># get vpn ipsec tunnel summary</span><br><span style="color:#e6edf3">Tunnel name &nbsp;: SiteA-HQ</span><br><span style="color:#f85149">Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: down</span><br><span style="color:rgba(255,255,255,.4)">Local IP &nbsp;&nbsp;&nbsp;&nbsp;: 203.0.113.1 &nbsp;&nbsp;Remote: 198.51.100.5</span><br><span style="color:#d29922">Last error &nbsp;&nbsp;: no proposal chosen</span></div>
+            <div id="aiThinking" style="padding:8px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:8px"><div style="display:flex;gap:4px"><span class="anim-dot"></span><span class="anim-dot" style="animation-delay:.2s"></span><span class="anim-dot" style="animation-delay:.4s"></span></div>Analyzing output with AI...</div>
+            <div id="aiResult" style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:9px;padding:14px;font-size:12px;color:rgba(255,255,255,.8);line-height:1.8;display:none"><div style="font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:#1D9E75;display:inline-block"></span>AI Diagnosis — LLaMA 3.3 70B</div><strong style="color:#58a6ff">Root cause:</strong> Phase 1 IKE proposal mismatch. The error <span style="font-family:var(--mono);font-size:10px;background:rgba(0,0,0,.4);padding:1px 5px;border-radius:3px;color:#3fb950">no proposal chosen</span> means the initiator is advertising encryption/DH-group combinations the remote peer cannot accept.<br><br><strong style="color:#58a6ff">Fix commands:</strong><br><span style="font-family:var(--mono);font-size:10.5px;color:#3fb950;display:block;margin:3px 0">show vpn ipsec phase1-interface SiteA-HQ</span><span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug application ike -1</span><span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug enable</span><br><strong style="color:#58a6ff">Resolution:</strong> Align <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set proposal aes256-sha256</span> and <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set dhgrp 14</span> on both peers. Switch to IKEv2.</div>
           </div>
-
-          <!-- SCENE 4: IP Anonymizer -->
           <div class="anim-scene" id="ascene3" style="padding:18px 20px;display:none">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-              <span style="font-size:13px;font-weight:700;color:#e6edf3">🎭 IP Anonymizer</span>
-              <span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">RFC 5737 safe IPs</span>
-            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:13px;font-weight:700;color:#e6edf3">🎭 IP Anonymizer</span><span style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">RFC 5737 safe IPs</span></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-              <div>
-                <div style="font-size:9px;color:rgba(255,255,255,.25);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px">▸ ORIGINAL CLI OUTPUT</div>
-                <div style="background:rgba(0,0,0,.4);border:1px solid rgba(248,81,73,.15);border-radius:8px;padding:12px;font-family:var(--mono);font-size:10.5px;line-height:1.9;color:rgba(255,255,255,.5)">
-                  <span style="color:#f85149">src=192.168.10.50</span><br>
-                  <span style="color:#f85149">dst=10.0.0.1</span><br>
-                  <span style="color:rgba(255,255,255,.4)">proto=6 sport=52441</span><br>
-                  <span style="color:#f85149">gw=172.16.1.254</span><br>
-                  <span style="color:rgba(255,255,255,.4)">policy-id=42 nat</span><br>
-                  <span style="color:#f85149">SNAT 192.168.10.50</span><br>
-                  <span style="color:#f85149">&nbsp;&nbsp;->203.88.12.1</span><br>
-                  <span style="color:rgba(255,255,255,.4)">state=may_dirty</span>
-                </div>
-              </div>
-              <div>
-                <div style="font-size:9px;color:rgba(255,255,255,.25);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px">▸ ANONYMIZED OUTPUT</div>
-                <div style="background:rgba(0,0,0,.4);border:1px solid rgba(63,185,80,.15);border-radius:8px;padding:12px;font-family:var(--mono);font-size:10.5px;line-height:1.9;color:rgba(255,255,255,.5)">
-                  <span style="color:#3fb950">src=192.0.2.1</span><br>
-                  <span style="color:#3fb950">dst=192.0.2.2</span><br>
-                  <span style="color:rgba(255,255,255,.4)">proto=6 sport=52441</span><br>
-                  <span style="color:#3fb950">gw=192.0.2.3</span><br>
-                  <span style="color:rgba(255,255,255,.4)">policy-id=42 nat</span><br>
-                  <span style="color:#3fb950">SNAT 192.0.2.1</span><br>
-                  <span style="color:#3fb950">&nbsp;&nbsp;->198.51.100.1</span><br>
-                  <span style="color:rgba(255,255,255,.4)">state=may_dirty</span>
-                </div>
-              </div>
+              <div><div style="font-size:9px;color:rgba(255,255,255,.25);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px">▸ ORIGINAL OUTPUT</div><div style="background:rgba(0,0,0,.4);border:1px solid rgba(248,81,73,.15);border-radius:8px;padding:12px;font-family:var(--mono);font-size:10.5px;line-height:1.9;color:rgba(255,255,255,.5)"><span style="color:#f85149">src=192.168.10.50</span><br><span style="color:#f85149">dst=10.0.0.1</span><br><span style="color:rgba(255,255,255,.4)">proto=6 sport=52441</span><br><span style="color:#f85149">gw=172.16.1.254</span><br><span style="color:rgba(255,255,255,.4)">policy-id=42 nat</span><br><span style="color:#f85149">SNAT 192.168.10.50</span><br><span style="color:#f85149">&nbsp;&nbsp;->203.88.12.1</span></div></div>
+              <div><div style="font-size:9px;color:rgba(255,255,255,.25);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px">▸ ANONYMIZED OUTPUT</div><div style="background:rgba(0,0,0,.4);border:1px solid rgba(63,185,80,.15);border-radius:8px;padding:12px;font-family:var(--mono);font-size:10.5px;line-height:1.9;color:rgba(255,255,255,.5)"><span style="color:#3fb950">src=192.0.2.1</span><br><span style="color:#3fb950">dst=192.0.2.2</span><br><span style="color:rgba(255,255,255,.4)">proto=6 sport=52441</span><br><span style="color:#3fb950">gw=192.0.2.3</span><br><span style="color:rgba(255,255,255,.4)">policy-id=42 nat</span><br><span style="color:#3fb950">SNAT 192.0.2.1</span><br><span style="color:#3fb950">&nbsp;&nbsp;->198.51.100.1</span></div></div>
             </div>
-            <div style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:8px;padding:12px 14px;margin-bottom:10px">
-              <div style="font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);letter-spacing:.07em;margin-bottom:8px">IP MAPPING TABLE</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;font-family:var(--mono);font-size:10.5px">
-                <span style="color:rgba(255,255,255,.3)">Real IP</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:rgba(255,255,255,.3)">Safe IP</span>
-                <span style="color:#f85149">192.168.10.50</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.1</span>
-                <span style="color:#f85149">10.0.0.1</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.2</span>
-                <span style="color:#f85149">172.16.1.254</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.3</span>
-                <span style="color:#f85149">203.88.12.1</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">198.51.100.1</span>
-              </div>
-            </div>
+            <div style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:8px;padding:12px 14px;margin-bottom:10px"><div style="font-size:10px;font-weight:700;color:#1D9E75;font-family:var(--mono);letter-spacing:.07em;margin-bottom:8px">IP MAPPING TABLE</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;font-family:var(--mono);font-size:10.5px"><span style="color:rgba(255,255,255,.3)">Real IP</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:rgba(255,255,255,.3)">Safe IP</span><span style="color:#f85149">192.168.10.50</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.1</span><span style="color:#f85149">10.0.0.1</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.2</span><span style="color:#f85149">172.16.1.254</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.3</span><span style="color:#f85149">203.88.12.1</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">198.51.100.1</span></div></div>
             <div style="font-size:10.5px;color:rgba(255,255,255,.3);font-family:var(--mono)">✓ 4 unique IPs replaced · RFC 5737 ranges · Safe to share with vendor</div>
           </div>
-
-          <!-- SCENE 5: Subnet Calc -->
           <div class="anim-scene" id="ascene4" style="padding:18px 20px;display:none">
             <div style="font-size:13px;font-weight:700;color:#e6edf3;margin-bottom:14px">🧮 IPv4 Subnet Calculator</div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px">
-              <span style="font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.3)">$</span>
-              <span id="subTyping" style="font-family:var(--mono);font-size:12px;color:#e6edf3"></span>
-              <span id="subCursor" style="font-family:var(--mono);font-size:12px;color:#1D9E75;animation:cur .6s infinite">▊</span>
-            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px"><span style="font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.3)">$</span><span id="subTyping" style="font-family:var(--mono);font-size:12px;color:#e6edf3"></span><span id="subCursor" style="font-family:var(--mono);font-size:12px;color:#1D9E75;animation:cur .6s infinite">▊</span></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="subCards">
               <div class="sub-card" style="opacity:0"><div class="sub-lbl">Network Address</div><div class="sub-val" style="color:#58a6ff">172.16.0.0</div></div>
               <div class="sub-card" style="opacity:0"><div class="sub-lbl">Broadcast Address</div><div class="sub-val" style="color:#d29922">172.16.15.255</div></div>
@@ -592,79 +340,31 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
               <div class="sub-card" style="opacity:0"><div class="sub-lbl">Usable Hosts</div><div class="sub-val" style="color:#1D9E75;font-size:18px">4,094</div></div>
               <div class="sub-card" style="opacity:0"><div class="sub-lbl">CIDR Prefix</div><div class="sub-val" style="color:rgba(255,255,255,.75)">/20</div></div>
             </div>
-            <div style="margin-top:10px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.35);line-height:1.8;opacity:0;transition:opacity .6s" id="subBinary">
-              Binary breakdown:<br>
-              IP:&nbsp;&nbsp; 10101100.00010000.00000000.00000000<br>
-              Mask: 11111111.11111111.11110000.00000000<br>
-              Net:&nbsp; 10101100.00010000.00000000.00000000
-            </div>
           </div>
-
-          <!-- SCENE 6: Quick Ref -->
           <div class="anim-scene" id="ascene5" style="padding:18px 20px;display:none">
-            <div style="font-size:13px;font-weight:700;color:#e6edf3;margin-bottom:14px">⚡ Quick Reference — Most Used Commands</div>
+            <div style="font-size:13px;font-weight:700;color:#e6edf3;margin-bottom:14px">⚡ Quick Reference</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-              <div class="qref-card">
-                <div class="qref-title">Session Table</div>
-                <div class="qref-cmd"><span style="color:#3fb950">get system session list</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#3fb950">diagnose sys session full-stat</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#d29922">diagnose sys session clear</span><button class="qref-copy">Copy</button></div>
-              </div>
-              <div class="qref-card">
-                <div class="qref-title">VPN Quick Check</div>
-                <div class="qref-cmd"><span style="color:#3fb950">get vpn ipsec tunnel summary</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#3fb950">get vpn ssl monitor</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#3fb950">diagnose vpn ssl statistics</span><button class="qref-copy">Copy</button></div>
-              </div>
-              <div class="qref-card">
-                <div class="qref-title">Routing</div>
-                <div class="qref-cmd"><span style="color:#3fb950">get router info routing-table all</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#3fb950">diagnose ip route get &lt;IP&gt;</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#3fb950">get router info ospf neighbor</span><button class="qref-copy">Copy</button></div>
-              </div>
-              <div class="qref-card">
-                <div class="qref-title">CPU & Memory</div>
-                <div class="qref-cmd"><span style="color:#3fb950">get system performance status</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#3fb950">diagnose sys top</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#3fb950">diagnose hardware sysinfo conserve</span><button class="qref-copy">Copy</button></div>
-              </div>
-              <div class="qref-card">
-                <div class="qref-title">Auth & Users</div>
-                <div class="qref-cmd"><span style="color:#d29922">diagnose test authserver ldap &lt;SRV&gt;</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#3fb950">diagnose firewall auth list</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#d29922">diagnose debug application fnbamd -1</span><button class="qref-copy">Copy</button></div>
-              </div>
-              <div class="qref-card">
-                <div class="qref-title">HA Cluster</div>
-                <div class="qref-cmd"><span style="color:#3fb950">get system ha status</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#d29922">diagnose sys ha checksum show</span><button class="qref-copy">Copy</button></div>
-                <div class="qref-cmd"><span style="color:#f85149">execute ha failover set 1</span><button class="qref-copy">Copy</button></div>
-              </div>
+              <div class="qref-card"><div class="qref-title">Session Table</div><div class="qref-cmd"><span style="color:#3fb950">get system session list</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#3fb950">diagnose sys session full-stat</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#d29922">diagnose sys session clear</span><button class="qref-copy">Copy</button></div></div>
+              <div class="qref-card"><div class="qref-title">VPN Quick Check</div><div class="qref-cmd"><span style="color:#3fb950">get vpn ipsec tunnel summary</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#3fb950">get vpn ssl monitor</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#3fb950">diagnose vpn ssl statistics</span><button class="qref-copy">Copy</button></div></div>
+              <div class="qref-card"><div class="qref-title">Routing</div><div class="qref-cmd"><span style="color:#3fb950">get router info routing-table all</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#3fb950">diagnose ip route get &lt;IP&gt;</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#3fb950">get router info ospf neighbor</span><button class="qref-copy">Copy</button></div></div>
+              <div class="qref-card"><div class="qref-title">CPU &amp; Memory</div><div class="qref-cmd"><span style="color:#3fb950">get system performance status</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#3fb950">diagnose sys top</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#3fb950">diagnose hardware sysinfo conserve</span><button class="qref-copy">Copy</button></div></div>
             </div>
           </div>
-
         </div>
       </div>
-
-      <!-- bottom progress bar -->
       <div style="height:2px;background:rgba(255,255,255,.05)"><div id="animProgress" style="height:100%;background:linear-gradient(90deg,#1D9E75,#52d6b0);width:0;transition:width .1s linear"></div></div>
-
-      <!-- status bar -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 18px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.05)">
         <span id="animStatus" style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.3)">FortiOS 7.4 · 50+ playbooks · AI-powered</span>
         <span style="font-family:var(--mono);font-size:10px;color:#1D9E75;display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:#3fb950;display:inline-block"></span>netwolffortigate.com</span>
       </div>
-
-      <!-- CTA strip -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(29,158,117,.05);border-top:1px solid rgba(29,158,117,.12);flex-wrap:wrap;gap:10px">
         <div style="font-size:12px;color:rgba(255,255,255,.5)"><strong style="color:rgba(255,255,255,.8)">NetWolf Pro</strong> — Professional FortiGate CLI toolkit for network engineers</div>
         <a href="#order" style="background:linear-gradient(90deg,#1D9E75,#0F6E56);border:none;border-radius:20px;padding:9px 22px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;text-decoration:none;white-space:nowrap">Subscribe — €10/month →</a>
       </div>
     </div>
-
     <div style="text-align:center;margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:10px">
       <a href="#order" class="btn-primary" style="font-size:16px;padding:15px 36px">Get Instant Access →</a>
-      <span style="font-size:12px;color:var(--t3)">€10/month · Cancel anytime · Credentials delivered instantly via Firebase</span>
+      <span style="font-size:12px;color:var(--t3)">€10/month · Cancel anytime · Credentials delivered instantly</span>
     </div>
   </div>
 </section>
@@ -676,128 +376,45 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   <p class="section-sub">One plan. Full access. Cancel anytime.</p>
   <div class="pricing-inner">
     <div class="price-cards">
-
-      <!-- MONTHLY -->
       <div class="price-card">
         <div class="price-name">NetWolf Pro · Monthly</div>
         <div class="price-amount"><span class="price-cur">€</span><span class="price-num">10</span></div>
-        <div class="price-period">per month, billed monthly</div>
-
-        <div class="price-section-label">🔒 Troubleshoot Playbooks</div>
-        <ul class="price-feats">
-          <li>50+ step-by-step guided CLI playbooks</li>
-          <li>IPsec VPN — Phase 1/2, DPD, IKE debug</li>
-          <li>SSL VPN — login loop, geo-IP, cert errors</li>
-          <li>Firewall policy, NAT, debug flow trace</li>
-          <li>SD-WAN — SLA, steering, health check</li>
-          <li>HA cluster — sync, failover, split-brain</li>
-          <li>Routing — OSPF, BGP, PBR, kernel table</li>
-          <li>Auth — LDAP, RADIUS, FSSO, FAC</li>
-          <li>UTM, IPS, web filter, SSL inspection</li>
-          <li>VLAN, DHCP, DNS, NTP, SNMP, certificates</li>
-          <li>ZTNA, FortiSwitch, FortiAP, IPv6, SIP/VoIP</li>
-          <li>FortiManager, FortiAnalyzer, Security Fabric</li>
-          <li>Packet sniffer + deep debug flow sequences</li>
-          <li>Session table, system diagnostics, NPU/hardware</li>
-          <li>WAN optimisation, traffic shaping, multicast</li>
+        <div class="price-period">per month · billed monthly · cancel anytime</div>
+        <ul class="price-feats" style="margin-top:16px">
+          <li>50+ guided troubleshoot playbooks</li>
+          <li>AI CLI Analyzer — Groq LLaMA 3.3 70B</li>
+          <li>IP Masking &amp; Bulk Anonymizer</li>
+          <li>IPv4 Subnet Calculator + binary view</li>
+          <li>Multi-vendor CLI — Cisco, Aruba, Huawei</li>
+          <li>10 full configuration guide templates</li>
+          <li>Config Generator — 7 ready-to-paste templates</li>
+          <li>Config Migrator — upload &amp; replace details</li>
+          <li>ZTNA, FortiSwitch, FortiAP playbooks</li>
+          <li>Advanced diagnostics &amp; fnsysctl kernel</li>
+          <li>Firebase-secured personal login credentials</li>
+          <li>Any browser · any device · instant access</li>
         </ul>
-
-        <div class="price-section-label">🤖 AI Tools</div>
-        <ul class="price-feats">
-          <li>AI CLI Analyzer — paste any output, get instant diagnosis</li>
-          <li>LLaMA 3.3 70B · Mixtral 8x7B · LLaMA 3.1 8B models</li>
-          <li>Root cause, fix commands, and explanation</li>
-          <li>Powered by Groq free API — your own key</li>
-        </ul>
-
-        <div class="price-section-label">🎭 IP & Network Tools</div>
-        <ul class="price-feats">
-          <li>IP Masking — real → RFC 5737 safe IPs</li>
-          <li>Bulk Anonymizer — auto-detect all IPs in any output</li>
-          <li>Full real→fake mapping table with export</li>
-          <li>IPv4 Subnet Calculator — CIDR, wildcard, binary</li>
-          <li>Network, broadcast, first/last host, usable count</li>
-        </ul>
-
-        <div class="price-section-label">🌐 Multi-Vendor CLI Reference</div>
-        <ul class="price-feats">
-          <li>Cisco IOS / IOS-XE — config + troubleshoot</li>
-          <li>ArubaOS-CX — config + troubleshoot</li>
-          <li>Huawei VRP — config + troubleshoot</li>
-          <li>Per-command safety badges + inline explanations</li>
-        </ul>
-
-        <div class="price-section-label">📜 Configuration Templates</div>
-        <ul class="price-feats">
-          <li>10 full copy-ready config guides</li>
-          <li>Initial setup, VDOM, IPsec, SSL VPN, SD-WAN</li>
-          <li>HA cluster, inter-VDOM, port forwarding VIP</li>
-          <li>OSPF/BGP, UTM security profile stack</li>
-          <li>FortiSwitch managed config, ZTNA setup</li>
-        </ul>
-
-        <div class="price-section-label">🔬 Advanced Tools</div>
-        <ul class="price-feats">
-          <li>Advanced fnsysctl kernel commands</li>
-          <li>Config transactions — safe change with rollback</li>
-          <li>Backup, restore and firmware upgrade procedures</li>
-          <li>CLI Output Reader — render raw output in-browser</li>
-          <li>Color-coded safety badges on every command</li>
-          <li>One-click copy on every command and step</li>
-        </ul>
-
-        <div class="price-section-label">👤 Account & Access</div>
-        <ul class="price-feats">
-          <li>Your own username and password</li>
-          <li>Firebase-secured login — no shared credentials</li>
-          <li>Access from any browser, any device</li>
-          <li>Regular content updates included</li>
-          <li>Password reset via email at any time</li>
-        </ul>
-
-        <a href="https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00" target="_blank" class="btn-ghost" style="display:block;text-align:center;text-decoration:none;margin-top:8px">Subscribe Monthly — €10 →</a>
-        <div class="price-note">Cancel anytime · Instant access · Renews monthly</div>
+        <a href="https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00" target="_blank" class="btn-ghost" style="display:block;text-align:center;text-decoration:none;margin-top:20px">Subscribe Monthly →</a>
+        <div class="price-note">Cancel anytime · No commitment</div>
       </div>
-
-      <!-- YEARLY -->
       <div class="price-card featured">
         <div class="featured-badge">BEST VALUE — SAVE €20</div>
         <div class="price-name">NetWolf Pro · Yearly</div>
         <div class="price-amount"><span class="price-cur">€</span><span class="price-num">100</span></div>
         <div class="price-period">per year — <span style="color:var(--g);font-weight:700">≈ €8.33/mo</span></div>
-
-        <div class="price-section-label">✅ Everything in Monthly, plus:</div>
-        <ul class="price-feats">
-          <li>Priority email support — responses within 24 hours</li>
-          <li>New playbooks and features added throughout the year</li>
-          <li>2 months free compared to monthly billing</li>
+        <ul class="price-feats" style="margin-top:16px">
+          <li>Everything in Monthly plan</li>
+          <li>2 months free vs monthly billing</li>
+          <li>Priority email support — 24h response</li>
+          <li>New playbooks added throughout the year</li>
           <li>Single annual payment — no monthly hassle</li>
-          <li>Best value for professional engineers and teams</li>
         </ul>
-
-        <div class="price-section-label">📦 Full feature summary</div>
-        <ul class="price-feats">
-          <li>50+ troubleshoot playbooks across 26 categories</li>
-          <li>AI CLI Analyzer with 3 Groq model options</li>
-          <li>IP Masking + Bulk Anonymizer with export</li>
-          <li>IPv4 Subnet Calculator with binary breakdown</li>
-          <li>Multi-vendor CLI — Cisco, Aruba, Huawei</li>
-          <li>10 full configuration guide templates</li>
-          <li>Advanced fnsysctl + kernel diagnostics</li>
-          <li>Config transaction safe-change workflow</li>
-          <li>Backup, restore and firmware procedures</li>
-          <li>ZTNA, FortiSwitch, FortiAP playbooks</li>
-          <li>Security Fabric, SIP/VoIP, IPv6, Traffic Shaping</li>
-          <li>FortiManager and FortiAnalyzer diagnostics</li>
-          <li>Firebase-secured personal login credentials</li>
-          <li>Works in any browser — no install needed</li>
-          <li>Regular content updates for the full year</li>
-        </ul>
-
-        <a href="https://buy.stripe.com/test_bJebJ0ajn2NWdeuaVygrS01" target="_blank" class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:8px">Subscribe Yearly — €100 →</a>
-        <div class="price-note">One payment · 12 months access · Priority email support</div>
+        <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.15);border-radius:8px;padding:12px 14px;margin-top:14px;font-size:12px;color:var(--t2);line-height:1.7">
+          <strong style="color:var(--a)">All features included:</strong> 50+ playbooks · AI Analyzer · IP Masking · Subnet Calc · Multi-vendor CLI · Config Generator · Config Migrator · Advanced Diag · ZTNA · FortiSwitch · FortiAP · IPv6 · SIP/VoIP · FortiManager · Security Fabric
+        </div>
+        <a href="https://buy.stripe.com/test_bJebJ0ajn2NWdeuaVygrS01" target="_blank" class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:20px">Subscribe Yearly — Best Value →</a>
+        <div class="price-note">One payment · 12 months access · Priority support</div>
       </div>
-
     </div>
   </div>
 </section>
@@ -814,14 +431,13 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
         1️⃣ Choose a plan and pay via Stripe<br>
         2️⃣ Come back here and fill in your login details<br>
         3️⃣ Your Firebase account is created instantly<br>
-        4️⃣ Log in at <a href="app.html" style="color:var(--a)">netwolffortigate.com/app.html</a>
+        4️⃣ Log in at <a href="https://netwolffortigate.com/app.html" style="color:var(--a)">netwolffortigate.com/app.html</a>
       </div>
       <div class="form-plan-banner">
         <span class="form-plan-name" id="planBannerName">🐺 NetWolf Pro — Monthly</span>
         <span class="form-plan-price" id="planBannerPrice">€10 / month</span>
       </div>
       <form id="orderForm" novalidate>
-
         <div class="form-divider">Your login credentials</div>
         <div class="form-group">
           <label>Username *</label>
@@ -840,27 +456,17 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
             <input type="password" name="confirmPassword" id="inp_confirm" placeholder="Repeat your password" required autocomplete="new-password">
           </div>
         </div>
-
         <div class="form-divider">Personal information</div>
         <div class="form-row">
-          <div class="form-group">
-            <label>First name *</label>
-            <input type="text" name="firstName" placeholder="John" required>
-          </div>
-          <div class="form-group">
-            <label>Last name *</label>
-            <input type="text" name="lastName" placeholder="Smith" required>
-          </div>
+          <div class="form-group"><label>First name *</label><input type="text" name="firstName" placeholder="John" required></div>
+          <div class="form-group"><label>Last name *</label><input type="text" name="lastName" placeholder="Smith" required></div>
         </div>
         <div class="form-group">
           <label>Work email * <span style="color:var(--t3);font-weight:400">(confirmation sent here)</span></label>
           <input type="email" name="email" placeholder="john@company.com" required>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Company</label>
-            <input type="text" name="company" placeholder="Acme Corp (optional)">
-          </div>
+          <div class="form-group"><label>Company</label><input type="text" name="company" placeholder="Acme Corp (optional)"></div>
           <div class="form-group">
             <label>Country *</label>
             <select name="country" required>
@@ -871,7 +477,6 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
             </select>
           </div>
         </div>
-
         <div class="form-divider">Subscription plan</div>
         <div class="plan-pick">
           <a href="https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00" target="_blank" class="plan-opt" style="text-decoration:none">
@@ -889,39 +494,21 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
             </div>
           </a>
         </div>
-
         <div class="form-divider">Payment — secured by Stripe</div>
-        <div class="cc-logos">
-          <span class="cc-logo">VISA</span><span class="cc-logo">MC</span>
-          <span class="cc-logo">AMEX</span><span class="cc-logo">iDEAL</span>
-        </div>
+        <div class="cc-logos"><span class="cc-logo">VISA</span><span class="cc-logo">MC</span><span class="cc-logo">AMEX</span><span class="cc-logo">iDEAL</span></div>
         <div class="security-note">🔒 Card details go directly to Stripe's encrypted servers. NetWolf never sees or stores your card number.</div>
-        <div class="form-group">
-          <label>Cardholder name *</label>
-          <input type="text" name="cardName" id="inp_cardName" placeholder="Name as printed on card" required>
-        </div>
-        <div class="form-group">
-          <label>Card details *</label>
-          <div id="stripe-card-element"></div>
-          <div id="card-errors"></div>
-        </div>
-
+        <div class="form-group"><label>Cardholder name *</label><input type="text" name="cardName" id="inp_cardName" placeholder="Name as printed on card" required></div>
+        <div class="form-group"><label>Card details *</label><div id="stripe-card-element"></div><div id="card-errors"></div></div>
         <div class="form-divider">Anything else?</div>
-        <div class="form-group">
-          <label>Message / notes</label>
-          <textarea name="message" rows="2" placeholder="Invoice requirements, team size, questions..."></textarea>
-        </div>
-
+        <div class="form-group"><label>Message / notes</label><textarea name="message" rows="2" placeholder="Invoice requirements, team size, questions..."></textarea></div>
         <div class="form-group" style="flex-direction:row;align-items:flex-start;gap:9px;margin-top:4px">
           <input type="checkbox" id="terms" style="margin-top:3px;width:auto;flex-shrink:0" required>
           <label for="terms" style="font-size:12.5px;color:var(--t2);cursor:pointer;line-height:1.6">I agree to the <a href="#" onclick="openTos(event)" style="color:var(--a)">Terms of Service</a> and authorise the selected subscription charge to my card until cancelled.</label>
         </div>
-
         <div class="form-err" id="formError"></div>
         <button type="submit" class="btn-submit" id="submitBtn">🔒 Subscribe &amp; Create Account</button>
         <div class="stripe-powered">Payments secured by <strong style="color:var(--t2)">Stripe</strong></div>
       </form>
-
       <div class="success-msg" id="successMsg">
         <div class="success-check">✓</div>
         <h3>Account created!</h3>
@@ -930,7 +517,7 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
           <div>Username: <span id="showUsername">—</span></div>
           <div>Password: <span id="showPassword">—</span></div>
           <div style="margin-top:10px;font-size:11px;color:var(--t3)">Keep these safe — you'll need them to log in at app.html</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--t3)">Questions? Email us at <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a></div>
+          <div style="margin-top:8px;font-size:11px;color:var(--t3)">Questions? Email us at <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a></div>
         </div>
         <a href="https://netwolffortigate.com/app.html" class="btn-primary" style="margin-top:28px;display:inline-block">Open Toolkit →</a>
       </div>
@@ -943,6 +530,26 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
 </footer>
 <div class="toast" id="toast"></div>
 
+<!-- TERMS OF USE MODAL -->
+<div class="tos-overlay" id="tosOverlay" onclick="if(event.target===this)closeTos()">
+  <div class="tos-card">
+    <div class="tos-hdr"><h3>📜 Terms of Service — NetWolf Pro</h3><button class="tos-close" onclick="closeTos()">✕ Close</button></div>
+    <div class="tos-body">
+      <h4>1. Acceptance of Terms</h4><p>By subscribing to NetWolf Pro and creating an account, you agree to be bound by these Terms of Service.</p>
+      <h4>2. Subscription &amp; Payment</h4><p>NetWolf Pro is offered as a monthly (€10/month) or yearly (€100/year) subscription. Payments are processed securely via Stripe. By subscribing you authorise recurring charges until you cancel. <strong>No refunds are issued for partial billing periods.</strong></p>
+      <h4>3. Account Credentials</h4><p>You are responsible for keeping your credentials confidential. Each subscription is for a single user. Credential sharing may result in account suspension without refund.</p>
+      <h4>4. Permitted Use</h4><p>NetWolf Pro is licensed for <strong>legitimate professional and educational network engineering contexts only</strong>. You must have explicit permission to run diagnostic commands on any device you target.</p>
+      <h4>5. Prohibited Use</h4><p>You may not use NetWolf Pro to access systems without authorisation, conduct unauthorised penetration testing, or resell/redistribute the toolkit content.</p>
+      <h4>6. Disclaimer of Liability</h4><p>NetWolf Pro is provided <strong>"as is"</strong> without warranty. The creators accept no liability for any damage, data loss, or service interruption. <strong>You are solely responsible for any commands executed on live production equipment.</strong> Commands such as <code>execute reboot</code> and <code>diagnose sys session clear</code> can cause traffic interruption.</p>
+      <h4>7. Intellectual Property</h4><p>All content within NetWolf Pro is the intellectual property of NetWolf. You may not copy, publish, or distribute this content without written permission.</p>
+      <h4>8. Cancellation</h4><p>You may cancel at any time by emailing <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a>. Cancellation takes effect at the end of the current billing period.</p>
+      <h4>9. Governing Law</h4><p>These terms are governed by the laws of the Netherlands.</p>
+      <p style="margin-top:20px;font-size:12px;color:var(--t3)">Last updated: May 2025 · NetWolf Pro Toolkit</p>
+    </div>
+    <div class="tos-foot"><button class="tos-btn-close" onclick="closeTos()">Close</button><button class="tos-btn-accept" onclick="acceptTos()">✅ I Accept</button></div>
+  </div>
+</div>
+
 <script>
 /* ── MATRIX ── */
 const canvas=document.getElementById('matBg'),ctx=canvas.getContext('2d');
@@ -951,34 +558,28 @@ function initMat(){canvas.width=window.innerWidth;canvas.height=window.innerHeig
 function drawMat(){ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#0f8';ctx.font=fs+'px monospace';drops.forEach((y,i)=>{ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*fs,y*fs);if(y*fs>canvas.height&&Math.random()>.975)drops[i]=0;drops[i]++;});}
 initMat();setInterval(drawMat,42);window.addEventListener('resize',initMat);
 
-/* ── PLAN SWITCH ── */
-function pickPlan(p){
-  document.querySelector(`input[name="plan"][value="${p}"]`).checked=true;
-  planChanged();
-  document.getElementById('order').scrollIntoView({behavior:'smooth'});
-}
-function planChanged(){
-  const p=document.querySelector('input[name="plan"]:checked').value;
-  document.getElementById('cardMonthly').classList.toggle('active',p==='monthly');
-  document.getElementById('cardYearly').classList.toggle('active',p==='yearly');
-  document.getElementById('cardMonthly').querySelector('.plan-opt-label').classList.toggle('active-lbl',p==='monthly');
-  document.getElementById('cardYearly').querySelector('.plan-opt-label').classList.toggle('active-lbl',p==='yearly');
-  if(p==='monthly'){
-    document.getElementById('planBannerName').textContent='🐺 NetWolf Pro — Monthly';
-    document.getElementById('planBannerPrice').textContent='€10 / month';
-    document.getElementById('submitBtn').textContent='🔒 Subscribe €10/month';
-  } else {
-    document.getElementById('planBannerName').textContent='🐺 NetWolf Pro — Yearly';
-    document.getElementById('planBannerPrice').textContent='€100 / year';
-    document.getElementById('submitBtn').textContent='🔒 Subscribe €100/year';
-  }
-}
-document.querySelectorAll('input[name="plan"]').forEach(r=>r.addEventListener('change',planChanged));
+/* ── FIREBASE ── */
+const firebaseConfig={apiKey:"AIzaSyBU2ojtAtH2PvvrNJgG4vH3mbPdAPAGhzk",authDomain:"netwolf-ccd3d.firebaseapp.com",projectId:"netwolf-ccd3d",storageBucket:"netwolf-ccd3d.firebasestorage.app",messagingSenderId:"942931607129",appId:"1:942931607129:web:5f644a2625931c70d6bb48",measurementId:"G-W0G3X4T0EW"};
+firebase.initializeApp(firebaseConfig);
+const fbAuth=firebase.auth();
+
+/* ── STRIPE ── */
+let stripe,cardEl;
+try{
+  stripe=Stripe('pk_test_51TSFD7Bqf1D7wxWnqqjK2SdGEZ2rFZeU0MbfcWlJXrbRQNRIG4W3bRJqz8sIHTIuuWIy0rxdiYRpfwwoJenMgffS00hbta37GW');
+  const els=stripe.elements();
+  cardEl=els.create('card',{style:{base:{color:'#e6edf3',fontFamily:"'Courier New',monospace",fontSize:'13px','::placeholder':{color:'#484f58'}},invalid:{color:'#f85149'}}});
+  cardEl.mount('#stripe-card-element');
+  cardEl.on('change',e=>{document.getElementById('card-errors').textContent=e.error?e.error.message:'';});
+}catch(e){document.getElementById('stripe-card-element').innerHTML='<div style="color:var(--y);font-size:12px;padding:8px 0;">⚠️ Add your Stripe publishable key to enable card payments.</div>';}
+
+/* ── TOAST ── */
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4200);}
+function showErr(m){const e=document.getElementById('formError');e.textContent='⚠️ '+m;e.style.display='block';document.getElementById('submitBtn').disabled=false;document.getElementById('submitBtn').textContent='🔒 Subscribe & Create Account';}
 
 /* ── PASSWORD STRENGTH ── */
 document.getElementById('inp_password').addEventListener('input',function(){
-  const v=this.value;
-  const fill=document.getElementById('strengthFill'),lbl=document.getElementById('strengthLabel');
+  const v=this.value;const fill=document.getElementById('strengthFill'),lbl=document.getElementById('strengthLabel');
   let s=0;if(v.length>=8)s++;if(v.length>=12)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
   const cols=['#f85149','#d29922','#d29922','#3fb950','#3fb950'];
   const labs=['Too short','Weak','Fair','Strong','Very strong'];
@@ -986,35 +587,13 @@ document.getElementById('inp_password').addEventListener('input',function(){
   lbl.textContent=v.length?labs[Math.min(s,4)]:'Min 8 characters';lbl.style.color=v.length?cols[Math.min(s,4)]:'var(--t3)';
 });
 
-/* ── STRIPE ──
-   Replace 'pk_test_YOUR_STRIPE_PUBLISHABLE_KEY' with your real key from dashboard.stripe.com
-*/
-let stripe,cardEl;
-try{
-  stripe=Stripe('pk_test_YOUR_STRIPE_PUBLISHABLE_KEY');
-  const els=stripe.elements();
-  cardEl=els.create('card');
-  cardEl.mount('#stripe-card-element');
-  cardEl.on('change',e=>{document.getElementById('card-errors').textContent=e.error?e.error.message:'';});
-}catch(e){
-  document.getElementById('stripe-card-element').innerHTML='<div style="color:var(--y);font-size:12px;padding:8px 0;">⚠️ Add your Stripe publishable key to enable card payments.</div>';
-}
-
-/* ── TOAST ── */
-function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4200);}
-function showErr(m){const e=document.getElementById('formError');e.textContent='⚠️ '+m;e.style.display='block';document.getElementById('submitBtn').disabled=false;document.getElementById('submitBtn').textContent='🔒 Subscribe & Create Account';}
-
-/* ── FORM SUBMIT ──
-   Replace 'YOUR_FORMSPREE_ID' with your form ID from formspree.io (e.g. xabcdefg)
-*/
+/* ── FORM SUBMIT ── */
 document.getElementById('orderForm').addEventListener('submit',async function(e){
   e.preventDefault();
   document.getElementById('formError').style.display='none';
   const g=n=>this.querySelector(`[name="${n}"]`).value.trim();
   const username=g('username'),password=g('password'),confirm=g('confirmPassword');
   const firstName=g('firstName'),lastName=g('lastName'),email=g('email'),country=g('country'),cardName=g('cardName');
-  const plan=document.querySelector('input[name="plan"]:checked').value;
-
   if(!username||username.length<4)return showErr('Username must be at least 4 characters.');
   if(!/^[a-zA-Z0-9_]+$/.test(username))return showErr('Username: letters, numbers and underscores only.');
   if(!password||password.length<8)return showErr('Password must be at least 8 characters.');
@@ -1024,39 +603,22 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
   if(!country)return showErr('Please select your country.');
   if(!cardName)return showErr('Please enter the cardholder name.');
   if(!document.getElementById('terms').checked)return showErr('Please accept the Terms of Service.');
-
   const btn=document.getElementById('submitBtn');
   btn.disabled=true;btn.textContent='Processing payment…';
-
-  /* STRIPE — validate card */
-  if(stripe&&cardEl){
-    try{
-      const {error}=await stripe.createPaymentMethod({type:'card',card:cardEl,billing_details:{name:cardName,email}});
-      if(error){showErr('💳 '+error.message);return;}
-    }catch(ex){/* proceed in demo mode if Stripe not configured */}
-  }
-
+  if(stripe&&cardEl){try{const{error}=await stripe.createPaymentMethod({type:'card',card:cardEl,billing_details:{name:cardName,email}});if(error){showErr('💳 '+error.message);return;}}catch(ex){}}
   btn.textContent='Creating account…';
-
-  /* FORMSPREE — send notification email to you */
   try{
-    await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({
-        _subject:`🐺 New NetWolf subscriber: ${username} (${plan})`,
-        _replyto:email,
-        username,firstName,lastName,email,
-        company:g('company')||'—',
-        country,plan,
-        amount:plan==='monthly'?'€10/month':'€100/year',
-        cardName,
-        message:g('message')||'—'
-      })
-    });
-  }catch(ex){/* non-critical */}
-
-  /* SUCCESS */
+    const result=await fbAuth.createUserWithEmailAndPassword(email,password);
+    await result.user.updateProfile({displayName:username});
+  }catch(firebaseErr){
+    if(firebaseErr.code==='auth/email-already-in-use'){showErr('This email already has an account. Log in at app.html instead.');}
+    else if(firebaseErr.code==='auth/weak-password'){showErr('Password is too weak. Please use at least 8 characters.');}
+    else{showErr('Account error: '+firebaseErr.message);}
+    return;
+  }
+  try{
+    await fetch('https://formspree.io/f/xykoyrda',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:`🐺 New NetWolf subscriber: ${username}`,_replyto:email,username,firstName,lastName,email,company:g('company')||'—',country,cardName,message:g('message')||'—'})});
+  }catch(ex){}
   document.getElementById('orderForm').style.display='none';
   document.getElementById('successMsg').style.display='block';
   document.getElementById('showUsername').textContent=username;
@@ -1064,65 +626,13 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
   showToast('✅ Account created! You can log in now.');
 });
 
-/* ══ INTERACTIVE DEMO ══ */
-const DEMO={
-  vpn:{label:'🔒 VPN / IPsec',color:'#f85149',steps:[
-    {t:'Check tunnel status',b:'ro',cmds:[{c:'get vpn ipsec tunnel summary',cl:'cmd-ro'},{c:'diagnose vpn tunnel list name <TUNNEL_NAME>',cl:'cmd-ro'},{c:'get vpn ipsec tunnel details',cl:'cmd-ro'}],note:'Look for "established" in both phases. Missing entry = tunnel never came up at all.'},
-    {t:'Live IKE negotiation debug',b:'warn',cmds:[{c:'diagnose debug reset',cl:'cmd-warn'},{c:'diagnose debug application ike -1',cl:'cmd-warn'},{c:'diagnose debug enable',cl:'cmd-warn'},{c:'(wait 30s — reproduce the issue)',cl:'cmd-note'},{c:'diagnose debug disable',cl:'cmd-warn'},{c:'diagnose debug reset',cl:'cmd-warn'}],note:'Key errors: NO_PROPOSAL_CHOSEN · AUTH_FAILED · PAYLOAD_MALFORMED · TS_UNACCEPTABLE'},
-    {t:'Compare phase proposals',b:'ro',cmds:[{c:'show vpn ipsec phase1-interface <NAME>',cl:'cmd-ro'},{c:'show vpn ipsec phase2-interface <NAME>',cl:'cmd-ro'}],note:'Encryption algo, DH group, and lifetime must match exactly on both peers.'},
-    {t:'Check routing to remote subnet',b:'ro',cmds:[{c:'get router info routing-table all',cl:'cmd-ro'},{c:'diagnose ip route get <REMOTE_IP>',cl:'cmd-ro'}],note:'Missing static route = traffic blackholed before reaching the tunnel interface.'},
-  ]},
-  ssl:{label:'🕵️ SSL VPN',color:'#58a6ff',steps:[
-    {t:'Check active SSL VPN sessions',b:'ro',cmds:[{c:'get vpn ssl monitor',cl:'cmd-ro'},{c:'diagnose vpn ssl list',cl:'cmd-ro'},{c:'diagnose vpn ssl statistics',cl:'cmd-ro'}],note:'Shows connected clients, portals assigned, tunnel/web mode, and IP pool usage.'},
-    {t:'Debug authentication flow',b:'warn',cmds:[{c:'diagnose debug reset',cl:'cmd-warn'},{c:'diagnose debug application sslvpn -1',cl:'cmd-warn'},{c:'diagnose debug enable',cl:'cmd-warn'},{c:'(reproduce login attempt)',cl:'cmd-note'},{c:'diagnose test authserver ldap <SERVER> <USER> <PASS>',cl:'cmd-warn'}],note:'Look for group-match failures. Run test authserver to isolate LDAP bind vs group issue.'},
-    {t:'Check geo-IP source restrictions',b:'ro',cmds:[{c:'show firewall policy <INBOUND_ID>',cl:'cmd-ro'},{c:'show firewall address',cl:'cmd-ro'},{c:'diagnose firewall iprope lookup <CLIENT_IP> <FGTWAN_IP> 6 0 443 <WAN_INTF>',cl:'cmd-ro'}],note:'Inbound policy may block foreign IPs. Check address objects on policy source.'},
-  ]},
-  policy:{label:'📃 Policy / NAT',color:'#d29922',steps:[
-    {t:'Debug flow trace — full sequence',b:'warn',cmds:[{c:'diagnose debug reset',cl:'cmd-warn'},{c:'diagnose debug flow filter addr <SRC_IP>',cl:'cmd-warn'},{c:'diagnose debug flow filter dport <PORT>',cl:'cmd-warn'},{c:'diagnose debug flow show function-name enable',cl:'cmd-warn'},{c:'diagnose debug flow trace start 50',cl:'cmd-warn'},{c:'diagnose debug enable',cl:'cmd-warn'}],note:'Key output: "Allowed by policy-id X" · "denied by forward policy" · "DNAT" · "SNAT"'},
-    {t:'Policy lookup via kernel',b:'ro',cmds:[{c:'diagnose firewall iprope lookup <SRC> <DST> <PROTO> <SPORT> <DPORT> <INTF>',cl:'cmd-ro'},{c:'diagnose firewall iprope show 100004 <POLICY_ID>',cl:'cmd-ro'}],note:'Queries kernel policy table directly — faster and more reliable than reading config.'},
-    {t:'Session table inspection',b:'ro',cmds:[{c:'diagnose sys session filter src <IP>',cl:'cmd-ro'},{c:'diagnose sys session filter dport <PORT>',cl:'cmd-ro'},{c:'diagnose sys session list',cl:'cmd-ro'}],note:'Confirms session was established and shows NAT translation currently applied.'},
-  ]},
-  ha:{label:'⚙️ HA Cluster',color:'#3fb950',steps:[
-    {t:'Check HA cluster status',b:'ro',cmds:[{c:'get system ha status',cl:'cmd-ro'},{c:'diagnose sys ha status',cl:'cmd-ro'},{c:'diagnose sys ha dump-by vcluster',cl:'cmd-ro'}],note:'Shows primary/secondary role, uptime, sync state, and heartbeat link health.'},
-    {t:'Verify synchronization',b:'warn',cmds:[{c:'diagnose sys ha checksum show',cl:'cmd-warn'},{c:'diagnose sys ha checksum recalculate',cl:'cmd-warn'},{c:'execute ha synchronize start',cl:'cmd-warn'}],note:'Checksum mismatch between units = config divergence. Force sync to resolve.'},
-    {t:'Force manual failover',b:'danger',cmds:[{c:'execute ha failover set 1',cl:'cmd-danger'},{c:'get system ha status',cl:'cmd-ro'},{c:'execute ha failover unset 1',cl:'cmd-danger'}],note:'⚠️ Brief traffic interruption expected. Confirm new primary role after.'},
-  ]},
-  sdwan:{label:'🌐 SD-WAN',color:'#1D9E75',steps:[
-    {t:'Check member status and SLA',b:'ro',cmds:[{c:'get router info sdwan health-check',cl:'cmd-ro'},{c:'diagnose sys sdwan member list',cl:'cmd-ro'},{c:'diagnose sys sdwan intf-sla-log',cl:'cmd-ro'}],note:'Shows which links are passing/failing latency/jitter/loss SLA thresholds.'},
-    {t:'Trace preferred member',b:'ro',cmds:[{c:'diagnose sys sdwan prefer-interface <SRC> <DST> <PROTO> <PORT>',cl:'cmd-ro'},{c:'get router info sdwan service',cl:'cmd-ro'}],note:'Confirms which WAN link is selected for a specific flow by the steering rules.'},
-  ]},
-  routing:{label:'🔧 Routing',color:'#58a6ff',steps:[
-    {t:'Check routing table',b:'ro',cmds:[{c:'get router info routing-table all',cl:'cmd-ro'},{c:'diagnose ip route get <DST_IP>',cl:'cmd-ro'},{c:'get router info kernel',cl:'cmd-ro'}],note:'Shows active routes with metric, admin distance, and next-hop interface.'},
-    {t:'OSPF neighbour and database',b:'ro',cmds:[{c:'get router info ospf neighbor',cl:'cmd-ro'},{c:'get router info ospf database router',cl:'cmd-ro'},{c:'get router info ospf interface',cl:'cmd-ro'}],note:'FULL = healthy. EXSTART/EXCHANGE = MTU mismatch. DOWN = no hello received.'},
-    {t:'BGP peers and prefixes',b:'ro',cmds:[{c:'get router info bgp summary',cl:'cmd-ro'},{c:'get router info bgp neighbors <PEER_IP>',cl:'cmd-ro'},{c:'get router info bgp neighbors <PEER_IP> advertised-routes',cl:'cmd-ro'}],note:'"Established" + non-zero prefix count = healthy. Idle/Active = session not forming.'},
-  ]},
-};
-
-const QREF=[
-  {cat:'Session Table',cmds:['get system session list','diagnose sys session full-stat','diagnose sys session filter src <IP>','diagnose sys session clear']},
-  {cat:'Routing',cmds:['get router info routing-table all','diagnose ip route get <IP>','get router info kernel','get router info ospf neighbor']},
-  {cat:'Interface',cmds:['get system interface physical','get hardware nic <INTF>','diagnose netlink ifconfig list','fnsysctl ifconfig']},
-  {cat:'CPU & Memory',cmds:['get system performance status','diagnose sys top','diagnose hardware sysinfo memory','diagnose hardware sysinfo conserve']},
-  {cat:'Auth & Users',cmds:['diagnose test authserver ldap <SRV> <USER> <PASS>','diagnose firewall auth list','diagnose debug application fnbamd -1']},
-  {cat:'VPN Quick',cmds:['get vpn ipsec tunnel summary','diagnose vpn tunnel list','get vpn ssl monitor','diagnose vpn ssl statistics']},
-];
-
-let dCat='vpn',dTab='guide';
-
-/* old interactive demo JS removed — replaced by animated demo engine below */
-function initDemo(){} /* no-op — animated demo handles itself */
-initDemo();
-
-/* ── TERMS OF SERVICE MODAL ── */
+/* ── TERMS MODAL ── */
 function openTos(e){if(e)e.preventDefault();document.getElementById('tosOverlay').classList.add('open');document.body.style.overflow='hidden';}
 function closeTos(){document.getElementById('tosOverlay').classList.remove('open');document.body.style.overflow='';}
-function acceptTos(){document.getElementById('terms').checked=true;closeTos();showToast('Terms accepted — checkbox ticked!');}
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeTos();});
+function acceptTos(){document.getElementById('terms').checked=true;closeTos();showToast('✅ Terms accepted!');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTos();});
 
-
-
-/* ══ ANIMATED DEMO ENGINE ══ */
-(function(){
+/* ── ANIMATED DEMO ── */
 const STEPS=[
   {cmds:[{t:'get vpn ipsec tunnel summary',cl:'ro'},{t:'diagnose vpn tunnel list name <TUNNEL_NAME>',cl:'ro'},{t:'get vpn ipsec tunnel details',cl:'ro'}]},
   {cmds:[{t:'diagnose debug reset',cl:'warn'},{t:'diagnose debug application ike -1',cl:'warn'},{t:'diagnose debug enable',cl:'warn'},{t:'(wait 30s)',cl:'note'},{t:'diagnose debug disable',cl:'warn'},{t:'diagnose debug reset',cl:'warn'}]},
@@ -1141,8 +651,7 @@ async function runGuideScene(){
   document.querySelectorAll('.anim-step-card').forEach(c=>c.classList.remove('show'));
   for(let si=0;si<STEPS.length;si++){
     const card=document.getElementById('asc'+si);const cmdsDiv=document.getElementById('acmds'+si);
-    if(!card||!cmdsDiv)continue;
-    cmdsDiv.innerHTML='';await sleep(200);card.classList.add('show');await sleep(150);
+    if(!card||!cmdsDiv)continue;cmdsDiv.innerHTML='';await sleep(200);card.classList.add('show');await sleep(150);
     for(let cmd of STEPS[si].cmds){await typeCmd(cmdsDiv,cmd.t,cmd.cl);await sleep(cmd.cl==='note'?300:200);}
     await sleep(500);
   }
@@ -1160,70 +669,21 @@ async function runAnonScene(){showScene('ascene3');setTab(2);setSidebar(10);setS
 async function runSubnetScene(){
   showScene('ascene4');setTab(3);setSidebar(11);setStatus('Subnet Calculator · Full CIDR breakdown with binary view');
   const typing=document.getElementById('subTyping');const cursor=document.getElementById('subCursor');
-  const cards=document.querySelectorAll('#subCards .sub-card');const binary=document.getElementById('subBinary');
-  cards.forEach(c=>c.classList.remove('show'));if(binary)binary.style.opacity='0';
+  const cards=document.querySelectorAll('#subCards .sub-card');
+  cards.forEach(c=>c.classList.remove('show'));
   if(typing)await typeText(typing,'172.16.0.0/20',40);
   if(cursor)cursor.style.display='none';await sleep(400);
   for(let i=0;i<cards.length;i++){cards[i].classList.add('show');await sleep(110);}
-  await sleep(500);if(binary)binary.style.opacity='1';await sleep(2500);if(cursor)cursor.style.display='inline';
+  await sleep(2500);if(cursor)cursor.style.display='inline';
 }
 async function runRefScene(){showScene('ascene5');setTab(4);setSidebar(12);setStatus('Quick Ref · Copy any command in one click');await sleep(3200);}
 async function runLoop(){while(true){await runGuideScene();await runHAScene();await runAIScene();await runAnonScene();await runSubnetScene();await runRefScene();}}
 function startProgress(){const fill=document.getElementById('animProgress');if(!fill)return;const cycle=24000;const start=Date.now();function tick(){fill.style.width=((Date.now()-start)%cycle)/cycle*100+'%';requestAnimationFrame(tick);}requestAnimationFrame(tick);}
 if(document.getElementById('animatedDemo')){runLoop();startProgress();}
-})();
 
+/* ── INIT ── */
+function initDemo(){}
+initDemo();
 </script>
-
-<!-- TERMS OF USE MODAL -->
-<div class="tos-overlay" id="tosOverlay" onclick="if(event.target===this)closeTos()">
-  <div class="tos-card">
-    <div class="tos-hdr">
-      <h3>📜 Terms of Service — NetWolf Pro</h3>
-      <button class="tos-close" onclick="closeTos()">✕ Close</button>
-    </div>
-    <div class="tos-body">
-      <h4>1. Acceptance of Terms</h4>
-      <p>By subscribing to NetWolf Pro and creating an account, you agree to be bound by these Terms of Service. If you do not agree, do not subscribe or use the toolkit.</p>
-
-      <h4>2. Subscription & Payment</h4>
-      <p>NetWolf Pro is offered as a monthly (€10/month) or yearly (€100/year) subscription. Payments are processed securely via Stripe. By subscribing you authorise recurring charges to your payment method at the selected interval until you cancel. <strong>No refunds are issued for partial billing periods.</strong></p>
-
-      <h4>3. Account Credentials</h4>
-      <p>You are responsible for keeping your username and password confidential. Do not share your credentials with others. Each subscription is for a single user. If we detect credential sharing, your account may be suspended without refund.</p>
-
-      <h4>4. Permitted Use</h4>
-      <p>NetWolf Pro is licensed for use in <strong>legitimate professional and educational network engineering contexts only</strong> — including troubleshooting, lab environments, and authorised production systems. You must have explicit permission to run diagnostic commands on any device you target.</p>
-
-      <h4>5. Prohibited Use</h4>
-      <p>You may not use NetWolf Pro to:<br><br>
-      • Access, modify, or disrupt systems you do not own or have explicit written authorisation to manage.<br>
-      • Conduct unauthorised penetration testing or security audits.<br>
-      • Reverse-engineer, resell, or redistribute the toolkit or its content.<br>
-      • Share login credentials with users outside your subscription.</p>
-
-      <h4>6. Disclaimer of Liability</h4>
-      <p>NetWolf Pro is provided <strong>"as is"</strong> without warranty of any kind. The creators accept no liability for any damage, data loss, service interruption, security breach, or legal consequence arising from the use of this toolkit. <strong>You are solely responsible for any commands executed on live production equipment.</strong> Some commands (e.g. <code>execute reboot</code>, <code>diagnose sys session clear</code>) can cause traffic interruption — always review before executing.</p>
-
-      <h4>7. Intellectual Property</h4>
-      <p>All content within NetWolf Pro — including playbooks, configuration guides, and CLI references — is the intellectual property of NetWolf. You may not copy, publish, or distribute this content without written permission.</p>
-
-      <h4>8. Cancellation</h4>
-      <p>You may cancel your subscription at any time by emailing <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a>. Cancellation takes effect at the end of the current billing period. No partial refunds are issued.</p>
-
-      <h4>9. Changes to Terms</h4>
-      <p>We reserve the right to update these terms at any time. Continued use of the toolkit after changes constitutes acceptance of the updated terms. Subscribers will be notified of material changes by email at <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a>.</p>
-
-      <h4>10. Governing Law</h4>
-      <p>These terms are governed by the laws of the Netherlands. Any disputes shall be subject to the exclusive jurisdiction of the courts of the Netherlands.</p>
-
-      <p style="margin-top:20px;font-size:12px;color:var(--t3)">Last updated: May 2025 · NetWolf Pro Toolkit</p>
-    </div>
-    <div class="tos-foot">
-      <button class="tos-btn-close" onclick="closeTos()">Close</button>
-      <button class="tos-btn-accept" onclick="acceptTos()">✅ I Accept</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
