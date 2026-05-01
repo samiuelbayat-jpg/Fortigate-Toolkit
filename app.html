@@ -12,7 +12,7 @@
 <style>
 :root{--a:#1D9E75;--ad:#0F6E56;--bg:#0d1117;--b2:#161b22;--b3:#21262d;--br:#30363d;--t:#e6edf3;--t2:#8b949e;--t3:#484f58;--g:#3fb950;--y:#d29922;--r:#f85149;--bl:#58a6ff;--mono:'Courier New',monospace}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;background:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:100vh;width:100vw;overflow:hidden;background:transparent}
 #matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;pointer-events:none;background:#000000}
 
 /* LOGIN OVERLAY */
@@ -47,8 +47,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .btn-secondary-t{background:linear-gradient(90deg,#3b4b5e,#2c3e45)}
 
 /* TOOLKIT SHELL */
-.shell{max-width:95%;width:1400px;margin:20px auto;border:1px solid var(--br);border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5);position:relative;z-index:1;background:rgba(13,17,23,0.88);backdrop-filter:blur(2px)}
-.tbar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--b2);border-bottom:1px solid var(--br)}
+.shell{width:100vw;height:100vh;margin:0;border:none;border-radius:0;overflow:hidden;position:fixed;top:0;left:0;z-index:1;background:rgba(13,17,23,0.95);display:flex;flex-direction:column}
+.tbar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--b2);border-bottom:1px solid var(--br);flex-shrink:0}
 .dot{width:12px;height:12px;border-radius:50%}
 .dot.r{background:#ff5f57}.dot.y{background:#ffbd2e}.dot.g{background:#28c840}
 .ttxt{font-family:var(--mono);font-size:14px;color:var(--t);margin-left:6px;font-weight:700}
@@ -56,26 +56,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .user-pill{background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.25);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--a);font-family:var(--mono)}
 .logout-btn{background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.25);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--r);cursor:pointer;font-family:var(--mono);transition:all .15s}
 .logout-btn:hover{background:rgba(248,81,73,.2)}
-.kbar{display:flex;align-items:center;gap:8px;padding:7px 16px;background:var(--b2);border-bottom:1px solid var(--br)}
+.kbar{display:flex;align-items:center;gap:8px;padding:7px 16px;background:var(--b2);border-bottom:1px solid var(--br);flex-shrink:0}
 .kbar label{font-size:12px;color:var(--t2);white-space:nowrap}
 .kbar input{flex:1;font-size:12px;padding:5px 10px;border-radius:5px;border:1px solid var(--br);background:var(--bg);color:var(--t);font-family:var(--mono);outline:none}
 .kbar input:focus{border-color:var(--a)}
 .sbtn{font-size:12px;padding:5px 12px;border-radius:5px;background:var(--a);color:white;border:none;cursor:pointer;font-weight:600}
 .sbtn:hover{background:var(--ad)}
 .kst{font-size:11px;white-space:nowrap}
-.layout{display:grid;grid-template-columns:240px 1fr;min-height:75vh}
-.sidebar{background:var(--b2);border-right:1px solid var(--br);padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;max-height:calc(75vh - 20px)}
+.layout{display:grid;grid-template-columns:240px 1fr;flex:1;overflow:hidden;min-height:0}
+.sidebar{background:var(--b2);border-right:1px solid var(--br);padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;height:100%}
 .slbl{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;padding:10px 10px 4px}
 .cb{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;font-size:13px;cursor:pointer;border:none;background:none;width:100%;text-align:left;color:var(--t2);transition:all .1s}
 .cb:hover{background:var(--b3);color:var(--t)}
 .cb.active{background:rgba(29,158,117,.15);color:var(--a);font-weight:700;border-left:2px solid var(--a);padding-left:8px}
 .cb .ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
-.main{display:flex;flex-direction:column;overflow:hidden}
-.tabs{display:flex;border-bottom:1px solid var(--br);padding:0 14px;background:rgba(13,17,23,0.7);overflow-x:auto}
+.main{display:flex;flex-direction:column;overflow:hidden;flex:1;min-height:0}
+.tabs{display:flex;border-bottom:1px solid var(--br);padding:0 14px;background:rgba(13,17,23,0.7);overflow-x:auto;flex-shrink:0}
 .tab{padding:9px 14px;font-size:13px;cursor:pointer;border:none;background:none;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .1s}
 .tab:hover{color:var(--t)}
 .tab.active{color:var(--a);border-bottom-color:var(--a);font-weight:700}
-.content{flex:1;overflow-y:auto;padding:16px;max-height:calc(75vh - 80px)}
+.content{flex:1;overflow-y:auto;padding:16px;min-height:0}
 .sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .stitle{font-size:15px;font-weight:700;color:var(--t)}
 .sev{font-size:11px;padding:3px 9px;border-radius:4px;font-weight:600}
@@ -194,7 +194,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 </div>
 
 <!-- TOOLKIT -->
-<div id="toolkitContainer" style="display:none;">
+<div id="toolkitContainer" style="display:none;width:100%;height:100%">
 <div class="shell">
   <div class="tbar">
     <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
@@ -225,6 +225,8 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
         <button class="tab" onclick="stab('bulkAnon')" id="tab-bulkAnon">🔄 Bulk IP Anonymizer</button>
         <button class="tab" onclick="stab('subnetcalc')" id="tab-subnetcalc">🧮 Subnet Calculator</button>
         <button class="tab" onclick="stab('advdiag')" id="tab-advdiag">🔬 Advanced Diag</button>
+        <button class="tab" onclick="stab('cfggen')" id="tab-cfggen">⚙️ Config Generator</button>
+        <button class="tab" onclick="stab('cfgmigrate')" id="tab-cfgmigrate">🔄 Config Migrator</button>
       </div>
       <div class="content" id="mc"></div>
     </div>
@@ -688,7 +690,7 @@ const QREF=[
 
 
 /* ══ RENDER FUNCTIONS ══ */
-function render(){const el=document.getElementById('mc');if(tab==='guide'){const d=D[cur];if(d.type==='config')renderCfg(el,d);else renderGuide(el,d);}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='advdiag')renderAdvDiag(el);}
+function render(){const el=document.getElementById('mc');if(tab==='guide'){const d=D[cur];if(d.type==='config')renderCfg(el,d);else renderGuide(el,d);}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);}
 
 function renderGuide(el,d){let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev '+d.s+'">P1 common</span></div>';h+='<div class="chips">'+d.chips.map(c=>'<span class="chip" onclick="askAI(\''+c.replace(/'/g,"\\'")+'  on FortiGate\')">'+c+' ↗</span>').join('')+'</div>';d.steps.forEach((s,i)=>{const real=s.cmds.filter(c=>!c.startsWith('('));const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':'';h+='<div class="cblock '+risk+'"><div class="chdr"><div class="chdr-l"><div class="snum">'+(i+1)+'</div>'+s.t+'</div><div style="display:flex;gap:6px;">'+(risk==='danger'?'<span class="cbadge danger">⚠️ service impact</span>':risk==='warn'?'<span class="cbadge caution">⚠️ config change</span>':'<span class="cbadge ro">read-only</span>')+'<button class="copybtn" onclick="copyAll(this,\''+cur+'\','+i+')">Copy all</button></div></div><div class="cbody">'+(risk==='danger'?'<div class="cdanger">⚠️ One or more commands below will impact live traffic or sessions.</div>':risk==='warn'?'<div class="cwarn">⚠️ One or more commands below will make configuration changes.</div>':'')+'<div class="clines">'+s.cmds.map(c=>{if(c.startsWith('('))return'<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>\n';const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';return'<span style="color:'+col+'">'+esc(c)+'</span>'+(sv==='danger'?' <span style="font-size:10px;color:var(--r);">⚠️CAUTION</span>':'')+'\n';}).join('')+'</div>'+(s.note?'<div class="cnote">'+s.note+'</div>':'')+'</div></div>';});
   h+=`<div style="margin-top:32px;border-top:2px solid var(--br);padding-top:18px;background:rgba(0,0,0,0.2);border-radius:12px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><span style="font-weight:700;font-size:15px;">📟 CLI Output Reader</span><span style="font-size:11px;color:var(--t2);">Paste command outputs from your terminal session</span></div><textarea id="troubleOutputInput" placeholder="Paste raw FortiGate CLI output here..." style="width:100%;background:#000000;color:#f0f0f0;border:1px solid var(--br);font-family:var(--mono);font-size:12px;padding:12px;border-radius:8px;resize:vertical;" rows="7"></textarea><div style="display:flex;justify-content:flex-end;gap:10px;margin:12px 0 16px;"><button id="troubleOutputRenderBtn" class="sbtn">🖥️ Render Output</button><button id="troubleOutputClearBtn" class="sbtn" style="background:#4b5563;">🗑️ Clear</button></div><pre id="troubleOutputDisplay" style="background:#000000;color:#e6edf3;font-family:var(--mono);font-size:12px;line-height:1.5;padding:14px;border-radius:8px;border:1px solid var(--br);overflow-x:auto;white-space:pre-wrap;word-break:break-word;max-height:450px;margin:0;">— Paste CLI output and click "Render Output" —</pre></div>`;
@@ -730,6 +732,1037 @@ function calculateSubnet(ipCidr){let[ip,prefix]=ipCidr.trim().split('/');let mb=
 function renderSubnetCalc(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🧮 IPv4 Subnet Calculator</div></div><div class="cbody"><div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;"><input type="text" id="subnetInput" placeholder="e.g., 192.168.1.0/24" style="flex:2;padding:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);"><button class="sbtn" id="calcSubnetBtn">Calculate</button><button class="sbtn" id="exampleSubnetBtn" style="background:var(--b3);">📋 Example</button></div><div id="subnetResult"><div class="cnote">Enter an IPv4 address with CIDR prefix.</div></div></div></div>`;function update(){const info=calculateSubnet(document.getElementById('subnetInput').value);if(info.error){document.getElementById('subnetResult').innerHTML=`<div class="cdanger">⚠️ ${info.error}</div>`;return;}let h=`<div class="subnet-result-grid"><div class="subnet-card"><div class="subnet-label">Network</div><div class="subnet-value">${info.network}</div></div><div class="subnet-card"><div class="subnet-label">Broadcast</div><div class="subnet-value">${info.broadcast}</div></div><div class="subnet-card"><div class="subnet-label">First Usable</div><div class="subnet-value">${info.firstUsable}</div></div><div class="subnet-card"><div class="subnet-label">Last Usable</div><div class="subnet-value">${info.lastUsable}</div></div><div class="subnet-card"><div class="subnet-label">Netmask</div><div class="subnet-value">${info.mask} (/${info.cidr})</div></div><div class="subnet-card"><div class="subnet-label">Wildcard</div><div class="subnet-value">${info.wildcard}</div></div><div class="subnet-card"><div class="subnet-label">Usable Hosts</div><div class="subnet-value">${info.totalHosts.toLocaleString()}</div></div><div class="subnet-card"><div class="subnet-label">CIDR</div><div class="subnet-value">/${info.cidr}</div></div></div><div class="subnet-explanation"><strong>Binary view:</strong><br>IP:&nbsp;&nbsp; ${info.binaryIp.match(/.{8}/g).join('.')}<br>Mask: ${info.binaryMask.match(/.{8}/g).join('.')}<br>Net:&nbsp; ${info.binaryNetwork.match(/.{8}/g).join('.')}</div>`;document.getElementById('subnetResult').innerHTML=h;}document.getElementById('calcSubnetBtn').onclick=update;document.getElementById('exampleSubnetBtn').onclick=()=>{document.getElementById('subnetInput').value='192.168.1.0/24';update();};document.getElementById('subnetInput').addEventListener('keypress',e=>{if(e.key==='Enter')update();});}
 
 function renderAdvDiag(el){const sections=[{title:"🩺 System Health & Performance",icon:"📊",commands:[{cmd:"diagnose hardware sysinfo conserve",exp:"Shows conserve mode status and memory thresholds.",safety:"ro"},{cmd:"diagnose sys top",exp:"Real-time process CPU/memory usage.",safety:"ro"},{cmd:"get hardware status",exp:"Hardware model, serial number, sensors.",safety:"ro"},{cmd:"diagnose hardware sysinfo memory",exp:"Detailed memory breakdown.",safety:"ro"}]},{title:"🔧 Kernel (fnsysctl)",icon:"🐧",commands:[{cmd:"fnsysctl ifconfig",exp:"Native Linux interface config.",safety:"ro"},{cmd:"fnsysctl df -h",exp:"Filesystem disk usage.",safety:"ro"},{cmd:"fnsysctl top",exp:"Linux top (real-time). Use with caution.",safety:"caution"}]},{title:"🐛 Daemon Debugging",icon:"🔬",commands:[{cmd:"diagnose test application wad 3",exp:"Debug Web Application Daemon.",safety:"caution"},{cmd:"diagnose test application fnbamd 3",exp:"Debug authentication daemon.",safety:"caution"},{cmd:"diagnose test application dnsproxy 6",exp:"DNS proxy debug level 6.",safety:"caution"}]},{title:"🛡️ Local-In & DoS",icon:"🛑",commands:[{cmd:"show firewall local-in-policy",exp:"Local-in policies protecting the FortiGate itself.",safety:"ro"},{cmd:"show firewall dos-policy",exp:"DoS policies against volumetric attacks.",safety:"ro"}]}];let h=`<div class="sh"><span class="stitle">🔬 Advanced Diagnostics</span><span class="sev info">Expert-level</span></div>`;for(let s of sections){h+=`<div class="cblock"><div class="chdr"><div class="chdr-l"><span style="margin-right:4px">${s.icon}</span>${s.title}</div></div><div class="cbody">`;for(let item of s.commands){let badge=item.safety==='ro'?'<span class="cbadge ro">🟢 read-only</span>':item.safety==='caution'?'<span class="cbadge caution">🟡 caution</span>':'<span class="cbadge danger">🔴 dangerous</span>';h+=`<div class="clines" style="margin-bottom:4px;">${escapeHtml(item.cmd)}</div><div style="font-size:12px;color:var(--t2);margin-left:12px;margin-bottom:8px;">📝 ${item.exp} ${badge}</div>`;}h+=`</div></div>`;}el.innerHTML=h;}
+
+
+/* ══ CONFIG GENERATOR ══ */
+function renderCfgGen(el){
+  el.innerHTML=`
+  <div class="sh"><span class="stitle">⚙️ FortiGate Config Generator</span><span class="sev info">Fill form → get CLI</span></div>
+  <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6">Fill in your network details below and click Generate. The tool outputs a complete, ready-to-paste FortiGate CLI configuration.</p>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+    <button class="sbtn cfg-type-btn active" data-type="initial" onclick="setCfgType('initial',this)">🚀 Initial Setup</button>
+    <button class="sbtn cfg-type-btn" data-type="ipsec" onclick="setCfgType('ipsec',this)" style="background:var(--b3)">🔒 IPsec VPN</button>
+    <button class="sbtn cfg-type-btn" data-type="sslvpn" onclick="setCfgType('sslvpn',this)" style="background:var(--b3)">🕵️ SSL VPN</button>
+    <button class="sbtn cfg-type-btn" data-type="vlan" onclick="setCfgType('vlan',this)" style="background:var(--b3)">💾 VLAN + DHCP</button>
+    <button class="sbtn cfg-type-btn" data-type="portfwd" onclick="setCfgType('portfwd',this)" style="background:var(--b3)">↩️ Port Forward</button>
+    <button class="sbtn cfg-type-btn" data-type="ha" onclick="setCfgType('ha',this)" style="background:var(--b3)">⚙️ HA Cluster</button>
+    <button class="sbtn cfg-type-btn" data-type="sdwan" onclick="setCfgType('sdwan',this)" style="background:var(--b3)">🌐 SD-WAN</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <div id="cfgGenForm" style="background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:16px"></div>
+      <button class="sbtn" onclick="generateConfig()" style="margin-top:12px;width:100%;padding:10px;font-size:14px">⚡ Generate Config</button>
+      <button class="sbtn" onclick="copyCfgOutput()" style="margin-top:6px;width:100%;padding:10px;font-size:14px;background:#15803D">📋 Copy Config</button>
+    </div>
+    <div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:6px;font-family:var(--mono)">▸ GENERATED CLI OUTPUT</div>
+      <pre id="cfgGenOutput" style="background:#010409;border:1px solid var(--br);border-radius:8px;padding:14px;font-family:var(--mono);font-size:11.5px;color:var(--g);white-space:pre-wrap;overflow-x:auto;min-height:400px;max-height:600px;overflow-y:auto">— Fill the form and click Generate —</pre>
+    </div>
+  </div>`;
+
+  setCfgType('initial', el.querySelector('[data-type="initial"]'));
+}
+
+let currentCfgType = 'initial';
+
+function setCfgType(type, btn){
+  currentCfgType = type;
+  document.querySelectorAll('.cfg-type-btn').forEach(b=>{
+    b.style.background = b.dataset.type === type ? 'var(--a)' : 'var(--b3)';
+  });
+  const form = document.getElementById('cfgGenForm');
+  if(!form) return;
+
+  const inp = (id,label,placeholder,val='') =>
+    `<div style="margin-bottom:10px"><label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">${label}</label>
+     <input type="text" id="cfg_${id}" placeholder="${placeholder}" value="${val}"
+       style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none"></div>`;
+
+  const sel = (id,label,opts) =>
+    `<div style="margin-bottom:10px"><label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">${label}</label>
+     <select id="cfg_${id}" style="width:100%;background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);outline:none">
+     ${opts.map(o=>`<option value="${o.v||o}">${o.l||o}</option>`).join('')}</select></div>`;
+
+  const forms = {
+    initial: `
+      <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🚀 Initial FortiGate Setup</div>
+      ${inp('hostname','Hostname','FGT-SITE-01','FGT-SITE-01')}
+      ${inp('admin_pass','Admin password','StrongP@ss123')}
+      ${inp('admin_port','HTTPS admin port','8443','8443')}
+      ${inp('mgmt_ip','Management interface IP (CIDR)','10.0.0.1/24','10.0.0.1/24')}
+      ${inp('lan_ip','LAN interface IP (CIDR)','192.168.1.1/24','192.168.1.1/24')}
+      ${inp('dhcp_start','DHCP pool start','192.168.1.10','192.168.1.10')}
+      ${inp('dhcp_end','DHCP pool end','192.168.1.200','192.168.1.200')}
+      ${inp('dns1','Primary DNS','8.8.8.8','8.8.8.8')}
+      ${inp('dns2','Secondary DNS','1.1.1.1','1.1.1.1')}
+      ${inp('ntp','NTP server','pool.ntp.org','pool.ntp.org')}
+      ${sel('wan_mode','WAN interface mode',[{v:'dhcp',l:'DHCP (dynamic IP)'},{v:'static',l:'Static IP'}])}
+      <div id="wan_static_fields" style="display:none">
+        ${inp('wan_ip','WAN static IP (CIDR)','203.0.113.1/24')}
+        ${inp('wan_gw','WAN gateway','203.0.113.254')}
+      </div>`,
+    ipsec: `
+      <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🔒 IPsec Site-to-Site VPN</div>
+      ${inp('tunnel_name','Tunnel name','VPN-TO-SITE-B','VPN-TO-SITE-B')}
+      ${inp('wan_intf','WAN interface','wan1','wan1')}
+      ${inp('peer_ip','Remote peer WAN IP','198.51.100.5')}
+      ${inp('psk','Pre-shared key','MySecretKey123')}
+      ${sel('ike_ver','IKE version',[{v:'2',l:'IKEv2 (recommended)'},{v:'1',l:'IKEv1'}])}
+      ${sel('proposal','Encryption proposal',[{v:'aes256-sha256',l:'AES256-SHA256 (recommended)'},{v:'aes128-sha256',l:'AES128-SHA256'},{v:'aes256-sha512',l:'AES256-SHA512'}])}
+      ${sel('dhgrp','DH Group',[{v:'14',l:'Group 14 (2048-bit)'},{v:'19',l:'Group 19 (256-bit ECP)'},{v:'20',l:'Group 20 (384-bit ECP)'},{v:'5',l:'Group 5 (1536-bit)'}])}
+      ${inp('local_subnet','Local subnet (CIDR)','10.1.0.0/16','10.1.0.0/16')}
+      ${inp('remote_subnet','Remote subnet (CIDR)','10.2.0.0/16','10.2.0.0/16')}
+      ${inp('local_gw','Local LAN interface','lan','lan')}`,
+    sslvpn: `
+      <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🕵️ SSL VPN Configuration</div>
+      ${inp('sslvpn_port','SSL VPN port','10443','10443')}
+      ${inp('sslvpn_cert','Server certificate name','Fortinet_Factory','Fortinet_Factory')}
+      ${inp('sslvpn_pool_start','Tunnel IP pool start','10.200.0.10','10.200.0.10')}
+      ${inp('sslvpn_pool_end','Tunnel IP pool end','10.200.0.100','10.200.0.100')}
+      ${inp('sslvpn_dns','DNS for VPN clients','10.0.0.1','10.0.0.1')}
+      ${inp('sslvpn_lan','LAN subnet allowed (CIDR)','192.168.1.0/24','192.168.1.0/24')}
+      ${inp('ldap_server','LDAP server IP','10.0.1.10')}
+      ${inp('ldap_dn','LDAP base DN','DC=corp,DC=local','DC=corp,DC=local')}
+      ${inp('ldap_user','LDAP bind username','CN=svc-fgt,OU=SVC,DC=corp,DC=local')}
+      ${inp('ldap_pass','LDAP bind password','LdapPass123')}
+      ${inp('vpn_group','AD group for VPN access','CN=VPN-Users,OU=Groups,DC=corp,DC=local')}
+      ${inp('wan_intf_ssl','WAN interface','wan1','wan1')}`,
+    vlan: `
+      <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">💾 VLAN + DHCP Server</div>
+      ${inp('vlan_id','VLAN ID','100','100')}
+      ${inp('vlan_name','VLAN name','VLAN-USERS','VLAN-USERS')}
+      ${inp('vlan_desc','Description','Users VLAN','Users VLAN')}
+      ${inp('parent_intf','Parent interface','port2','port2')}
+      ${inp('vlan_ip','VLAN interface IP (CIDR)','192.168.100.1/24','192.168.100.1/24')}
+      ${inp('vlan_dhcp_start','DHCP pool start','192.168.100.10','192.168.100.10')}
+      ${inp('vlan_dhcp_end','DHCP pool end','192.168.100.200','192.168.100.200')}
+      ${inp('vlan_dns1','DHCP DNS server 1','8.8.8.8','8.8.8.8')}
+      ${inp('vlan_lease','DHCP lease time (seconds)','86400','86400')}`,
+    portfwd: `
+      <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">↩️ Port Forwarding (VIP)</div>
+      ${inp('vip_name','VIP object name','VIP-WEB-HTTPS','VIP-WEB-HTTPS')}
+      ${inp('wan_intf_vip','WAN interface','wan1','wan1')}
+      ${inp('vip_extip','External (WAN) IP','203.0.113.1')}
+      ${inp('vip_intip','Internal server IP','192.168.1.100')}
+      ${sel('vip_proto','Protocol',[{v:'tcp',l:'TCP'},{v:'udp',l:'UDP'}])}
+      ${inp('vip_extport','External port','443','443')}
+      ${inp('vip_intport','Internal port','443','443')}
+      ${sel('vip_service','Service',[{v:'HTTPS',l:'HTTPS (443)'},{v:'HTTP',l:'HTTP (80)'},{v:'RDP',l:'RDP (3389)'},{v:'SSH',l:'SSH (22)'},{v:'ALL',l:'ALL'}])}
+      ${inp('lan_intf_vip','LAN interface','lan','lan')}
+      ${inp('lan_subnet_vip','LAN subnet object name','LAN-SUBNET','LAN-SUBNET')}`,
+    ha: `
+      <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">⚙️ HA Active-Passive Cluster</div>
+      ${inp('ha_group','HA group name','CLUSTER-01','CLUSTER-01')}
+      ${inp('ha_group_id','HA group ID (1-255)','1','1')}
+      ${inp('ha_pass','HA password','HAPassword123')}
+      ${inp('ha_hbdev','Heartbeat interfaces','ha1 50 ha2 50','ha1 50 ha2 50')}
+      ${inp('ha_pri_priority','Primary unit priority','200','200')}
+      ${inp('ha_sec_priority','Secondary unit priority','100','100')}
+      ${inp('ha_mgmt_intf','Management interface','mgmt','mgmt')}
+      ${inp('ha_pri_mgmt','Primary unit management IP (CIDR)','10.0.0.1/24','10.0.0.1/24')}
+      ${inp('ha_sec_mgmt','Secondary unit management IP (CIDR)','10.0.0.2/24','10.0.0.2/24')}
+      ${inp('ha_mgmt_gw','Management gateway','10.0.0.254','10.0.0.254')}`,
+    sdwan: `
+      <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🌐 SD-WAN Configuration</div>
+      ${inp('sdwan_wan1','WAN1 interface','wan1','wan1')}
+      ${inp('sdwan_wan1_gw','WAN1 gateway','203.0.113.254')}
+      ${inp('sdwan_wan2','WAN2 interface','wan2','wan2')}
+      ${inp('sdwan_wan2_gw','WAN2 gateway','198.51.100.254')}
+      ${inp('sdwan_hc_server','Health check server','8.8.8.8','8.8.8.8')}
+      ${inp('sdwan_latency','Latency threshold (ms)','150','150')}
+      ${inp('sdwan_jitter','Jitter threshold (ms)','30','30')}
+      ${inp('sdwan_loss','Packet loss threshold (%)','5','5')}
+      ${inp('sdwan_lan','LAN interface','lan','lan')}`,
+  };
+
+  form.innerHTML = forms[type] || '';
+
+  // Show/hide WAN static fields
+  const wanMode = document.getElementById('cfg_wan_mode');
+  if(wanMode){
+    wanMode.onchange = ()=>{
+      const sf = document.getElementById('wan_static_fields');
+      if(sf) sf.style.display = wanMode.value==='static'?'block':'none';
+    };
+  }
+}
+
+function g(id){ const el=document.getElementById('cfg_'+id); return el ? el.value.trim() : ''; }
+function gs(id){ const el=document.getElementById('cfg_'+id); return el ? el.value : ''; }
+
+function cidrToMask(cidr){
+  const bits=parseInt(cidr.split('/')[1]||'24');
+  const mask=(bits===0?0:(0xFFFFFFFF<<(32-bits))>>>0);
+  return [(mask>>>24)&255,(mask>>>16)&255,(mask>>>8)&255,mask&255].join('.');
+}
+function cidrToIp(cidr){ return cidr.split('/')[0]; }
+function cidrToNetwork(cidr){
+  const [ip,prefix]=cidr.split('/');
+  const parts=ip.split('.').map(Number);
+  const bits=parseInt(prefix||'24');
+  const mask=(bits===0?0:(0xFFFFFFFF<<(32-bits))>>>0);
+  const ipInt=((parts[0]<<24)|(parts[1]<<16)|(parts[2]<<8)|parts[3])>>>0;
+  const net=(ipInt&mask)>>>0;
+  return [(net>>>24)&255,(net>>>16)&255,(net>>>8)&255,net&255].join('.')+'/'+prefix;
+}
+
+function generateConfig(){
+  const out = document.getElementById('cfgGenOutput');
+  if(!out) return;
+  let cfg = '';
+  const type = currentCfgType;
+
+  if(type==='initial'){
+    const hostname=g('hostname')||'FGT-SITE-01';
+    const adminPass=g('admin_pass')||'Admin@123';
+    const adminPort=g('admin_port')||'8443';
+    const mgmtCidr=g('mgmt_ip')||'10.0.0.1/24';
+    const mgmtIp=cidrToIp(mgmtCidr);
+    const mgmtMask=cidrToMask(mgmtCidr);
+    const lanCidr=g('lan_ip')||'192.168.1.1/24';
+    const lanIp=cidrToIp(lanCidr);
+    const lanMask=cidrToMask(lanCidr);
+    const dhcpStart=g('dhcp_start')||'192.168.1.10';
+    const dhcpEnd=g('dhcp_end')||'192.168.1.200';
+    const dns1=g('dns1')||'8.8.8.8';
+    const dns2=g('dns2')||'1.1.1.1';
+    const ntp=g('ntp')||'pool.ntp.org';
+    const wanMode=gs('wan_mode')||'dhcp';
+    const wanIp=cidrToIp(g('wan_ip')||'203.0.113.1/24');
+    const wanMask=cidrToMask(g('wan_ip')||'203.0.113.1/24');
+    const wanGw=g('wan_gw')||'203.0.113.254';
+
+    cfg = `# ═══════════════════════════════════════════
+# NetWolf Config Generator — Initial Setup
+# Hostname: ${hostname}
+# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
+# ═══════════════════════════════════════════
+
+# 1. System global settings
+config system global
+    set hostname ${hostname}
+    set timezone 26
+    set admintimeout 30
+    set admin-sport ${adminPort}
+    set admin-ssh-port 22
+end
+
+# 2. Admin password
+config system admin
+    edit admin
+        set password ${adminPass}
+    next
+end
+
+# 3. Management interface
+config system interface
+    edit mgmt
+        set ip ${mgmtIp} ${mgmtMask}
+        set allowaccess ping https ssh
+        set role lan
+        set description "Management Interface"
+    next
+end
+
+# 4. WAN interface
+config system interface
+    edit wan1
+        set mode ${wanMode}${wanMode==='static'?`\n        set ip ${wanIp} ${wanMask}`:''}
+        set allowaccess ping
+        set role wan
+        set description "WAN Interface"
+    next
+end
+${wanMode==='static'?`
+# 4a. Default route (static WAN)
+config router static
+    edit 1
+        set gateway ${wanGw}
+        set device wan1
+    next
+end`:''}
+
+# 5. LAN interface
+config system interface
+    edit lan
+        set ip ${lanIp} ${lanMask}
+        set allowaccess ping
+        set role lan
+        set description "LAN Interface"
+    next
+end
+
+# 6. DNS servers
+config system dns
+    set primary ${dns1}
+    set secondary ${dns2}
+end
+
+# 7. NTP
+config system ntp
+    set ntpsync enable
+    set type custom
+    config ntpserver
+        edit 1
+            set server ${ntp}
+        next
+    end
+end
+
+# 8. DHCP server on LAN
+config system dhcp server
+    edit 1
+        set interface lan
+        set default-gateway ${lanIp}
+        set netmask ${lanMask}
+        set dns-service default
+        config ip-range
+            edit 1
+                set start-ip ${dhcpStart}
+                set end-ip ${dhcpEnd}
+            next
+        end
+    next
+end
+
+# 9. LAN to WAN firewall policy with NAT
+config firewall policy
+    edit 1
+        set name "LAN-TO-WAN"
+        set srcintf "lan"
+        set dstintf "wan1"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set nat enable
+        set logtraffic all
+    next
+end
+
+# 10. Enable disk logging
+config log disk setting
+    set status enable
+    set severity information
+end`;
+  }
+
+  else if(type==='ipsec'){
+    const name=g('tunnel_name')||'VPN-TO-SITE-B';
+    const wanIntf=g('wan_intf')||'wan1';
+    const peerIp=g('peer_ip')||'198.51.100.5';
+    const psk=g('psk')||'ChangeMe123';
+    const ikeVer=gs('ike_ver')||'2';
+    const proposal=gs('proposal')||'aes256-sha256';
+    const dhgrp=gs('dhgrp')||'14';
+    const localSubnet=g('local_subnet')||'10.1.0.0/16';
+    const remoteSubnet=g('remote_subnet')||'10.2.0.0/16';
+    const localIntf=g('local_gw')||'lan';
+    const localNet=cidrToIp(localSubnet);
+    const localMask=cidrToMask(localSubnet);
+    const remoteNet=cidrToIp(remoteSubnet);
+    const remoteMask=cidrToMask(remoteSubnet);
+
+    cfg = `# ═══════════════════════════════════════════
+# NetWolf Config Generator — IPsec Site-to-Site VPN
+# Tunnel: ${name}  Peer: ${peerIp}
+# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
+# ═══════════════════════════════════════════
+
+# 1. Phase 1 — IKE
+config vpn ipsec phase1-interface
+    edit "${name}"
+        set interface "${wanIntf}"
+        set ike-version ${ikeVer}
+        set proposal ${proposal}
+        set dhgrp ${dhgrp}
+        set remote-gw ${peerIp}
+        set psksecret "${psk}"
+        set dpd on-idle
+        set dpd-retrycount 3
+        set dpd-retryinterval 20
+    next
+end
+
+# 2. Phase 2 — IPsec SA
+config vpn ipsec phase2-interface
+    edit "${name}-P2"
+        set phase1name "${name}"
+        set proposal ${proposal}
+        set dhgrp ${dhgrp}
+        set pfs enable
+        set src-subnet ${localNet} ${localMask}
+        set dst-subnet ${remoteNet} ${remoteMask}
+        set auto-negotiate enable
+    next
+end
+
+# 3. Address objects
+config firewall address
+    edit "${name}-LOCAL"
+        set subnet ${localNet} ${localMask}
+    next
+    edit "${name}-REMOTE"
+        set subnet ${remoteNet} ${remoteMask}
+    next
+end
+
+# 4. Firewall policies — outbound
+config firewall policy
+    edit 10
+        set name "${name}-OUT"
+        set srcintf "${localIntf}"
+        set dstintf "${name}"
+        set srcaddr "${name}-LOCAL"
+        set dstaddr "${name}-REMOTE"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+end
+
+# 5. Firewall policies — inbound
+config firewall policy
+    edit 11
+        set name "${name}-IN"
+        set srcintf "${name}"
+        set dstintf "${localIntf}"
+        set srcaddr "${name}-REMOTE"
+        set dstaddr "${name}-LOCAL"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+end
+
+# 6. Static route to remote subnet
+config router static
+    edit 10
+        set dst ${remoteNet} ${remoteMask}
+        set device "${name}"
+    next
+end
+
+# 7. Verify tunnel
+# execute ping-options source ${localNet}
+# execute ping ${remoteNet}
+# get vpn ipsec tunnel summary`;
+  }
+
+  else if(type==='sslvpn'){
+    const port=g('sslvpn_port')||'10443';
+    const cert=g('sslvpn_cert')||'Fortinet_Factory';
+    const poolStart=g('sslvpn_pool_start')||'10.200.0.10';
+    const poolEnd=g('sslvpn_pool_end')||'10.200.0.100';
+    const dns=g('sslvpn_dns')||'10.0.0.1';
+    const lanSubnet=g('sslvpn_lan')||'192.168.1.0/24';
+    const lanNet=cidrToIp(lanSubnet);
+    const lanMask=cidrToMask(lanSubnet);
+    const ldapServer=g('ldap_server')||'10.0.1.10';
+    const ldapDn=g('ldap_dn')||'DC=corp,DC=local';
+    const ldapUser=g('ldap_user')||'CN=svc-fgt,OU=SVC,DC=corp,DC=local';
+    const ldapPass=g('ldap_pass')||'LdapPass123';
+    const vpnGroup=g('vpn_group')||'CN=VPN-Users,OU=Groups,DC=corp,DC=local';
+    const wanIntf=g('wan_intf_ssl')||'wan1';
+
+    cfg = `# ═══════════════════════════════════════════
+# NetWolf Config Generator — SSL VPN
+# Port: ${port}  LDAP: ${ldapServer}
+# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
+# ═══════════════════════════════════════════
+
+# 1. SSL VPN portal
+config vpn ssl web portal
+    edit "tunnel-portal"
+        set tunnel-mode enable
+        set split-tunneling enable
+        set split-tunneling-routing-address "SSLVPN-LAN"
+        set dns-server1 ${dns}
+    next
+end
+
+# 2. Address objects
+config firewall address
+    edit "SSLVPN-POOL"
+        set type iprange
+        set start-ip ${poolStart}
+        set end-ip ${poolEnd}
+    next
+    edit "SSLVPN-LAN"
+        set subnet ${lanNet} ${lanMask}
+    next
+end
+
+# 3. LDAP server
+config user ldap
+    edit "CORP-LDAP"
+        set server ${ldapServer}
+        set cnid sAMAccountName
+        set dn ${ldapDn}
+        set type regular
+        set username ${ldapUser}
+        set password ${ldapPass}
+    next
+end
+
+# 4. User group
+config user group
+    edit "SSLVPN-USERS"
+        set member "CORP-LDAP"
+        config match
+            edit 1
+                set server-name "CORP-LDAP"
+                set group-name "${vpnGroup}"
+            next
+        end
+    next
+end
+
+# 5. SSL VPN settings
+config vpn ssl settings
+    set servercert "${cert}"
+    set tunnel-ip-pools "SSLVPN-POOL"
+    set port ${port}
+    set source-interface "${wanIntf}"
+    set default-portal "tunnel-portal"
+    config authentication-rule
+        edit 1
+            set groups "SSLVPN-USERS"
+            set portal "tunnel-portal"
+        next
+    end
+end
+
+# 6. Firewall policy — SSL VPN to LAN
+config firewall policy
+    edit 20
+        set name "SSLVPN-TO-LAN"
+        set srcintf "ssl.root"
+        set dstintf "lan"
+        set srcaddr "SSLVPN-POOL"
+        set dstaddr "SSLVPN-LAN"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+end`;
+  }
+
+  else if(type==='vlan'){
+    const vlanId=g('vlan_id')||'100';
+    const vlanName=g('vlan_name')||'VLAN-USERS';
+    const vlanDesc=g('vlan_desc')||'Users VLAN';
+    const parentIntf=g('parent_intf')||'port2';
+    const vlanCidr=g('vlan_ip')||'192.168.100.1/24';
+    const vlanIp=cidrToIp(vlanCidr);
+    const vlanMask=cidrToMask(vlanCidr);
+    const dhcpStart=g('vlan_dhcp_start')||'192.168.100.10';
+    const dhcpEnd=g('vlan_dhcp_end')||'192.168.100.200';
+    const dns1=g('vlan_dns1')||'8.8.8.8';
+    const lease=g('vlan_lease')||'86400';
+
+    cfg = `# ═══════════════════════════════════════════
+# NetWolf Config Generator — VLAN + DHCP
+# VLAN ${vlanId}: ${vlanName}
+# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
+# ═══════════════════════════════════════════
+
+# 1. VLAN interface
+config system interface
+    edit "${vlanName}"
+        set vdom "root"
+        set ip ${vlanIp} ${vlanMask}
+        set allowaccess ping
+        set description "${vlanDesc}"
+        set role lan
+        set interface "${parentIntf}"
+        set vlanid ${vlanId}
+    next
+end
+
+# 2. DHCP server for VLAN
+config system dhcp server
+    edit ${vlanId}
+        set interface "${vlanName}"
+        set default-gateway ${vlanIp}
+        set netmask ${vlanMask}
+        set dns-server1 ${dns1}
+        set lease-time ${lease}
+        config ip-range
+            edit 1
+                set start-ip ${dhcpStart}
+                set end-ip ${dhcpEnd}
+            next
+        end
+    next
+end
+
+# 3. Allow VLAN to access internet (adjust policy ID as needed)
+config firewall policy
+    edit 100
+        set name "${vlanName}-TO-WAN"
+        set srcintf "${vlanName}"
+        set dstintf "wan1"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set nat enable
+        set logtraffic all
+    next
+end`;
+  }
+
+  else if(type==='portfwd'){
+    const vipName=g('vip_name')||'VIP-WEB';
+    const wanIntf=g('wan_intf_vip')||'wan1';
+    const extIp=g('vip_extip')||'203.0.113.1';
+    const intIp=g('vip_intip')||'192.168.1.100';
+    const proto=gs('vip_proto')||'tcp';
+    const extPort=g('vip_extport')||'443';
+    const intPort=g('vip_intport')||'443';
+    const service=gs('vip_service')||'HTTPS';
+    const lanIntf=g('lan_intf_vip')||'lan';
+    const lanSubnet=g('lan_subnet_vip')||'LAN-SUBNET';
+
+    cfg = `# ═══════════════════════════════════════════
+# NetWolf Config Generator — Port Forwarding (VIP)
+# ${extIp}:${extPort} → ${intIp}:${intPort}
+# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
+# ═══════════════════════════════════════════
+
+# 1. VIP object
+config firewall vip
+    edit "${vipName}"
+        set extintf "${wanIntf}"
+        set extip ${extIp}
+        set mappedip ${intIp}
+        set portforward enable
+        set protocol ${proto}
+        set extport ${extPort}
+        set mappedport ${intPort}
+    next
+end
+
+# 2. Inbound firewall policy (WAN → Server)
+config firewall policy
+    edit 30
+        set name "${vipName}-INBOUND"
+        set srcintf "${wanIntf}"
+        set dstintf "${lanIntf}"
+        set srcaddr "all"
+        set dstaddr "${vipName}"
+        set action accept
+        set schedule "always"
+        set service "${service}"
+        set logtraffic all
+    next
+end
+
+# 3. Hairpin NAT policy (internal clients → VIP)
+config firewall policy
+    edit 31
+        set name "${vipName}-HAIRPIN"
+        set srcintf "${lanIntf}"
+        set dstintf "${lanIntf}"
+        set srcaddr "${lanSubnet}"
+        set dstaddr "${vipName}"
+        set action accept
+        set schedule "always"
+        set service "${service}"
+        set nat enable
+        set logtraffic all
+    next
+end
+
+# 4. Verify VIP
+# show firewall vip ${vipName}
+# diagnose sniffer packet ${wanIntf} 'host ${extIp} and port ${extPort}' 4 20 l`;
+  }
+
+  else if(type==='ha'){
+    const group=g('ha_group')||'CLUSTER-01';
+    const groupId=g('ha_group_id')||'1';
+    const pass=g('ha_pass')||'HAPassword123';
+    const hbdev=g('ha_hbdev')||'ha1 50 ha2 50';
+    const priPri=g('ha_pri_priority')||'200';
+    const secPri=g('ha_sec_priority')||'100';
+    const mgmtIntf=g('ha_mgmt_intf')||'mgmt';
+    const priMgmt=cidrToIp(g('ha_pri_mgmt')||'10.0.0.1/24');
+    const secMgmt=cidrToIp(g('ha_sec_mgmt')||'10.0.0.2/24');
+    const mgmtMask=cidrToMask(g('ha_pri_mgmt')||'10.0.0.1/24');
+    const mgmtGw=g('ha_mgmt_gw')||'10.0.0.254';
+
+    cfg = `# ═══════════════════════════════════════════
+# NetWolf Config Generator — HA Active-Passive
+# Group: ${group}  ID: ${groupId}
+# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
+# ═══════════════════════════════════════════
+
+# ── PRIMARY UNIT ──────────────────────────
+
+config system ha
+    set mode a-p
+    set group-name "${group}"
+    set group-id ${groupId}
+    set password "${pass}"
+    set priority ${priPri}
+    set hbdev ${hbdev}
+    set session-sync-dev ${hbdev.split(' ').filter((_,i)=>i%2===0).join(' ')}
+    set override enable
+    set ha-mgmt-status enable
+    config ha-mgmt-interfaces
+        edit 1
+            set interface "${mgmtIntf}"
+            set gateway ${mgmtGw}
+        next
+    end
+end
+
+# Primary unit management IP
+config system interface
+    edit "${mgmtIntf}"
+        set ip ${priMgmt} ${mgmtMask}
+        set allowaccess ping https ssh
+    next
+end
+
+# ── SECONDARY UNIT ────────────────────────
+# Run the following on the SECONDARY unit:
+
+config system ha
+    set mode a-p
+    set group-name "${group}"
+    set group-id ${groupId}
+    set password "${pass}"
+    set priority ${secPri}
+    set hbdev ${hbdev}
+    set ha-mgmt-status enable
+    config ha-mgmt-interfaces
+        edit 1
+            set interface "${mgmtIntf}"
+            set gateway ${mgmtGw}
+        next
+    end
+end
+
+# Secondary unit management IP
+config system interface
+    edit "${mgmtIntf}"
+        set ip ${secMgmt} ${mgmtMask}
+        set allowaccess ping https ssh
+    next
+end
+
+# ── VERIFY ────────────────────────────────
+# get system ha status
+# diagnose sys ha checksum show
+# diagnose sys ha status`;
+  }
+
+  else if(type==='sdwan'){
+    const wan1=g('sdwan_wan1')||'wan1';
+    const wan1gw=g('sdwan_wan1_gw')||'203.0.113.254';
+    const wan2=g('sdwan_wan2')||'wan2';
+    const wan2gw=g('sdwan_wan2_gw')||'198.51.100.254';
+    const hcServer=g('sdwan_hc_server')||'8.8.8.8';
+    const latency=g('sdwan_latency')||'150';
+    const jitter=g('sdwan_jitter')||'30';
+    const loss=g('sdwan_loss')||'5';
+    const lan=g('sdwan_lan')||'lan';
+
+    cfg = `# ═══════════════════════════════════════════
+# NetWolf Config Generator — SD-WAN
+# WAN1: ${wan1}  WAN2: ${wan2}
+# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
+# ═══════════════════════════════════════════
+
+# 1. Enable SD-WAN and add members
+config system sdwan
+    set status enable
+    config members
+        edit 1
+            set interface "${wan1}"
+            set gateway ${wan1gw}
+        next
+        edit 2
+            set interface "${wan2}"
+            set gateway ${wan2gw}
+        next
+    end
+
+# 2. Health checks with SLA thresholds
+    config health-check
+        edit "HC-INTERNET"
+            set server ${hcServer}
+            set protocol ping
+            set interval 1000
+            set failtime 3
+            set recoverytime 5
+            config sla
+                edit 1
+                    set latency-threshold ${latency}
+                    set jitter-threshold ${jitter}
+                    set packetloss-threshold ${loss}
+                next
+            end
+            set members 1 2
+        next
+    end
+
+# 3. Steering rules
+    config service
+        edit 1
+            set name "WAN1-Primary"
+            set mode sla
+            config sla
+                edit "HC-INTERNET"
+                    set id 1
+                next
+            end
+            set priority-members 1
+        next
+        edit 99
+            set name "Default-LoadBalance"
+            set mode load-balance
+            set priority-members 1 2
+        next
+    end
+end
+
+# 4. Firewall policy using SD-WAN
+config firewall policy
+    edit 1
+        set name "${lan}-TO-SDWAN"
+        set srcintf "${lan}"
+        set dstintf "virtual-wan-link"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set nat enable
+        set logtraffic all
+    next
+end
+
+# 5. Verify SD-WAN
+# get router info sdwan health-check
+# diagnose sys sdwan member list
+# get router info sdwan service`;
+  }
+
+  out.textContent = cfg || '— Click Generate to build your config —';
+}
+
+function copyCfgOutput(){
+  const out = document.getElementById('cfgGenOutput');
+  if(!out || out.textContent.startsWith('—')) return;
+  navigator.clipboard.writeText(out.textContent).then(()=>{
+    showToast('✅ Config copied to clipboard!');
+  });
+}
+
+/* ══ CONFIG MIGRATOR ══ */
+function renderCfgMigrate(el){
+  el.innerHTML=`
+  <div class="sh"><span class="stitle">🔄 Config Migrator</span><span class="sev info">Upload config → replace details → download new config</span></div>
+  <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6">Upload an existing FortiGate config file (.conf or .txt), enter the new device details below, and the tool will replace all matching values and generate a ready-to-use config for the new FortiGate.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <div class="cblock">
+        <div class="chdr"><div class="chdr-l">📁 Step 1 — Upload existing config</div></div>
+        <div class="cbody">
+          <input type="file" id="cfgFile" accept=".conf,.txt,.cfg" style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px;font-size:12px;color:var(--t);margin-bottom:10px">
+          <div class="cnote">Supported: .conf .txt .cfg — FortiGate backup files</div>
+          <div id="cfgFileStatus" style="font-size:11px;color:var(--t3);margin-top:6px"></div>
+        </div>
+      </div>
+
+      <div class="cblock" style="margin-top:10px">
+        <div class="chdr"><div class="chdr-l">✏️ Step 2 — New device details</div></div>
+        <div class="cbody">
+          <div style="font-size:11px;color:var(--y);background:rgba(210,153,34,.08);border-left:2px solid var(--y);padding:8px;border-radius:4px;margin-bottom:12px;line-height:1.5">
+            ⚠️ Leave fields blank to keep the original value. Only filled fields will be replaced.
+          </div>
+
+          <div style="font-size:11px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px;text-transform:uppercase">System</div>
+          <div class="mig-row"><label>New hostname</label><input type="text" id="mig_hostname" placeholder="FGT-NEWSITE-01"></div>
+          <div class="mig-row"><label>New admin password</label><input type="password" id="mig_adminpass" placeholder="NewAdmin@123"></div>
+
+          <div style="font-size:11px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin:14px 0 8px;text-transform:uppercase">Network — Find & Replace IPs</div>
+          <div class="cnote" style="margin-bottom:10px">Add IP replacements — old IP on left, new IP on right</div>
+          <div id="migIpRows">
+            <div class="mig-ip-row">
+              <input type="text" placeholder="Old IP (e.g. 192.168.1.1)" class="mig-old-ip" style="font-family:var(--mono)">
+              <span style="color:var(--t3);font-size:14px;flex-shrink:0">→</span>
+              <input type="text" placeholder="New IP (e.g. 10.10.1.1)" class="mig-new-ip" style="font-family:var(--mono)">
+              <button onclick="removeMigRow(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);color:var(--r);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;flex-shrink:0">✕</button>
+            </div>
+          </div>
+          <button onclick="addMigRow()" class="sbtn" style="background:var(--b3);margin-top:8px;font-size:11px">+ Add IP replacement</button>
+
+          <div style="font-size:11px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin:14px 0 8px;text-transform:uppercase">Text replacements</div>
+          <div id="migTextRows">
+            <div class="mig-ip-row">
+              <input type="text" placeholder="Old text (e.g. OLD-SITE)" class="mig-old-txt">
+              <span style="color:var(--t3);font-size:14px;flex-shrink:0">→</span>
+              <input type="text" placeholder="New text (e.g. NEW-SITE)" class="mig-new-txt">
+              <button onclick="removeMigRow(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);color:var(--r);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;flex-shrink:0">✕</button>
+            </div>
+          </div>
+          <button onclick="addMigTextRow()" class="sbtn" style="background:var(--b3);margin-top:8px;font-size:11px">+ Add text replacement</button>
+        </div>
+      </div>
+
+      <button class="sbtn" onclick="runMigration()" style="margin-top:12px;width:100%;padding:10px;font-size:14px">🔄 Generate Migrated Config</button>
+      <button class="sbtn" onclick="downloadMigrated()" style="margin-top:6px;width:100%;padding:10px;font-size:14px;background:#15803D">💾 Download New Config</button>
+    </div>
+
+    <div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:6px;font-family:var(--mono)">▸ MIGRATED CONFIG OUTPUT</div>
+      <pre id="migOutput" style="background:#010409;border:1px solid var(--br);border-radius:8px;padding:14px;font-family:var(--mono);font-size:11px;color:var(--g);white-space:pre-wrap;overflow-x:auto;min-height:500px;max-height:700px;overflow-y:auto">— Upload a config file and click Generate —</pre>
+      <div id="migStats" style="font-size:11px;color:var(--t3);margin-top:6px"></div>
+    </div>
+  </div>`;
+
+  // Inject CSS for migrator rows
+  if(!document.getElementById('migCSS')){
+    const style=document.createElement('style');
+    style.id='migCSS';
+    style.textContent=`.mig-row{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}.mig-row label{font-size:11px;font-weight:600;color:var(--t2)}.mig-row input{background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:inherit;outline:none}.mig-ip-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}.mig-ip-row input{flex:1;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-size:11px;color:var(--t);outline:none}`;
+    document.head.appendChild(style);
+  }
+
+  // File upload handler
+  document.getElementById('cfgFile').onchange = function(){
+    const file=this.files[0];
+    if(file){
+      const status=document.getElementById('cfgFileStatus');
+      status.textContent=`✓ Loaded: ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+      status.style.color='var(--g)';
+    }
+  };
+}
+
+function addMigRow(){
+  const container=document.getElementById('migIpRows');
+  const row=document.createElement('div');
+  row.className='mig-ip-row';
+  row.innerHTML=`<input type="text" placeholder="Old IP" class="mig-old-ip" style="font-family:var(--mono)"><span style="color:var(--t3);font-size:14px;flex-shrink:0">→</span><input type="text" placeholder="New IP" class="mig-new-ip" style="font-family:var(--mono)"><button onclick="removeMigRow(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);color:var(--r);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;flex-shrink:0">✕</button>`;
+  container.appendChild(row);
+}
+
+function addMigTextRow(){
+  const container=document.getElementById('migTextRows');
+  const row=document.createElement('div');
+  row.className='mig-ip-row';
+  row.innerHTML=`<input type="text" placeholder="Old text" class="mig-old-txt"><span style="color:var(--t3);font-size:14px;flex-shrink:0">→</span><input type="text" placeholder="New text" class="mig-new-txt"><button onclick="removeMigRow(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);color:var(--r);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:11px;flex-shrink:0">✕</button>`;
+  container.appendChild(row);
+}
+
+function removeMigRow(btn){ btn.parentElement.remove(); }
+
+let migratedConfig='';
+
+function runMigration(){
+  const fileInput=document.getElementById('cfgFile');
+  const out=document.getElementById('migOutput');
+  const stats=document.getElementById('migStats');
+  if(!fileInput.files.length){ showToast('⚠️ Please upload a config file first.'); return; }
+  const file=fileInput.files[0];
+  const reader=new FileReader();
+  reader.onload=function(e){
+    let cfg=e.target.result;
+    let replacements=0;
+
+    // Hostname replacement
+    const newHostname=document.getElementById('mig_hostname')?.value.trim();
+    if(newHostname){
+      cfg=cfg.replace(/set hostname .+/g,`set hostname ${newHostname}`);
+      replacements++;
+    }
+
+    // Admin password replacement
+    const newPass=document.getElementById('mig_adminpass')?.value.trim();
+    if(newPass){
+      cfg=cfg.replace(/set password ENC .+/g,`set password ${newPass}`);
+      cfg=cfg.replace(/(edit admin[\s\S]*?set password )[^\n]+/g,`$1${newPass}`);
+      replacements++;
+    }
+
+    // IP replacements
+    document.querySelectorAll('.mig-old-ip').forEach((oldEl,i)=>{
+      const newEl=document.querySelectorAll('.mig-new-ip')[i];
+      const oldIp=oldEl.value.trim();
+      const newIp=newEl?.value.trim();
+      if(oldIp&&newIp){
+        const regex=new RegExp(oldIp.replace(/\./g,'\\.'),'g');
+        const count=(cfg.match(regex)||[]).length;
+        cfg=cfg.replace(regex,newIp);
+        replacements+=count;
+      }
+    });
+
+    // Text replacements
+    document.querySelectorAll('.mig-old-txt').forEach((oldEl,i)=>{
+      const newEl=document.querySelectorAll('.mig-new-txt')[i];
+      const oldTxt=oldEl.value.trim();
+      const newTxt=newEl?.value.trim();
+      if(oldTxt&&newTxt){
+        const count=(cfg.split(oldTxt).length-1);
+        cfg=cfg.split(oldTxt).join(newTxt);
+        replacements+=count;
+      }
+    });
+
+    // Add migration header
+    const header=`# ═══════════════════════════════════════════
+# NetWolf Config Migrator — Migrated Config
+# Original file: ${file.name}
+# Migration date: ${new Date().toISOString().slice(0,19).replace('T',' ')}
+# Total replacements made: ${replacements}
+# ═══════════════════════════════════════════
+# ⚠️ REVIEW CAREFULLY before applying to production
+# Test in a lab environment first
+# ═══════════════════════════════════════════
+
+`;
+    migratedConfig=header+cfg;
+    out.textContent=migratedConfig;
+    stats.textContent=`✓ Migration complete — ${replacements} replacements made · ${(migratedConfig.length/1024).toFixed(1)} KB`;
+    stats.style.color='var(--g)';
+    showToast(`✅ Migration done — ${replacements} replacements made`);
+  };
+  reader.readAsText(file);
+}
+
+function downloadMigrated(){
+  if(!migratedConfig){ showToast('⚠️ Generate a migrated config first.'); return; }
+  const blob=new Blob([migratedConfig],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`netwolf_migrated_${Date.now()}.conf`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('💾 Config downloaded!');
+}
+
+function showToast(msg){
+  let t=document.getElementById('nwToast');
+  if(!t){t=document.createElement('div');t.id='nwToast';t.style.cssText='position:fixed;bottom:26px;right:26px;background:var(--b2);border:1px solid var(--a);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--t);z-index:9999;transform:translateY(70px);opacity:0;transition:all .3s;max-width:300px';document.body.appendChild(t);}
+  t.textContent=msg;t.style.transform='translateY(0)';t.style.opacity='1';
+  setTimeout(()=>{t.style.transform='translateY(70px)';t.style.opacity='0';},3500);
+}
+
 
 function initSidebar(){
   let sidebar=document.querySelector('.sidebar');
