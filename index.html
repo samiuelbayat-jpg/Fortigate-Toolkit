@@ -147,6 +147,9 @@ h1 .accent{background:linear-gradient(90deg,var(--a),#52d6b0);-webkit-background
 .price-feats li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--t)}
 .price-feats li::before{content:'✓';width:18px;height:18px;border-radius:50%;background:rgba(29,158,117,.15);color:var(--a);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
 .price-note{font-size:11px;color:var(--t3);text-align:center;margin-top:12px}
+.price-section-label{font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;margin:18px 0 8px;padding-bottom:6px;border-bottom:1px solid rgba(29,158,117,.15)}
+.price-feats li{font-size:12.5px}
+
 .order-section{padding:90px 24px;background:var(--b2);border-top:1px solid var(--br)}
 .order-inner{max-width:700px;margin:0 auto}
 .form-card{background:var(--bg);border:1px solid var(--br);border-radius:16px;padding:36px 32px}
@@ -254,7 +257,7 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
     <a href="#demo">Demo</a>
     <a href="#pricing">Pricing</a>
     <a href="#order">Subscribe</a>
-    <a href="app.html" class="btn-nav">Open Toolkit →</a>
+    <a href="https://netwolffortigate.com/app.html" class="btn-nav">Open Toolkit →</a>
   </div>
 </nav>
 
@@ -673,38 +676,128 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   <p class="section-sub">One plan. Full access. Cancel anytime.</p>
   <div class="pricing-inner">
     <div class="price-cards">
+
+      <!-- MONTHLY -->
       <div class="price-card">
         <div class="price-name">NetWolf Pro · Monthly</div>
         <div class="price-amount"><span class="price-cur">€</span><span class="price-num">10</span></div>
         <div class="price-period">per month, billed monthly</div>
+
+        <div class="price-section-label">🔒 Troubleshoot Playbooks</div>
         <ul class="price-feats">
-          <li>All 50+ guided troubleshoot playbooks</li>
-          <li>AI CLI Analyzer (Groq LLaMA 3.3)</li>
-          <li>IP Masking &amp; Bulk Anonymizer</li>
-          <li>Subnet Calculator + Advanced Diag</li>
-          <li>Multi-vendor CLI (Cisco, Aruba, Huawei)</li>
-          <li>10 full configuration templates</li>
-          <li>Regular content updates</li>
-          <li>Your own login credentials</li>
+          <li>50+ step-by-step guided CLI playbooks</li>
+          <li>IPsec VPN — Phase 1/2, DPD, IKE debug</li>
+          <li>SSL VPN — login loop, geo-IP, cert errors</li>
+          <li>Firewall policy, NAT, debug flow trace</li>
+          <li>SD-WAN — SLA, steering, health check</li>
+          <li>HA cluster — sync, failover, split-brain</li>
+          <li>Routing — OSPF, BGP, PBR, kernel table</li>
+          <li>Auth — LDAP, RADIUS, FSSO, FAC</li>
+          <li>UTM, IPS, web filter, SSL inspection</li>
+          <li>VLAN, DHCP, DNS, NTP, SNMP, certificates</li>
+          <li>ZTNA, FortiSwitch, FortiAP, IPv6, SIP/VoIP</li>
+          <li>FortiManager, FortiAnalyzer, Security Fabric</li>
+          <li>Packet sniffer + deep debug flow sequences</li>
+          <li>Session table, system diagnostics, NPU/hardware</li>
+          <li>WAN optimisation, traffic shaping, multicast</li>
         </ul>
-        <a href="#order" class="btn-ghost" style="display:block;text-align:center;text-decoration:none" onclick="pickPlan('monthly')">Get Monthly →</a>
-        <div class="price-note">Cancel anytime · No commitment</div>
+
+        <div class="price-section-label">🤖 AI Tools</div>
+        <ul class="price-feats">
+          <li>AI CLI Analyzer — paste any output, get instant diagnosis</li>
+          <li>LLaMA 3.3 70B · Mixtral 8x7B · LLaMA 3.1 8B models</li>
+          <li>Root cause, fix commands, and explanation</li>
+          <li>Powered by Groq free API — your own key</li>
+        </ul>
+
+        <div class="price-section-label">🎭 IP & Network Tools</div>
+        <ul class="price-feats">
+          <li>IP Masking — real → RFC 5737 safe IPs</li>
+          <li>Bulk Anonymizer — auto-detect all IPs in any output</li>
+          <li>Full real→fake mapping table with export</li>
+          <li>IPv4 Subnet Calculator — CIDR, wildcard, binary</li>
+          <li>Network, broadcast, first/last host, usable count</li>
+        </ul>
+
+        <div class="price-section-label">🌐 Multi-Vendor CLI Reference</div>
+        <ul class="price-feats">
+          <li>Cisco IOS / IOS-XE — config + troubleshoot</li>
+          <li>ArubaOS-CX — config + troubleshoot</li>
+          <li>Huawei VRP — config + troubleshoot</li>
+          <li>Per-command safety badges + inline explanations</li>
+        </ul>
+
+        <div class="price-section-label">📜 Configuration Templates</div>
+        <ul class="price-feats">
+          <li>10 full copy-ready config guides</li>
+          <li>Initial setup, VDOM, IPsec, SSL VPN, SD-WAN</li>
+          <li>HA cluster, inter-VDOM, port forwarding VIP</li>
+          <li>OSPF/BGP, UTM security profile stack</li>
+          <li>FortiSwitch managed config, ZTNA setup</li>
+        </ul>
+
+        <div class="price-section-label">🔬 Advanced Tools</div>
+        <ul class="price-feats">
+          <li>Advanced fnsysctl kernel commands</li>
+          <li>Config transactions — safe change with rollback</li>
+          <li>Backup, restore and firmware upgrade procedures</li>
+          <li>CLI Output Reader — render raw output in-browser</li>
+          <li>Color-coded safety badges on every command</li>
+          <li>One-click copy on every command and step</li>
+        </ul>
+
+        <div class="price-section-label">👤 Account & Access</div>
+        <ul class="price-feats">
+          <li>Your own username and password</li>
+          <li>Firebase-secured login — no shared credentials</li>
+          <li>Access from any browser, any device</li>
+          <li>Regular content updates included</li>
+          <li>Password reset via email at any time</li>
+        </ul>
+
+        <a href="https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00" target="_blank" class="btn-ghost" style="display:block;text-align:center;text-decoration:none;margin-top:8px">Subscribe Monthly — €10 →</a>
+        <div class="price-note">Cancel anytime · Instant access · Renews monthly</div>
       </div>
+
+      <!-- YEARLY -->
       <div class="price-card featured">
         <div class="featured-badge">BEST VALUE — SAVE €20</div>
         <div class="price-name">NetWolf Pro · Yearly</div>
         <div class="price-amount"><span class="price-cur">€</span><span class="price-num">100</span></div>
         <div class="price-period">per year — <span style="color:var(--g);font-weight:700">≈ €8.33/mo</span></div>
+
+        <div class="price-section-label">✅ Everything in Monthly, plus:</div>
         <ul class="price-feats">
-          <li>Everything in Monthly</li>
-          <li>Priority email support</li>
-          <li>Early access to new features</li>
-          <li>2 months free vs monthly billing</li>
-          <li>Single annual payment, no recurring hassle</li>
+          <li>Priority email support — responses within 24 hours</li>
+          <li>New playbooks and features added throughout the year</li>
+          <li>2 months free compared to monthly billing</li>
+          <li>Single annual payment — no monthly hassle</li>
+          <li>Best value for professional engineers and teams</li>
         </ul>
-        <a href="#order" class="btn-primary" style="display:block;text-align:center;text-decoration:none" onclick="pickPlan('yearly')">Get Yearly →</a>
-        <div class="price-note">One payment · Full 12-month access</div>
+
+        <div class="price-section-label">📦 Full feature summary</div>
+        <ul class="price-feats">
+          <li>50+ troubleshoot playbooks across 26 categories</li>
+          <li>AI CLI Analyzer with 3 Groq model options</li>
+          <li>IP Masking + Bulk Anonymizer with export</li>
+          <li>IPv4 Subnet Calculator with binary breakdown</li>
+          <li>Multi-vendor CLI — Cisco, Aruba, Huawei</li>
+          <li>10 full configuration guide templates</li>
+          <li>Advanced fnsysctl + kernel diagnostics</li>
+          <li>Config transaction safe-change workflow</li>
+          <li>Backup, restore and firmware procedures</li>
+          <li>ZTNA, FortiSwitch, FortiAP playbooks</li>
+          <li>Security Fabric, SIP/VoIP, IPv6, Traffic Shaping</li>
+          <li>FortiManager and FortiAnalyzer diagnostics</li>
+          <li>Firebase-secured personal login credentials</li>
+          <li>Works in any browser — no install needed</li>
+          <li>Regular content updates for the full year</li>
+        </ul>
+
+        <a href="https://buy.stripe.com/test_bJebJ0ajn2NWdeuaVygrS01" target="_blank" class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:8px">Subscribe Yearly — €100 →</a>
+        <div class="price-note">One payment · 12 months access · Priority email support</div>
       </div>
+
     </div>
   </div>
 </section>
@@ -714,8 +807,15 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   <div class="order-inner">
     <div class="section-label" style="text-align:left">Subscribe</div>
     <h2 class="section-title" style="text-align:left;margin-bottom:8px">Create your account</h2>
-    <p style="color:var(--t2);font-size:14px;margin-bottom:32px;line-height:1.7">Choose your own username and password. You'll use these to log in to the toolkit immediately after your payment is confirmed.</p>
+    <p style="color:var(--t2);font-size:14px;margin-bottom:32px;line-height:1.7">Choose your plan below — you'll be taken to Stripe's secure checkout to complete payment. Once done, come back here to create your login credentials. Questions? Email <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a></p>
     <div class="form-card" id="formCard">
+      <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.15);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--t2);line-height:1.7">
+        <strong style="color:var(--t)">How it works:</strong><br>
+        1️⃣ Choose a plan and pay via Stripe<br>
+        2️⃣ Come back here and fill in your login details<br>
+        3️⃣ Your Firebase account is created instantly<br>
+        4️⃣ Log in at <a href="app.html" style="color:var(--a)">netwolffortigate.com/app.html</a>
+      </div>
       <div class="form-plan-banner">
         <span class="form-plan-name" id="planBannerName">🐺 NetWolf Pro — Monthly</span>
         <span class="form-plan-price" id="planBannerPrice">€10 / month</span>
@@ -774,20 +874,20 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
 
         <div class="form-divider">Subscription plan</div>
         <div class="plan-pick">
-          <label class="plan-opt">
-            <div class="plan-opt-inner active" id="cardMonthly">
+          <a href="https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00" target="_blank" class="plan-opt" style="text-decoration:none">
+            <div class="plan-opt-inner active" id="cardMonthly" style="cursor:pointer">
               <div class="plan-opt-label active-lbl">Monthly</div>
               <div class="plan-opt-price">€10<span style="font-size:12px;color:var(--t2)">/mo</span></div>
+              <div style="font-size:10px;color:var(--a);margin-top:4px;font-family:var(--mono)">Click to subscribe →</div>
             </div>
-            <input type="radio" name="plan" value="monthly" style="display:none" checked onchange="planChanged()">
-          </label>
-          <label class="plan-opt">
-            <div class="plan-opt-inner" id="cardYearly">
-              <div class="plan-opt-label" id="lblYearly">Yearly <span style="color:var(--g);font-size:10px;font-weight:700">SAVE €20</span></div>
+          </a>
+          <a href="https://buy.stripe.com/test_bJebJ0ajn2NWdeuaVygrS01" target="_blank" class="plan-opt" style="text-decoration:none">
+            <div class="plan-opt-inner" id="cardYearly" style="cursor:pointer">
+              <div class="plan-opt-label">Yearly <span style="color:var(--g);font-size:10px;font-weight:700">SAVE €20</span></div>
               <div class="plan-opt-price">€100<span style="font-size:12px;color:var(--t2)">/yr</span></div>
+              <div style="font-size:10px;color:var(--g);margin-top:4px;font-family:var(--mono)">Click to subscribe →</div>
             </div>
-            <input type="radio" name="plan" value="yearly" style="display:none" onchange="planChanged()">
-          </label>
+          </a>
         </div>
 
         <div class="form-divider">Payment — secured by Stripe</div>
@@ -830,15 +930,16 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
           <div>Username: <span id="showUsername">—</span></div>
           <div>Password: <span id="showPassword">—</span></div>
           <div style="margin-top:10px;font-size:11px;color:var(--t3)">Keep these safe — you'll need them to log in at app.html</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--t3)">Questions? Email us at <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a></div>
         </div>
-        <a href="app.html" class="btn-primary" style="margin-top:28px;display:inline-block">Open Toolkit →</a>
+        <a href="https://netwolffortigate.com/app.html" class="btn-primary" style="margin-top:28px;display:inline-block">Open Toolkit →</a>
       </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>© 2025 NetWolf · FortiGate Pro Toolkit · <a href="app.html">Open Toolkit</a> · Built for network engineers</p>
+  <p>© 2025 NetWolf · FortiGate Pro Toolkit · <a href="https://netwolffortigate.com/app.html">Open Toolkit</a> · <a href="mailto:support@netwolffortigate.com">support@netwolffortigate.com</a> · Built for network engineers</p>
 </footer>
 <div class="toast" id="toast"></div>
 
@@ -1108,10 +1209,10 @@ if(document.getElementById('animatedDemo')){runLoop();startProgress();}
       <p>All content within NetWolf Pro — including playbooks, configuration guides, and CLI references — is the intellectual property of NetWolf. You may not copy, publish, or distribute this content without written permission.</p>
 
       <h4>8. Cancellation</h4>
-      <p>You may cancel your subscription at any time by contacting us. Cancellation takes effect at the end of the current billing period. No partial refunds are issued.</p>
+      <p>You may cancel your subscription at any time by emailing <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a>. Cancellation takes effect at the end of the current billing period. No partial refunds are issued.</p>
 
       <h4>9. Changes to Terms</h4>
-      <p>We reserve the right to update these terms at any time. Continued use of the toolkit after changes constitutes acceptance of the updated terms. Subscribers will be notified of material changes by email.</p>
+      <p>We reserve the right to update these terms at any time. Continued use of the toolkit after changes constitutes acceptance of the updated terms. Subscribers will be notified of material changes by email at <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a>.</p>
 
       <h4>10. Governing Law</h4>
       <p>These terms are governed by the laws of the Netherlands. Any disputes shall be subject to the exclusive jurisdiction of the courts of the Netherlands.</p>

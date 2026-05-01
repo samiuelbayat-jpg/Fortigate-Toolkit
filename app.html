@@ -10,60 +10,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
 <style>
-/* BASE DARK THEME (default) */
-:root {
-  --a: #1D9E75;
-  --ad: #0F6E56;
-  --bg: #0d1117;
-  --b2: #161b22;
-  --b3: #21262d;
-  --br: #30363d;
-  --t: #e6edf3;
-  --t2: #8b949e;
-  --t3: #484f58;
-  --g: #3fb950;
-  --y: #d29922;
-  --r: #f85149;
-  --bl: #58a6ff;
-  --mono: 'Courier New', monospace;
-}
-
-/* LIGHT THEME */
-body.theme-light {
-  --a: #0f6e56;
-  --ad: #0a4d3c;
-  --bg: #ffffff;
-  --b2: #f6f8fa;
-  --b3: #eaeef2;
-  --br: #d0d7de;
-  --t: #1f2328;
-  --t2: #656d76;
-  --t3: #8c959f;
-  --g: #2c7a4d;
-  --y: #b05c00;
-  --r: #cf222e;
-  --bl: #0969da;
-}
-
-/* MATRIX GREEN THEME */
-body.theme-matrix {
-  --a: #00ff88;
-  --ad: #00cc66;
-  --bg: #010a02;
-  --b2: #001a04;
-  --b3: #002a08;
-  --br: #00aa44;
-  --t: #b0ffd0;
-  --t2: #5affa0;
-  --t3: #1f8a4a;
-  --g: #2ecc71;
-  --y: #f1c40f;
-  --r: #e74c3c;
-  --bl: #3498db;
-}
-
+:root{--a:#1D9E75;--ad:#0F6E56;--bg:#0d1117;--b2:#161b22;--b3:#21262d;--br:#30363d;--t:#e6edf3;--t2:#8b949e;--t3:#484f58;--g:#3fb950;--y:#d29922;--r:#f85149;--bl:#58a6ff;--mono:'Courier New',monospace}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;background:transparent;transition:background-color 0.2s, color 0.2s;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;background:transparent}
 #matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;pointer-events:none;background:#000000}
 
 /* LOGIN OVERLAY */
@@ -98,7 +47,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .btn-secondary-t{background:linear-gradient(90deg,#3b4b5e,#2c3e45)}
 
 /* TOOLKIT SHELL */
-.shell{width:100%;max-width:100%;margin:0;border:1px solid var(--br);border-radius:12px 12px 0 0;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5);position:relative;z-index:1;background:rgba(13,17,23,0.88);backdrop-filter:blur(2px)}
+.shell{max-width:95%;width:1400px;margin:20px auto;border:1px solid var(--br);border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5);position:relative;z-index:1;background:rgba(13,17,23,0.88);backdrop-filter:blur(2px)}
 .tbar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--b2);border-bottom:1px solid var(--br)}
 .dot{width:12px;height:12px;border-radius:50%}
 .dot.r{background:#ff5f57}.dot.y{background:#ffbd2e}.dot.g{background:#28c840}
@@ -107,16 +56,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .user-pill{background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.25);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--a);font-family:var(--mono)}
 .logout-btn{background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.25);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--r);cursor:pointer;font-family:var(--mono);transition:all .15s}
 .logout-btn:hover{background:rgba(248,81,73,.2)}
-#themeSelect {
-  background: var(--b3);
-  color: var(--t);
-  border: 1px solid var(--br);
-  border-radius: 20px;
-  padding: 3px 8px;
-  font-family: var(--mono);
-  font-size: 11px;
-  cursor: pointer;
-}
 .kbar{display:flex;align-items:center;gap:8px;padding:7px 16px;background:var(--b2);border-bottom:1px solid var(--br)}
 .kbar label{font-size:12px;color:var(--t2);white-space:nowrap}
 .kbar input{flex:1;font-size:12px;padding:5px 10px;border-radius:5px;border:1px solid var(--br);background:var(--bg);color:var(--t);font-family:var(--mono);outline:none}
@@ -124,8 +63,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .sbtn{font-size:12px;padding:5px 12px;border-radius:5px;background:var(--a);color:white;border:none;cursor:pointer;font-weight:600}
 .sbtn:hover{background:var(--ad)}
 .kst{font-size:11px;white-space:nowrap}
-.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 60px)}
-.sidebar{background:var(--b2);border-right:1px solid var(--br);padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;max-height:calc(100vh - 100px)}
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:75vh}
+.sidebar{background:var(--b2);border-right:1px solid var(--br);padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;max-height:calc(75vh - 20px)}
 .slbl{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;padding:10px 10px 4px}
 .cb{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;font-size:13px;cursor:pointer;border:none;background:none;width:100%;text-align:left;color:var(--t2);transition:all .1s}
 .cb:hover{background:var(--b3);color:var(--t)}
@@ -136,7 +75,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-heig
 .tab{padding:9px 14px;font-size:13px;cursor:pointer;border:none;background:none;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .1s}
 .tab:hover{color:var(--t)}
 .tab.active{color:var(--a);border-bottom-color:var(--a);font-weight:700}
-.content{flex:1;overflow-y:auto;padding:16px;max-height:calc(100vh - 120px)}
+.content{flex:1;overflow-y:auto;padding:16px;max-height:calc(75vh - 80px)}
 .sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .stitle{font-size:15px;font-weight:700;color:var(--t)}
 .sev{font-size:11px;padding:3px 9px;border-radius:4px;font-weight:600}
@@ -207,7 +146,7 @@ textarea{outline:none;resize:vertical}
 textarea#groqPrompt{background:#0d1117!important;color:#e6edf3!important;border:1px solid var(--br);border-radius:6px;font-family:var(--mono);font-size:13px;padding:10px;width:100%}
 textarea#groqPrompt::placeholder{color:#8b949e!important}
 .vendor-section{margin-bottom:28px;border-left:3px solid var(--a);padding-left:16px}
-.vendor-title{font-size:18px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--t)}
+.vendor-title{font-size:18px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .subnet-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
 .subnet-card{background:var(--b2);border-radius:8px;padding:12px;border:1px solid var(--br)}
 .subnet-label{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:0.5px}
@@ -250,7 +189,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <button class="login-btn" id="loginBtn" onclick="doLogin()">Login</button>
     <button class="login-forgot" onclick="doForgotPassword()">Forgot password?</button>
     <div id="loginError" class="login-error"></div>
-    <div class="login-footer">Don't have an account? <a href="index.html">Subscribe here →</a></div>
+    <div class="login-footer">Don't have an account? <a href="https://netwolffortigate.com">Subscribe here →</a></div>
   </div>
 </div>
 
@@ -263,11 +202,6 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <div class="ver">
       <span>FortiOS 6.x / 7.x</span>
       <span class="user-pill" id="loggedInUser"></span>
-      <select id="themeSelect">
-        <option value="dark">🌙 Dark</option>
-        <option value="light">☀️ Light</option>
-        <option value="matrix">💚 Matrix Green</option>
-      </select>
       <button class="logout-btn" onclick="doLogout()">⏻ Logout</button>
     </div>
   </div>
@@ -312,30 +246,6 @@ const firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
 
-/* ══ THEME SWITCHER ══ */
-function setTheme(theme) {
-  const body = document.body;
-  body.classList.remove('theme-light', 'theme-matrix');
-  if (theme === 'light') body.classList.add('theme-light');
-  if (theme === 'matrix') body.classList.add('theme-matrix');
-  localStorage.setItem('netwolf_theme', theme);
-  const select = document.getElementById('themeSelect');
-  if (select) select.value = theme;
-}
-function initTheme() {
-  const saved = localStorage.getItem('netwolf_theme');
-  const validThemes = ['dark', 'light', 'matrix'];
-  let theme = (saved && validThemes.includes(saved)) ? saved : 'dark';
-  setTheme(theme);
-}
-document.addEventListener('DOMContentLoaded', () => {
-  const themeSelect = document.getElementById('themeSelect');
-  if (themeSelect) {
-    themeSelect.addEventListener('change', (e) => setTheme(e.target.value));
-  }
-  initTheme();
-});
-
 /* ══ AUTH STATE — show login or toolkit ══ */
 fbAuth.onAuthStateChanged(function(user){
   if(user){
@@ -375,7 +285,7 @@ function doLogin(){
 function doLogout(){
   fbAuth.signOut().then(()=>{
     sessionStorage.clear();
-    window.location.href='index.html';
+    window.location.href='https://netwolffortigate.com';
   });
 }
 
@@ -432,7 +342,7 @@ function copyRef(btn,ci,si){navigator.clipboard.writeText(QREF[ci].cmds[si]).the
 function askAI(q){stab('ai');setTimeout(()=>{const i=document.getElementById('chi');if(i){i.value=q;i.focus();}},50);}
 function escapeHtml(s){return String(s).replace(/[&<>]/g,function(m){if(m==='&')return'&amp;';if(m==='<')return'&lt;';return'&gt;';});}
 
-/* ══ D OBJECT — FULL (exactly as in original, no changes) ══ */
+/* ══ D OBJECT — FULL ══ */
 const D={
 vpn:{t:'IPsec VPN troubleshooting',s:'high',type:'trouble',chips:['Phase 1 down','Phase 2 down','Traffic not passing','Unstable tunnel','Mismatched proposals','Dead peer','IKEv1 vs IKEv2'],steps:[
 {t:'Check tunnel status',note:'Look for "established" in both phases. Missing = never came up.',cmds:['get vpn ipsec tunnel summary','diagnose vpn tunnel list name <TUNNEL_NAME>','diagnose vpn tunnel list']},
@@ -775,6 +685,8 @@ const QREF=[
 {cat:'System',cmds:['get system status','execute time','get system performance status','diagnose hardware sysinfo shm','diagnose debug crashlog read']}
 ];
 
+
+
 /* ══ RENDER FUNCTIONS ══ */
 function render(){const el=document.getElementById('mc');if(tab==='guide'){const d=D[cur];if(d.type==='config')renderCfg(el,d);else renderGuide(el,d);}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='advdiag')renderAdvDiag(el);}
 
@@ -799,7 +711,7 @@ let ipMappings=[];
 function generateFakeIP(real){let hash=0;for(let i=0;i<real.length;i++)hash=((hash<<5)-hash)+real.charCodeAt(i);hash=Math.abs(hash);let last=(hash%254)+1;let r=hash%3;if(r===0)return`192.0.2.${last}`;if(r===1)return`198.51.100.${last}`;return`203.0.113.${last}`;}
 function saveMappings(){localStorage.setItem("forti_masks_standalone",JSON.stringify(ipMappings));renderMaskTableStandalone();}
 function loadMappingsStandalone(){let s=localStorage.getItem("forti_masks_standalone");if(s){try{ipMappings=JSON.parse(s);}catch(e){ipMappings=[];}}else ipMappings=[];renderMaskTableStandalone();}
-function renderMaskTableStandalone(){const cont=document.getElementById("maskTableStandalone");if(!cont)return;if(!ipMappings.length){cont.innerHTML="<div style='color:#FCD34D;'>✨ No IP mappings yet.</div>";return;}let html="<table class='ip-mask-table'><thead><tr><th>Real IP</th><th>Fake IP</th><th>Description</th><th>Action</th></tr></thead><tbody>";ipMappings.forEach(m=>{html+=`<tr><td>${escapeHtml(m.real)}</td><td>${escapeHtml(m.fake)}</td><td>${escapeHtml(m.desc||'')}</td><td><button class='delMaskBtnStandalone' data-real='${m.real}' style='background:#B91C1C;color:white;border:none;border-radius:20px;padding:2px 8px;cursor:pointer;'>❌</button></td>`;});html+="</tbody></table>";cont.innerHTML=html;document.querySelectorAll('.delMaskBtnStandalone').forEach(btn=>{btn.addEventListener('click',()=>{ipMappings=ipMappings.filter(m=>m.real!==btn.getAttribute('data-real'));saveMappings();});});}
+function renderMaskTableStandalone(){const cont=document.getElementById("maskTableStandalone");if(!cont)return;if(!ipMappings.length){cont.innerHTML="<div style='color:#FCD34D;'>✨ No IP mappings yet.</div>";return;}let html="<table class='ip-mask-table'><thead><tr><th>Real IP</th><th>Fake IP</th><th>Description</th><th>Action</th></tr></thead><tbody>";ipMappings.forEach(m=>{html+=`<tr><td>${escapeHtml(m.real)}</td><td>${escapeHtml(m.fake)}</td><td>${escapeHtml(m.desc||'')}</td><td><button class='delMaskBtnStandalone' data-real='${m.real}' style='background:#B91C1C;color:white;border:none;border-radius:20px;padding:2px 8px;cursor:pointer;'>❌</button></td></tr>`;});html+="</tbody></table>";cont.innerHTML=html;document.querySelectorAll('.delMaskBtnStandalone').forEach(btn=>{btn.addEventListener('click',()=>{ipMappings=ipMappings.filter(m=>m.real!==btn.getAttribute('data-real'));saveMappings();});});}
 function addMappingStandalone(real,desc){if(ipMappings.find(m=>m.real===real)){alert("IP already mapped");return false;}ipMappings.push({real,fake:generateFakeIP(real),desc:desc||""});saveMappings();return true;}
 function maskTextStandalone(input){let out=input;ipMappings.forEach(m=>{let regex=new RegExp(m.real.replace(/\./g,'\\.'),'g');out=out.replace(regex,m.fake);});return out;}
 function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:var(--b2);border-radius:12px;padding:16px;"><div class="stitle" style="margin-bottom:12px;">🎭 IP Masking</div><div class="mask-input-group"><input type="text" id="realIpMask" placeholder="Real IP (e.g., 192.168.1.100)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><input type="text" id="descMask" placeholder="Description (optional)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><button class="sbtn" id="addMaskBtnStandalone">➕ Add</button></div><div id="maskTableStandalone" style="background:#010409;border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto;"></div><div style="display:flex;gap:8px;margin-bottom:16px;"><button class="sbtn" id="deleteAllMaskStandalone" style="background:#B91C1C;">🗑️ Delete all</button><button class="sbtn" id="exportMaskStandalone" style="background:#15803D;">📄 Export</button></div><textarea id="rawTextMask" rows="10" placeholder="Paste any FortiGate output with real IPs..." style="width:100%;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;"></textarea><button class="sbtn" id="applyMaskStandalone" style="background:var(--a);margin-top:6px;">🎭 Mask this text</button><pre id="maskedPreviewStandalone" class="mask-preview">Masked output will appear here.</pre></div>`;loadMappingsStandalone();document.getElementById("addMaskBtnStandalone")?.addEventListener('click',()=>{let real=document.getElementById("realIpMask").value.trim();let desc=document.getElementById("descMask").value.trim();if(real)addMappingStandalone(real,desc);document.getElementById("realIpMask").value="";document.getElementById("descMask").value="";});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{if(confirm("Delete ALL mappings?")){ipMappings=[];saveMappings();}});document.getElementById("exportMaskStandalone")?.addEventListener('click',()=>{let content="# NetWolf IP Masking Report\n\n";ipMappings.forEach(m=>{content+=`${m.real} → ${m.fake} (${m.desc||''})\n`;});let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:"text/plain"}));a.download=`netwolf_mask_${Date.now()}.txt`;a.click();});document.getElementById("applyMaskStandalone")?.addEventListener('click',()=>{let raw=document.getElementById("rawTextMask").value;document.getElementById("maskedPreviewStandalone").innerText=maskTextStandalone(raw)||"(nothing to mask)";});}
@@ -807,198 +719,12 @@ function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:
 let groqApiKeyFree=localStorage.getItem('groq_key')||'';
 function renderFreeAITab(el){el.innerHTML=`<div class="analyzer-container"><div class="analyzer-row"><label>🔑 Groq API Key:</label><input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}" style="flex:2"><button class="sbtn" id="saveGroqKeyBtn">Save</button><a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl)">Get free key →</a></div><div class="analyzer-row"><label>🤖 Model:</label><select id="groqModelSelect"><option value="llama-3.3-70b-versatile">Llama 3.3 70B</option><option value="mixtral-8x7b-32768">Mixtral 8x7B</option><option value="llama-3.1-8b-instant">Llama 3.1 8B</option></select></div><div><label>📄 CLI Output / Question:</label><textarea id="groqPrompt" rows="10" placeholder="Paste FortiGate CLI output or ask a question..."></textarea></div><div class="analyzer-row"><button class="sbtn" id="analyzeGroqBtn">🚀 Analyze</button><button class="sbtn" id="exampleGroqBtn" style="background:var(--b3);">📋 Example</button><button class="sbtn" id="copyGroqResponseBtn" style="background:#15803D;">📋 Copy</button></div><div><div class="stitle" style="margin-bottom:6px;">🤖 AI Analysis:</div><div id="groqResponse" class="analyzer-response">Click "Analyze" to see AI analysis.</div></div></div>`;const keyInput=document.getElementById('groqApiKeyInput');document.getElementById('saveGroqKeyBtn').onclick=()=>{const k=keyInput.value.trim();if(k){localStorage.setItem('groq_key',k);groqApiKeyFree=k;groqApiKey=k;document.getElementById('groqResponse').innerHTML='<span style="color:var(--g);">✅ Key saved.</span>';}};document.getElementById('exampleGroqBtn').onclick=()=>{document.getElementById('groqPrompt').value=`get vpn ipsec tunnel summary\nTunnel name: SiteA-SiteB\nStatus: down\nError: "no proposal chosen"`;};document.getElementById('analyzeGroqBtn').onclick=async()=>{const prompt=document.getElementById('groqPrompt').value.trim();const respDiv=document.getElementById('groqResponse');if(!prompt){respDiv.innerHTML='<span style="color:var(--r);">Enter some CLI output first.</span>';return;}if(!groqApiKeyFree){respDiv.innerHTML='<span style="color:var(--r);">Enter your Groq API key first.</span>';return;}respDiv.innerHTML='<div class="typing"><span></span><span></span><span></span></div> Analyzing...';try{const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKeyFree}`},body:JSON.stringify({model:document.getElementById('groqModelSelect').value,messages:[{role:'system',content:'You are a senior FortiGate network engineer. Analyze the CLI output and provide diagnosis, root cause, and fix commands.'},{role:'user',content:prompt}],temperature:0.3,max_tokens:1500})});const data=await resp.json();if(data.error)throw new Error(data.error.message);respDiv.innerHTML=fmt(data.choices[0].message.content);}catch(err){respDiv.innerHTML=`<span style="color:var(--r);">❌ ${err.message}</span>`;}};document.getElementById('copyGroqResponseBtn').onclick=()=>{navigator.clipboard.writeText(document.getElementById('groqResponse').innerText);};}
 
-// EXPANDED MULTI-VENDOR CLI (unchanged)
-function renderMultiVendorTab(el){
-  let html = `
-    <div class="vendor-section">
-      <div class="vendor-title">🟡 Cisco IOS / IOS-XE</div>
-      <div class="cblock"><div class="cbody">
-        <div class="clines">show ip interface brief</div><div class="cnote">Quick status of all interfaces.</div>
-        <div class="clines">show running-config</div><div class="cnote">Current active configuration.</div>
-        <div class="clines">show vlan brief</div><div class="cnote">List VLANs and assigned ports.</div>
-        <div class="clines">show ip route</div><div class="cnote">IPv4 routing table.</div>
-        <div class="clines">show ip ospf neighbor</div><div class="cnote">OSPF adjacency status.</div>
-        <div class="clines">show ip bgp summary</div><div class="cnote">BGP neighbor summary.</div>
-        <div class="clines">show interfaces</div><div class="cnote">Detailed interface counters (errors, drops).</div>
-        <div class="clines">show logging</div><div class="cnote">System logs (buffer).</div>
-        <div class="clines">debug ip packet [acl]</div><div class="cnote">Live packet trace (high impact — use with ACL).</div>
-        <div class="clines">configure terminal</div><div class="cnote">Enter global configuration mode.</div>
-        <div class="clines">interface GigabitEthernet0/1</div><div class="cnote">Enter interface config mode.</div>
-        <div class="clines">ip address 192.168.1.1 255.255.255.0</div><div class="cnote">Assign IP to interface.</div>
-        <div class="clines">no shutdown</div><div class="cnote">Enable interface (bring up).</div>
-        <div class="clines">vlan 10</div><div class="cnote">Create VLAN 10.</div>
-        <div class="clines">name Sales</div><div class="cnote">Name the VLAN.</div>
-        <div class="clines">interface vlan 10</div><div class="cnote">Enter SVI for VLAN 10.</div>
-        <div class="clines">switchport mode access</div><div class="cnote">Set switchport as access.</div>
-        <div class="clines">switchport access vlan 10</div><div class="cnote">Assign port to VLAN 10.</div>
-        <div class="clines">ip route 0.0.0.0 0.0.0.0 192.168.1.254</div><div class="cnote">Default gateway.</div>
-        <div class="clines">router ospf 1</div><div class="cnote">Enable OSPF process.</div>
-        <div class="clines">network 10.0.0.0 0.255.255.255 area 0</div><div class="cnote">Advertise network into OSPF.</div>
-        <div class="clines">write memory</div><div class="cnote">Save config to startup.</div>
-      </div></div>
-    </div>
-    <div class="vendor-section">
-      <div class="vendor-title">🟢 ArubaOS-CX (Aruba Switching)</div>
-      <div class="cblock"><div class="cbody">
-        <div class="clines">show interface brief</div><div class="cnote">Interface status summary.</div>
-        <div class="clines">show vlan</div><div class="cnote">VLAN list and port membership.</div>
-        <div class="clines">show ip route</div><div class="cnote">Routing table.</div>
-        <div class="clines">show ip ospf neighbor</div><div class="cnote">OSPF neighbors.</div>
-        <div class="clines">show tech</div><div class="cnote">Collect extensive diagnostic output (safe).</div>
-        <div class="clines">show running-config</div><div class="cnote">Current configuration.</div>
-        <div class="clines">show logging -r</div><div class="cnote">Display log buffer.</div>
-        <div class="clines">configure terminal</div><div class="cnote">Enter config mode.</div>
-        <div class="clines">interface 1/1/1</div><div class="cnote">Enter interface config.</div>
-        <div class="clines">no shutdown</div><div class="cnote">Enable interface.</div>
-        <div class="clines">vlan 10</div><div class="cnote">Create VLAN 10.</div>
-        <div class="clines">vlan 10 name "Sales"</div><div class="cnote">Name VLAN.</div>
-        <div class="clines">interface vlan 10</div><div class="cnote">Enter SVI.</div>
-        <div class="clines">ip address 192.168.10.1/24</div><div class="cnote">Assign IP to SVI.</div>
-        <div class="clines">switchport mode access</div><div class="cnote">Set access mode.</div>
-        <div class="clines">switchport access vlan 10</div><div class="cnote">Assign port to VLAN.</div>
-        <div class="clines">ip route 0.0.0.0/0 192.168.1.254</div><div class="cnote">Default route.</div>
-        <div class="clines">router ospf 1</div><div class="cnote">Enable OSPF.</div>
-        <div class="clines">area 0.0.0.0</div><div class="cnote">Set OSPF area.</div>
-        <div class="clines">write memory</div><div class="cnote">Save config.</div>
-      </div></div>
-    </div>
-    <div class="vendor-section">
-      <div class="vendor-title">🔵 Juniper JunOS</div>
-      <div class="cblock"><div class="cbody">
-        <div class="clines">show interfaces terse</div><div class="cnote">Brief interface status.</div>
-        <div class="clines">show configuration</div><div class="cnote">Current active configuration.</div>
-        <div class="clines">show vlans</div><div class="cnote">VLAN information.</div>
-        <div class="clines">show route</div><div class="cnote">Routing table.</div>
-        <div class="clines">show ospf neighbor</div><div class="cnote">OSPF neighbors.</div>
-        <div class="clines">show bgp summary</div><div class="cnote">BGP peer summary.</div>
-        <div class="clines">show log messages</div><div class="cnote">System logs.</div>
-        <div class="clines">monitor traffic interface ge-0/0/0</div><div class="cnote">Live packet capture on interface.</div>
-        <div class="clines">configure</div><div class="cnote">Enter configuration mode.</div>
-        <div class="clines">set interfaces ge-0/0/0 unit 0 family inet address 192.168.1.1/24</div><div class="cnote">Set IP on interface.</div>
-        <div class="clines">set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members Sales</div><div class="cnote">Assign switchport to VLAN.</div>
-        <div class="clines">set vlans Sales vlan-id 10</div><div class="cnote">Create VLAN with ID.</div>
-        <div class="clines">set interfaces vlan unit 10 family inet address 192.168.10.1/24</div><div class="cnote">Configure SVI.</div>
-        <div class="clines">set routing-options static route 0.0.0.0/0 next-hop 192.168.1.254</div><div class="cnote">Default route.</div>
-        <div class="clines">set protocols ospf area 0.0.0.0 interface ge-0/0/0</div><div class="cnote">Enable OSPF on interface.</div>
-        <div class="clines">commit</div><div class="cnote">Apply and save configuration.</div>
-        <div class="clines">rollback 0</div><div class="cnote">Revert to previous config (if not committed).</div>
-      </div></div>
-    </div>
-    <div class="vendor-section">
-      <div class="vendor-title">🔴 Huawei VRP</div>
-      <div class="cblock"><div class="cbody">
-        <div class="clines">display ip interface brief</div><div class="cnote">Quick interface status.</div>
-        <div class="clines">display current-configuration</div><div class="cnote">Current configuration.</div>
-        <div class="clines">display vlan</div><div class="cnote">VLAN list and port assignment.</div>
-        <div class="clines">display ip routing-table</div><div class="cnote">Routing table.</div>
-        <div class="clines">display ospf peer</div><div class="cnote">OSPF neighbors.</div>
-        <div class="clines">display bgp peer</div><div class="cnote">BGP peer status.</div>
-        <div class="clines">display logbuffer</div><div class="cnote">System logs.</div>
-        <div class="clines">system-view</div><div class="cnote">Enter system view (config mode).</div>
-        <div class="clines">interface GigabitEthernet0/0/1</div><div class="cnote">Enter interface view.</div>
-        <div class="clines">ip address 192.168.1.1 24</div><div class="cnote">Assign IP address.</div>
-        <div class="clines">undo shutdown</div><div class="cnote">Enable interface.</div>
-        <div class="clines">vlan 10</div><div class="cnote">Create VLAN.</div>
-        <div class="clines">port link-type access</div><div class="cnote">Set port as access.</div>
-        <div class="clines">port default vlan 10</div><div class="cnote">Assign port to VLAN.</div>
-        <div class="clines">interface Vlanif10</div><div class="cnote">Enter SVI interface.</div>
-        <div class="clines">ip address 192.168.10.1 24</div><div class="cnote">IP for SVI.</div>
-        <div class="clines">ip route-static 0.0.0.0 0.0.0.0 192.168.1.254</div><div class="cnote">Default route.</div>
-        <div class="clines">ospf 1</div><div class="cnote">Enable OSPF process.</div>
-        <div class="clines">area 0.0.0.0</div><div class="cnote">Enter OSPF area.</div>
-        <div class="clines">network 192.168.1.0 0.0.0.255</div><div class="cnote">Advertise network.</div>
-        <div class="clines">save</div><div class="cnote">Save configuration.</div>
-      </div></div>
-    </div>
-    <div class="vendor-section">
-      <div class="vendor-title">🟠 Nokia (Alcatel-Lucent) SR OS</div>
-      <div class="cblock"><div class="cbody">
-        <div class="clines">show port</div><div class="cnote">Port status and statistics.</div>
-        <div class="clines">show router interface</div><div class="cnote">IP interfaces.</div>
-        <div class="clines">show router route-table</div><div class="cnote">Routing table.</div>
-        <div class="clines">show router ospf neighbor</div><div class="cnote">OSPF neighbors.</div>
-        <div class="clines">show router bgp summary</div><div class="cnote">BGP summary.</div>
-        <div class="clines">show log log-id 99</div><div class="cnote">Display system logs (if configured).</div>
-        <div class="clines">configure</div><div class="cnote">Enter configuration mode.</div>
-        <div class="clines">port 1/1/1</div><div class="cnote">Enter port config.</div>
-        <div class="clines">no shutdown</div><div class="cnote">Enable port.</div>
-        <div class="clines">router interface "vlan10"</div><div class="cnote">Create sub-interface.</div>
-        <div class="clines">address 192.168.10.1/24</div><div class="cnote">Assign IP.</div>
-        <div class="clines">vlan 10</div><div class="cnote">Assign VLAN ID.</div>
-        <div class="clines">port 1/1/1</div><div class="cnote">Bind to port.</div>
-        <div class="clines">router static-route 0.0.0.0/0 next-hop 192.168.1.254</div><div class="cnote">Default route.</div>
-        <div class="clines">commit</div><div class="cnote">Apply config.</div>
-      </div></div>
-    </div>
-    <div class="vendor-section">
-      <div class="vendor-title">🔘 Palo Alto Networks PAN-OS (firewall)</div>
-      <div class="cblock"><div class="cbody">
-        <div class="clines">show interface all</div><div class="cnote">Interface status.</div>
-        <div class="clines">show configuration</div><div class="cnote">Running config (CLI structured).</div>
-        <div class="clines">show routing route</div><div class="cnote">Routing table.</div>
-        <div class="clines">show vlan all</div><div class="cnote">VLAN summary.</div>
-        <div class="clines">show session all</div><div class="cnote">Active sessions.</div>
-        <div class="clines">show log system</div><div class="cnote">System logs.</div>
-        <div class="clines">configure</div><div class="cnote">Enter configuration mode.</div>
-        <div class="clines">set deviceconfig system hostname PA-FW</div><div class="cnote">Set hostname.</div>
-        <div class="clines">set network interface ethernet ethernet1/1 layer3 ip 192.168.1.1/24</div><div class="cnote">Set IP on interface.</div>
-        <div class="clines">set network virtual-router default routing-table ip static-route default next-hop 192.168.1.254</div><div class="cnote">Default route.</div>
-        <div class="clines">set zone name Trust network layer3 ethernet1/1</div><div class="cnote">Add interface to zone.</div>
-        <div class="clines">commit</div><div class="cnote">Commit changes.</div>
-      </div></div>
-    </div>
-    <div class="vendor-section">
-      <div class="vendor-title">🟣 Arista EOS</div>
-      <div class="cblock"><div class="cbody">
-        <div class="clines">show interfaces status</div><div class="cnote">Interface status.</div>
-        <div class="clines">show running-config</div><div class="cnote">Current config.</div>
-        <div class="clines">show vlan</div><div class="cnote">VLAN table.</div>
-        <div class="clines">show ip route</div><div class="cnote">Routing table.</div>
-        <div class="clines">show ip ospf neighbor</div><div class="cnote">OSPF neighbors.</div>
-        <div class="clines">show logging</div><div class="cnote">Logs.</div>
-        <div class="clines">configure terminal</div><div class="cnote">Enter config mode.</div>
-        <div class="clines">interface Ethernet1</div><div class="cnote">Enter interface config.</div>
-        <div class="clines">no switchport</div><div class="cnote">Make routed port.</div>
-        <div class="clines">ip address 192.168.1.1/24</div><div class="cnote">Assign IP.</div>
-        <div class="clines">no shutdown</div><div class="cnote">Enable.</div>
-        <div class="clines">vlan 10</div><div class="cnote">Create VLAN.</div>
-        <div class="clines">name Sales</div><div class="cnote">Name VLAN.</div>
-        <div class="clines">interface Ethernet2</div><div class="cnote">Enter switchport.</div>
-        <div class="clines">switchport access vlan 10</div><div class="cnote">Assign VLAN.</div>
-        <div class="clines">ip route 0.0.0.0/0 192.168.1.254</div><div class="cnote">Default route.</div>
-        <div class="clines">router ospf 1</div><div class="cnote">Enable OSPF.</div>
-        <div class="clines">network 192.168.1.0/24 area 0</div><div class="cnote">Advertise network.</div>
-        <div class="clines">write memory</div><div class="cnote">Save config.</div>
-      </div></div>
-    </div>
-    <div class="vendor-section">
-      <div class="vendor-title">🟤 Extreme XOS / EXOS</div>
-      <div class="cblock"><div class="cbody">
-        <div class="clines">show ports</div><div class="cnote">Port status.</div>
-        <div class="clines">show configuration</div><div class="cnote">Running configuration.</div>
-        <div class="clines">show vlan</div><div class="cnote">VLAN information.</div>
-        <div class="clines">show ip route</div><div class="cnote">Routing table.</div>
-        <div class="clines">show ospf neighbor</div><div class="cnote">OSPF neighbors.</div>
-        <div class="clines">show log</div><div class="cnote">System logs.</div>
-        <div class="clines">configure terminal</div><div class="cnote">Enter config mode (if script).</div>
-        <div class="clines">configure vlan default delete ports 1-10</div><div class="cnote">Remove ports from default VLAN.</div>
-        <div class="clines">create vlan Sales</div><div class="cnote">Create VLAN.</div>
-        <div class="clines">configure vlan Sales tag 10</div><div class="cnote">Set VLAN ID.</div>
-        <div class="clines">configure vlan Sales add ports 1-10 untagged</div><div class="cnote">Add ports untagged.</div>
-        <div class="clines">configure vlan Sales ipaddress 192.168.10.1/24</div><div class="cnote">Assign SVI IP.</div>
-        <div class="clines">enable ipforwarding</div><div class="cnote">Enable routing.</div>
-        <div class="clines">configure iproute add default 192.168.1.254</div><div class="cnote">Default gateway.</div>
-        <div class="clines">save configuration primary</div><div class="cnote">Save config.</div>
-      </div></div>
-    </div>
-  `;
-  el.innerHTML = html;
-}
+function renderMultiVendorTab(el){el.innerHTML=`<div class="vendor-section"><div class="vendor-title">🟡 Cisco IOS / IOS-XE</div><div class="cblock"><div class="cbody"><div class="clines">show ip interface brief</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">Quick status of all interfaces.</div><div class="clines">show running-config</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">Current active configuration.</div><div class="clines">show vlan brief</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">List VLANs and assigned ports.</div><div class="clines">show ip route</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">IPv4 routing table.</div><div class="clines">show ip ospf neighbor</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">OSPF adjacency status.</div><div class="clines">debug ip packet</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">Live packet trace (high impact — use with ACL).</div></div></div></div><div class="vendor-section"><div class="vendor-title">🟢 ArubaOS-CX</div><div class="cblock"><div class="cbody"><div class="clines">show interface brief</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">Interface status summary.</div><div class="clines">show vlan</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">VLAN list and port membership.</div><div class="clines">show ip route</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">Routing table.</div><div class="clines">show ip ospf neighbor</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">OSPF neighbors.</div><div class="clines">show tech</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">Collect extensive diagnostic output (safe).</div></div></div></div><div class="vendor-section"><div class="vendor-title">🔴 Huawei VRP</div><div class="cblock"><div class="cbody"><div class="clines">display ip interface brief</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">Quick interface status.</div><div class="clines">display ip routing-table</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">Routing table.</div><div class="clines">display ospf peer</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">OSPF neighbors.</div><div class="clines">display bgp peer</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">BGP peer status.</div><div class="clines">display logbuffer</div><div class="explanation" style="color:var(--t2);font-size:12px;margin-left:16px;margin-bottom:8px;">System logs.</div></div></div></div>`;}
 
 function extractUniqueIPs(text){const re=/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g;return[...new Set((text.match(re)||[]))].sort();}
 function generateFakeIPs(ips){const nets=["203.0.113.","198.51.100.","192.0.2."];const m=new Map();ips.forEach((ip,i)=>{m.set(ip,nets[Math.floor(i/254)]+(i%254+1));});return m;}
 function replaceIPsInText(text,map){let r=text;for(const[real,fake]of map.entries()){r=r.replace(new RegExp('\\b'+real.replace(/\./g,'\\.')+'\\b','g'),fake);}return r;}
-function renderBulkAnonTab(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🔄 Bulk IP Anonymizer</div></div><div class="cbody"><textarea id="bulkAnonInput" rows="10" style="width:100%;background:var(--bg);color:var(--t);font-family:var(--mono);font-size:11px;border:1px solid var(--br);border-radius:6px;padding:10px;" placeholder="Paste FortiGate CLI output with real IPs..."></textarea><div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;"><button class="sbtn" id="bulkAnonConvertBtn">✨ Anonymize</button><button class="sbtn" id="bulkAnonCopyBtn" style="background:#15803D;">📋 Copy</button><button class="sbtn" id="bulkAnonClearBtn" style="background:#4b5563;">🗑️ Clear</button></div></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">Anonymized Output</div></div><div class="cbody"><pre id="bulkAnonOutput" style="background:#010409;border-radius:8px;padding:12px;font-family:var(--mono);font-size:11px;white-space:pre-wrap;overflow-x:auto;max-height:400px;">— Output will appear here —</pre></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">IP Mapping Table</div></div><div class="cbody" id="bulkAnonMappingContainer"><div class="cnote">Run conversion to see mapping.</div></div></div>`;document.getElementById('bulkAnonConvertBtn').onclick=()=>{const raw=document.getElementById('bulkAnonInput').value;const ips=extractUniqueIPs(raw);const map=generateFakeIPs(ips);document.getElementById('bulkAnonOutput').innerText=replaceIPsInText(raw,map);let th='<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;"><thead><tr><th style="text-align:left;border-bottom:1px solid var(--br);">Real</th><th style="text-align:left;border-bottom:1px solid var(--br);">→ Fake</th></tr></thead><tbody>';for(const[r,f]of map.entries())th+=`<tr><td style="padding:3px 0;color:var(--r);">${r}</td><td style="padding:3px 0;color:var(--g);">${f}</td>`;th+='</tbody></table>';document.getElementById('bulkAnonMappingContainer').innerHTML=th;};document.getElementById('bulkAnonCopyBtn').onclick=()=>{navigator.clipboard.writeText(document.getElementById('bulkAnonOutput').innerText);};document.getElementById('bulkAnonClearBtn').onclick=()=>{document.getElementById('bulkAnonInput').value='';document.getElementById('bulkAnonOutput').innerText='— Output will appear here —';document.getElementById('bulkAnonMappingContainer').innerHTML='<div class="cnote">Run conversion to see mapping.</div>';};}
+function renderBulkAnonTab(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🔄 Bulk IP Anonymizer</div></div><div class="cbody"><textarea id="bulkAnonInput" rows="10" style="width:100%;background:var(--bg);color:var(--t);font-family:var(--mono);font-size:11px;border:1px solid var(--br);border-radius:6px;padding:10px;" placeholder="Paste FortiGate CLI output with real IPs..."></textarea><div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;"><button class="sbtn" id="bulkAnonConvertBtn">✨ Anonymize</button><button class="sbtn" id="bulkAnonCopyBtn" style="background:#15803D;">📋 Copy</button><button class="sbtn" id="bulkAnonClearBtn" style="background:#4b5563;">🗑️ Clear</button></div></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">Anonymized Output</div></div><div class="cbody"><pre id="bulkAnonOutput" style="background:#010409;border-radius:8px;padding:12px;font-family:var(--mono);font-size:11px;white-space:pre-wrap;overflow-x:auto;max-height:400px;">— Output will appear here —</pre></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">IP Mapping Table</div></div><div class="cbody" id="bulkAnonMappingContainer"><div class="cnote">Run conversion to see mapping.</div></div></div>`;document.getElementById('bulkAnonConvertBtn').onclick=()=>{const raw=document.getElementById('bulkAnonInput').value;const ips=extractUniqueIPs(raw);const map=generateFakeIPs(ips);document.getElementById('bulkAnonOutput').innerText=replaceIPsInText(raw,map);let th='<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;"><thead><tr><th style="text-align:left;border-bottom:1px solid var(--br);">Real</th><th style="text-align:left;border-bottom:1px solid var(--br);">→ Fake</th></tr></thead><tbody>';for(const[r,f]of map.entries())th+=`<tr><td style="padding:3px 0;color:var(--r);">${r}</td><td style="padding:3px 0;color:var(--g);">${f}</td></tr>`;th+='</tbody></table>';document.getElementById('bulkAnonMappingContainer').innerHTML=th;};document.getElementById('bulkAnonCopyBtn').onclick=()=>{navigator.clipboard.writeText(document.getElementById('bulkAnonOutput').innerText);};document.getElementById('bulkAnonClearBtn').onclick=()=>{document.getElementById('bulkAnonInput').value='';document.getElementById('bulkAnonOutput').innerText='— Output will appear here —';document.getElementById('bulkAnonMappingContainer').innerHTML='<div class="cnote">Run conversion to see mapping.</div>';};}
 
 function calculateSubnet(ipCidr){let[ip,prefix]=ipCidr.trim().split('/');let mb=parseInt(prefix);if(isNaN(mb)||mb<0||mb>32)return{error:"Prefix must be 0-32"};let p=ip.split('.').map(Number);if(p.length!==4||p.some(n=>isNaN(n)||n<0||n>255))return{error:"Invalid IP"};let ipI=((p[0]<<24)|(p[1]<<16)|(p[2]<<8)|p[3])>>>0;let mI=mb===0?0:(((1<<mb)-1)<<(32-mb))>>>0;let nI=(ipI&mI)>>>0,bI=(nI|(~mI>>>0))>>>0;const itp=i=>((i>>>24)&255)+'.'+((i>>>16)&255)+'.'+((i>>>8)&255)+'.'+(i&255);let h=mb>=31?Math.pow(2,32-mb):Math.pow(2,32-mb)-2;return{network:itp(nI),broadcast:itp(bI),firstUsable:mb<=30?itp(nI+1):'N/A',lastUsable:mb<=30?itp(bI-1):'N/A',mask:itp(mI),cidr:mb,wildcard:itp((~mI)>>>0),totalHosts:h,binaryIp:ipI.toString(2).padStart(32,'0'),binaryMask:mI.toString(2).padStart(32,'0'),binaryNetwork:nI.toString(2).padStart(32,'0'),error:null};}
 function renderSubnetCalc(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🧮 IPv4 Subnet Calculator</div></div><div class="cbody"><div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;"><input type="text" id="subnetInput" placeholder="e.g., 192.168.1.0/24" style="flex:2;padding:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);"><button class="sbtn" id="calcSubnetBtn">Calculate</button><button class="sbtn" id="exampleSubnetBtn" style="background:var(--b3);">📋 Example</button></div><div id="subnetResult"><div class="cnote">Enter an IPv4 address with CIDR prefix.</div></div></div></div>`;function update(){const info=calculateSubnet(document.getElementById('subnetInput').value);if(info.error){document.getElementById('subnetResult').innerHTML=`<div class="cdanger">⚠️ ${info.error}</div>`;return;}let h=`<div class="subnet-result-grid"><div class="subnet-card"><div class="subnet-label">Network</div><div class="subnet-value">${info.network}</div></div><div class="subnet-card"><div class="subnet-label">Broadcast</div><div class="subnet-value">${info.broadcast}</div></div><div class="subnet-card"><div class="subnet-label">First Usable</div><div class="subnet-value">${info.firstUsable}</div></div><div class="subnet-card"><div class="subnet-label">Last Usable</div><div class="subnet-value">${info.lastUsable}</div></div><div class="subnet-card"><div class="subnet-label">Netmask</div><div class="subnet-value">${info.mask} (/${info.cidr})</div></div><div class="subnet-card"><div class="subnet-label">Wildcard</div><div class="subnet-value">${info.wildcard}</div></div><div class="subnet-card"><div class="subnet-label">Usable Hosts</div><div class="subnet-value">${info.totalHosts.toLocaleString()}</div></div><div class="subnet-card"><div class="subnet-label">CIDR</div><div class="subnet-value">/${info.cidr}</div></div></div><div class="subnet-explanation"><strong>Binary view:</strong><br>IP:&nbsp;&nbsp; ${info.binaryIp.match(/.{8}/g).join('.')}<br>Mask: ${info.binaryMask.match(/.{8}/g).join('.')}<br>Net:&nbsp; ${info.binaryNetwork.match(/.{8}/g).join('.')}</div>`;document.getElementById('subnetResult').innerHTML=h;}document.getElementById('calcSubnetBtn').onclick=update;document.getElementById('exampleSubnetBtn').onclick=()=>{document.getElementById('subnetInput').value='192.168.1.0/24';update();};document.getElementById('subnetInput').addEventListener('keypress',e=>{if(e.key==='Enter')update();});}
