@@ -895,6 +895,7 @@ function renderFreeAITab(el){
     localStorage.setItem('groq_key',k);
     groqApiKeyFree=k; groqApiKey=k;
     showToast('✅ Groq API key saved!');
+    document.getElementById('groqApiKeyInput').value=k.slice(0,8)+'••••••••••••••••••••';
     renderFreeAITab(el);
   };
 
