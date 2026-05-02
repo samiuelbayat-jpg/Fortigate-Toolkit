@@ -83,11 +83,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .cb.active{background:rgba(29,158,117,.15);color:var(--a);font-weight:700;border-left:2px solid var(--a);padding-left:8px}
 .cb .ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
 .main{display:flex;flex-direction:column;overflow:hidden;flex:1;min-height:0}
-.tabs{display:flex;border-bottom:1px solid var(--br);padding:0 14px;background:rgba(13,17,23,0.7);overflow-x:auto;flex-shrink:0}
-.tab{padding:9px 14px;font-size:13px;cursor:pointer;border:none;background:none;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .1s}
+.tabs{display:flex;border-bottom:1px solid var(--br);padding:0 6px;background:rgba(13,17,23,0.7);overflow-x:auto;flex-shrink:0;scrollbar-width:thin;scrollbar-color:var(--br) transparent;-webkit-overflow-scrolling:touch}
+.tab{padding:8px 10px;font-size:11px;cursor:pointer;border:none;background:none;color:var(--t2);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .1s;flex-shrink:0;font-family:var(--mono);letter-spacing:.02em}
 .tab:hover{color:var(--t)}
 .tab.active{color:var(--a);border-bottom-color:var(--a);font-weight:700}
-.content{flex:1;overflow-y:auto;padding:16px;min-height:0}
+.content{flex:1;overflow-y:auto;padding:16px;min-height:0;background:var(--bg)}
 .sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .stitle{font-size:15px;font-weight:700;color:var(--t)}
 .sev{font-size:11px;padding:3px 9px;border-radius:4px;font-weight:600}
@@ -783,7 +783,150 @@ function maskTextStandalone(input){let out=input;ipMappings.forEach(m=>{let rege
 function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:var(--b2);border-radius:12px;padding:16px;"><div class="stitle" style="margin-bottom:12px;">🎭 IP Masking</div><div class="mask-input-group"><input type="text" id="realIpMask" placeholder="Real IP (e.g., 192.168.1.100)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><input type="text" id="descMask" placeholder="Description (optional)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><button class="sbtn" id="addMaskBtnStandalone">➕ Add</button></div><div id="maskTableStandalone" style="background:#010409;border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto;"></div><div style="display:flex;gap:8px;margin-bottom:16px;"><button class="sbtn" id="deleteAllMaskStandalone" style="background:#B91C1C;">🗑️ Delete all</button><button class="sbtn" id="exportMaskStandalone" style="background:#15803D;">📄 Export</button></div><textarea id="rawTextMask" rows="10" placeholder="Paste any FortiGate output with real IPs..." style="width:100%;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;"></textarea><button class="sbtn" id="applyMaskStandalone" style="background:var(--a);margin-top:6px;">🎭 Mask this text</button><pre id="maskedPreviewStandalone" class="mask-preview">Masked output will appear here.</pre></div>`;loadMappingsStandalone();document.getElementById("addMaskBtnStandalone")?.addEventListener('click',()=>{let real=document.getElementById("realIpMask").value.trim();let desc=document.getElementById("descMask").value.trim();if(real)addMappingStandalone(real,desc);document.getElementById("realIpMask").value="";document.getElementById("descMask").value="";});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{if(confirm("Delete ALL mappings?")){ipMappings=[];saveMappings();}});document.getElementById("exportMaskStandalone")?.addEventListener('click',()=>{let content="# NetWolf IP Masking Report\n\n";ipMappings.forEach(m=>{content+=`${m.real} → ${m.fake} (${m.desc||''})\n`;});let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:"text/plain"}));a.download=`netwolf_mask_${Date.now()}.txt`;a.click();});document.getElementById("applyMaskStandalone")?.addEventListener('click',()=>{let raw=document.getElementById("rawTextMask").value;document.getElementById("maskedPreviewStandalone").innerText=maskTextStandalone(raw)||"(nothing to mask)";});}
 
 let groqApiKeyFree=localStorage.getItem('groq_key')||'';
-function renderFreeAITab(el){el.innerHTML=`<div class="analyzer-container"><div class="analyzer-row"><label>🔑 Groq API Key:</label><input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}" style="flex:2"><button class="sbtn" id="saveGroqKeyBtn">Save</button><a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl)">Get free key →</a></div><div class="analyzer-row"><label>🤖 Model:</label><select id="groqModelSelect"><option value="llama-3.3-70b-versatile">Llama 3.3 70B</option><option value="mixtral-8x7b-32768">Mixtral 8x7B</option><option value="llama-3.1-8b-instant">Llama 3.1 8B</option></select></div><div><label>📄 CLI Output / Question:</label><textarea id="groqPrompt" rows="10" placeholder="Paste FortiGate CLI output or ask a question..."></textarea></div><div class="analyzer-row"><button class="sbtn" id="analyzeGroqBtn">🚀 Analyze</button><button class="sbtn" id="exampleGroqBtn" style="background:var(--b3);">📋 Example</button><button class="sbtn" id="copyGroqResponseBtn" style="background:#15803D;">📋 Copy</button></div><div><div class="stitle" style="margin-bottom:6px;">🤖 AI Analysis:</div><div id="groqResponse" class="analyzer-response">Click "Analyze" to see AI analysis.</div></div></div>`;const keyInput=document.getElementById('groqApiKeyInput');document.getElementById('saveGroqKeyBtn').onclick=()=>{const k=keyInput.value.trim();if(k){localStorage.setItem('groq_key',k);groqApiKeyFree=k;groqApiKey=k;document.getElementById('groqResponse').innerHTML='<span style="color:var(--g);">✅ Key saved.</span>';}};document.getElementById('exampleGroqBtn').onclick=()=>{document.getElementById('groqPrompt').value=`get vpn ipsec tunnel summary\nTunnel name: SiteA-SiteB\nStatus: down\nError: "no proposal chosen"`;};document.getElementById('analyzeGroqBtn').onclick=async()=>{const prompt=document.getElementById('groqPrompt').value.trim();const respDiv=document.getElementById('groqResponse');if(!prompt){respDiv.innerHTML='<span style="color:var(--r);">Enter some CLI output first.</span>';return;}if(!groqApiKeyFree){respDiv.innerHTML='<span style="color:var(--r);">Enter your Groq API key first.</span>';return;}respDiv.innerHTML='<div class="typing"><span></span><span></span><span></span></div> Analyzing...';try{const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKeyFree}`},body:JSON.stringify({model:document.getElementById('groqModelSelect').value,messages:[{role:'system',content:'You are a senior FortiGate network engineer. Analyze the CLI output and provide diagnosis, root cause, and fix commands.'},{role:'user',content:prompt}],temperature:0.3,max_tokens:1500})});const data=await resp.json();if(data.error)throw new Error(data.error.message);respDiv.innerHTML=fmt(data.choices[0].message.content);}catch(err){respDiv.innerHTML=`<span style="color:var(--r);">❌ ${err.message}</span>`;}};document.getElementById('copyGroqResponseBtn').onclick=()=>{navigator.clipboard.writeText(document.getElementById('groqResponse').innerText);};}
+function renderFreeAITab(el){
+  const hasKey = !!groqApiKeyFree;
+  el.innerHTML=`
+  <div class="sh"><span class="stitle">🧠 AI CLI Analyzer</span><span class="sev info">Powered by Groq — Free</span></div>
+
+  <!-- Setup guide — only shown when no key is set -->
+  ${!hasKey ? `
+  <div style="background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.2);border-radius:12px;padding:20px 22px;margin-bottom:16px">
+    <div style="font-size:13px;font-weight:700;color:var(--bl);margin-bottom:14px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:16px">🔑</span> First-time setup — get your free Groq API key
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px">
+      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">1</div>
+          <span style="font-size:12px;font-weight:700;color:var(--t)">Create free account</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Go to <a href="https://console.groq.com" target="_blank" style="color:var(--bl)">console.groq.com</a> and sign up for free — no credit card needed.</div>
+      </div>
+      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">2</div>
+          <span style="font-size:12px;font-weight:700;color:var(--t)">Generate API key</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">In the Groq console click <strong style="color:var(--t)">API Keys → Create API Key</strong>. Copy the key starting with <span style="font-family:var(--mono);color:var(--g);font-size:10.5px">gsk_...</span></div>
+      </div>
+      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">3</div>
+          <span style="font-size:12px;font-weight:700;color:var(--t)">Paste it below</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Enter your key in the field below and click <strong style="color:var(--t)">Save</strong>. It's stored locally — never sent to our servers.</div>
+      </div>
+    </div>
+    <div style="background:rgba(29,158,117,.05);border-left:3px solid var(--a);padding:8px 12px;border-radius:0 6px 6px 0;font-size:11.5px;color:var(--t2);line-height:1.6">
+      💡 <strong style="color:var(--t)">Completely free</strong> — Groq offers a generous free tier with no credit card required. Your key is saved in your browser and persists between sessions.
+    </div>
+  </div>` : ''}
+
+  <!-- Key input row -->
+  <div style="background:var(--b2);border:1px solid ${hasKey?'rgba(63,185,80,.3)':'var(--br)'};border-radius:10px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="font-size:12px;font-weight:600;color:var(--t2);white-space:nowrap">🔑 Groq API Key</span>
+    <input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}"
+      style="flex:1;min-width:180px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 12px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+    <button class="sbtn" id="saveGroqKeyBtn" style="white-space:nowrap">💾 Save Key</button>
+    <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl);white-space:nowrap">Get free key →</a>
+    ${hasKey ? '<span style="font-size:11px;color:var(--g);white-space:nowrap">✓ Key saved</span>' : ''}
+  </div>
+
+  <!-- Model selector -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+    <span style="font-size:12px;font-weight:600;color:var(--t2)">🤖 Model:</span>
+    <select id="groqModelSelect" style="background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--t);outline:none;cursor:pointer">
+      <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B — Most accurate (recommended)</option>
+      <option value="mixtral-8x7b-32768">Mixtral 8x7B — Fast &amp; balanced</option>
+      <option value="llama-3.1-8b-instant">LLaMA 3.1 8B — Fastest response</option>
+    </select>
+    <span style="font-size:11px;color:var(--t3)">All models free via Groq API</span>
+  </div>
+
+  <!-- Input area -->
+  <div style="margin-bottom:10px">
+    <label style="font-size:12px;font-weight:600;color:var(--t2);display:block;margin-bottom:6px">📄 Paste CLI output or ask a question:</label>
+    <textarea id="groqPrompt" rows="8"
+      placeholder="Paste any FortiGate CLI output here — e.g. get vpn ipsec tunnel summary, diagnose sys session list, debug flow output...&#10;&#10;Or ask a question like: How do I check if a policy is matching traffic?"
+      style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--t);resize:vertical;outline:none;line-height:1.7"></textarea>
+  </div>
+
+  <!-- Action buttons -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+    <button class="sbtn" id="analyzeGroqBtn" style="padding:9px 20px;font-size:13px">🚀 Analyze</button>
+    <button class="sbtn" id="exampleGroqBtn" style="background:var(--b3)">📋 Load Example</button>
+    <button class="sbtn" id="copyGroqResponseBtn" style="background:#15803D">📋 Copy Response</button>
+    <button class="sbtn" id="clearGroqBtn" style="background:var(--b3)">🗑️ Clear</button>
+  </div>
+
+  <!-- Response area -->
+  <div style="font-size:11px;font-weight:600;color:var(--t2);margin-bottom:6px;font-family:var(--mono);letter-spacing:.04em">▸ AI ANALYSIS</div>
+  <div id="groqResponse" class="analyzer-response" style="min-height:120px">
+    ${hasKey ? 'Paste CLI output above and click Analyze.' : '<span style="color:var(--y)">⚠️ Enter your Groq API key above to get started.</span>'}
+  </div>`;
+
+  // ── Event handlers ──
+  document.getElementById('saveGroqKeyBtn').onclick=()=>{
+    const k=document.getElementById('groqApiKeyInput').value.trim();
+    if(!k){ showToast('⚠️ Please enter your Groq API key first.'); return; }
+    if(!k.startsWith('gsk_')){ showToast('⚠️ Key should start with gsk_'); return; }
+    localStorage.setItem('groq_key',k);
+    groqApiKeyFree=k; groqApiKey=k;
+    showToast('✅ Groq API key saved!');
+    renderFreeAITab(el);
+  };
+
+  document.getElementById('exampleGroqBtn').onclick=()=>{
+    document.getElementById('groqPrompt').value=
+`get vpn ipsec tunnel summary
+Tunnel name   : SiteA-HQ
+Status        : down
+Local         : 203.0.113.1    Remote: 198.51.100.5
+Last error    : no proposal chosen
+Npu-flag      : 00`;
+  };
+
+  document.getElementById('clearGroqBtn').onclick=()=>{
+    document.getElementById('groqPrompt').value='';
+    document.getElementById('groqResponse').innerHTML='Paste CLI output above and click Analyze.';
+  };
+
+  document.getElementById('copyGroqResponseBtn').onclick=()=>{
+    const txt=document.getElementById('groqResponse').innerText;
+    navigator.clipboard.writeText(txt).then(()=>showToast('✅ Response copied!'));
+  };
+
+  document.getElementById('analyzeGroqBtn').onclick=async()=>{
+    const prompt=document.getElementById('groqPrompt').value.trim();
+    const respDiv=document.getElementById('groqResponse');
+    if(!prompt){ respDiv.innerHTML='<span style="color:var(--r)">⚠️ Paste some CLI output first.</span>'; return; }
+    if(!groqApiKeyFree){
+      respDiv.innerHTML='<span style="color:var(--r)">⚠️ No API key set. Enter your Groq key above and click Save.</span>';
+      return;
+    }
+    respDiv.innerHTML='<div class="typing"><span></span><span></span><span></span></div>&nbsp; Analyzing with '+document.getElementById('groqModelSelect').options[document.getElementById('groqModelSelect').selectedIndex].text.split('—')[0]+'...';
+    try{
+      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKeyFree}`},
+        body:JSON.stringify({
+          model:document.getElementById('groqModelSelect').value,
+          messages:[
+            {role:'system',content:'You are a senior FortiGate network engineer. Analyze the CLI output or question and provide: 1) Root cause or direct answer, 2) Recommended CLI fix commands in code blocks, 3) Brief explanation. Be concise and practical.'},
+            {role:'user',content:prompt}
+          ],
+          temperature:0.3,
+          max_tokens:1500
+        })
+      });
+      const data=await resp.json();
+      if(data.error) throw new Error(data.error.message);
+      respDiv.innerHTML=fmt(data.choices[0].message.content);
+    }catch(err){
+      respDiv.innerHTML=`<span style="color:var(--r)">❌ ${err.message}</span><br><span style="font-size:11px;color:var(--t3)">Check your API key is correct and has not expired.</span>`;
+    }
+  };
+}
 
 function renderMultiVendorTab(el){
   if(!document.getElementById('mvCSS')){
@@ -1960,7 +2103,7 @@ function detectAllFields(cfg){
   return fields;
 }
 
-const SECTION_LABELS = {
+const MIG_SECTION_LABELS = {
   system: '🖥️ System Identity & Admin',
   interfaces: '🔌 Interface IP Addresses',
   routes: '🔀 Static Routes & Gateways',
@@ -1987,7 +2130,7 @@ function renderMigForm(container, detected){
   </div>`;
 
   Object.entries(detected).forEach(([section, fields])=>{
-    const label = SECTION_LABELS[section] || section;
+    const label = MIG_SECTION_LABELS[section] || section;
     const count = Object.keys(fields).length;
     h += `<div class="cblock" style="margin-bottom:10px">
       <div class="chdr"><div class="chdr-l" style="font-size:12px">${label} <span style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-left:6px">${count} field${count>1?'s':''}</span></div></div>
@@ -2430,7 +2573,7 @@ function renderCfgGen(el){
   setCfgType('initial', el.querySelector('[data-type="initial"]'));
 }
 
-let currentCfgType = 'initial';
+currentCfgType = 'initial';
 
 function setCfgType(type, btn){
   currentCfgType = type;
@@ -3444,7 +3587,7 @@ function detectAllFields(cfg){
   return fields;
 }
 
-SECTION_LABELS = {
+const MIG_LABELS2 = {
   system: '🖥️ System Identity & Admin',
   interfaces: '🔌 Interface IP Addresses',
   routes: '🔀 Static Routes & Gateways',
@@ -3471,7 +3614,7 @@ function renderMigForm(container, detected){
   </div>`;
 
   Object.entries(detected).forEach(([section, fields])=>{
-    const label = SECTION_LABELS[section] || section;
+    const label = MIG_LABELS2[section] || section;
     const count = Object.keys(fields).length;
     h += `<div class="cblock" style="margin-bottom:10px">
       <div class="chdr"><div class="chdr-l" style="font-size:12px">${label} <span style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-left:6px">${count} field${count>1?'s':''}</span></div></div>
