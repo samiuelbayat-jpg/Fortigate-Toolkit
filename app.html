@@ -191,6 +191,11 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 
 /* ══ MOBILE RESPONSIVE ══ */
 @media(max-width:768px){
+  /* Hide macOS window dots on mobile */
+  .dot.r, .dot.y, .dot.g{display:none}
+  /* Make toolkit name visible */
+  .ttxt{display:block;max-width:180px;font-size:12px}
+
 
   /* Full page layout */
   body{overflow:hidden}
