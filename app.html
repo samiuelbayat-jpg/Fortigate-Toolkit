@@ -213,9 +213,13 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   #loggedInUser{display:none}
   #nwVerBadge{display:none}
 
-  /* Tab bar — scrollable, smaller */
-  .tabs{padding:0 4px;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .tab{padding:7px 8px;font-size:10px;letter-spacing:0;flex-shrink:0}
+  /* Tab bar — scrollable on mobile */
+  .tabs{padding:0 2px}
+  .tab-group-label{display:none}
+  .tab{min-width:44px;padding:6px 6px 7px}
+  .tab-lbl{display:none}
+  .tab-icon{font-size:18px}
+  .tab-divider{margin:6px 2px}
 
   /* Layout — hide sidebar on mobile, full width content */
   .layout{grid-template-columns:1fr;position:relative}
@@ -377,20 +381,86 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <div class="sidebar"></div>
     <div class="main">
       <div class="tabs">
-        <button class="tab active" onclick="stab('guide')" id="tab-guide">Guided Steps</button>
-        <button class="tab" onclick="stab('analyze')" id="tab-analyze">📊 Analyze Output</button>
-        <button class="tab" onclick="stab('ai')" id="tab-ai">AI Assistant</button>
-        <button class="tab" onclick="stab('ref')" id="tab-ref">Quick Ref</button>
-        <button class="tab" onclick="stab('masking')" id="tab-masking">🎭 IP Masking</button>
-        <button class="tab" onclick="stab('freeai')" id="tab-freeai">🧠 CLI Analyzer (Free AI)</button>
-        <button class="tab" onclick="stab('multivendor')" id="tab-multivendor">🌐 Multi‑Vendor CLI</button>
-        <button class="tab" onclick="stab('bulkAnon')" id="tab-bulkAnon">🔄 Bulk IP Anonymizer</button>
-        <button class="tab" onclick="stab('subnetcalc')" id="tab-subnetcalc">🧮 Subnet Calculator</button>
-        <button class="tab" onclick="stab('advdiag')" id="tab-advdiag">🔬 Advanced Diag</button>
-        <button class="tab" onclick="stab('cfggen')" id="tab-cfggen">⚙️ Config Generator</button>
-        <button class="tab" onclick="stab('cfgmigrate')" id="tab-cfgmigrate">🔄 Config Migrator</button>
-        <button class="tab" onclick="stab('labsetup')" id="tab-labsetup">🧪 Lab Setup</button>
-        <button class="tab" onclick="stab('hwref')" id="tab-hwref">🖥️ HW Reference</button>
+        <!-- GROUP: Troubleshoot -->
+        <div class="tab-group">
+          <div class="tab-group-label">Troubleshoot</div>
+          <div class="tab-group-btns">
+            <button class="tab active" onclick="stab('guide')" id="tab-guide" title="Guided Steps">
+              <span class="tab-icon">📋</span><span class="tab-lbl">Guided Steps</span>
+            </button>
+            <button class="tab" onclick="stab('analyze')" id="tab-analyze" title="Analyze Output">
+              <span class="tab-icon">📊</span><span class="tab-lbl">Analyze</span>
+            </button>
+            <button class="tab" onclick="stab('advdiag')" id="tab-advdiag" title="Advanced Diagnostics">
+              <span class="tab-icon">🔬</span><span class="tab-lbl">Advanced Diag</span>
+            </button>
+          </div>
+        </div>
+        <div class="tab-divider"></div>
+
+        <!-- GROUP: AI Tools -->
+        <div class="tab-group">
+          <div class="tab-group-label">AI Tools</div>
+          <div class="tab-group-btns">
+            <button class="tab" onclick="stab('freeai')" id="tab-freeai" title="AI CLI Analyzer">
+              <span class="tab-icon">🤖</span><span class="tab-lbl">AI Analyzer</span>
+            </button>
+            <button class="tab" onclick="stab('ai')" id="tab-ai" title="AI Assistant">
+              <span class="tab-icon">🧠</span><span class="tab-lbl">AI Assistant</span>
+            </button>
+          </div>
+        </div>
+        <div class="tab-divider"></div>
+
+        <!-- GROUP: Network Tools -->
+        <div class="tab-group">
+          <div class="tab-group-label">Network Tools</div>
+          <div class="tab-group-btns">
+            <button class="tab" onclick="stab('masking')" id="tab-masking" title="IP Masking">
+              <span class="tab-icon">🎭</span><span class="tab-lbl">IP Masking</span>
+            </button>
+            <button class="tab" onclick="stab('bulkAnon')" id="tab-bulkAnon" title="Bulk IP Anonymizer">
+              <span class="tab-icon">🔄</span><span class="tab-lbl">Bulk Anon</span>
+            </button>
+            <button class="tab" onclick="stab('subnetcalc')" id="tab-subnetcalc" title="Subnet Calculator">
+              <span class="tab-icon">🧮</span><span class="tab-lbl">Subnet Calc</span>
+            </button>
+          </div>
+        </div>
+        <div class="tab-divider"></div>
+
+        <!-- GROUP: Reference -->
+        <div class="tab-group">
+          <div class="tab-group-label">Reference</div>
+          <div class="tab-group-btns">
+            <button class="tab" onclick="stab('ref')" id="tab-ref" title="Quick Reference">
+              <span class="tab-icon">⚡</span><span class="tab-lbl">Quick Ref</span>
+            </button>
+            <button class="tab" onclick="stab('multivendor')" id="tab-multivendor" title="Multi-Vendor CLI">
+              <span class="tab-icon">🌐</span><span class="tab-lbl">Multi-Vendor</span>
+            </button>
+            <button class="tab" onclick="stab('hwref')" id="tab-hwref" title="Hardware Reference">
+              <span class="tab-icon">🖥️</span><span class="tab-lbl">HW Ref</span>
+            </button>
+          </div>
+        </div>
+        <div class="tab-divider"></div>
+
+        <!-- GROUP: Config -->
+        <div class="tab-group">
+          <div class="tab-group-label">Config</div>
+          <div class="tab-group-btns">
+            <button class="tab" onclick="stab('cfggen')" id="tab-cfggen" title="Config Generator">
+              <span class="tab-icon">⚙️</span><span class="tab-lbl">Generator</span>
+            </button>
+            <button class="tab" onclick="stab('cfgmigrate')" id="tab-cfgmigrate" title="Config Migrator">
+              <span class="tab-icon">🔀</span><span class="tab-lbl">Migrator</span>
+            </button>
+            <button class="tab" onclick="stab('labsetup')" id="tab-labsetup" title="Lab Setup Guide">
+              <span class="tab-icon">🧪</span><span class="tab-lbl">Lab Setup</span>
+            </button>
+          </div>
+        </div>
       </div>
       <div class="content" id="mc"></div>
     </div>
