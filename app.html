@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="favicon.svg">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -186,9 +189,13 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 .ai-typing span:nth-child(2){animation-delay:.2s}
 .ai-typing span:nth-child(3){animation-delay:.4s}
 @media(max-width:700px){.layout{grid-template-columns:1fr}.rgrid{grid-template-columns:1fr}.subnet-result-grid{grid-template-columns:1fr}}
+
+/* Content protection */
+.clines{-webkit-user-select:text;user-select:text}
+body{-webkit-tap-highlight-color:transparent}
 </style>
 </head>
-<body>
+<body oncontextmenu="return false">
 <canvas id="matrixCanvas"></canvas>
 
 <!-- LOGIN OVERLAY -->
@@ -891,6 +898,7 @@ function renderFreeAITab(el){
     localStorage.setItem('groq_key',k);
     groqApiKeyFree=k; groqApiKey=k;
     showToast('✅ Groq API key saved!');
+    document.getElementById('groqApiKeyInput').value=k.slice(0,8)+'••••••••••••••••••••';
     renderFreeAITab(el);
   };
 
