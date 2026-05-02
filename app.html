@@ -1584,16 +1584,86 @@ function setCfgType(type, btn){
       </div>`,
     ipsec: `
       <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🔒 IPsec Site-to-Site VPN</div>
+
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Phase 1 — IKE Settings</div>
       ${inp('tunnel_name','Tunnel name','VPN-TO-SITE-B','VPN-TO-SITE-B')}
       ${inp('wan_intf','WAN interface','wan1','wan1')}
+      ${sel('ike_ver','IKE version',[{v:'2',l:'IKEv2 (recommended)'},{v:'1',l:'IKEv1 (legacy)'}])}
+      ${sel('p1_proposal','Phase 1 encryption',[
+        {v:'aes256-sha256',l:'AES256-SHA256 — recommended'},
+        {v:'aes256-sha384',l:'AES256-SHA384'},
+        {v:'aes256-sha512',l:'AES256-SHA512'},
+        {v:'aes128-sha256',l:'AES128-SHA256'},
+        {v:'aes128-sha384',l:'AES128-SHA384'},
+        {v:'aes256gcm-sha256',l:'AES256GCM-SHA256 — AEAD'},
+        {v:'aes256gcm-sha384',l:'AES256GCM-SHA384 — AEAD'},
+        {v:'aes128gcm-sha256',l:'AES128GCM-SHA256 — AEAD'},
+        {v:'chacha20poly1305-sha256',l:'ChaCha20Poly1305-SHA256'},
+        {v:'3des-sha1',l:'3DES-SHA1 — legacy only'},
+      ])}
+      ${sel('dhgrp','DH Group (Phase 1)',[
+        {v:'14',l:'Group 14 — 2048-bit MODP (recommended)'},
+        {v:'15',l:'Group 15 — 3072-bit MODP'},
+        {v:'16',l:'Group 16 — 4096-bit MODP'},
+        {v:'19',l:'Group 19 — 256-bit ECP'},
+        {v:'20',l:'Group 20 — 384-bit ECP'},
+        {v:'21',l:'Group 21 — 521-bit ECP'},
+        {v:'24',l:'Group 24 — 2048-bit MODP+Prime'},
+        {v:'5',l:'Group 5 — 1536-bit (legacy)'},
+        {v:'2',l:'Group 2 — 1024-bit (legacy, avoid)'},
+      ])}
+      ${inp('lifetime_p1','Phase 1 keylife (seconds)','86400','86400')}
+      ${sel('dpd','Dead Peer Detection (DPD)',[
+        {v:'on-idle',l:'on-idle — detect only when idle (recommended)'},
+        {v:'on-demand',l:'on-demand — detect when traffic fails'},
+        {v:'disable',l:'disable — no DPD'},
+      ])}
+      ${inp('dpd_retries','DPD retry count','3','3')}
+      ${inp('dpd_interval','DPD retry interval (seconds)','20','20')}
+
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Phase 2 — IPsec SA Settings</div>
+      ${sel('p2_proposal','Phase 2 encryption',[
+        {v:'aes256-sha256',l:'AES256-SHA256 — recommended'},
+        {v:'aes256-sha384',l:'AES256-SHA384'},
+        {v:'aes256-sha512',l:'AES256-SHA512'},
+        {v:'aes128-sha256',l:'AES128-SHA256'},
+        {v:'aes256gcm-sha256',l:'AES256GCM-SHA256 — AEAD'},
+        {v:'aes256gcm-sha384',l:'AES256GCM-SHA384 — AEAD'},
+        {v:'aes128gcm-sha256',l:'AES128GCM-SHA256 — AEAD'},
+        {v:'3des-sha1',l:'3DES-SHA1 — legacy only'},
+      ])}
+      ${sel('pfs','PFS DH Group (Phase 2)',[
+        {v:'14',l:'Group 14 — 2048-bit (recommended)'},
+        {v:'15',l:'Group 15 — 3072-bit'},
+        {v:'19',l:'Group 19 — 256-bit ECP'},
+        {v:'20',l:'Group 20 — 384-bit ECP'},
+        {v:'disable',l:'Disable PFS — not recommended'},
+      ])}
+      ${inp('lifetime_p2','Phase 2 keylife (seconds)','43200','43200')}
+
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Authentication</div>
+      ${sel('auth_method','Authentication method',[
+        {v:'psk',l:'Pre-Shared Key (PSK)'},
+        {v:'signature',l:'Certificate / Signature'},
+      ])}
+      ${inp('psk','Pre-shared key','MySecretKey123!')}
       ${inp('peer_ip','Remote peer WAN IP','198.51.100.5')}
-      ${inp('psk','Pre-shared key','MySecretKey123')}
-      ${sel('ike_ver','IKE version',[{v:'2',l:'IKEv2 (recommended)'},{v:'1',l:'IKEv1'}])}
-      ${sel('proposal','Encryption proposal',[{v:'aes256-sha256',l:'AES256-SHA256 (recommended)'},{v:'aes128-sha256',l:'AES128-SHA256'},{v:'aes256-sha512',l:'AES256-SHA512'}])}
-      ${sel('dhgrp','DH Group',[{v:'14',l:'Group 14 (2048-bit)'},{v:'19',l:'Group 19 (256-bit ECP)'},{v:'20',l:'Group 20 (384-bit ECP)'},{v:'5',l:'Group 5 (1536-bit)'}])}
-      ${inp('local_subnet','Local subnet (CIDR)','10.1.0.0/16','10.1.0.0/16')}
-      ${inp('remote_subnet','Remote subnet (CIDR)','10.2.0.0/16','10.2.0.0/16')}
-      ${inp('local_gw','Local LAN interface','lan','lan')}`,
+      ${sel('peer_type','Peer ID type',[
+        {v:'any',l:'Any — accept any peer ID'},
+        {v:'ip',l:'IP — use peer IP as ID'},
+        {v:'fqdn',l:'FQDN — use domain name'},
+      ])}
+
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Subnets — Local &amp; Remote</div>
+      <div style="font-size:11px;color:var(--y);background:rgba(210,153,34,.06);border-left:2px solid var(--y);padding:6px 10px;border-radius:0 5px 5px 0;margin-bottom:10px">
+        For multiple subnets enter comma-separated CIDRs: <span style="font-family:var(--mono);color:var(--g);font-size:10px">10.1.0.0/24, 10.2.0.0/24</span>
+      </div>
+      ${inp('local_subnet','Local subnet(s) (CIDR)','10.1.0.0/24','10.1.0.0/24')}
+      ${inp('remote_subnet','Remote subnet(s) (CIDR)','10.2.0.0/24','10.2.0.0/24')}
+      ${inp('local_gw','Local LAN interface','lan','lan')}
+      <div style="font-size:11px;color:var(--t2);background:rgba(29,158,117,.05);border-left:2px solid var(--a);padding:6px 10px;border-radius:0 5px 5px 0;margin-top:4px;line-height:1.6">
+        💡 Multiple subnets create separate Phase 2 selectors automatically — one per subnet pair.
+      </div>`,
     sslvpn: `
       <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🕵️ SSL VPN Configuration</div>
       ${inp('sslvpn_port','SSL VPN port','10443','10443')}
@@ -1833,106 +1903,137 @@ end`;
     const name=g('tunnel_name')||'VPN-TO-SITE-B';
     const wanIntf=g('wan_intf')||'wan1';
     const peerIp=g('peer_ip')||'198.51.100.5';
-    const psk=g('psk')||'ChangeMe123';
+    const psk=g('psk')||'ChangeMe123!';
     const ikeVer=gs('ike_ver')||'2';
-    const proposal=gs('proposal')||'aes256-sha256';
+    const p1Proposal=gs('p1_proposal')||'aes256-sha256';
+    const p2Proposal=gs('p2_proposal')||'aes256-sha256';
     const dhgrp=gs('dhgrp')||'14';
-    const localSubnet=g('local_subnet')||'10.1.0.0/16';
-    const remoteSubnet=g('remote_subnet')||'10.2.0.0/16';
+    const pfsGrp=gs('pfs')||'14';
+    const dpd=gs('dpd')||'on-idle';
+    const dpdRetries=g('dpd_retries')||'3';
+    const dpdInterval=g('dpd_interval')||'20';
+    const lifetimeP1=g('lifetime_p1')||'86400';
+    const lifetimeP2=g('lifetime_p2')||'43200';
+    const peerType=gs('peer_type')||'any';
     const localIntf=g('local_gw')||'lan';
-    const localNet=cidrToIp(localSubnet);
-    const localMask=cidrToMask(localSubnet);
-    const remoteNet=cidrToIp(remoteSubnet);
-    const remoteMask=cidrToMask(remoteSubnet);
+    const authMethod=gs('auth_method')||'psk';
 
-    cfg = `// ═══════════════════════════════════════════
-# NetWolf Config Generator — IPsec Site-to-Site VPN
-# Tunnel: ${name}  Peer: ${peerIp}
-# Generated: ${new Date().toISOString().slice(0,19).replace('T',' ')}
-// ═══════════════════════════════════════════
+    // Parse multiple subnets (comma separated)
+    const localSubnets=(g('local_subnet')||'10.1.0.0/24').split(',').map(function(s){return s.trim();}).filter(Boolean);
+    const remoteSubnets=(g('remote_subnet')||'10.2.0.0/24').split(',').map(function(s){return s.trim();}).filter(Boolean);
+    const firstLocal=localSubnets[0];
+    const firstRemote=remoteSubnets[0];
 
-# 1. Phase 1 — IKE
-config vpn ipsec phase1-interface
-    edit "${name}"
-        set interface "${wanIntf}"
-        set ike-version ${ikeVer}
-        set proposal ${proposal}
-        set dhgrp ${dhgrp}
-        set remote-gw ${peerIp}
-        set psksecret "${psk}"
-        set dpd on-idle
-        set dpd-retrycount 3
-        set dpd-retryinterval 20
-    next
-end
+    // Build Phase 2 selectors
+    let p2Config='';
+    let addrConfig='';
+    let routeConfig='';
+    let p2Idx=1;
+    let routeIdx=10;
 
-# 2. Phase 2 — IPsec SA
-config vpn ipsec phase2-interface
-    edit "${name}-P2"
-        set phase1name "${name}"
-        set proposal ${proposal}
-        set dhgrp ${dhgrp}
-        set pfs enable
-        set src-subnet ${localNet} ${localMask}
-        set dst-subnet ${remoteNet} ${remoteMask}
-        set auto-negotiate enable
-    next
-end
+    localSubnets.forEach(function(sub,li){
+      addrConfig+='    edit "'+name+'-LOCAL'+(localSubnets.length>1?'-'+(li+1):'')+'"'+'\n';
+      addrConfig+='        set subnet '+cidrToIp(sub)+' '+cidrToMask(sub)+'\n';
+      addrConfig+='    next\n';
+    });
+    remoteSubnets.forEach(function(sub,ri){
+      addrConfig+='    edit "'+name+'-REMOTE'+(remoteSubnets.length>1?'-'+(ri+1):'')+'"'+'\n';
+      addrConfig+='        set subnet '+cidrToIp(sub)+' '+cidrToMask(sub)+'\n';
+      addrConfig+='    next\n';
+    });
 
-# 3. Address objects
-config firewall address
-    edit "${name}-LOCAL"
-        set subnet ${localNet} ${localMask}
-    next
-    edit "${name}-REMOTE"
-        set subnet ${remoteNet} ${remoteMask}
-    next
-end
+    localSubnets.forEach(function(lsub){
+      remoteSubnets.forEach(function(rsub){
+        const p2name=name+'-P2'+(p2Idx>1?'-'+p2Idx:'');
+        p2Config+='    edit "'+p2name+'"\n';
+        p2Config+='        set phase1name "'+name+'"\n';
+        p2Config+='        set proposal '+p2Proposal+'\n';
+        p2Config+='        set dhgrp '+dhgrp+'\n';
+        p2Config+=(pfsGrp==='disable'?'        set pfs disable\n':'        set pfs enable\n');
+        p2Config+='        set src-subnet '+cidrToIp(lsub)+' '+cidrToMask(lsub)+'\n';
+        p2Config+='        set dst-subnet '+cidrToIp(rsub)+' '+cidrToMask(rsub)+'\n';
+        p2Config+='        set keylifeseconds '+lifetimeP2+'\n';
+        p2Config+='        set auto-negotiate enable\n';
+        p2Config+='    next\n';
+        p2Idx++;
+      });
+    });
 
-# 4. Firewall policies — outbound
-config firewall policy
-    edit 10
-        set name "${name}-OUT"
-        set srcintf "${localIntf}"
-        set dstintf "${name}"
-        set srcaddr "${name}-LOCAL"
-        set dstaddr "${name}-REMOTE"
-        set action accept
-        set schedule "always"
-        set service "ALL"
-        set logtraffic all
-    next
-end
+    remoteSubnets.forEach(function(rsub){
+      routeConfig+='    edit '+routeIdx+'\n';
+      routeConfig+='        set dst '+cidrToIp(rsub)+' '+cidrToMask(rsub)+'\n';
+      routeConfig+='        set device "'+name+'"\n';
+      routeConfig+='    next\n';
+      routeIdx++;
+    });
 
-# 5. Firewall policies — inbound
-config firewall policy
-    edit 11
-        set name "${name}-IN"
-        set srcintf "${name}"
-        set dstintf "${localIntf}"
-        set srcaddr "${name}-REMOTE"
-        set dstaddr "${name}-LOCAL"
-        set action accept
-        set schedule "always"
-        set service "ALL"
-        set logtraffic all
-    next
-end
+    const localAddrs=localSubnets.map(function(_,i){return '"'+name+'-LOCAL'+(localSubnets.length>1?'-'+(i+1):'')+'"';}).join(' ');
+    const remoteAddrs=remoteSubnets.map(function(_,i){return '"'+name+'-REMOTE'+(remoteSubnets.length>1?'-'+(i+1):'')+'"';}).join(' ');
+    const policyIdx=10;
 
-# 6. Static route to remote subnet
-config router static
-    edit 10
-        set dst ${remoteNet} ${remoteMask}
-        set device "${name}"
-    next
-end
-
-# 7. Verify tunnel
-# execute ping-options source ${localNet}
-# execute ping ${remoteNet}
-# get vpn ipsec tunnel summary`;
+    cfg = '# NetWolf Config Generator — IPsec Site-to-Site VPN\n'
+        + '# Tunnel : '+name+'\n'
+        + '# Peer   : '+peerIp+'\n'
+        + '# IKEv   : '+ikeVer+'  Auth: '+authMethod.toUpperCase()+'\n'
+        + '# Phase1 : '+p1Proposal+'  DH: Group '+dhgrp+'\n'
+        + '# Phase2 : '+p2Proposal+'  PFS: Group '+pfsGrp+'\n'
+        + '# Local  : '+localSubnets.join(', ')+'\n'
+        + '# Remote : '+remoteSubnets.join(', ')+'\n'
+        + '# Selectors: '+(p2Idx-1)+' Phase2 selector'+(p2Idx>2?'s':'')+'\n'
+        + '# Generated: '+new Date().toISOString().slice(0,19).replace('T',' ')+'\n\n'
+        + '# 1. Phase 1 — IKE\n'
+        + 'config vpn ipsec phase1-interface\n'
+        + '    edit "'+name+'"\n'
+        + '        set interface "'+wanIntf+'"\n'
+        + '        set ike-version '+ikeVer+'\n'
+        + '        set proposal '+p1Proposal+'\n'
+        + '        set dhgrp '+dhgrp+'\n'
+        + '        set remote-gw '+peerIp+'\n'
+        + (authMethod==='psk'?'        set psksecret "'+psk+'"\n':'        set certificate "<YOUR_CERT_NAME>"\n')
+        + '        set keylife '+lifetimeP1+'\n'
+        + '        set dpd '+dpd+'\n'
+        + (dpd!=='disable'?'        set dpd-retrycount '+dpdRetries+'\n        set dpd-retryinterval '+dpdInterval+'\n':'')
+        + (peerType!=='any'?'        set peer-type '+peerType+'\n        set peer-id "'+peerIp+'"\n':'        set peer-type any\n')
+        + '        set auto-negotiate enable\n'
+        + '    next\nend\n\n'
+        + '# 2. Phase 2 — IPsec SA ('+(p2Idx-1)+' selector'+(p2Idx>2?'s':'')+' for '+localSubnets.length+' local x '+remoteSubnets.length+' remote subnet'+(remoteSubnets.length>1?'s':'')+') \n'
+        + 'config vpn ipsec phase2-interface\n'+p2Config+'end\n\n'
+        + '# 3. Address objects\n'
+        + 'config firewall address\n'+addrConfig+'end\n\n'
+        + '# 4. Outbound policy (local to remote)\n'
+        + 'config firewall policy\n'
+        + '    edit '+policyIdx+'\n'
+        + '        set name "'+name+'-OUT"\n'
+        + '        set srcintf "'+localIntf+'"\n'
+        + '        set dstintf "'+name+'"\n'
+        + '        set srcaddr '+localAddrs+'\n'
+        + '        set dstaddr '+remoteAddrs+'\n'
+        + '        set action accept\n'
+        + '        set schedule "always"\n'
+        + '        set service "ALL"\n'
+        + '        set logtraffic all\n'
+        + '    next\nend\n\n'
+        + '# 5. Inbound policy (remote to local)\n'
+        + 'config firewall policy\n'
+        + '    edit '+(policyIdx+1)+'\n'
+        + '        set name "'+name+'-IN"\n'
+        + '        set srcintf "'+name+'"\n'
+        + '        set dstintf "'+localIntf+'"\n'
+        + '        set srcaddr '+remoteAddrs+'\n'
+        + '        set dstaddr '+localAddrs+'\n'
+        + '        set action accept\n'
+        + '        set schedule "always"\n'
+        + '        set service "ALL"\n'
+        + '        set logtraffic all\n'
+        + '    next\nend\n\n'
+        + '# 6. Static routes to remote subnet(s)\n'
+        + 'config router static\n'+routeConfig+'end\n\n'
+        + '# 7. Verify tunnel\n'
+        + '# get vpn ipsec tunnel summary\n'
+        + '# diagnose vpn tunnel list name '+name+'\n'
+        + '# execute ping-options source '+cidrToIp(firstLocal)+'\n'
+        + '# execute ping '+cidrToIp(firstRemote);
   }
-
   else if(type==='sslvpn'){
     const port=g('sslvpn_port')||'10443';
     const cert=g('sslvpn_cert')||'Fortinet_Factory';
@@ -3068,16 +3169,86 @@ function setCfgType(type, btn){
       </div>`,
     ipsec: `
       <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🔒 IPsec Site-to-Site VPN</div>
+
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Phase 1 — IKE Settings</div>
       ${inp('tunnel_name','Tunnel name','VPN-TO-SITE-B','VPN-TO-SITE-B')}
       ${inp('wan_intf','WAN interface','wan1','wan1')}
+      ${sel('ike_ver','IKE version',[{v:'2',l:'IKEv2 (recommended)'},{v:'1',l:'IKEv1 (legacy)'}])}
+      ${sel('p1_proposal','Phase 1 encryption',[
+        {v:'aes256-sha256',l:'AES256-SHA256 — recommended'},
+        {v:'aes256-sha384',l:'AES256-SHA384'},
+        {v:'aes256-sha512',l:'AES256-SHA512'},
+        {v:'aes128-sha256',l:'AES128-SHA256'},
+        {v:'aes128-sha384',l:'AES128-SHA384'},
+        {v:'aes256gcm-sha256',l:'AES256GCM-SHA256 — AEAD'},
+        {v:'aes256gcm-sha384',l:'AES256GCM-SHA384 — AEAD'},
+        {v:'aes128gcm-sha256',l:'AES128GCM-SHA256 — AEAD'},
+        {v:'chacha20poly1305-sha256',l:'ChaCha20Poly1305-SHA256'},
+        {v:'3des-sha1',l:'3DES-SHA1 — legacy only'},
+      ])}
+      ${sel('dhgrp','DH Group (Phase 1)',[
+        {v:'14',l:'Group 14 — 2048-bit MODP (recommended)'},
+        {v:'15',l:'Group 15 — 3072-bit MODP'},
+        {v:'16',l:'Group 16 — 4096-bit MODP'},
+        {v:'19',l:'Group 19 — 256-bit ECP'},
+        {v:'20',l:'Group 20 — 384-bit ECP'},
+        {v:'21',l:'Group 21 — 521-bit ECP'},
+        {v:'24',l:'Group 24 — 2048-bit MODP+Prime'},
+        {v:'5',l:'Group 5 — 1536-bit (legacy)'},
+        {v:'2',l:'Group 2 — 1024-bit (legacy, avoid)'},
+      ])}
+      ${inp('lifetime_p1','Phase 1 keylife (seconds)','86400','86400')}
+      ${sel('dpd','Dead Peer Detection (DPD)',[
+        {v:'on-idle',l:'on-idle — detect only when idle (recommended)'},
+        {v:'on-demand',l:'on-demand — detect when traffic fails'},
+        {v:'disable',l:'disable — no DPD'},
+      ])}
+      ${inp('dpd_retries','DPD retry count','3','3')}
+      ${inp('dpd_interval','DPD retry interval (seconds)','20','20')}
+
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Phase 2 — IPsec SA Settings</div>
+      ${sel('p2_proposal','Phase 2 encryption',[
+        {v:'aes256-sha256',l:'AES256-SHA256 — recommended'},
+        {v:'aes256-sha384',l:'AES256-SHA384'},
+        {v:'aes256-sha512',l:'AES256-SHA512'},
+        {v:'aes128-sha256',l:'AES128-SHA256'},
+        {v:'aes256gcm-sha256',l:'AES256GCM-SHA256 — AEAD'},
+        {v:'aes256gcm-sha384',l:'AES256GCM-SHA384 — AEAD'},
+        {v:'aes128gcm-sha256',l:'AES128GCM-SHA256 — AEAD'},
+        {v:'3des-sha1',l:'3DES-SHA1 — legacy only'},
+      ])}
+      ${sel('pfs','PFS DH Group (Phase 2)',[
+        {v:'14',l:'Group 14 — 2048-bit (recommended)'},
+        {v:'15',l:'Group 15 — 3072-bit'},
+        {v:'19',l:'Group 19 — 256-bit ECP'},
+        {v:'20',l:'Group 20 — 384-bit ECP'},
+        {v:'disable',l:'Disable PFS — not recommended'},
+      ])}
+      ${inp('lifetime_p2','Phase 2 keylife (seconds)','43200','43200')}
+
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Authentication</div>
+      ${sel('auth_method','Authentication method',[
+        {v:'psk',l:'Pre-Shared Key (PSK)'},
+        {v:'signature',l:'Certificate / Signature'},
+      ])}
+      ${inp('psk','Pre-shared key','MySecretKey123!')}
       ${inp('peer_ip','Remote peer WAN IP','198.51.100.5')}
-      ${inp('psk','Pre-shared key','MySecretKey123')}
-      ${sel('ike_ver','IKE version',[{v:'2',l:'IKEv2 (recommended)'},{v:'1',l:'IKEv1'}])}
-      ${sel('proposal','Encryption proposal',[{v:'aes256-sha256',l:'AES256-SHA256 (recommended)'},{v:'aes128-sha256',l:'AES128-SHA256'},{v:'aes256-sha512',l:'AES256-SHA512'}])}
-      ${sel('dhgrp','DH Group',[{v:'14',l:'Group 14 (2048-bit)'},{v:'19',l:'Group 19 (256-bit ECP)'},{v:'20',l:'Group 20 (384-bit ECP)'},{v:'5',l:'Group 5 (1536-bit)'}])}
-      ${inp('local_subnet','Local subnet (CIDR)','10.1.0.0/16','10.1.0.0/16')}
-      ${inp('remote_subnet','Remote subnet (CIDR)','10.2.0.0/16','10.2.0.0/16')}
-      ${inp('local_gw','Local LAN interface','lan','lan')}`,
+      ${sel('peer_type','Peer ID type',[
+        {v:'any',l:'Any — accept any peer ID'},
+        {v:'ip',l:'IP — use peer IP as ID'},
+        {v:'fqdn',l:'FQDN — use domain name'},
+      ])}
+
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Subnets — Local &amp; Remote</div>
+      <div style="font-size:11px;color:var(--y);background:rgba(210,153,34,.06);border-left:2px solid var(--y);padding:6px 10px;border-radius:0 5px 5px 0;margin-bottom:10px">
+        For multiple subnets enter comma-separated CIDRs: <span style="font-family:var(--mono);color:var(--g);font-size:10px">10.1.0.0/24, 10.2.0.0/24</span>
+      </div>
+      ${inp('local_subnet','Local subnet(s) (CIDR)','10.1.0.0/24','10.1.0.0/24')}
+      ${inp('remote_subnet','Remote subnet(s) (CIDR)','10.2.0.0/24','10.2.0.0/24')}
+      ${inp('local_gw','Local LAN interface','lan','lan')}
+      <div style="font-size:11px;color:var(--t2);background:rgba(29,158,117,.05);border-left:2px solid var(--a);padding:6px 10px;border-radius:0 5px 5px 0;margin-top:4px;line-height:1.6">
+        💡 Multiple subnets create separate Phase 2 selectors automatically — one per subnet pair.
+      </div>`,
     sslvpn: `
       <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🕵️ SSL VPN Configuration</div>
       ${inp('sslvpn_port','SSL VPN port','10443','10443')}
