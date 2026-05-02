@@ -665,11 +665,38 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
 
 <script>
 /* ── MATRIX ── */
-const canvas=document.getElementById('matBg'),ctx=canvas.getContext('2d');
-let drops=[];const fs=15,chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
-function initMat(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;drops=new Array(Math.floor(canvas.width/fs)).fill(1);}
-function drawMat(){ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#0f8';ctx.font=fs+'px monospace';drops.forEach((y,i)=>{ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*fs,y*fs);if(y*fs>canvas.height&&Math.random()>.975)drops[i]=0;drops[i]++;});}
-initMat();setInterval(drawMat,42);window.addEventListener('resize',initMat);
+const canvas = document.getElementById('matBg');
+const ctx = canvas.getContext('2d');
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
+const FS = 14;
+let W, H, drops;
+
+function init(){
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  const cols = Math.floor(W / FS);
+  drops = new Array(cols).fill(0).map(() => Math.random() * -150);
+}
+
+function draw(){
+  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  ctx.fillRect(0,0,W,H);
+  ctx.font = FS + 'px Courier New';
+  drops.forEach((y, i) => {
+    const r = Math.random();
+    if(r > 0.97) ctx.fillStyle = '#c0ffe8';
+    else if(r > 0.85) ctx.fillStyle = '#3fb950';
+    else if(r > 0.5) ctx.fillStyle = '#1D9E75';
+    else ctx.fillStyle = '#0a4a2e';
+    ctx.fillText(CHARS[Math.floor(Math.random()*CHARS.length)], i*FS, y*FS);
+    if(y*FS > H && Math.random() > 0.975) drops[i] = 0;
+    drops[i] += 0.35 + Math.random()*0.25;
+  });
+}
+
+init();
+setInterval(draw, 38);
+window.addEventListener('resize', init);
 
 /* ── FIREBASE ── */
 const firebaseConfig={apiKey:"AIzaSyBU2ojtAtH2PvvrNJgG4vH3mbPdAPAGhzk",authDomain:"netwolf-ccd3d.firebaseapp.com",projectId:"netwolf-ccd3d",storageBucket:"netwolf-ccd3d.firebasestorage.app",messagingSenderId:"942931607129",appId:"1:942931607129:web:5f644a2625931c70d6bb48",measurementId:"G-W0G3X4T0EW"};

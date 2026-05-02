@@ -377,16 +377,34 @@ function showTermsModal(onAccept){
 
 /* ══ MATRIX RAIN ══ */
 const matrixCanvas=document.getElementById('matrixCanvas');
-let matrixCtx=matrixCanvas.getContext('2d');
-let matrixDrops=[];
-const matrixFontSize=20;
-const matrixChars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}:<>?~";
-function initMatrixRain(){let w=window.innerWidth,h=window.innerHeight;matrixCanvas.width=w;matrixCanvas.height=h;let cols=Math.floor(w/matrixFontSize);matrixDrops=new Array(cols).fill(1);}
-function drawMatrixRain(){matrixCtx.fillStyle="rgba(0,0,0,0.05)";matrixCtx.fillRect(0,0,matrixCanvas.width,matrixCanvas.height);matrixCtx.fillStyle="#0f8";matrixCtx.font=matrixFontSize+"px monospace";for(let i=0;i<matrixDrops.length;i++){let text=matrixChars[Math.floor(Math.random()*matrixChars.length)];matrixCtx.fillText(text,i*matrixFontSize,matrixDrops[i]*matrixFontSize);if(matrixDrops[i]*matrixFontSize>matrixCanvas.height&&Math.random()>0.975)matrixDrops[i]=0;matrixDrops[i]++;}}
+const matrixCtx=matrixCanvas.getContext('2d');
+const MATRIX_CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
+const MATRIX_FS=14;
+let matrixW,matrixH,matrixDrops;
+function initMatrixRain(){
+  matrixW=matrixCanvas.width=window.innerWidth;
+  matrixH=matrixCanvas.height=window.innerHeight;
+  const cols=Math.floor(matrixW/MATRIX_FS);
+  matrixDrops=new Array(cols).fill(0).map(()=>Math.random()*-150);
+}
+function drawMatrixRain(){
+  matrixCtx.fillStyle='rgba(0,0,0,0.04)';
+  matrixCtx.fillRect(0,0,matrixW,matrixH);
+  matrixCtx.font=MATRIX_FS+'px Courier New';
+  matrixDrops.forEach((y,i)=>{
+    const r=Math.random();
+    if(r>0.97) matrixCtx.fillStyle='#c0ffe8';
+    else if(r>0.85) matrixCtx.fillStyle='#3fb950';
+    else if(r>0.5) matrixCtx.fillStyle='#1D9E75';
+    else matrixCtx.fillStyle='#0a4a2e';
+    matrixCtx.fillText(MATRIX_CHARS[Math.floor(Math.random()*MATRIX_CHARS.length)],i*MATRIX_FS,y*MATRIX_FS);
+    if(y*MATRIX_FS>matrixH&&Math.random()>0.975) matrixDrops[i]=0;
+    matrixDrops[i]+=0.35+Math.random()*0.25;
+  });
+}
 window.addEventListener('resize',initMatrixRain);
 initMatrixRain();
-function animateMatrix(){drawMatrixRain();requestAnimationFrame(animateMatrix);}
-animateMatrix();
+setInterval(drawMatrixRain,38);
 
 /* ══ CORE HELPERS ══ */
 const SAFE={'diagnose':'ro','get ':'ro','show ':'ro','execute ping':'ro','execute nslookup':'ro','execute log':'ro','execute fortiguard':'ro','diagnose debug reset':'caution','diagnose debug disable':'caution','diagnose sys session clear':'danger','execute user clear':'danger','execute ha failover':'danger','execute reboot':'danger','execute shutdown':'danger','execute clear system arp':'caution','execute ha synchronize':'caution','config ':'caution','edit ':'caution','set ':'caution','end':'caution','next':'caution','delete ':'danger','unset ':'danger'};
