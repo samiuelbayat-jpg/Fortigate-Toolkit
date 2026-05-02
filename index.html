@@ -212,7 +212,7 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   <div class="hero-inner">
     <div class="hero-badge">🐺 NetWolf | Fortigate Pro Toolkit</div>
     <h1>The Engineer's<br><span class="accent">FortiGate Command Centre</span></h1>
-    <p class="hero-sub">The professional toolkit for FortiGate network engineers. Troubleshoot faster, configure smarter, document safely.</p>
+    <p class="hero-sub">The professional browser-based toolkit for FortiGate network engineers. Troubleshoot faster, configure smarter, and document safely — all in one place.</p>
     <div class="hero-cta">
       <a href="#demo" class="btn-primary">▶ Interactive Demo</a>
       <a href="#pricing" class="btn-ghost">View Pricing</a>
@@ -220,28 +220,149 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   </div>
 </section>
 
-<section class="stats-bar">
-  <div class="stat"><div class="stat-num">50+</div><div class="stat-lbl">Guided playbooks</div></div>
-  <div class="stat"><div class="stat-num">26</div><div class="stat-lbl">Trouble categories</div></div>
-  <div class="stat"><div class="stat-num">12</div><div class="stat-lbl">Config guides</div></div>
-  <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">Vendor CLIs</div></div>
-  <div class="stat"><div class="stat-num">AI</div><div class="stat-lbl">Groq LLaMA 3.3</div></div>
-  <div class="stat"><div class="stat-num">5</div><div class="stat-lbl">Colour themes</div></div>
-  <div class="stat"><div class="stat-num">v1.2</div><div class="stat-lbl">Latest version</div></div>
-</section>
+
 
 <section class="features" id="features">
   <div class="section-label">What's inside</div>
-  <h2 class="section-title">Built for FortiGate engineers</h2>
-  <p class="section-sub">Every tool you need — from daily troubleshooting to full config generation. Built from real production experience.</p>
-  <div class="feat-grid">
-    <div class="feat-card"><div class="feat-icon">🔒</div><div class="feat-title">Guided Troubleshoot Playbooks</div><div class="feat-desc">Step-by-step CLI sequences for IPsec, SSL VPN, SD-WAN, HA, Routing, Policy, Auth and more — with safety badges on every command.</div><div class="feat-tags"><span class="feat-tag">50+ playbooks</span><span class="feat-tag">26 categories</span><span class="feat-tag">safety badges</span></div></div>
-    <div class="feat-card"><div class="feat-icon">🤖</div><div class="feat-title">AI CLI Analyzer</div><div class="feat-desc">Paste any FortiGate CLI output and get instant root cause, diagnosis and fix commands — powered by Groq LLaMA 3.3 70B.</div><div class="feat-tags"><span class="feat-tag">LLaMA 3.3 70B</span><span class="feat-tag">free Groq API</span><span class="feat-tag">instant diagnosis</span></div></div>
-    <div class="feat-card"><div class="feat-icon">⚙️</div><div class="feat-title">Config Generator & Migrator</div><div class="feat-desc">Generate complete FortiGate CLI from a simple form. Or upload an existing config, replace IPs and hostnames, and download a ready-to-apply migrated config.</div><div class="feat-tags"><span class="feat-tag">7 templates</span><span class="feat-tag">auto-detect fields</span><span class="feat-tag">download .conf</span></div></div>
-    <div class="feat-card"><div class="feat-icon">🌍</div><div class="feat-title">Multi-Vendor CLI Reference</div><div class="feat-desc">Comprehensive CLI reference for Cisco IOS-XE, ArubaOS-CX and Huawei VRP — troubleshoot and config commands with explanations and safety badges.</div><div class="feat-tags"><span class="feat-tag">Cisco IOS-XE</span><span class="feat-tag">ArubaOS-CX</span><span class="feat-tag">Huawei VRP</span></div></div>
-    <div class="feat-card"><div class="feat-icon">🎭</div><div class="feat-title">IP Masking & Anonymizer</div><div class="feat-desc">Replace all real IPs in any CLI output with RFC 5737 safe addresses before sharing with vendors or colleagues. Auto-detect or manual mapping.</div><div class="feat-tags"><span class="feat-tag">RFC 5737</span><span class="feat-tag">bulk replace</span><span class="feat-tag">mapping table</span></div></div>
-    <div class="feat-card"><div class="feat-icon">🧮</div><div class="feat-title">Subnet Calculator & Quick Ref</div><div class="feat-desc">Full CIDR subnet breakdown with binary view. Plus a quick reference of the most-used FortiGate commands — all with one-click copy.</div><div class="feat-tags"><span class="feat-tag">CIDR</span><span class="feat-tag">binary view</span><span class="feat-tag">one-click copy</span></div></div>
+  <h2 class="section-title">Every tool a FortiGate engineer needs</h2>
+  <p class="section-sub">Built from real production experience — not theory. Every feature solves a real problem network engineers face daily.</p>
+
+  <!-- Big number stats row -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;max-width:900px;margin:0 auto 48px">
+    <div style="background:var(--b2);border:1px solid var(--br);border-radius:12px;padding:20px 16px;text-align:center">
+      <div style="font-size:36px;font-weight:700;color:var(--a);font-family:var(--mono);line-height:1">50+</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:6px;text-transform:uppercase;letter-spacing:.07em">Troubleshoot<br>Playbooks</div>
+    </div>
+    <div style="background:var(--b2);border:1px solid var(--br);border-radius:12px;padding:20px 16px;text-align:center">
+      <div style="font-size:36px;font-weight:700;color:var(--a);font-family:var(--mono);line-height:1">26</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:6px;text-transform:uppercase;letter-spacing:.07em">Trouble<br>Categories</div>
+    </div>
+    <div style="background:var(--b2);border:1px solid var(--br);border-radius:12px;padding:20px 16px;text-align:center">
+      <div style="font-size:36px;font-weight:700;color:var(--a);font-family:var(--mono);line-height:1">12</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:6px;text-transform:uppercase;letter-spacing:.07em">Config<br>Guides</div>
+    </div>
+    <div style="background:var(--b2);border:1px solid var(--br);border-radius:12px;padding:20px 16px;text-align:center">
+      <div style="font-size:36px;font-weight:700;color:var(--a);font-family:var(--mono);line-height:1">3</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:6px;text-transform:uppercase;letter-spacing:.07em">Vendor<br>CLI Refs</div>
+    </div>
+    <div style="background:var(--b2);border:1px solid var(--br);border-radius:12px;padding:20px 16px;text-align:center">
+      <div style="font-size:36px;font-weight:700;color:var(--a);font-family:var(--mono);line-height:1">7</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:6px;text-transform:uppercase;letter-spacing:.07em">Config<br>Templates</div>
+    </div>
+    <div style="background:var(--b2);border:1px solid var(--br);border-radius:12px;padding:20px 16px;text-align:center">
+      <div style="font-size:36px;font-weight:700;color:var(--a);font-family:var(--mono);line-height:1">AI</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:6px;text-transform:uppercase;letter-spacing:.07em">Groq<br>LLaMA 3.3</div>
+    </div>
   </div>
+
+  <!-- Feature cards -->
+  <div class="feat-grid">
+
+    <div class="feat-card">
+      <div class="feat-icon">🔒</div>
+      <div class="feat-title">Guided Troubleshoot Playbooks</div>
+      <div class="feat-desc">Stop guessing. Every category has a proven step-by-step CLI sequence — from tunnel failures to HA sync issues. Each command is tagged read-only, caution, or service-impact so you always know what's safe.</div>
+      <div class="feat-tags"><span class="feat-tag">IPsec VPN</span><span class="feat-tag">SSL VPN</span><span class="feat-tag">SD-WAN</span><span class="feat-tag">HA Cluster</span><span class="feat-tag">Routing</span><span class="feat-tag">+21 more</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🤖</div>
+      <div class="feat-title">AI CLI Analyzer</div>
+      <div class="feat-desc">Paste raw FortiGate output — get an instant AI diagnosis with root cause, fix commands and explanation. No more staring at debug output wondering what went wrong. Works with any FortiOS version.</div>
+      <div class="feat-tags"><span class="feat-tag">LLaMA 3.3 70B</span><span class="feat-tag">root cause</span><span class="feat-tag">fix commands</span><span class="feat-tag">any output</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">⚙️</div>
+      <div class="feat-title">Config Generator</div>
+      <div class="feat-desc">Fill in a simple form — get a complete, ready-to-paste FortiGate CLI config. No more writing configs from scratch or copying from old devices. Covers the most common deployment scenarios.</div>
+      <div class="feat-tags"><span class="feat-tag">Initial Setup</span><span class="feat-tag">IPsec VPN</span><span class="feat-tag">SSL VPN</span><span class="feat-tag">HA Cluster</span><span class="feat-tag">SD-WAN</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🔄</div>
+      <div class="feat-title">Smart Config Migrator</div>
+      <div class="feat-desc">Upload an existing FortiGate backup config. The tool automatically detects every IP, hostname, PSK, gateway and server address. Update what needs changing — download the migrated config ready to apply.</div>
+      <div class="feat-tags"><span class="feat-tag">auto-detect</span><span class="feat-tag">IP replace</span><span class="feat-tag">add sections</span><span class="feat-tag">download .conf</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🌍</div>
+      <div class="feat-title">Multi-Vendor CLI Reference</div>
+      <div class="feat-desc">Working with mixed environments? Full CLI reference for Cisco IOS-XE, ArubaOS-CX and Huawei VRP — troubleshoot and config commands, with explanations and safety badges on every single command.</div>
+      <div class="feat-tags"><span class="feat-tag">Cisco IOS-XE</span><span class="feat-tag">ArubaOS-CX</span><span class="feat-tag">Huawei VRP</span><span class="feat-tag">70+ cmds each</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🎭</div>
+      <div class="feat-title">IP Masking & Anonymizer</div>
+      <div class="feat-desc">Share CLI output safely with vendors and colleagues. Replace all real IPs with RFC 5737 documentation addresses in one click — with a full real→fake mapping table so you can reverse it anytime.</div>
+      <div class="feat-tags"><span class="feat-tag">RFC 5737</span><span class="feat-tag">bulk auto-detect</span><span class="feat-tag">mapping table</span><span class="feat-tag">export</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🧮</div>
+      <div class="feat-title">Subnet Calculator</div>
+      <div class="feat-desc">Enter any CIDR — instantly get network address, broadcast, first and last usable host, subnet mask, wildcard mask, usable host count and full binary breakdown. Essential for VIP ranges and DHCP scopes.</div>
+      <div class="feat-tags"><span class="feat-tag">CIDR</span><span class="feat-tag">wildcard mask</span><span class="feat-tag">binary view</span><span class="feat-tag">usable hosts</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">📋</div>
+      <div class="feat-title">Config Guides — 12 Templates</div>
+      <div class="feat-desc">Full step-by-step configuration walkthroughs for the most common FortiGate deployments — from initial setup and VDOM architecture to ZTNA, FortiSwitch and inter-VDOM routing. Every command copy-ready.</div>
+      <div class="feat-tags"><span class="feat-tag">Initial Setup</span><span class="feat-tag">VDOM</span><span class="feat-tag">ZTNA</span><span class="feat-tag">FortiSwitch</span><span class="feat-tag">+8 more</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🔬</div>
+      <div class="feat-title">Advanced Diagnostics</div>
+      <div class="feat-desc">Go deeper than the standard CLI. Kernel-level fnsysctl commands, daemon debugging, local-in policy inspection, DoS policy monitoring, config transaction workflows, and hardware NPU diagnostics.</div>
+      <div class="feat-tags"><span class="feat-tag">fnsysctl</span><span class="feat-tag">daemon debug</span><span class="feat-tag">config tx</span><span class="feat-tag">NPU / hardware</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🛡️</div>
+      <div class="feat-title">Full FortiOS Coverage</div>
+      <div class="feat-desc">Not just VPN and routing. Complete playbooks for ZTNA, FortiSwitch, FortiAP, IPv6, SIP/VoIP, Traffic Shaping, Security Fabric, FortiManager, FortiAnalyzer, SNMP, Certificates and more.</div>
+      <div class="feat-tags"><span class="feat-tag">ZTNA</span><span class="feat-tag">FortiSwitch</span><span class="feat-tag">FortiAP</span><span class="feat-tag">Security Fabric</span><span class="feat-tag">FortiManager</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🧪</div>
+      <div class="feat-title">Lab Setup Guide</div>
+      <div class="feat-desc">Build a full FortiGate lab on your local PC using EVE-NG Community and FortiGate VM — completely free. Includes a step-by-step PDF guide covering everything from installation to running IPsec between two sites.</div>
+      <div class="feat-tags"><span class="feat-tag">EVE-NG</span><span class="feat-tag">VirtualBox</span><span class="feat-tag">FortiGate VM</span><span class="feat-tag">PDF guide</span></div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🎨</div>
+      <div class="feat-title">Built for Daily Use</div>
+      <div class="feat-desc">Works in any browser — no install needed. 5 colour themes so it fits your setup. One-click copy on every command. Version changelog so you always know what's new. Built to be open all day alongside your terminal.</div>
+      <div class="feat-tags"><span class="feat-tag">5 themes</span><span class="feat-tag">one-click copy</span><span class="feat-tag">any browser</span><span class="feat-tag">changelog</span></div>
+    </div>
+
+  </div>
+
+  <!-- Social proof / trust strip -->
+  <div style="max-width:900px;margin:48px auto 0;background:var(--b2);border:1px solid var(--br);border-radius:14px;padding:28px 32px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;text-align:center">
+    <div>
+      <div style="font-size:28px;margin-bottom:8px">⚡</div>
+      <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">Instant access</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.6">Your account is created immediately after subscribing. No waiting, no manual setup.</div>
+    </div>
+    <div>
+      <div style="font-size:28px;margin-bottom:8px">🔒</div>
+      <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">Secure &amp; private</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.6">Firebase-secured personal login. Your credentials are yours alone — no shared accounts.</div>
+    </div>
+    <div>
+      <div style="font-size:28px;margin-bottom:8px">🔄</div>
+      <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">Always updated</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.6">New playbooks, commands and features added regularly. Your subscription includes all updates.</div>
+    </div>
+  </div>
+
 </section>
 
 <!-- INTERACTIVE DEMO -->
