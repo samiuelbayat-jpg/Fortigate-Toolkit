@@ -828,7 +828,7 @@ function renderFreeAITab(el){
     <input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}"
       style="flex:1;min-width:180px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 12px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
     <button class="sbtn" id="saveGroqKeyBtn" style="white-space:nowrap">💾 Save Key</button>
-    <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl);white-space:nowrap">Get free key →</a>
+    <button onclick="showGroqGuide()" style="font-size:11px;color:var(--bl);background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:20px;padding:4px 12px;cursor:pointer;white-space:nowrap">❓ How to get a free key</button>
     ${hasKey ? '<span style="font-size:11px;color:var(--g);white-space:nowrap">✓ Key saved</span>' : ''}
   </div>
 
@@ -4495,6 +4495,130 @@ execute ping 192.168.2.1<button class="lab-cmd-copy" onclick="labCopyBlock(this)
     <div id="labProgressBar">${progressHTML()}</div>
     <div id="labMain">${buildMain()}</div>
   </div>`;
+}
+
+/* ══ GROQ SETUP GUIDE ══ */
+function showGroqGuide(){
+  if(!document.getElementById('groqGuideModal')){
+    const modal = document.createElement('div');
+    modal.id = 'groqGuideModal';
+    modal.style.cssText = 'display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center';
+    modal.innerHTML = `
+      <div style="background:var(--b2);border:1px solid rgba(88,166,255,.25);border-radius:16px;padding:28px;width:540px;max-width:94vw;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div>
+            <div style="font-size:16px;font-weight:700;color:var(--t)">🔑 Get Your Free Groq API Key</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px;font-family:var(--mono)">Takes about 2 minutes · No credit card needed</div>
+          </div>
+          <button onclick="document.getElementById('groqGuideModal').remove()" style="background:var(--b3);border:1px solid var(--br);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--t2);cursor:pointer">✕</button>
+        </div>
+
+        <!-- Steps -->
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+
+          <div style="background:var(--b3);border:1px solid var(--br);border-radius:10px;padding:14px 16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono);border:1px solid rgba(29,158,117,.2)">1</div>
+              <span style="font-size:13px;font-weight:700;color:var(--t)">Open Groq Console</span>
+            </div>
+            <p style="font-size:12px;color:var(--t2);line-height:1.7;margin-left:34px;margin-bottom:8px">
+              Click the button below to open the Groq Console in a new tab. Groq is a free AI inference platform — no credit card required.
+            </p>
+            <div style="margin-left:34px">
+              <a href="https://console.groq.com" target="_blank"
+                style="display:inline-flex;align-items:center;gap:6px;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:20px;padding:7px 16px;font-size:12px;font-weight:700;color:var(--bl);text-decoration:none">
+                🌐 Open console.groq.com →
+              </a>
+            </div>
+          </div>
+
+          <div style="background:var(--b3);border:1px solid var(--br);border-radius:10px;padding:14px 16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono);border:1px solid rgba(29,158,117,.2)">2</div>
+              <span style="font-size:13px;font-weight:700;color:var(--t)">Create a free account</span>
+            </div>
+            <p style="font-size:12px;color:var(--t2);line-height:1.7;margin-left:34px">
+              Click <strong style="color:var(--t)">Sign Up</strong> and register with your email or Google account. Verify your email if prompted. It takes about 30 seconds.
+            </p>
+          </div>
+
+          <div style="background:var(--b3);border:1px solid var(--br);border-radius:10px;padding:14px 16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono);border:1px solid rgba(29,158,117,.2)">3</div>
+              <span style="font-size:13px;font-weight:700;color:var(--t)">Generate your API key</span>
+            </div>
+            <p style="font-size:12px;color:var(--t2);line-height:1.7;margin-left:34px;margin-bottom:8px">
+              Once logged in:
+            </p>
+            <div style="margin-left:34px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--t2)">
+                <span style="color:var(--a);flex-shrink:0">▸</span>
+                Click <strong style="color:var(--t);margin:0 3px">API Keys</strong> in the left sidebar
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--t2)">
+                <span style="color:var(--a);flex-shrink:0">▸</span>
+                Click <strong style="color:var(--t);margin:0 3px">Create API Key</strong>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--t2)">
+                <span style="color:var(--a);flex-shrink:0">▸</span>
+                Give it a name like <span style="font-family:var(--mono);font-size:11px;background:var(--b2);padding:1px 6px;border-radius:4px;color:var(--g)">NetWolf</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--t2)">
+                <span style="color:var(--a);flex-shrink:0">▸</span>
+                Click <strong style="color:var(--t);margin:0 3px">Submit</strong> — your key appears once, copy it immediately
+              </div>
+            </div>
+          </div>
+
+          <div style="background:var(--b3);border:1px solid var(--br);border-radius:10px;padding:14px 16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono);border:1px solid rgba(29,158,117,.2)">4</div>
+              <span style="font-size:13px;font-weight:700;color:var(--t)">Paste it in NetWolf</span>
+            </div>
+            <p style="font-size:12px;color:var(--t2);line-height:1.7;margin-left:34px;margin-bottom:10px">
+              Come back here, paste your key in the <strong style="color:var(--t)">Groq API Key</strong> field and click <strong style="color:var(--t)">Save Key</strong>. Done — the AI Analyzer is ready to use.
+            </p>
+            <div style="margin-left:34px;background:rgba(29,158,117,.06);border-left:3px solid var(--a);padding:8px 12px;border-radius:0 6px 6px 0;font-size:11.5px;color:var(--t2);line-height:1.6">
+              💡 Your key looks like: <span style="font-family:var(--mono);color:var(--g);font-size:11px">gsk_xxxxxxxxxxxxxxxxxxxx</span><br>
+              It is saved in your browser only — never sent to NetWolf servers.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- What you get -->
+        <div style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.15);border-radius:10px;padding:14px 16px;margin-bottom:20px">
+          <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:10px">✅ What you get with a free Groq account</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            ${[
+              ['LLaMA 3.3 70B','Most accurate model for CLI diagnosis'],
+              ['Mixtral 8x7B','Fast balanced model'],
+              ['LLaMA 3.1 8B','Fastest responses'],
+              ['Free tier','Generous daily limits for personal use'],
+              ['No credit card','Account creation requires no payment'],
+              ['Instant access','Key works immediately after creation'],
+            ].map(([title,desc])=>`
+              <div style="display:flex;align-items:flex-start;gap:7px">
+                <span style="color:var(--g);flex-shrink:0;margin-top:1px">✓</span>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--t)">${title}</div>
+                  <div style="font-size:11px;color:var(--t2)">${desc}</div>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <button onclick="document.getElementById('groqGuideModal').remove()"
+          style="width:100%;background:linear-gradient(90deg,var(--a),var(--ad));border:none;border-radius:20px;padding:11px;font-size:13px;font-weight:700;color:#fff;cursor:pointer">
+          Got it — I'll get my key now
+        </button>
+      </div>
+    `;
+    modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
+    document.body.appendChild(modal);
+  } else {
+    document.getElementById('groqGuideModal').style.display='flex';
+  }
 }
 
 function initSidebar(){
