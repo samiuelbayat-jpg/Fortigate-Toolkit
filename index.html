@@ -405,7 +405,7 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
           <li>Firebase-secured personal login credentials</li>
           <li>Any browser · any device · instant access</li>
         </ul>
-        <a href="https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00" target="_blank" class="btn-ghost" style="display:block;text-align:center;text-decoration:none;margin-top:20px">Subscribe Monthly →</a>
+        <a href="#order" class="btn-ghost" style="display:block;text-align:center;text-decoration:none;margin-top:20px" onclick="setPlan('monthly')">Subscribe Monthly →</a>
         <div class="price-note">Cancel anytime · No commitment</div>
       </div>
       <div class="price-card featured">
@@ -423,7 +423,7 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
         <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.15);border-radius:8px;padding:12px 14px;margin-top:14px;font-size:12px;color:var(--t2);line-height:1.7">
           <strong style="color:var(--a)">All features included:</strong> 50+ playbooks · AI Analyzer · IP Masking · Subnet Calc · Multi-vendor CLI · Config Generator · Smart Config Migrator · Advanced Diag · ZTNA · FortiSwitch · FortiAP · IPv6 · SIP/VoIP · FortiManager · Security Fabric · EVE-NG Lab Guide · 5 Colour Themes · Version Changelog
         </div>
-        <a href="https://buy.stripe.com/test_bJebJ0ajn2NWdeuaVygrS01" target="_blank" class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:20px">Subscribe Yearly — Best Value →</a>
+        <a href="#order" class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:20px" onclick="setPlan('yearly')">Subscribe Yearly — Best Value →</a>
         <div class="price-note">One payment · 12 months access · Priority support</div>
       </div>
     </div>
@@ -435,14 +435,15 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   <div class="order-inner">
     <div class="section-label" style="text-align:left">Subscribe</div>
     <h2 class="section-title" style="text-align:left;margin-bottom:8px">Create your account</h2>
-    <p style="color:var(--t2);font-size:14px;margin-bottom:32px;line-height:1.7">Choose your plan below — you'll be taken to Stripe's secure checkout to complete payment. Once done, come back here to create your login credentials. Questions? Email <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a></p>
+    <p style="color:var(--t2);font-size:14px;margin-bottom:32px;line-height:1.7">Fill in your details below and choose your plan. Once the form is complete click <strong style="color:var(--t)">Subscribe &amp; Create Account</strong> — you will be taken to Stripe's secure checkout to complete payment. Questions? Email <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a></p>
     <div class="form-card" id="formCard">
       <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.15);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--t2);line-height:1.7">
         <strong style="color:var(--t)">How it works:</strong><br>
-        1️⃣ Choose a plan and pay via Stripe<br>
-        2️⃣ Come back here and fill in your login details<br>
-        3️⃣ Your Firebase account is created instantly<br>
-        4️⃣ Log in at <a href="https://netwolffortigate.com/app.html" style="color:var(--a)">netwolffortigate.com/app.html</a>
+        1️⃣ Fill in all your details below<br>
+        2️⃣ Choose your plan — Monthly or Yearly<br>
+        3️⃣ Click Subscribe — you go to Stripe secure checkout<br>
+        4️⃣ After payment your Firebase account is created instantly<br>
+        5️⃣ Log in at <a href="https://netwolffortigate.com/app.html" style="color:var(--a)">netwolffortigate.com/app.html</a>
       </div>
       <div class="form-plan-banner">
         <span class="form-plan-name" id="planBannerName">🐺 NetWolf Pro — Monthly</span>
@@ -490,20 +491,20 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
         </div>
         <div class="form-divider">Subscription plan</div>
         <div class="plan-pick">
-          <a href="https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00" target="_blank" class="plan-opt" style="text-decoration:none">
-            <div class="plan-opt-inner active" id="cardMonthly" style="cursor:pointer">
+          <div class="plan-opt" onclick="setPlan('monthly')" style="cursor:pointer">
+            <div class="plan-opt-inner active" id="cardMonthly">
               <div class="plan-opt-label active-lbl">Monthly</div>
               <div class="plan-opt-price">€10<span style="font-size:12px;color:var(--t2)">/mo</span></div>
-              <div style="font-size:10px;color:var(--a);margin-top:4px;font-family:var(--mono)">Click to subscribe →</div>
+              <div style="font-size:10px;color:var(--a);margin-top:4px;font-family:var(--mono)">Select this plan</div>
             </div>
-          </a>
-          <a href="https://buy.stripe.com/test_bJebJ0ajn2NWdeuaVygrS01" target="_blank" class="plan-opt" style="text-decoration:none">
-            <div class="plan-opt-inner" id="cardYearly" style="cursor:pointer">
+          </div>
+          <div class="plan-opt" onclick="setPlan('yearly')" style="cursor:pointer">
+            <div class="plan-opt-inner" id="cardYearly">
               <div class="plan-opt-label">Yearly <span style="color:var(--g);font-size:10px;font-weight:700">SAVE €20</span></div>
               <div class="plan-opt-price">€100<span style="font-size:12px;color:var(--t2)">/yr</span></div>
-              <div style="font-size:10px;color:var(--g);margin-top:4px;font-family:var(--mono)">Click to subscribe →</div>
+              <div style="font-size:10px;color:var(--g);margin-top:4px;font-family:var(--mono)">Select this plan</div>
             </div>
-          </a>
+          </div>
         </div>
         <div class="form-divider">Payment — secured by Stripe</div>
         <div class="cc-logos"><span class="cc-logo">VISA</span><span class="cc-logo">MC</span><span class="cc-logo">AMEX</span><span class="cc-logo">iDEAL</span></div>
@@ -574,6 +575,37 @@ const firebaseConfig={apiKey:"AIzaSyBU2ojtAtH2PvvrNJgG4vH3mbPdAPAGhzk",authDomai
 firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
 
+/* ── PLAN SELECTION ── */
+let selectedPlan = 'monthly';
+const STRIPE_LINKS = {
+  monthly: 'https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00',
+  yearly:  'https://buy.stripe.com/test_bJebJ0ajn2NWdeuaVygrS01'
+};
+
+function setPlan(plan){
+  selectedPlan = plan;
+  // Update plan cards
+  const mCard = document.getElementById('cardMonthly');
+  const yCard = document.getElementById('cardYearly');
+  if(mCard) mCard.style.border = plan==='monthly' ? '2px solid var(--a)' : '1px solid var(--br)';
+  if(yCard) yCard.style.border = plan==='yearly'  ? '2px solid var(--a)' : '1px solid var(--br)';
+  // Update label colors
+  const mLbl = mCard?.querySelector('.plan-opt-label');
+  const yLbl = yCard?.querySelector('.plan-opt-label');
+  if(mLbl) mLbl.style.color = plan==='monthly' ? 'var(--a)' : 'var(--t2)';
+  if(yLbl) yLbl.style.color = plan==='yearly'  ? 'var(--g)' : 'var(--t2)';
+  // Update sub text
+  const mSub = mCard?.querySelectorAll('div')[2];
+  const ySub = yCard?.querySelectorAll('div')[2];
+  if(mSub) mSub.textContent = plan==='monthly' ? '✓ Selected' : 'Select this plan';
+  if(ySub) ySub.textContent = plan==='yearly'  ? '✓ Selected' : 'Select this plan';
+  if(mSub) mSub.style.color = plan==='monthly' ? 'var(--a)' : 'var(--t3)';
+  if(ySub) ySub.style.color = plan==='yearly'  ? 'var(--g)' : 'var(--t3)';
+  // Scroll to form if called from pricing section
+  const formCard = document.getElementById('formCard');
+  if(formCard) formCard.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 /* ── STRIPE ── */
 let stripe,cardEl;
 try{
@@ -604,7 +636,9 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
   document.getElementById('formError').style.display='none';
   const g=n=>this.querySelector(`[name="${n}"]`).value.trim();
   const username=g('username'),password=g('password'),confirm=g('confirmPassword');
-  const firstName=g('firstName'),lastName=g('lastName'),email=g('email'),country=g('country'),cardName=g('cardName');
+  const firstName=g('firstName'),lastName=g('lastName'),email=g('email'),country=g('country');
+
+  // ── STEP 1: Validate all fields ──
   if(!username||username.length<4)return showErr('Username must be at least 4 characters.');
   if(!/^[a-zA-Z0-9_]+$/.test(username))return showErr('Username: letters, numbers and underscores only.');
   if(!password||password.length<8)return showErr('Password must be at least 8 characters.');
@@ -612,11 +646,11 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
   if(!firstName||!lastName)return showErr('Please enter your full name.');
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showErr('Please enter a valid email address.');
   if(!country)return showErr('Please select your country.');
-  if(!cardName)return showErr('Please enter the cardholder name.');
   if(!document.getElementById('terms').checked)return showErr('Please accept the Terms of Service.');
+
+  // ── STEP 2: Create Firebase account ──
   const btn=document.getElementById('submitBtn');
-  btn.disabled=true;btn.textContent='Processing payment…';
-  if(stripe&&cardEl){try{const{error}=await stripe.createPaymentMethod({type:'card',card:cardEl,billing_details:{name:cardName,email}});if(error){showErr('💳 '+error.message);return;}}catch(ex){}}
+  btn.disabled=true;
   btn.textContent='Creating account…';
   try{
     const result=await fbAuth.createUserWithEmailAndPassword(email,password);
@@ -627,14 +661,26 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
     else{showErr('Account error: '+firebaseErr.message);}
     return;
   }
+
+  // ── STEP 3: Send Formspree notification ──
   try{
-    await fetch('https://formspree.io/f/xykoyrda',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:`🐺 New NetWolf subscriber: ${username}`,_replyto:email,username,firstName,lastName,email,company:g('company')||'—',country,cardName,message:g('message')||'—'})});
+    await fetch('https://formspree.io/f/xykoyrda',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:`🐺 New NetWolf subscriber: ${username}`,_replyto:email,username,firstName,lastName,email,company:g('company')||'—',country,plan:selectedPlan,message:g('message')||'—'})});
   }catch(ex){}
+
+  // ── STEP 4: Redirect to Stripe payment ──
+  btn.textContent='Redirecting to payment…';
+  showToast('✅ Account created! Redirecting to Stripe...');
+
+  // Show success info first then redirect
   document.getElementById('orderForm').style.display='none';
   document.getElementById('successMsg').style.display='block';
   document.getElementById('showUsername').textContent=username;
   document.getElementById('showPassword').textContent='•'.repeat(password.length);
-  showToast('✅ Account created! You can log in now.');
+
+  // Auto-redirect to Stripe after 2 seconds
+  setTimeout(()=>{
+    window.open(STRIPE_LINKS[selectedPlan],'_blank');
+  }, 2000);
 });
 
 /* ── TERMS MODAL ── */
