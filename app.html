@@ -188,6 +188,125 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 .ai-typing span:nth-child(2){animation-delay:.2s}
 .ai-typing span:nth-child(3){animation-delay:.4s}
 @media(max-width:700px){.layout{grid-template-columns:1fr}.rgrid{grid-template-columns:1fr}.subnet-result-grid{grid-template-columns:1fr}}
+
+/* ══ MOBILE RESPONSIVE ══ */
+@media(max-width:768px){
+
+  /* Full page layout */
+  body{overflow:hidden}
+  .shell{position:fixed;top:0;left:0;width:100vw;height:100dvh;display:flex;flex-direction:column}
+
+  /* Toolbar — compact */
+  .tbar{padding:8px 10px;gap:6px;flex-wrap:nowrap;overflow:hidden}
+  .ttxt{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+  .ver{display:none}
+  .theme-switcher{display:none}
+  .kbar{padding:5px 10px;gap:6px}
+  .kbar label{display:none}
+  .kbar input{font-size:11px;padding:4px 8px}
+  .logout-btn{font-size:10px;padding:2px 8px;white-space:nowrap}
+  #loggedInUser{display:none}
+  #nwVerBadge{display:none}
+
+  /* Tab bar — scrollable, smaller */
+  .tabs{padding:0 4px;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab{padding:7px 8px;font-size:10px;letter-spacing:0;flex-shrink:0}
+
+  /* Layout — hide sidebar on mobile, full width content */
+  .layout{grid-template-columns:1fr;position:relative}
+  .sidebar{
+    position:fixed;
+    top:0;left:0;
+    width:80vw;max-width:280px;
+    height:100dvh;
+    z-index:500;
+    transform:translateX(-100%);
+    transition:transform .25s ease;
+    background:var(--b2);
+    border-right:1px solid var(--br);
+    padding:50px 8px 16px;
+    overflow-y:auto;
+    box-shadow:4px 0 20px rgba(0,0,0,.4)
+  }
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{
+    display:none;
+    position:fixed;top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,.5);
+    z-index:499
+  }
+  .sidebar-overlay.open{display:block}
+
+  /* Menu toggle button */
+  .menu-toggle{display:none}
+@media(max-width:768px){.menu-toggle{
+    display:flex;
+    align-items:center;justify-content:center;
+    width:32px;height:32px;
+    background:rgba(29,158,117,.12);
+    border:1px solid rgba(29,158,117,.25);
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    flex-shrink:0;
+    color:var(--a)
+  }
+
+  /* Content — full width */
+  .main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+  .content{flex:1;overflow-y:auto;padding:12px;min-height:0}
+
+  /* Steps — full width */
+  .cblock{margin-bottom:8px}
+  .cbody{padding:10px 12px}
+  .clines{font-size:11px}
+  .sh{padding:8px 12px}
+  .stitle{font-size:13px}
+
+  /* Command blocks */
+  .sbtn{font-size:11px;padding:6px 10px}
+  .sev{font-size:9px;padding:2px 6px}
+
+  /* Forms */
+  .analyzer-container{padding:8px}
+  textarea{font-size:11px}
+  input[type=text],input[type=password],select{font-size:12px}
+
+  /* Config gen grid */
+  .lab-grid{grid-template-columns:1fr}
+  .demo-subnet-grid{grid-template-columns:1fr}
+  .rgrid{grid-template-columns:1fr}
+
+  /* Multi-vendor */
+  .mv-body{grid-template-columns:1fr}
+  .mv-cats{display:none}
+  .mv-cats.open{display:block;position:fixed;top:0;left:0;width:80vw;max-width:280px;height:100dvh;z-index:500;padding-top:50px;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,.4)}
+  .mv-vendor-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .mv-vtab{font-size:11px;padding:6px 10px}
+
+  /* Config migrator grid */
+  .mig-ip-row{flex-wrap:wrap}
+  .mig-ip-row input{min-width:120px}
+
+  /* Login screen */
+  .login-card{width:94vw;padding:24px 18px;margin:16px auto}
+  .login-logo{font-size:28px}
+  .login-title{font-size:18px}
+
+  /* Subnet result */
+  .subnet-result-grid{grid-template-columns:1fr 1fr}
+
+  /* Quick ref */
+  .rgrid{grid-template-columns:1fr}
+}
+
+/* Small phones */
+@media(max-width:380px){
+  .tab{font-size:9px;padding:6px 6px}
+  .ttxt{max-width:100px}
+}
+
 </style>
 </head>
 <body oncontextmenu="return false">
@@ -224,7 +343,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 <!-- TOOLKIT -->
 <div id="toolkitContainer" style="display:none;width:100%;height:100%">
 <div class="shell">
+  <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
   <div class="tbar">
+    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()" title="Menu">☰</button>
     <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
     <span class="ttxt">🐺 NetWolf | Fortigate Pro Toolkit</span><span id="nwVerBadge" style="font-family:var(--mono);font-size:9px;background:rgba(29,158,117,.12);color:var(--a);border:1px solid rgba(29,158,117,.2);border-radius:20px;padding:2px 8px;cursor:pointer;white-space:nowrap" onclick="showChangelog()" title="Click to see changelog">v1.2.0</span>
     <div class="ver" style="display:flex;align-items:center;gap:8px">
@@ -4874,6 +4995,35 @@ function showChangelog(){
     </div>`).join('');
   modal.style.display='flex';
 }
+
+function toggleSidebar(){
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const btn = document.getElementById('menuToggleBtn');
+  if(!sidebar || !overlay) return;
+  const isOpen = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', !isOpen);
+  overlay.classList.toggle('open', !isOpen);
+  if(btn) btn.textContent = isOpen ? '☰' : '✕';
+}
+
+// Close sidebar when a category is selected on mobile
+const origSel = window.sel;
+window.addEventListener('DOMContentLoaded', ()=>{
+  // Override sel to close sidebar on mobile
+  const _sel = window.sel;
+  if(_sel) window.sel = function(id){
+    _sel(id);
+    if(window.innerWidth <= 768){
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      if(sidebar) sidebar.classList.remove('open');
+      if(overlay) overlay.classList.remove('open');
+      const btn = document.getElementById('menuToggleBtn');
+      if(btn) btn.textContent = '☰';
+    }
+  };
+});
 
 function initAndRender(){try{loadSavedTheme();initSidebar();render();}catch(err){const content=document.getElementById('mc');if(content)content.innerHTML=`<div class="cdanger" style="padding:20px;">⚠️ Failed to load toolkit: ${err.message}</div>`;}}
 </script>
