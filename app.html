@@ -4850,7 +4850,7 @@ function initSidebar(){
   for(let cat of categories){
     html+=`<div class="slbl">${cat.section}</div>`;
     for(let id of cat.items){
-      html+=`<button class="cb ${cur===id?'active':''}" onclick="sel('${id}')" id="cat-${id}"><span class="ic">${labelMap[id][0]}</span>${labelMap[id]}</button>`;
+      html+=`<button class="cb ${cur===id?'active':''}" onclick="sel('${id}')" id="cat-${id}">${labelMap[id]}</button>`;
     }
   }
   sidebar.innerHTML=html;
