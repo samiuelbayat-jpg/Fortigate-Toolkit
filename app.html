@@ -1077,6 +1077,184 @@ function renderBulkAnonTab(el){el.innerHTML=`<div class="cblock"><div class="chd
 function calculateSubnet(ipCidr){let[ip,prefix]=ipCidr.trim().split('/');let mb=parseInt(prefix);if(isNaN(mb)||mb<0||mb>32)return{error:"Prefix must be 0-32"};let p=ip.split('.').map(Number);if(p.length!==4||p.some(n=>isNaN(n)||n<0||n>255))return{error:"Invalid IP"};let ipI=((p[0]<<24)|(p[1]<<16)|(p[2]<<8)|p[3])>>>0;let mI=mb===0?0:(((1<<mb)-1)<<(32-mb))>>>0;let nI=(ipI&mI)>>>0,bI=(nI|(~mI>>>0))>>>0;const itp=i=>((i>>>24)&255)+'.'+((i>>>16)&255)+'.'+((i>>>8)&255)+'.'+(i&255);let h=mb>=31?Math.pow(2,32-mb):Math.pow(2,32-mb)-2;return{network:itp(nI),broadcast:itp(bI),firstUsable:mb<=30?itp(nI+1):'N/A',lastUsable:mb<=30?itp(bI-1):'N/A',mask:itp(mI),cidr:mb,wildcard:itp((~mI)>>>0),totalHosts:h,binaryIp:ipI.toString(2).padStart(32,'0'),binaryMask:mI.toString(2).padStart(32,'0'),binaryNetwork:nI.toString(2).padStart(32,'0'),error:null};}
 function renderSubnetCalc(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🧮 IPv4 Subnet Calculator</div></div><div class="cbody"><div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;"><input type="text" id="subnetInput" placeholder="e.g., 192.168.1.0/24" style="flex:2;padding:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);"><button class="sbtn" id="calcSubnetBtn">Calculate</button><button class="sbtn" id="exampleSubnetBtn" style="background:var(--b3);">📋 Example</button></div><div id="subnetResult"><div class="cnote">Enter an IPv4 address with CIDR prefix.</div></div></div></div>`;function update(){const info=calculateSubnet(document.getElementById('subnetInput').value);if(info.error){document.getElementById('subnetResult').innerHTML=`<div class="cdanger">⚠️ ${info.error}</div>`;return;}let h=`<div class="subnet-result-grid"><div class="subnet-card"><div class="subnet-label">Network</div><div class="subnet-value">${info.network}</div></div><div class="subnet-card"><div class="subnet-label">Broadcast</div><div class="subnet-value">${info.broadcast}</div></div><div class="subnet-card"><div class="subnet-label">First Usable</div><div class="subnet-value">${info.firstUsable}</div></div><div class="subnet-card"><div class="subnet-label">Last Usable</div><div class="subnet-value">${info.lastUsable}</div></div><div class="subnet-card"><div class="subnet-label">Netmask</div><div class="subnet-value">${info.mask} (/${info.cidr})</div></div><div class="subnet-card"><div class="subnet-label">Wildcard</div><div class="subnet-value">${info.wildcard}</div></div><div class="subnet-card"><div class="subnet-label">Usable Hosts</div><div class="subnet-value">${info.totalHosts.toLocaleString()}</div></div><div class="subnet-card"><div class="subnet-label">CIDR</div><div class="subnet-value">/${info.cidr}</div></div></div><div class="subnet-explanation"><strong>Binary view:</strong><br>IP:&nbsp;&nbsp; ${info.binaryIp.match(/.{8}/g).join('.')}<br>Mask: ${info.binaryMask.match(/.{8}/g).join('.')}<br>Net:&nbsp; ${info.binaryNetwork.match(/.{8}/g).join('.')}</div>`;document.getElementById('subnetResult').innerHTML=h;}document.getElementById('calcSubnetBtn').onclick=update;document.getElementById('exampleSubnetBtn').onclick=()=>{document.getElementById('subnetInput').value='192.168.1.0/24';update();};document.getElementById('subnetInput').addEventListener('keypress',e=>{if(e.key==='Enter')update();});}
 
+function renderAdvDiag(el){
+  const sections=[
+    {
+      title:'🩺 System Health & Performance',
+      commands:[
+        {cmd:'get system status',exp:'Firmware version, serial number, uptime, license, HA mode.',safety:'ro'},
+        {cmd:'get system performance status',exp:'CPU, memory, network usage — overall system load.',safety:'ro'},
+        {cmd:'diagnose sys top',exp:'Real-time process monitor — CPU and memory per daemon.',safety:'ro'},
+        {cmd:'diagnose sys top 5',exp:'Top 5 CPU-consuming processes — ideal for high CPU investigation.',safety:'ro'},
+        {cmd:'get hardware status',exp:'Hardware model, sensors, serial number.',safety:'ro'},
+        {cmd:'diagnose hardware sysinfo memory',exp:'Detailed memory breakdown — total, free, cached, conserve threshold.',safety:'ro'},
+        {cmd:'diagnose hardware sysinfo conserve',exp:'Shows conserve mode status and thresholds.',safety:'ro'},
+        {cmd:'diagnose hardware sysinfo cpu',exp:'CPU model, clock speed, and core count.',safety:'ro'},
+        {cmd:'diagnose hardware sysinfo shm',exp:'Shared memory usage between daemons.',safety:'ro'},
+        {cmd:'diagnose debug crashlog read',exp:'Read crash log — identify recent daemon crashes.',safety:'ro'},
+        {cmd:'diagnose debug crashlog clear',exp:'Clear crash log after reviewing.',safety:'caution'},
+        {cmd:'execute time',exp:'Show current system time — verify NTP sync.',safety:'ro'},
+        {cmd:'get system ntp',exp:'NTP server configuration and sync status.',safety:'ro'},
+      ]
+    },
+    {
+      title:'🔧 fnsysctl — Kernel Level Commands',
+      commands:[
+        {cmd:'fnsysctl ifconfig',exp:'Native Linux interface list — shows all interfaces including hidden ones.',safety:'ro'},
+        {cmd:'fnsysctl ifconfig <INTF>',exp:'Native Linux interface details for specific interface.',safety:'ro'},
+        {cmd:'fnsysctl df -h',exp:'Filesystem disk usage in human-readable format.',safety:'ro'},
+        {cmd:'fnsysctl du -s /var/',exp:'Disk usage of /var directory — large log files.',safety:'ro'},
+        {cmd:'fnsysctl du -L 4 /var/',exp:'Recursive disk usage 4 levels deep in /var.',safety:'ro'},
+        {cmd:'fnsysctl top',exp:'Linux top — real-time process list.',safety:'caution'},
+        {cmd:'fnsysctl ps',exp:'All running processes — useful for daemon investigation.',safety:'ro'},
+        {cmd:'fnsysctl ls -la /tmp/',exp:'List /tmp directory — check for temporary files.',safety:'ro'},
+        {cmd:'fnsysctl ls -la /data/',exp:'List /data directory — quarantine and AV cache.',safety:'ro'},
+        {cmd:'fnsysctl cat /etc/hosts',exp:'Read /etc/hosts file — check for local DNS overrides.',safety:'ro'},
+        {cmd:'fnsysctl cat /proc/version',exp:'Linux kernel version running under FortiOS.',safety:'ro'},
+        {cmd:'fnsysctl cat /proc/cpuinfo',exp:'CPU detailed info at kernel level.',safety:'ro'},
+        {cmd:'fnsysctl cat /proc/net/tcp',exp:'Raw TCP socket table at kernel level.',safety:'ro'},
+        {cmd:'fnsysctl date',exp:'System date and time at kernel level.',safety:'ro'},
+      ]
+    },
+    {
+      title:'🐛 Daemon Debugging',
+      commands:[
+        {cmd:'diagnose debug reset',exp:'Reset all debug settings — always run before starting new debug.',safety:'ro'},
+        {cmd:'diagnose debug enable',exp:'Enable debug output to console.',safety:'caution'},
+        {cmd:'diagnose debug disable',exp:'Stop debug output — always run after debugging.',safety:'ro'},
+        {cmd:'diagnose debug application ike -1',exp:'IPsec IKE negotiation debug — Phase 1 and Phase 2.',safety:'caution'},
+        {cmd:'diagnose debug application sslvpn -1',exp:'SSL VPN daemon — authentication and tunnel events.',safety:'caution'},
+        {cmd:'diagnose debug application fnbamd -1',exp:'Authentication daemon — LDAP, RADIUS, local auth.',safety:'caution'},
+        {cmd:'diagnose debug application urlfilter -1',exp:'URL filter daemon — category lookups and blocks.',safety:'caution'},
+        {cmd:'diagnose debug application wad -1',exp:'Web Application Daemon — proxy, DPI and UTM.',safety:'caution'},
+        {cmd:'diagnose debug application dnsproxy -1',exp:'DNS proxy daemon — DNS filter and resolution.',safety:'caution'},
+        {cmd:'diagnose debug application forticlient -1',exp:'FortiClient EMS and ZTNA endpoint debug.',safety:'caution'},
+        {cmd:'diagnose debug application hatalk -1',exp:'HA cluster communication daemon.',safety:'caution'},
+        {cmd:'diagnose debug application hasync -1',exp:'HA config sync daemon.',safety:'caution'},
+        {cmd:'diagnose debug application fgfmd -1',exp:'FortiGate-FortiManager communication daemon.',safety:'caution'},
+        {cmd:'diagnose debug application update -1',exp:'FortiGuard update daemon.',safety:'caution'},
+        {cmd:'diagnose test application wad 3',exp:'WAD daemon diagnostic test level 3.',safety:'caution'},
+        {cmd:'diagnose test application fnbamd 3',exp:'Authentication daemon test level 3.',safety:'caution'},
+        {cmd:'diagnose test application dnsproxy 6',exp:'DNS proxy diagnostic test level 6.',safety:'caution'},
+      ]
+    },
+    {
+      title:'🌐 Network Socket & Connection Inspection',
+      commands:[
+        {cmd:'diagnose sys tcpsock',exp:'All open TCP sockets — shows connections to/from FortiGate.',safety:'ro'},
+        {cmd:'diagnose sys udpsock',exp:'All open UDP sockets.',safety:'ro'},
+        {cmd:'fnsysctl cat /proc/net/tcp',exp:'Raw kernel TCP socket table.',safety:'ro'},
+        {cmd:'diagnose netlink interface list',exp:'All interfaces with packet counters at kernel level.',safety:'ro'},
+        {cmd:'diag netlink interface list',exp:'Short form — interface kernel counters.',safety:'ro'},
+        {cmd:'diagnose ip arp list',exp:'ARP table with interface and VLAN info.',safety:'ro'},
+        {cmd:'diagnose ip arp flush',exp:'Flush ARP table — force re-resolution of all MACs.',safety:'caution'},
+        {cmd:'diagnose netlink brctl list',exp:'Bridge/VDOM link table — inter-VDOM connections.',safety:'ro'},
+      ]
+    },
+    {
+      title:'🛡️ Local-In Policy & DoS Protection',
+      commands:[
+        {cmd:'show firewall local-in-policy',exp:'Policies protecting the FortiGate itself — management access rules.',safety:'ro'},
+        {cmd:'show firewall local-in-policy6',exp:'IPv6 local-in policies.',safety:'ro'},
+        {cmd:'show firewall dos-policy',exp:'DoS policies against volumetric attacks.',safety:'ro'},
+        {cmd:'diagnose ips anomaly list',exp:'Active IPS anomaly detections — DoS/DDoS indicators.',safety:'ro'},
+        {cmd:'diagnose firewall packet-filter list',exp:'Active packet filter rules.',safety:'ro'},
+        {cmd:'diagnose firewall iprope list 100004',exp:'Firewall policy kernel table — all active policies.',safety:'ro'},
+        {cmd:'diagnose firewall iprope lookup <SRC> <DST> <PROTO> <SPORT> <DPORT> <INTF>',exp:'Kernel policy lookup for specific traffic.',safety:'ro'},
+      ]
+    },
+    {
+      title:'💾 Config Transactions & Safe Change',
+      commands:[
+        {cmd:'execute backup config tftp <IP> <FILE>',exp:'Backup config to TFTP — always do before changes.',safety:'caution'},
+        {cmd:'execute backup config ftp <IP> <FILE>',exp:'Backup config to FTP server.',safety:'caution'},
+        {cmd:'execute restore config tftp <FILE> <IP>',exp:'Restore config from TFTP.',safety:'danger'},
+        {cmd:'config global',exp:'Enter global config — for multi-VDOM systems.',safety:'caution'},
+        {cmd:'show full-configuration',exp:'Show complete config with all default values — very verbose.',safety:'ro'},
+        {cmd:'show',exp:'Show non-default config — shorter and cleaner than full-configuration.',safety:'ro'},
+        {cmd:'get system checksum status',exp:'Config file checksum — detect unauthorised changes.',safety:'ro'},
+        {cmd:'diagnose debug config-error-log read',exp:'Show config error log — detect syntax errors after edits.',safety:'ro'},
+        {cmd:'diagnose debug config-error-log clear',exp:'Clear config error log.',safety:'caution'},
+        {cmd:'execute factoryreset',exp:'Full factory reset — DESTROYS ALL CONFIG.',safety:'danger'},
+        {cmd:'execute factoryreset2',exp:'Factory reset keeping management IP and firmware.',safety:'danger'},
+      ]
+    },
+    {
+      title:'🔩 Hardware & NPU Diagnostics',
+      commands:[
+        {cmd:'diagnose npu np6 stats',exp:'NP6 NPU packet processing statistics.',safety:'ro'},
+        {cmd:'diagnose npu np6xlite stats',exp:'NP6XLite NPU stats (lower-end models).',safety:'ro'},
+        {cmd:'diagnose npu np6 session-stats',exp:'NPU session offload counters.',safety:'ro'},
+        {cmd:'diagnose hardware deviceinfo disk',exp:'Disk health and S.M.A.R.T. status.',safety:'ro'},
+        {cmd:'diagnose hardware deviceinfo nic <INTF>',exp:'NIC hardware info — driver, firmware, counters.',safety:'ro'},
+        {cmd:'get hardware nic <INTF>',exp:'Interface hardware details and error counters.',safety:'ro'},
+        {cmd:'diagnose hardware sysinfo raid',exp:'RAID status (applicable models).',safety:'ro'},
+        {cmd:'diagnose hardware flash test',exp:'Flash memory test — checks for bad blocks.',safety:'caution'},
+        {cmd:'get system status | grep branch',exp:'Check FortiOS branch and patch version.',safety:'ro'},
+      ]
+    },
+    {
+      title:'🔬 Packet Capture (Sniffer)',
+      commands:[
+        {cmd:'diagnose sniffer packet <INTF> none 1 0 l',exp:'Capture all packets on interface — brief format.',safety:'ro'},
+        {cmd:'diagnose sniffer packet <INTF> \'host <IP>\' 4 100 l',exp:'Capture packets for specific host — verbose format with timestamp.',safety:'ro'},
+        {cmd:'diagnose sniffer packet <INTF> \'port 443\' 4 50 l',exp:'Capture HTTPS packets — 50 packets verbose.',safety:'ro'},
+        {cmd:'diagnose sniffer packet any \'host <IP> and port 500\' 4 0 l',exp:'Capture IKE (IPsec) traffic on all interfaces.',safety:'ro'},
+        {cmd:'diagnose sniffer packet any \'host <IP>\' 6 100 l',exp:'Level 6 — includes interface name and full headers.',safety:'ro'},
+      ]
+    },
+    {
+      title:'🧵 Debug Flow Trace',
+      commands:[
+        {cmd:'diagnose debug reset',exp:'Reset all debug filters — always start here.',safety:'ro'},
+        {cmd:'diagnose debug flow filter addr <SRC_IP>',exp:'Filter flow trace by source or destination IP.',safety:'caution'},
+        {cmd:'diagnose debug flow filter dport <PORT>',exp:'Filter flow trace by destination port.',safety:'caution'},
+        {cmd:'diagnose debug flow filter proto <PROTO>',exp:'Filter by protocol — 6=TCP 17=UDP 1=ICMP.',safety:'caution'},
+        {cmd:'diagnose debug flow show function-name enable',exp:'Show function names in flow output — easier to read.',safety:'caution'},
+        {cmd:'diagnose debug flow show iprope-set-detail enable',exp:'Show iprope policy set detail in flow.',safety:'caution'},
+        {cmd:'diagnose debug flow trace start 100',exp:'Start flow trace — capture 100 packets.',safety:'caution'},
+        {cmd:'diagnose debug enable',exp:'Enable debug output to terminal.',safety:'caution'},
+        {cmd:'diagnose debug disable',exp:'Disable debug output — always run when done.',safety:'ro'},
+        {cmd:'diagnose debug flow trace stop',exp:'Stop flow trace.',safety:'ro'},
+      ]
+    },
+  ];
+
+  let h=`<div class="sh"><span class="stitle">🔬 Advanced Diagnostics</span><span class="sev info">Expert-level · Use with care</span></div>
+  <div style="background:rgba(210,153,34,.06);border-left:3px solid var(--y);padding:8px 14px;border-radius:0 6px 6px 0;font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6">
+    ⚠️ <strong style="color:var(--y)">Expert section.</strong> Many commands here can cause service interruption or expose sensitive data. 
+    Always run <span style="font-family:var(--mono);color:var(--g);font-size:11px">diagnose debug reset</span> after finishing any debug session.
+  </div>`;
+
+  for(let s of sections){
+    h+=`<div class="cblock" style="margin-bottom:10px">
+      <div class="chdr"><div class="chdr-l">${s.title} <span style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-left:6px">${s.commands.length} commands</span></div></div>
+      <div class="cbody">`;
+    for(let item of s.commands){
+      const col=item.safety==='ro'?'var(--g)':item.safety==='caution'?'var(--y)':'var(--r)';
+      const badge=item.safety==='ro'
+        ?'<span style="font-size:9px;padding:1px 7px;border-radius:10px;background:rgba(63,185,80,.1);color:#3fb950;border:1px solid rgba(63,185,80,.2);font-family:var(--mono)">safe</span>'
+        :item.safety==='caution'
+        ?'<span style="font-size:9px;padding:1px 7px;border-radius:10px;background:rgba(210,153,34,.1);color:#d29922;border:1px solid rgba(210,153,34,.2);font-family:var(--mono)">caution</span>'
+        :'<span style="font-size:9px;padding:1px 7px;border-radius:10px;background:rgba(248,81,73,.1);color:#f85149;border:1px solid rgba(248,81,73,.2);font-family:var(--mono)">danger</span>';
+      h+=`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:7px;margin-bottom:3px;transition:background .12s" onmouseover="this.style.background='rgba(29,158,117,.04)'" onmouseout="this.style.background=''">
+        <div style="flex:1;min-width:0">
+          <div style="font-family:var(--mono);font-size:12px;font-weight:600;color:${col};margin-bottom:2px">${escapeHtml(item.cmd)}</div>
+          <div style="font-size:11px;color:var(--t2);line-height:1.5">${item.exp}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+          ${badge}
+          <button style="font-size:9px;padding:2px 9px;border-radius:10px;border:1px solid var(--br);background:var(--b2);color:var(--t3);cursor:pointer;font-family:var(--mono)" onclick="navigator.clipboard.writeText('${item.cmd.replace(/'/g,"\\'")}').then(()=>{this.textContent='✓';this.style.color='var(--a)';setTimeout(()=>{this.textContent='Copy';this.style.color=''},1500)})">Copy</button>
+        </div>
+      </div>`;
+    }
+    h+=`</div></div>`;
+  }
+  el.innerHTML=h;
+}
+
+function renderSubnetCalc(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🧮 IPv4 Subnet Calculator</div></div><div class="cbody"><div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;"><input type="text" id="subnetInput" placeholder="e.g., 192.168.1.0/24" style="flex:2;padding:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);"><button class="sbtn" id="calcSubnetBtn">Calculate</button><button class="sbtn" id="exampleSubnetBtn" style="background:var(--b3);">📋 Example</button></div><div id="subnetResult"><div class="cnote">Enter an IPv4 address with CIDR prefix.</div></div></div></div>`;function update(){const info=calculateSubnet(document.getElementById('subnetInput').value);if(info.error){document.getElementById('subnetResult').innerHTML=`<div class="cdanger">⚠️ ${info.error}</div>`;return;}let h=`<div class="subnet-result-grid"><div class="subnet-card"><div class="subnet-label">Network</div><div class="subnet-value">${info.network}</div></div><div class="subnet-card"><div class="subnet-label">Broadcast</div><div class="subnet-value">${info.broadcast}</div></div><div class="subnet-card"><div class="subnet-label">First Usable</div><div class="subnet-value">${info.firstUsable}</div></div><div class="subnet-card"><div class="subnet-label">Last Usable</div><div class="subnet-value">${info.lastUsable}</div></div><div class="subnet-card"><div class="subnet-label">Netmask</div><div class="subnet-value">${info.mask} (/${info.cidr})</div></div><div class="subnet-card"><div class="subnet-label">Wildcard</div><div class="subnet-value">${info.wildcard}</div></div><div class="subnet-card"><div class="subnet-label">Usable Hosts</div><div class="subnet-value">${info.totalHosts.toLocaleString()}</div></div><div class="subnet-card"><div class="subnet-label">CIDR</div><div class="subnet-value">/${info.cidr}</div></div></div><div class="subnet-explanation"><strong>Binary view:</strong><br>IP:&nbsp;&nbsp; ${info.binaryIp.match(/.{8}/g).join('.')}<br>Mask: ${info.binaryMask.match(/.{8}/g).join('.')}<br>Net:&nbsp; ${info.binaryNetwork.match(/.{8}/g).join('.')}</div>`;document.getElementById('subnetResult').innerHTML=h;}document.getElementById('calcSubnetBtn').onclick=update;document.getElementById('exampleSubnetBtn').onclick=()=>{document.getElementById('subnetInput').value='192.168.1.0/24';update();};document.getElementById('subnetInput').addEventListener('keypress',e=>{if(e.key==='Enter')update();});}
+
 function renderAdvDiag(el){const sections=[{title:"🩺 System Health & Performance",icon:"📊",commands:[{cmd:"diagnose hardware sysinfo conserve",exp:"Shows conserve mode status and memory thresholds.",safety:"ro"},{cmd:"diagnose sys top",exp:"Real-time process CPU/memory usage.",safety:"ro"},{cmd:"get hardware status",exp:"Hardware model, serial number, sensors.",safety:"ro"},{cmd:"diagnose hardware sysinfo memory",exp:"Detailed memory breakdown.",safety:"ro"}]},{title:"🔧 Kernel (fnsysctl)",icon:"🐧",commands:[{cmd:"fnsysctl ifconfig",exp:"Native Linux interface config.",safety:"ro"},{cmd:"fnsysctl df -h",exp:"Filesystem disk usage.",safety:"ro"},{cmd:"fnsysctl top",exp:"Linux top (real-time). Use with caution.",safety:"caution"}]},{title:"🐛 Daemon Debugging",icon:"🔬",commands:[{cmd:"diagnose test application wad 3",exp:"Debug Web Application Daemon.",safety:"caution"},{cmd:"diagnose test application fnbamd 3",exp:"Debug authentication daemon.",safety:"caution"},{cmd:"diagnose test application dnsproxy 6",exp:"DNS proxy debug level 6.",safety:"caution"}]},{title:"🛡️ Local-In & DoS",icon:"🛑",commands:[{cmd:"show firewall local-in-policy",exp:"Local-in policies protecting the FortiGate itself.",safety:"ro"},{cmd:"show firewall dos-policy",exp:"DoS policies against volumetric attacks.",safety:"ro"}]}];let h=`<div class="sh"><span class="stitle">🔬 Advanced Diagnostics</span><span class="sev info">Expert-level</span></div>`;for(let s of sections){h+=`<div class="cblock"><div class="chdr"><div class="chdr-l"><span style="margin-right:4px">${s.icon}</span>${s.title}</div></div><div class="cbody">`;for(let item of s.commands){let badge=item.safety==='ro'?'<span class="cbadge ro">🟢 read-only</span>':item.safety==='caution'?'<span class="cbadge caution">🟡 caution</span>':'<span class="cbadge danger">🔴 dangerous</span>';h+=`<div class="clines" style="margin-bottom:4px;">${escapeHtml(item.cmd)}</div><div style="font-size:12px;color:var(--t2);margin-left:12px;margin-bottom:8px;">📝 ${item.exp} ${badge}</div>`;}h+=`</div></div>`;}el.innerHTML=h;}
 
 
