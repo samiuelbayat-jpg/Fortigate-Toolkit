@@ -527,6 +527,9 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
         </ul>
         <a href="#order" class="btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:20px" onclick="setPlan('yearly')">Subscribe Yearly — Best Value →</a>
         <div class="price-note">One payment · 12 months access · Priority support</div>
+      <div style="margin-top:10px;background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--t2);text-align:center;line-height:1.6">
+        🚀 <strong style="color:var(--a)">Going live soon</strong> — automatic billing and instant access coming when we launch out of beta
+      </div>
       </div>
     </div>
   </div>
@@ -538,14 +541,26 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
     <div class="section-label" style="text-align:left">Subscribe</div>
     <h2 class="section-title" style="text-align:left;margin-bottom:8px">Create your account</h2>
     <p style="color:var(--t2);font-size:14px;margin-bottom:32px;line-height:1.7">Fill in your details below and choose your plan. Once the form is complete click <strong style="color:var(--t)">Subscribe &amp; Create Account</strong> — you will be taken to Stripe's secure checkout to complete payment. Questions? Email <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a></p>
-    <div class="form-card" id="formCard">
+    <div style="background:rgba(210,153,34,.06);border:1px solid rgba(210,153,34,.25);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px">
+  <span style="font-size:18px;flex-shrink:0">🚧</span>
+  <div>
+    <div style="font-size:13px;font-weight:700;color:#d29922;margin-bottom:4px">Beta Launch — Manual Verification Active</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.7">
+      NetWolf Pro is currently in beta. After subscribing your account will be <strong style="color:var(--t)">manually verified</strong> before toolkit access is granted. 
+      You will receive a confirmation email at <strong style="color:var(--t)">support@netwolffortigate.com</strong> within 24 hours once verified.
+      Payment is currently processed in <strong style="color:var(--t)">test mode</strong> — no real charges will be made during this period.
+    </div>
+  </div>
+</div>
+<div class="form-card" id="formCard">
       <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.15);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--t2);line-height:1.7">
-        <strong style="color:var(--t)">How it works:</strong><br>
+        <strong style="color:var(--t)">How it works (Beta):</strong><br>
         1️⃣ Fill in all your details below<br>
         2️⃣ Choose your plan — Monthly or Yearly<br>
-        3️⃣ Click Subscribe — you go to Stripe secure checkout<br>
-        4️⃣ After payment your Firebase account is created instantly<br>
-        5️⃣ Log in at <a href="https://netwolffortigate.com/app.html" style="color:var(--a)">netwolffortigate.com/app.html</a>
+        3️⃣ Click Subscribe — Stripe secure checkout opens<br>
+        4️⃣ Your account is created and sent for manual verification<br>
+        5️⃣ You receive confirmation at your email within 24 hours<br>
+        6️⃣ Log in at <a href="https://netwolffortigate.com/app.html" style="color:var(--a)">netwolffortigate.com/app.html</a>
       </div>
       <div class="form-plan-banner">
         <span class="form-plan-name" id="planBannerName">🐺 NetWolf Pro — Monthly</span>
@@ -620,13 +635,14 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
           <label for="terms" style="font-size:12.5px;color:var(--t2);cursor:pointer;line-height:1.6">I agree to the <a href="#" onclick="openTos(event)" style="color:var(--a)">Terms of Service</a> and authorise the selected subscription charge to my card until cancelled.</label>
         </div>
         <div class="form-err" id="formError"></div>
-        <button type="submit" class="btn-submit" id="submitBtn">🔒 Subscribe &amp; Create Account</button>
+        <button type="submit" class="btn-submit" id="submitBtn">🔒 Subscribe &amp; Request Access</button>
         <div class="stripe-powered">Payments secured by <strong style="color:var(--t2)">Stripe</strong></div>
       </form>
       <div class="success-msg" id="successMsg">
         <div class="success-check">✓</div>
-        <h3>Account created!</h3>
-        <p>Your NetWolf Pro subscription is active. Use the credentials below to log in to the toolkit right now. A confirmation email has also been sent.</p>
+        <h3>Request received! 🎉</h3>
+        <p>Your subscription request has been received. Your account has been created and is pending manual verification.</p>
+        <p style="margin-top:8px">You will receive a confirmation email at your registered address within <strong>24 hours</strong> once your access is activated. Questions? Email <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a></p>
         <div class="success-creds">
           <div>Username: <span id="showUsername">—</span></div>
           <div>Password: <span id="showPassword">—</span></div>
