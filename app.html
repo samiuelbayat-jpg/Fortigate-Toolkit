@@ -390,6 +390,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
         <button class="tab" onclick="stab('cfggen')" id="tab-cfggen">⚙️ Config Generator</button>
         <button class="tab" onclick="stab('cfgmigrate')" id="tab-cfgmigrate">🔄 Config Migrator</button>
         <button class="tab" onclick="stab('labsetup')" id="tab-labsetup">🧪 Lab Setup</button>
+        <button class="tab" onclick="stab('hwref')" id="tab-hwref">🖥️ HW Reference</button>
       </div>
       <div class="content" id="mc"></div>
     </div>
@@ -902,7 +903,7 @@ const QREF=[
 
 
 /* ══ RENDER FUNCTIONS ══ */
-function render(){const el=document.getElementById('mc');if(tab==='guide'){const d=D[cur];if(d.type==='config')renderCfg(el,d);else renderGuide(el,d);}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);}
+function render(){const el=document.getElementById('mc');if(tab==='guide'){const d=D[cur];if(d.type==='config')renderCfg(el,d);else renderGuide(el,d);}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);}
 
 function renderGuide(el,d){let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev '+d.s+'">P1 common</span></div>';h+='<div class="chips">'+d.chips.map(c=>'<span class="chip" onclick="askAI(\''+c.replace(/'/g,"\\'")+'  on FortiGate\')">'+c+' ↗</span>').join('')+'</div>';d.steps.forEach((s,i)=>{const real=s.cmds.filter(c=>!c.startsWith('('));const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':'';h+='<div class="cblock '+risk+'"><div class="chdr"><div class="chdr-l"><div class="snum">'+(i+1)+'</div>'+s.t+'</div><div style="display:flex;gap:6px;">'+(risk==='danger'?'<span class="cbadge danger">⚠️ service impact</span>':risk==='warn'?'<span class="cbadge caution">⚠️ config change</span>':'<span class="cbadge ro">read-only</span>')+'<button class="copybtn" onclick="copyAll(this,\''+cur+'\','+i+')">Copy all</button></div></div><div class="cbody">'+(risk==='danger'?'<div class="cdanger">⚠️ One or more commands below will impact live traffic or sessions.</div>':risk==='warn'?'<div class="cwarn">⚠️ One or more commands below will make configuration changes.</div>':'')+'<div class="clines">'+s.cmds.map(c=>{if(c.startsWith('('))return'<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>\n';const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';return'<span style="color:'+col+'">'+esc(c)+'</span>'+(sv==='danger'?' <span style="font-size:10px;color:var(--r);">⚠️CAUTION</span>':'')+'\n';}).join('')+'</div>'+(s.note?'<div class="cnote">'+s.note+'</div>':'')+'</div></div>';});
   h+=`<div style="margin-top:32px;border-top:2px solid var(--br);padding-top:18px;background:rgba(0,0,0,0.2);border-radius:12px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><span style="font-weight:700;font-size:15px;">📟 CLI Output Reader</span><span style="font-size:11px;color:var(--t2);">Paste command outputs from your terminal session</span></div><textarea id="troubleOutputInput" placeholder="Paste raw FortiGate CLI output here..." style="width:100%;background:#000000;color:#f0f0f0;border:1px solid var(--br);font-family:var(--mono);font-size:12px;padding:12px;border-radius:8px;resize:vertical;" rows="7"></textarea><div style="display:flex;justify-content:flex-end;gap:10px;margin:12px 0 16px;"><button id="troubleOutputRenderBtn" class="sbtn">🖥️ Render Output</button><button id="troubleOutputClearBtn" class="sbtn" style="background:#4b5563;">🗑️ Clear</button></div><pre id="troubleOutputDisplay" style="background:#000000;color:#e6edf3;font-family:var(--mono);font-size:12px;line-height:1.5;padding:14px;border-radius:8px;border:1px solid var(--br);overflow-x:auto;white-space:pre-wrap;word-break:break-word;max-height:450px;margin:0;">— Paste CLI output and click "Render Output" —</pre></div>`;
@@ -4946,6 +4947,201 @@ function showGroqGuide(){
   } else {
     document.getElementById('groqGuideModal').style.display='flex';
   }
+}
+
+
+/* ══ HARDWARE REFERENCE ══ */
+function renderHWRef(el){
+  if(!document.getElementById('hwCSS')){
+    const s=document.createElement('style');s.id='hwCSS';
+    s.textContent=`
+      .hw-tier{margin-bottom:20px}
+      .hw-tier-hdr{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px 10px 0 0;font-size:13px;font-weight:700}
+      .hw-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;padding:12px 0}
+      .hw-card{background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;transition:all .2s;cursor:default}
+      .hw-card:hover{border-color:rgba(29,158,117,.4);transform:translateY(-2px)}
+      .hw-img{width:100%;height:130px;object-fit:contain;background:#010409;padding:12px;border-bottom:1px solid var(--br)}
+      .hw-img-ph{width:100%;height:130px;background:linear-gradient(135deg,#0a1628,#0d1f3c);border-bottom:1px solid var(--br);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px}
+      .hw-body{padding:12px 14px}
+      .hw-model{font-size:14px;font-weight:700;color:var(--t);font-family:var(--mono);margin-bottom:2px}
+      .hw-nickname{font-size:11px;color:var(--a);margin-bottom:8px;font-weight:600}
+      .hw-desc{font-size:11.5px;color:var(--t2);line-height:1.6;margin-bottom:10px}
+      .hw-specs{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+      .hw-spec{font-size:10.5px;color:var(--t2);display:flex;flex-direction:column;gap:1px;background:var(--b3);border-radius:5px;padding:5px 8px}
+      .hw-spec-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono)}
+      .hw-spec-val{font-family:var(--mono);font-size:11px;color:var(--t);font-weight:600}
+      .hw-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+      .hw-tag{font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.18);font-family:var(--mono)}
+      .hw-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+      .hw-fbtn{font-size:11px;padding:5px 14px;border-radius:20px;border:1px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;transition:all .15s;font-family:var(--mono)}
+      .hw-fbtn:hover,.hw-fbtn.active{background:var(--a);border-color:var(--a);color:#fff}
+      .hw-search{flex:1;min-width:160px;background:var(--bg);border:1px solid var(--br);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--t);outline:none;font-family:var(--mono)}
+      .hw-search:focus{border-color:var(--a)}
+    `;
+    document.head.appendChild(s);
+  }
+
+  const TIERS=[
+    {
+      id:'soho',label:'🏠 SOHO & Small Office',color:'rgba(88,166,255,.15)',border:'rgba(88,166,255,.3)',
+      desc:'Desktop form factor · Up to 25 users · Basic SD-WAN and security',
+      models:[
+        {model:'FortiGate 40F',nick:'The Branch Starter',fw:'5 Gbps',tp:'1 Gbps',ssl:'490 Mbps',ports:'5x GE RJ45',users:'Up to 25',form:'Desktop',npu:'SoC4',desc:'Entry-level desktop firewall ideal for small retail, home offices and micro-branches. Includes built-in SD-WAN, firewall, VPN and basic UTM in a compact fanless design.',tags:['Fanless','SD-WAN','SSL VPN','Desktop'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-40f.png'},
+        {model:'FortiGate 60F',nick:'The SMB Workhorse',fw:'10 Gbps',tp:'1.5 Gbps',ssl:'700 Mbps',ports:'10x GE RJ45 + 2x SFP',users:'Up to 50',form:'Desktop',npu:'SoC4',desc:'The most popular small business FortiGate. Combines firewall, SD-WAN, VPN and UTM in a single desktop unit. WiFi variant (61F) adds 802.11ac wireless.',tags:['Most popular SMB','WiFi option','SD-WAN','UTM'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-60f.png'},
+        {model:'FortiGate 80F',nick:'The Power Desktop',fw:'10 Gbps',tp:'1.5 Gbps',ssl:'1 Gbps',ports:'8x GE RJ45 + 2x SFP + 2x SFP bypass',users:'Up to 75',form:'Desktop',npu:'SoC4',desc:'Step up from the 60F with bypass interfaces for inline deployment. Adds hardware bypass for fail-open scenarios — ideal for ISP edge or inline security.',tags:['Bypass ports','Inline deployment','Desktop','SD-WAN'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-80f.png'},
+        {model:'FortiGate 90G',nick:'The New Generation',fw:'22 Gbps',tp:'2.2 Gbps',ssl:'2 Gbps',ports:'10x GE RJ45 + 2x SFP + 2x SFP bypass',users:'Up to 100',form:'Desktop',npu:'SoC5',desc:'Latest G-series replacing the 80F/90E. Uses new SoC5 chip for significantly higher threat protection throughput. Includes built-in 4G/5G readiness.',tags:['G-series','SoC5','5G ready','New model'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-90g.png'},
+      ]
+    },
+    {
+      id:'smb',label:'🏢 SMB & Branch Office',color:'rgba(29,158,117,.12)',border:'rgba(29,158,117,.3)',
+      desc:'1U rackmount · 50–500 users · Full UTM, HA support, 10GbE',
+      models:[
+        {model:'FortiGate 100F',nick:'The Rack Entry',fw:'20 Gbps',tp:'1.6 Gbps',ssl:'1 Gbps',ports:'22x GE RJ45 + 4x SFP + 2x SFP+',users:'Up to 200',form:'1U Rack',npu:'NP6lite',desc:'First rackmount model in the lineup. Suited for medium offices needing structured rack deployment with HA pair capability and 10GbE uplinks.',tags:['1U Rack','HA support','10GbE','NP6lite'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-100f.png'},
+        {model:'FortiGate 120G',nick:'The G-Series Branch',fw:'25 Gbps',tp:'3 Gbps',ssl:'2.5 Gbps',ports:'18x GE RJ45 + 4x SFP + 4x SFP+',users:'Up to 300',form:'1U Rack',npu:'NP7lite',desc:'New G-series branch model with NP7lite processor. Delivers significantly better threat protection throughput than the 100F at similar price point.',tags:['G-series','NP7lite','New model','HA'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-120g.png'},
+        {model:'FortiGate 200F',nick:'The Regional Office',fw:'27 Gbps',tp:'3 Gbps',ssl:'2 Gbps',ports:'18x GE RJ45 + 8x SFP + 4x SFP+',users:'Up to 500',form:'1U Rack',npu:'NP6',desc:'Popular mid-range model for regional offices and distributed enterprise branches. Full NP6 NPU offloading, dual power supply option, and high port density.',tags:['NP6','Dual PSU option','Regional office','High port density'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-200f.png'},
+        {model:'FortiGate 400F',nick:'The Campus Edge',fw:'65 Gbps',tp:'9.5 Gbps',ssl:'7.5 Gbps',ports:'16x GE RJ45 + 16x SFP + 4x SFP+ + 2x QSFP28',users:'Up to 1000',form:'1U Rack',npu:'NP7',desc:'High-performance model for campus edges and larger enterprises. NP7 NPU delivers carrier-grade throughput. First model with 100GbE QSFP28 uplinks.',tags:['NP7','100GbE','Campus edge','High throughput'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-400f.png'},
+      ]
+    },
+    {
+      id:'enterprise',label:'🏗️ Enterprise & Data Centre',color:'rgba(210,153,34,.1)',border:'rgba(210,153,34,.3)',
+      desc:'1U/2U rackmount · 1000+ users · Redundant PSU, 25/40/100GbE, VDOM',
+      models:[
+        {model:'FortiGate 600F',nick:'The Enterprise Firewall',fw:'125 Gbps',tp:'15 Gbps',ssl:'12 Gbps',ports:'18x GE RJ45 + 16x SFP + 4x SFP28 + 2x QSFP28',users:'Up to 2000',form:'1U Rack',npu:'NP7',desc:'Full enterprise-grade firewall with 25GbE SFP28 interfaces and 100GbE QSFP28 uplinks. Redundant PSU standard. Suited for large campus cores and internet edges.',tags:['25GbE','100GbE','Redundant PSU','NP7'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-600f.png'},
+        {model:'FortiGate 1000F',nick:'The DC Edge',fw:'400 Gbps',tp:'80 Gbps',ssl:'35 Gbps',ports:'16x 25GbE SFP28 + 4x 100GbE QSFP28 + management',users:'5000+',form:'2U Rack',npu:'NP7',desc:'Data centre edge firewall. Ultra-high throughput with NP7 hardware acceleration. Full VDOM support for multi-tenant environments. Dual redundant PSU standard.',tags:['Data Centre','400 Gbps','VDOM','Dual PSU'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-1000f.png'},
+        {model:'FortiGate 1800F',nick:'The Core Firewall',fw:'660 Gbps',tp:'200 Gbps',ssl:'50 Gbps',ports:'16x 25GbE SFP28 + 4x 100GbE QSFP28 + 2x 400GbE',users:'10000+',form:'2U Rack',npu:'NP7',desc:'High-end data centre core firewall. First model with 400GbE interfaces. Suited for large enterprise cores and carrier-grade deployments requiring maximum throughput.',tags:['400GbE','Core DC','NP7','Carrier grade'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-1800f.png'},
+        {model:'FortiGate 2600F',nick:'The Hyperscale',fw:'3 Tbps',tp:'500 Gbps',ssl:'100 Gbps',ports:'24x 100GbE QSFP28 + 2x 400GbE QSFP-DD',users:'50000+',form:'3U Rack',npu:'NP7',desc:'Hyperscale firewall for the largest enterprise and service provider environments. Terabit-scale throughput with NP7 acceleration. Built for carrier-grade internet edge.',tags:['3 Tbps','Hyperscale','Service provider','QSFP-DD'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-2600f.png'},
+      ]
+    },
+    {
+      id:'chassis',label:'🏭 Chassis & Ultra-Scale',color:'rgba(248,81,73,.1)',border:'rgba(248,81,73,.3)',
+      desc:'Multi-slot chassis · Carrier grade · Terabit throughput · Service provider',
+      models:[
+        {model:'FortiGate 3000F',nick:'The Service Provider Core',fw:'1.2 Tbps',tp:'300 Gbps',ssl:'100 Gbps',ports:'8x 100GbE QSFP28 + 4x 400GbE QSFP-DD',users:'100000+',form:'3U Rack',npu:'NP7',desc:'Top fixed-form-factor FortiGate. Used by large ISPs, cloud providers and mega-enterprise data centres. Built for internet transit and carrier-grade NAT at massive scale.',tags:['1.2 Tbps','Carrier NAT','CGNAT','Service provider'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-3000f.png'},
+        {model:'FortiGate 7121F',nick:'The Chassis King',fw:'2 Tbps+',tp:'400 Gbps+',ssl:'N/A',ports:'Up to 288x 100GbE per chassis',users:'Unlimited',form:'12-slot Chassis',npu:'NP7 blades',desc:'Largest chassis-based FortiGate. 12 slots for line cards and security processing blades. Used by tier-1 carriers, hyperscalers and national backbone networks. Modular and fully redundant.',tags:['Chassis','12-slot','Tier-1 ISP','Modular'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-7121f.png'},
+        {model:'FortiGate VM',nick:'The Cloud Firewall',fw:'Variable',tp:'Variable',ssl:'Variable',ports:'Up to 10 vNIC',users:'Variable',form:'Virtual Machine',npu:'Software',desc:'Software FortiGate for VMware, KVM, Hyper-V, AWS, Azure, GCP and OCI. Same FortiOS as hardware. Licensed by throughput (VM01 to VM32). Used for cloud security and lab environments.',tags:['VMware','AWS','Azure','GCP','Lab'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fortigate-vm.png'},
+      ]
+    },
+  ];
+
+  const NAMING={
+    'E':'Previous generation (2016-2019)',
+    'F':'Current generation (2020-2023) — NP6/NP7 NPU',
+    'G':'Latest generation (2023+) — NP7/SoC5 NPU',
+    'W':'WiFi integrated',
+    'D':'PoE switch ports included',
+    'P':'PoE power sourcing',
+  };
+
+  let activeTier='all';
+  let searchTerm='';
+
+  function imgOrPlaceholder(model, imgUrl){
+    return `<div class="hw-img-ph">
+      <span style="font-size:32px">🛡️</span>
+      <span style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.3)">${model}</span>
+    </div>`;
+    // Using placeholder since external images may not load due to CORS
+  }
+
+  function buildCards(){
+    const cont = document.getElementById('hwCardContainer');
+    if(!cont) return;
+    let html='';
+    for(const tier of TIERS){
+      if(activeTier !== 'all' && activeTier !== tier.id) continue;
+      const models = tier.models.filter(m=>
+        !searchTerm ||
+        m.model.toLowerCase().includes(searchTerm) ||
+        m.nick.toLowerCase().includes(searchTerm) ||
+        m.desc.toLowerCase().includes(searchTerm) ||
+        m.tags.some(t=>t.toLowerCase().includes(searchTerm))
+      );
+      if(!models.length) continue;
+      html+=`<div class="hw-tier">
+        <div class="hw-tier-hdr" style="background:${tier.color};border:1px solid ${tier.border};border-bottom:none">
+          ${tier.label}
+          <span style="font-size:11px;font-weight:400;color:var(--t2);margin-left:4px">— ${tier.desc}</span>
+        </div>
+        <div style="border:1px solid ${tier.border};border-top:none;border-radius:0 0 10px 10px;padding:12px">
+          <div class="hw-cards">`;
+      for(const m of models){
+        html+=`<div class="hw-card">
+          ${imgOrPlaceholder(m.model, m.img)}
+          <div class="hw-body">
+            <div class="hw-model">${m.model}</div>
+            <div class="hw-nickname">${m.nick}</div>
+            <div class="hw-desc">${m.desc}</div>
+            <div class="hw-specs">
+              <div class="hw-spec"><span class="hw-spec-lbl">Firewall</span><span class="hw-spec-val">${m.fw}</span></div>
+              <div class="hw-spec"><span class="hw-spec-lbl">Threat Protection</span><span class="hw-spec-val">${m.tp}</span></div>
+              <div class="hw-spec"><span class="hw-spec-lbl">SSL Inspection</span><span class="hw-spec-val">${m.ssl}</span></div>
+              <div class="hw-spec"><span class="hw-spec-lbl">Form Factor</span><span class="hw-spec-val">${m.form}</span></div>
+              <div class="hw-spec" style="grid-column:1/-1"><span class="hw-spec-lbl">Interfaces</span><span class="hw-spec-val" style="font-size:10px">${m.ports}</span></div>
+            </div>
+            <div class="hw-tags">${m.tags.map(t=>`<span class="hw-tag">${t}</span>`).join('')}</div>
+          </div>
+        </div>`;
+      }
+      html+=`</div></div></div>`;
+    }
+    cont.innerHTML = html || '<div style="color:var(--t3);text-align:center;padding:40px">No models match your search.</div>';
+  }
+
+  el.innerHTML=`
+  <div class="sh"><span class="stitle">🖥️ FortiGate Hardware Reference</span><span class="sev info">Small Office → Enterprise → Carrier</span></div>
+
+  <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6">
+    Complete overview of the FortiGate hardware lineup — from the compact desktop 40F to the 12-slot 7121F chassis.
+    All throughput figures are from official Fortinet datasheets.
+    <a href="https://www.fortinet.com/products/product-compare" target="_blank" style="color:var(--bl);font-size:11px;margin-left:6px">Official Fortinet comparison tool →</a>
+  </p>
+
+  <!-- Model naming guide -->
+  <div class="cblock" style="margin-bottom:16px">
+    <div class="chdr"><div class="chdr-l">📖 Model Naming Guide — What do the letters mean?</div></div>
+    <div class="cbody">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+        ${Object.entries(NAMING).map(([k,v])=>`
+        <div style="display:flex;align-items:flex-start;gap:8px">
+          <span style="font-family:var(--mono);font-size:16px;font-weight:700;color:var(--a);flex-shrink:0;width:20px">${k}</span>
+          <span style="font-size:11.5px;color:var(--t2);line-height:1.5">${v}</span>
+        </div>`).join('')}
+      </div>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--t2);line-height:1.6;background:rgba(29,158,117,.05);border-left:3px solid var(--a);padding:8px 12px;border-radius:0 6px 6px 0">
+        💡 Example: <span style="font-family:var(--mono);color:var(--g)">FortiGate 60F</span> = 60-series · F-generation · No WiFi &nbsp;|&nbsp;
+        <span style="font-family:var(--mono);color:var(--g)">FortiGate 61F</span> = same + WiFi &nbsp;|&nbsp;
+        <span style="font-family:var(--mono);color:var(--g)">FortiGate 90G</span> = 90-series · G-generation (latest)
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+    <input class="hw-search" id="hwSearch" placeholder="Search model, feature or use case..." oninput="hwFilter()">
+    <div class="hw-filter" id="hwFilters">
+      <button class="hw-fbtn active" onclick="hwTier('all',this)">All</button>
+      <button class="hw-fbtn" onclick="hwTier('soho',this)">🏠 SOHO</button>
+      <button class="hw-fbtn" onclick="hwTier('smb',this)">🏢 SMB</button>
+      <button class="hw-fbtn" onclick="hwTier('enterprise',this)">🏗️ Enterprise</button>
+      <button class="hw-fbtn" onclick="hwTier('chassis',this)">🏭 Chassis</button>
+    </div>
+  </div>
+
+  <div id="hwCardContainer"></div>`;
+
+  window.hwTier=function(tier,btn){
+    activeTier=tier;
+    document.querySelectorAll('.hw-fbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    buildCards();
+  };
+
+  window.hwFilter=function(){
+    searchTerm=document.getElementById('hwSearch').value.toLowerCase().trim();
+    buildCards();
+  };
+
+  buildCards();
 }
 
 function initSidebar(){
