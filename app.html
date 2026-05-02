@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="robots" content="noindex, nofollow">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'">
+<meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="favicon.svg">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -189,10 +188,6 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 .ai-typing span:nth-child(2){animation-delay:.2s}
 .ai-typing span:nth-child(3){animation-delay:.4s}
 @media(max-width:700px){.layout{grid-template-columns:1fr}.rgrid{grid-template-columns:1fr}.subnet-result-grid{grid-template-columns:1fr}}
-
-/* Content protection */
-.clines{-webkit-user-select:text;user-select:text}
-body{-webkit-tap-highlight-color:transparent}
 </style>
 </head>
 <body oncontextmenu="return false">
@@ -766,13 +761,15 @@ cfgbackup:{t:'Backup, Restore & Firmware',s:'high',type:'trouble',chips:['Backup
 };
 
 const QREF=[
-{cat:'Session table',cmds:['get system session list','diagnose sys session full-stat','diagnose sys session filter src <IP>','diagnose sys session filter dst <IP>','diagnose sys session list','diagnose sys session clear']},
-{cat:'Routing',cmds:['get router info routing-table all','diagnose ip route get <IP>','get router info kernel','show router static','get router info ospf neighbor','get router info bgp summary']},
-{cat:'Interface',cmds:['get system interface physical','get hardware nic <INTF>','diagnose netlink ifconfig list','fnsysctl ifconfig','diagnose hardware deviceinfo nic <INTF>']},
-{cat:'CPU and Memory',cmds:['get system performance status','diagnose sys top','diagnose hardware sysinfo memory','diagnose hardware sysinfo cpu','diagnose hardware sysinfo conserve']},
-{cat:'Logs',cmds:['execute log filter category 0','execute log display','diagnose log test','get log fortianalyzer setting','show log syslogd setting']},
-{cat:'Auth and Users',cmds:['diagnose test authserver ldap <SRV> <USER> <PASS>','diagnose firewall auth list','get user local','diagnose debug application fnbamd -1','diagnose firewall auth list']},
-{cat:'VPN quick check',cmds:['get vpn ipsec tunnel summary','diagnose vpn tunnel list','get vpn ssl monitor','diagnose vpn ssl list','diagnose vpn ssl statistics']},
+{cat:'Session Table',cmds:['get system session list','diagnose sys session full-stat','diag sys session stat','diagnose sys session filter src <IP>','diagnose sys session filter dst <IP>','diagnose sys session clear']},
+{cat:'Routing',cmds:['get router info routing-table all','diagnose ip route get <IP>','execute traceroute <IP>','get router info kernel','show router static','get router info ospf neighbor','get router info bgp summary']},
+{cat:'Interface',cmds:['get system interface physical','get hardware nic <INTF>','diagnose netlink ifconfig list','diag netlink interface list','diag hardware device reset <INTF>','fnsysctl ifconfig','diagnose hardware deviceinfo nic <INTF>']},
+{cat:'CPU & Memory',cmds:['get system performance status','diag sys top','diag sys top 5','diagnose hardware sysinfo memory','diagnose hardware sysinfo cpu','diagnose hardware sysinfo conserve']},
+{cat:'Logs & Backup',cmds:['execute log filter category 0','execute log display','diagnose log test','execute log export ftp <IP> <FILE>','execute backup config ftp <IP> <FILE>','execute backup config tftp <IP> <FILE>','get log fortianalyzer setting']},
+{cat:'Auth & Users',cmds:['diagnose test authserver ldap <SRV> <USER> <PASS>','diagnose firewall auth list','get user local','diagnose debug application fnbamd -1']},
+{cat:'VPN Quick',cmds:['get vpn ipsec tunnel summary','diagnose vpn tunnel list','get vpn ssl monitor','diagnose vpn ssl list','diagnose vpn ssl statistics']},
+{cat:'Policy & Flow',cmds:['diag firewall policy list','diag firewall policy lookup <SRC> <DST>','diagnose debug flow filter addr <IP>','diagnose debug flow trace start 50','diagnose debug enable','diagnose debug disable','diagnose debug reset']},
+{cat:'Debug Apps',cmds:['diagnose debug application sslvpn -1','diagnose debug application urlfilter -1','diagnose debug application ike -1','diagnose debug application fnbamd -1','diagnose debug application forticlient -1']},
 {cat:'System',cmds:['get system status','execute time','get system performance status','diagnose hardware sysinfo shm','diagnose debug crashlog read']}
 ];
 
@@ -898,7 +895,6 @@ function renderFreeAITab(el){
     localStorage.setItem('groq_key',k);
     groqApiKeyFree=k; groqApiKey=k;
     showToast('✅ Groq API key saved!');
-    document.getElementById('groqApiKeyInput').value=k.slice(0,8)+'••••••••••••••••••••';
     renderFreeAITab(el);
   };
 
