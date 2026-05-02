@@ -1655,14 +1655,34 @@ function setCfgType(type, btn){
       ])}
 
       <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Subnets — Local &amp; Remote</div>
-      <div style="font-size:11px;color:var(--y);background:rgba(210,153,34,.06);border-left:2px solid var(--y);padding:6px 10px;border-radius:0 5px 5px 0;margin-bottom:10px">
-        For multiple subnets enter comma-separated CIDRs: <span style="font-family:var(--mono);color:var(--g);font-size:10px">10.1.0.0/24, 10.2.0.0/24</span>
-      </div>
-      ${inp('local_subnet','Local subnet(s) (CIDR)','10.1.0.0/24','10.1.0.0/24')}
-      ${inp('remote_subnet','Remote subnet(s) (CIDR)','10.2.0.0/24','10.2.0.0/24')}
       ${inp('local_gw','Local LAN interface','lan','lan')}
-      <div style="font-size:11px;color:var(--t2);background:rgba(29,158,117,.05);border-left:2px solid var(--a);padding:6px 10px;border-radius:0 5px 5px 0;margin-top:4px;line-height:1.6">
-        💡 Multiple subnets create separate Phase 2 selectors automatically — one per subnet pair.
+
+      <div style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:6px">Local subnet(s)</label>
+        <div id="ipsec_local_subnets">
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <input type="text" class="ipsec-local-sub" placeholder="e.g. 10.1.0.0/24" value="10.1.0.0/24"
+              style="flex:1;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+            <button onclick="ipsecAddSubnet('local')" style="background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.3);border-radius:6px;padding:6px 12px;color:var(--a);cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap">+ Add</button>
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:2px;font-family:var(--mono)">Each subnet = one Phase 2 selector</div>
+      </div>
+
+      <div style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:6px">Remote subnet(s)</label>
+        <div id="ipsec_remote_subnets">
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <input type="text" class="ipsec-remote-sub" placeholder="e.g. 10.2.0.0/24" value="10.2.0.0/24"
+              style="flex:1;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+            <button onclick="ipsecAddSubnet('remote')" style="background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.3);border-radius:6px;padding:6px 12px;color:var(--a);cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap">+ Add</button>
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:2px;font-family:var(--mono)">Each remote subnet gets a static route automatically</div>
+      </div>
+
+      <div style="font-size:11px;color:var(--t2);background:rgba(29,158,117,.05);border-left:2px solid var(--a);padding:8px 12px;border-radius:0 6px 6px 0;line-height:1.6">
+        💡 <strong style="color:var(--t)">Multiple subnets</strong> — each local+remote pair generates a separate Phase 2 selector. Example: 2 local × 3 remote = 6 Phase 2 selectors.
       </div>`,
     sslvpn: `
       <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🕵️ SSL VPN Configuration</div>
@@ -1739,6 +1759,30 @@ function setCfgType(type, btn){
 }
 
 function g(id){ const el=document.getElementById('cfg_'+id); return el ? el.value.trim() : ''; }
+
+function ipsecAddSubnet(type){
+  const container = document.getElementById('ipsec_'+type+'_subnets');
+  if(!container) return;
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:6px;margin-bottom:6px';
+  row.innerHTML = '<input type="text" class="ipsec-'+type+'-sub" placeholder="e.g. 10.'+(type==='local'?'1':'2')+'.0.0/24"'
+    +' style="flex:1;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">'
+    +'<button onclick="ipsecRemoveSubnet(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);border-radius:6px;padding:6px 12px;color:var(--r);cursor:pointer;font-size:13px;font-weight:700">−</button>';
+  container.appendChild(row);
+}
+
+function ipsecRemoveSubnet(btn){
+  const row = btn.closest('div');
+  const container = row.parentElement;
+  // Don't remove if only one row left
+  if(container.querySelectorAll('div').length > 1) row.remove();
+  else showToast('⚠️ At least one subnet is required.');
+}
+
+function ipsecGetSubnets(type){
+  const inputs = document.querySelectorAll('.ipsec-'+type+'-sub');
+  return Array.from(inputs).map(i=>i.value.trim()).filter(Boolean);
+}
 function gs(id){ const el=document.getElementById('cfg_'+id); return el ? el.value : ''; }
 
 function cidrToMask(cidr){
@@ -1918,9 +1962,9 @@ end`;
     const localIntf=g('local_gw')||'lan';
     const authMethod=gs('auth_method')||'psk';
 
-    // Parse multiple subnets (comma separated)
-    const localSubnets=(g('local_subnet')||'10.1.0.0/24').split(',').map(function(s){return s.trim();}).filter(Boolean);
-    const remoteSubnets=(g('remote_subnet')||'10.2.0.0/24').split(',').map(function(s){return s.trim();}).filter(Boolean);
+    // Read subnets from dynamic rows
+    const localSubnets=ipsecGetSubnets('local').length?ipsecGetSubnets('local'):['10.1.0.0/24'];
+    const remoteSubnets=ipsecGetSubnets('remote').length?ipsecGetSubnets('remote'):['10.2.0.0/24'];
     const firstLocal=localSubnets[0];
     const firstRemote=remoteSubnets[0];
 
@@ -3240,14 +3284,34 @@ function setCfgType(type, btn){
       ])}
 
       <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--br)">Subnets — Local &amp; Remote</div>
-      <div style="font-size:11px;color:var(--y);background:rgba(210,153,34,.06);border-left:2px solid var(--y);padding:6px 10px;border-radius:0 5px 5px 0;margin-bottom:10px">
-        For multiple subnets enter comma-separated CIDRs: <span style="font-family:var(--mono);color:var(--g);font-size:10px">10.1.0.0/24, 10.2.0.0/24</span>
-      </div>
-      ${inp('local_subnet','Local subnet(s) (CIDR)','10.1.0.0/24','10.1.0.0/24')}
-      ${inp('remote_subnet','Remote subnet(s) (CIDR)','10.2.0.0/24','10.2.0.0/24')}
       ${inp('local_gw','Local LAN interface','lan','lan')}
-      <div style="font-size:11px;color:var(--t2);background:rgba(29,158,117,.05);border-left:2px solid var(--a);padding:6px 10px;border-radius:0 5px 5px 0;margin-top:4px;line-height:1.6">
-        💡 Multiple subnets create separate Phase 2 selectors automatically — one per subnet pair.
+
+      <div style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:6px">Local subnet(s)</label>
+        <div id="ipsec_local_subnets">
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <input type="text" class="ipsec-local-sub" placeholder="e.g. 10.1.0.0/24" value="10.1.0.0/24"
+              style="flex:1;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+            <button onclick="ipsecAddSubnet('local')" style="background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.3);border-radius:6px;padding:6px 12px;color:var(--a);cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap">+ Add</button>
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:2px;font-family:var(--mono)">Each subnet = one Phase 2 selector</div>
+      </div>
+
+      <div style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:6px">Remote subnet(s)</label>
+        <div id="ipsec_remote_subnets">
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <input type="text" class="ipsec-remote-sub" placeholder="e.g. 10.2.0.0/24" value="10.2.0.0/24"
+              style="flex:1;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+            <button onclick="ipsecAddSubnet('remote')" style="background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.3);border-radius:6px;padding:6px 12px;color:var(--a);cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap">+ Add</button>
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:2px;font-family:var(--mono)">Each remote subnet gets a static route automatically</div>
+      </div>
+
+      <div style="font-size:11px;color:var(--t2);background:rgba(29,158,117,.05);border-left:2px solid var(--a);padding:8px 12px;border-radius:0 6px 6px 0;line-height:1.6">
+        💡 <strong style="color:var(--t)">Multiple subnets</strong> — each local+remote pair generates a separate Phase 2 selector. Example: 2 local × 3 remote = 6 Phase 2 selectors.
       </div>`,
     sslvpn: `
       <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:12px;font-family:var(--mono)">🕵️ SSL VPN Configuration</div>
@@ -3324,6 +3388,30 @@ function setCfgType(type, btn){
 }
 
 function g(id){ const el=document.getElementById('cfg_'+id); return el ? el.value.trim() : ''; }
+
+function ipsecAddSubnet(type){
+  const container = document.getElementById('ipsec_'+type+'_subnets');
+  if(!container) return;
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:6px;margin-bottom:6px';
+  row.innerHTML = '<input type="text" class="ipsec-'+type+'-sub" placeholder="e.g. 10.'+(type==='local'?'1':'2')+'.0.0/24"'
+    +' style="flex:1;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">'
+    +'<button onclick="ipsecRemoveSubnet(this)" style="background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);border-radius:6px;padding:6px 12px;color:var(--r);cursor:pointer;font-size:13px;font-weight:700">−</button>';
+  container.appendChild(row);
+}
+
+function ipsecRemoveSubnet(btn){
+  const row = btn.closest('div');
+  const container = row.parentElement;
+  // Don't remove if only one row left
+  if(container.querySelectorAll('div').length > 1) row.remove();
+  else showToast('⚠️ At least one subnet is required.');
+}
+
+function ipsecGetSubnets(type){
+  const inputs = document.querySelectorAll('.ipsec-'+type+'-sub');
+  return Array.from(inputs).map(i=>i.value.trim()).filter(Boolean);
+}
 function gs(id){ const el=document.getElementById('cfg_'+id); return el ? el.value : ''; }
 
 function cidrToMask(cidr){
