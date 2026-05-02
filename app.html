@@ -296,10 +296,26 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   .rgrid{grid-template-columns:1fr}
 
   /* Multi-vendor */
-  .mv-body{grid-template-columns:1fr}
+  /* Multi-vendor mobile */
+  .mv-wrap{height:auto;min-height:0}
+  .mv-body{grid-template-columns:1fr;height:auto}
   .mv-cats{display:none}
-  .mv-cats.open{display:block;position:fixed;top:0;left:0;width:80vw;max-width:280px;height:100dvh;z-index:500;padding-top:50px;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,.4)}
-  .mv-vendor-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .mv-cats.open{display:block;position:fixed;top:0;left:0;width:80vw;max-width:280px;height:100dvh;z-index:500;padding-top:50px;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,.4);background:var(--b2)}
+  .mv-vendor-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
+  .mv-vtab{font-size:10px;padding:6px 8px;white-space:nowrap;flex-shrink:0}
+  .mv-cmds{padding:10px;max-height:none}
+  .mv-cmd-row{flex-wrap:wrap;gap:6px}
+  .mv-cmd-right{flex-wrap:wrap}
+  .mv-cat-hdr{font-size:12px}
+  /* HW Reference mobile */
+  .hw-cards{grid-template-columns:1fr}
+  .hw-filter{gap:4px}
+  .hw-fbtn{font-size:10px;padding:4px 8px}
+  .hw-search{font-size:11px;padding:5px 10px}
+  .hw-specs{grid-template-columns:1fr 1fr}
+  .hw-img-ph{height:100px}
+  .hw-tier-hdr{flex-direction:column;align-items:flex-start;gap:4px;font-size:12px}
+  .hw-tier-hdr span{font-size:10px}
   .mv-vtab{font-size:11px;padding:6px 10px}
 
   /* Config migrator grid */
@@ -1244,13 +1260,45 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
     const c=curC||getFirstCat(curV);
     el.innerHTML=`
       <div class="mv-wrap">
-        <div class="mv-vendor-tabs" id="mvVTabs">${vendorTabsHTML()}</div>
+        <div style="display:flex;align-items:center;gap:0;background:var(--b2);border-bottom:1px solid var(--br)">
+          <button id="mvCatToggle" onclick="mvToggleCats()" style="display:none;padding:8px 12px;background:rgba(29,158,117,.1);border:none;border-right:1px solid var(--br);color:var(--a);font-size:13px;cursor:pointer;flex-shrink:0" title="Categories">☰ Categories</button>
+          <div class="mv-vendor-tabs" id="mvVTabs" style="flex:1">${vendorTabsHTML()}</div>
+        </div>
+        <div id="mvCatOverlay" onclick="mvCloseCats()" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:498"></div>
         <div class="mv-body">
           <div class="mv-cats" id="mvCats">${catsHTML(curV)}</div>
           <div class="mv-cmds" id="mvCmds">${cmdsHTML(curV,c)}</div>
         </div>
       </div>`;
   }
+
+  window.mvToggleCats=function(){
+    const cats=document.getElementById('mvCats');
+    const overlay=document.getElementById('mvCatOverlay');
+    const btn=document.getElementById('mvCatToggle');
+    if(!cats) return;
+    const isOpen=cats.classList.contains('open');
+    cats.classList.toggle('open',!isOpen);
+    if(overlay) overlay.style.display=isOpen?'none':'block';
+    if(btn) btn.textContent=isOpen?'☰ Categories':'✕ Close';
+  };
+
+  window.mvCloseCats=function(){
+    const cats=document.getElementById('mvCats');
+    const overlay=document.getElementById('mvCatOverlay');
+    const btn=document.getElementById('mvCatToggle');
+    if(cats) cats.classList.remove('open');
+    if(overlay) overlay.style.display='none';
+    if(btn) btn.textContent='☰ Categories';
+  };
+
+  // Show/hide category toggle button on mobile
+  function mvCheckMobile(){
+    const btn=document.getElementById('mvCatToggle');
+    if(btn) btn.style.display=window.innerWidth<=768?'block':'none';
+  }
+  mvCheckMobile();
+  window.addEventListener('resize',mvCheckMobile);
 
   window.mvSetV=function(vid){
     curV=vid; curC=getFirstCat(vid);
@@ -1260,6 +1308,7 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
   };
 
   window.mvSetC=function(cat,vid){
+    if(window.innerWidth<=768) mvCloseCats();
     curC=cat; curV=vid||curV;
     document.getElementById('mvCats').innerHTML=catsHTML(curV);
     document.getElementById('mvCmds').innerHTML=cmdsHTML(curV,cat);
