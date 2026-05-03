@@ -224,6 +224,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   #loggedInUser{display:none}
   #nwVerBadge{display:none}
 
+  /* Kbar compact on mobile */
+  #kbarMain{padding:4px 10px}
+  #kbarMain .kst{font-size:10px}
   /* Tab bar — scrollable on mobile */
   .tabs{padding:0 2px}
   .tab-group-label{display:none}
@@ -409,11 +412,19 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
       <button class="logout-btn" onclick="doLogout()">⏻ Logout</button>
     </div>
   </div>
-  <div class="kbar">
-    <label>🔑 Groq API Key (free):</label>
-    <input type="password" id="apikey" placeholder="gsk_..."/>
-    <button class="sbtn" onclick="saveKey()">Save</button>
-    <span class="kst" id="kst" style="color:var(--t3)">not set</span>
+  <div class="kbar" id="kbarMain" style="justify-content:flex-end">
+    <span class="kst" id="kst" style="color:var(--t3);font-size:11px">🔑 Groq: not set</span>
+    <button onclick="kbarToggle()" id="kbarToggleBtn"
+      style="font-size:10px;padding:3px 10px;border-radius:20px;border:1px solid var(--br);background:var(--b3);color:var(--t2);cursor:pointer;font-family:var(--mono);white-space:nowrap">
+      Set Key
+    </button>
+  </div>
+  <div id="kbarExpanded" style="display:none;align-items:center;gap:8px;padding:6px 16px;background:var(--b2);border-bottom:1px solid var(--br);flex-shrink:0;flex-wrap:wrap">
+    <label style="font-size:11px;color:var(--t2);white-space:nowrap">🔑 Groq API Key:</label>
+    <input type="password" id="apikey" placeholder="gsk_..." 
+      style="flex:1;min-width:180px;max-width:360px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none"/>
+    <button class="sbtn" onclick="saveKey()" style="padding:5px 14px">Save</button>
+    <button onclick="kbarToggle()" style="font-size:11px;color:var(--t3);background:none;border:none;cursor:pointer;padding:0">✕</button>
   </div>
   <div class="layout">
     <div class="sidebar"></div>
@@ -5786,6 +5797,15 @@ document.addEventListener('click', function(e){
     results.style.display='none';
   }
 });
+
+function kbarToggle(){
+  const exp = document.getElementById('kbarExpanded');
+  const btn = document.getElementById('kbarToggleBtn');
+  if(!exp) return;
+  const isOpen = exp.style.display === 'flex';
+  exp.style.display = isOpen ? 'none' : 'flex';
+  if(btn) btn.textContent = isOpen ? 'Set Key' : '✕ Close';
+}
 
 function toggleSidebar(){
   const sidebar = document.querySelector('.sidebar');
