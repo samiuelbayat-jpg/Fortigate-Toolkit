@@ -7,16 +7,16 @@
 <link rel="apple-touch-icon" href="favicon.svg">
 <meta name="google-site-verification" content="oeYl1b9Z9yTtBtV6eDU-G9ARM3WM9O_nEq7NCcAmqvg">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🐺 NetWolf | FortiGate Pro Toolkit — Professional FortiGate CLI Troubleshooting</title>
-<meta name="description" content="NetWolf Pro — the professional FortiGate CLI toolkit for network engineers. 50+ guided troubleshooting playbooks, AI-powered CLI analysis, IP masking, subnet calculator and multi-vendor CLI reference.">
-<meta name="keywords" content="FortiGate, FortiOS, CLI, troubleshooting, IPsec VPN, SSL VPN, SD-WAN, HA cluster, VDOM, network engineer, firewall, Fortinet, toolkit, diagnose, debug flow, sniffer">
+<title>NetWolf | FortiGate Troubleshooting Toolkit — CLI Playbooks, AI Analysis & Config Generator</title>
+<meta name="description" content="NetWolf Pro — FortiGate troubleshooting toolkit for network engineers. Step-by-step CLI playbooks for IPsec VPN, SSL VPN, SD-WAN, HA cluster, routing, policy and NAT. AI-powered CLI analysis, config generator, IP masking and multi-vendor CLI reference.">
+<meta name="keywords" content="FortiGate troubleshooting, FortiGate CLI, FortiOS debug, IPsec VPN troubleshoot, SSL VPN FortiGate, SD-WAN FortiGate, HA cluster FortiGate, FortiGate debug flow, diagnose sniffer FortiGate, FortiGate network engineer, Fortinet toolkit, FortiGate config generator, FortiGate IP masking, FortiGate commands, FortiOS 7.x">
 <meta name="author" content="NetWolf">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#1D9E75">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://netwolffortigate.com/">
-<meta property="og:title" content="🐺 NetWolf | FortiGate Pro Toolkit">
-<meta property="og:description" content="Professional FortiGate troubleshooting toolkit for network engineers. 50+ CLI playbooks, AI analysis, IP masking and more.">
+<meta property="og:title" content="NetWolf | FortiGate Troubleshooting Toolkit — CLI Playbooks & AI Analysis">
+<meta property="og:description" content="Step-by-step FortiGate CLI troubleshooting playbooks for IPsec, SSL VPN, SD-WAN, HA and more. AI-powered CLI analysis, config generator and IP masking — built for network engineers.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://netwolffortigate.com/">
 <meta name="twitter:title" content="🐺 NetWolf | FortiGate Pro Toolkit">
@@ -556,15 +556,10 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
       <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.15);border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--t2);line-height:1.7">
         <strong style="color:var(--t)">How it works (Beta):</strong><br>
         1️⃣ Fill in all your details below<br>
-        2️⃣ Choose your plan — Monthly or Yearly<br>
-        3️⃣ Click Subscribe — Stripe secure checkout opens<br>
-        4️⃣ Your account is created and sent for manual verification<br>
-        5️⃣ You receive confirmation at your email within 24 hours<br>
-        6️⃣ Log in at <a href="https://netwolffortigate.com/app.html" style="color:var(--a)">netwolffortigate.com/app.html</a>
-      </div>
-      <div class="form-plan-banner">
-        <span class="form-plan-name" id="planBannerName">🐺 NetWolf Pro — Monthly</span>
-        <span class="form-plan-price" id="planBannerPrice">€10 / month</span>
+        2️⃣ Click Subscribe — Stripe secure checkout opens<br>
+        3️⃣ Your account is created and sent for manual verification<br>
+        4️⃣ You receive confirmation at your email within 24 hours<br>
+        5️⃣ Log in at <a href="https://netwolffortigate.com/app.html" style="color:var(--a)">netwolffortigate.com/app.html</a>
       </div>
       <form id="orderForm" novalidate>
         <div class="form-divider">Your login credentials</div>
@@ -606,22 +601,16 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
             </select>
           </div>
         </div>
-        <div class="form-divider">Subscription plan</div>
-        <div class="plan-pick">
-          <div class="plan-opt" onclick="setPlan('monthly')" style="cursor:pointer">
-            <div class="plan-opt-inner active" id="cardMonthly">
-              <div class="plan-opt-label active-lbl">Monthly</div>
-              <div class="plan-opt-price">€10<span style="font-size:12px;color:var(--t2)">/mo</span></div>
-              <div style="font-size:10px;color:var(--a);margin-top:4px;font-family:var(--mono)">Select this plan</div>
+        <div class="form-divider">Your selected plan</div>
+        <div id="selectedPlanDisplay" style="background:rgba(29,158,117,.07);border:2px solid rgba(29,158,117,.25);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="font-size:24px">🐺</span>
+            <div>
+              <div id="selectedPlanName" style="font-size:15px;font-weight:700;color:var(--a)">NetWolf Pro — Monthly</div>
+              <div id="selectedPlanPrice" style="font-size:13px;color:var(--t2);margin-top:2px">€10 / month · billed monthly · cancel anytime</div>
             </div>
           </div>
-          <div class="plan-opt" onclick="setPlan('yearly')" style="cursor:pointer">
-            <div class="plan-opt-inner" id="cardYearly">
-              <div class="plan-opt-label">Yearly <span style="color:var(--g);font-size:10px;font-weight:700">SAVE €20</span></div>
-              <div class="plan-opt-price">€100<span style="font-size:12px;color:var(--t2)">/yr</span></div>
-              <div style="font-size:10px;color:var(--g);margin-top:4px;font-family:var(--mono)">Select this plan</div>
-            </div>
-          </div>
+          <a href="#pricing" onclick="window.scrollTo({top:document.getElementById('pricing').offsetTop,behavior:'smooth'})" style="font-size:11px;color:var(--t3);text-decoration:none;border:1px solid var(--br);border-radius:20px;padding:5px 14px;cursor:pointer">← Change plan</a>
         </div>
         <div class="form-divider">Payment — secured by Stripe</div>
         <div class="cc-logos"><span class="cc-logo">VISA</span><span class="cc-logo">MC</span><span class="cc-logo">AMEX</span><span class="cc-logo">iDEAL</span></div>
@@ -729,24 +718,15 @@ const STRIPE_LINKS = {
 
 function setPlan(plan){
   selectedPlan = plan;
-  // Update plan cards
-  const mCard = document.getElementById('cardMonthly');
-  const yCard = document.getElementById('cardYearly');
-  if(mCard) mCard.style.border = plan==='monthly' ? '2px solid var(--a)' : '1px solid var(--br)';
-  if(yCard) yCard.style.border = plan==='yearly'  ? '2px solid var(--a)' : '1px solid var(--br)';
-  // Update label colors
-  const mLbl = mCard?.querySelector('.plan-opt-label');
-  const yLbl = yCard?.querySelector('.plan-opt-label');
-  if(mLbl) mLbl.style.color = plan==='monthly' ? 'var(--a)' : 'var(--t2)';
-  if(yLbl) yLbl.style.color = plan==='yearly'  ? 'var(--g)' : 'var(--t2)';
-  // Update sub text
-  const mSub = mCard?.querySelectorAll('div')[2];
-  const ySub = yCard?.querySelectorAll('div')[2];
-  if(mSub) mSub.textContent = plan==='monthly' ? '✓ Selected' : 'Select this plan';
-  if(ySub) ySub.textContent = plan==='yearly'  ? '✓ Selected' : 'Select this plan';
-  if(mSub) mSub.style.color = plan==='monthly' ? 'var(--a)' : 'var(--t3)';
-  if(ySub) ySub.style.color = plan==='yearly'  ? 'var(--g)' : 'var(--t3)';
-  // Scroll to form if called from pricing section
+  const nameEl = document.getElementById('selectedPlanName');
+  const priceEl = document.getElementById('selectedPlanPrice');
+  // Also update banner if present
+  const bannerName = document.getElementById('planBannerName');
+  const bannerPrice = document.getElementById('planBannerPrice');
+  if(bannerName) bannerName.textContent = plan==='monthly' ? '🐺 NetWolf Pro — Monthly' : '🐺 NetWolf Pro — Yearly';
+  if(bannerPrice) bannerPrice.textContent = plan==='monthly' ? '€10 / month' : '€100 / year';
+  if(nameEl) nameEl.textContent = plan==='monthly' ? '🐺 NetWolf Pro — Monthly' : '🐺 NetWolf Pro — Yearly';
+  if(priceEl) priceEl.textContent = plan==='monthly' ? '€10 / month · billed monthly' : '€100 / year · save €20';
   const formCard = document.getElementById('formCard');
   if(formCard) formCard.scrollIntoView({behavior:'smooth', block:'start'});
 }
