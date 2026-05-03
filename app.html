@@ -1160,14 +1160,26 @@ function renderFreeAITab(el){
     </div>
   </div>` : ''}
 
-  <!-- Key input row -->
-  <div style="background:var(--b2);border:1px solid ${hasKey?'rgba(63,185,80,.3)':'var(--br)'};border-radius:10px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span style="font-size:12px;font-weight:600;color:var(--t2);white-space:nowrap">🔑 Groq API Key</span>
-    <input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}"
-      style="flex:1;min-width:180px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 12px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
-    <button class="sbtn" id="saveGroqKeyBtn" style="white-space:nowrap">💾 Save Key</button>
+  <!-- Key input row — compact toggle -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+    ${hasKey
+      ? `<div style="display:flex;align-items:center;gap:8px;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:20px;padding:5px 14px">
+           <span style="font-size:11px;color:var(--g)">✓ Groq key saved</span>
+           <button id="groqToggleBtn" onclick="groqToggleKey()" style="font-size:10px;color:var(--bl);background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono)">Change</button>
+         </div>`
+      : `<button id="groqToggleBtn" onclick="groqToggleKey()"
+           style="display:inline-flex;align-items:center;gap:6px;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--bl);cursor:pointer;font-family:var(--mono)">
+           🔑 Add Groq API Key
+         </button>`
+    }
     <button onclick="showGroqGuide()" style="font-size:11px;color:var(--bl);background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:20px;padding:4px 12px;cursor:pointer;white-space:nowrap">❓ How to get a free key</button>
-    ${hasKey ? '<span style="font-size:11px;color:var(--g);white-space:nowrap">✓ Key saved</span>' : ''}
+  </div>
+  <div id="groqKeyPanel" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:10px 14px;margin-bottom:12px">
+    <span style="font-size:11px;font-weight:600;color:var(--t2);white-space:nowrap">🔑 API Key</span>
+    <input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}"
+      style="flex:1;min-width:160px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+    <button class="sbtn" id="saveGroqKeyBtn" style="white-space:nowrap;padding:6px 14px">💾 Save</button>
+    <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl);white-space:nowrap">Get key →</a>
   </div>
 
   <!-- Model selector -->
@@ -1204,6 +1216,15 @@ function renderFreeAITab(el){
   </div>`;
 
   // ── Event handlers ──
+  window.groqToggleKey = function(){
+    const panel = document.getElementById('groqKeyPanel');
+    const btn = document.getElementById('groqToggleBtn');
+    if(!panel) return;
+    const isOpen = panel.style.display === 'flex';
+    panel.style.display = isOpen ? 'none' : 'flex';
+    if(btn) btn.textContent = isOpen ? 'Change' : 'Cancel';
+  };
+
   document.getElementById('saveGroqKeyBtn').onclick=()=>{
     const k=document.getElementById('groqApiKeyInput').value.trim();
     if(!k){ showToast('⚠️ Please enter your Groq API key first.'); return; }
@@ -1212,6 +1233,7 @@ function renderFreeAITab(el){
     groqApiKeyFree=k; groqApiKey=k;
     showToast('✅ Groq API key saved!');
     document.getElementById('groqApiKeyInput').value=k.slice(0,8)+'••••••••••••••••••••';
+    const kp=document.getElementById('groqKeyPanel'); if(kp) kp.style.display='none';
     renderFreeAITab(el);
   };
 
