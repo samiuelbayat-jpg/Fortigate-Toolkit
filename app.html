@@ -5533,8 +5533,8 @@ function renderHWRef(el){
 function initSidebar(){
   let sidebar=document.querySelector('.sidebar');
   let categories=[
-    {section:"Troubleshoot",items:["vpn","ssl","policy","portfwd","sdwan","routing","vlan","intervdom","ha","auth","utm","cert","dhcp","fguard","sniffer","debug","session","sysdiag","hwnpu","routing3","pbr","logging","snmp","ntp","fmgr","wanopt","ztna","fortiswitch","fortiap","ipv6","trafficshaping","sip","secfabric","cfgtransaction","fnsysctladv","cfgbackup"]},
-    {section:"Config Guides",items:["cfg-init","cfg-vdom","cfg-ipsec","cfg-sslvpn","cfg-sdwan","cfg-ha","cfg-intervdom","cfg-portfwd","cfg-ospfbgp","cfg-sec","cfg-fortiswitch","cfg-ztna"]}
+    {section:"Troubleshoot",items:["vpn","ssl","policy","portfwd","sdwan","routing","vlan","intervdom","ha","auth","utm","cert","dhcp","fguard","sniffer","debug","session","sysdiag","hwnpu","routing3","pbr","logging","snmp","ntp","fmgr","wanopt","ztna","fortiswitch","fortiap","ipv6","trafficshaping","sip","secfabric","cfgtransaction","fnsysctladv","cfgbackup","netflow"]},
+    {section:"Config Guides",items:["cfg-init","cfg-vdom","cfg-ipsec","cfg-sslvpn","cfg-sdwan","cfg-ha","cfg-intervdom","cfg-portfwd","cfg-ospfbgp","cfg-sec","cfg-fortiswitch","cfg-ztna","cfg-netflow"]}
   ];
   let labelMap={
     vpn:"🔒 VPN / IPsec",ssl:"🕵️ SSL VPN",policy:"📃 Policy / NAT",portfwd:"↩️ Port Forwarding",
@@ -5552,7 +5552,7 @@ function initSidebar(){
     "cfg-sslvpn":"💻 SSL VPN Full","cfg-sdwan":"🛰️ SD-WAN Config","cfg-ha":"🔄 HA Cluster",
     "cfg-intervdom":"↔️ Inter-VDOM","cfg-portfwd":"🚪 Port Forward VIP",
     "cfg-ospfbgp":"📊 OSPF/BGP","cfg-sec":"✨ Security Profiles",
-    "cfg-fortiswitch":"🔀 FortiSwitch Config","cfg-ztna":"🛡️ ZTNA Config"
+    "cfg-fortiswitch":"🔀 FortiSwitch Config","cfg-ztna":"🛡️ ZTNA Config","cfg-netflow":"📊 NetFlow Config"
   };
   let html='';
   for(let cat of categories){
@@ -5615,4 +5615,120 @@ window.addEventListener('DOMContentLoaded', ()=>{
 function initAndRender(){try{loadSavedTheme();initSidebar();render();}catch(err){const content=document.getElementById('mc');if(content)content.innerHTML=`<div class="cdanger" style="padding:20px;">⚠️ Failed to load toolkit: ${err.message}</div>`;}}
 </script>
 </body>
-</html>
+</html>case 'netflow':
+  steps=[
+    {
+      title:"Check if NetFlow is enabled",
+      commands:[
+        {cmd:"show system netflow",cl:"ro"},
+        {cmd:"get system netflow",cl:"ro"},
+        {cmd:"diagnose test application proxyd 1",cl:"ro"},
+      ],
+      note:"Verify collector IP, port (default 2055), active-flow-timeout and inactive-flow-timeout."
+    },
+    {
+      title:"Verify NetFlow collector connectivity",
+      commands:[
+        {cmd:"execute ping <COLLECTOR_IP>",cl:"ro"},
+        {cmd:"execute traceroute <COLLECTOR_IP>",cl:"ro"},
+        {cmd:"diagnose sniffer packet any 'host <COLLECTOR_IP> and port 2055' 4 20 l",cl:"ro"},
+      ],
+      note:"Port 2055 = NetFlow v5/v9. Port 4739 = IPFIX. Capture to confirm FortiGate is sending flows."
+    },
+    {
+      title:"Check flow export statistics",
+      commands:[
+        {cmd:"diagnose netflow stat",cl:"ro"},
+        {cmd:"diagnose netflow reset",cl:"caution"},
+        {cmd:"diagnose debug flow filter addr <IP>",cl:"caution"},
+        {cmd:"diagnose debug enable",cl:"caution"},
+      ],
+      note:"diagnose netflow stat shows exported packets, bytes and flow records sent to collector."
+    },
+    {
+      title:"Check sFlow configuration",
+      commands:[
+        {cmd:"show system sflow",cl:"ro"},
+        {cmd:"get system sflow",cl:"ro"},
+        {cmd:"show system interface | grep sflow",cl:"ro"},
+      ],
+      note:"sFlow samples at interface level. NetFlow/IPFIX exports session flows. Both can run simultaneously."
+    },
+    {
+      title:"Verify IPFIX / NetFlow v9 template",
+      commands:[
+        {cmd:"diagnose netflow template",cl:"ro"},
+        {cmd:"diagnose sniffer packet any 'port 4739' 4 20 l",cl:"ro"},
+      ],
+      note:"IPFIX uses port 4739. Templates are sent periodically — check collector received template before data records."
+    },
+  ];
+  break;
+case 'cfg-netflow':
+  steps=[
+    {
+      title:"Enable NetFlow globally",
+      commands:[
+        {cmd:"config system netflow",cl:"caution"},
+        {cmd:"    set status enable",cl:"caution"},
+        {cmd:"    set collector-ip <COLLECTOR_IP>",cl:"caution"},
+        {cmd:"    set collector-port 2055",cl:"caution"},
+        {cmd:"    set source-ip <FORTIGATE_IP>",cl:"caution"},
+        {cmd:"    set active-flow-timeout 60",cl:"caution"},
+        {cmd:"    set inactive-flow-timeout 15",cl:"caution"},
+        {cmd:"end",cl:"caution"},
+      ],
+      note:"active-flow-timeout: export interval for long flows (seconds). inactive-flow-timeout: export after flow ends."
+    },
+    {
+      title:"Enable NetFlow v9 or IPFIX",
+      commands:[
+        {cmd:"config system netflow",cl:"caution"},
+        {cmd:"    set collector-ip <COLLECTOR_IP>",cl:"caution"},
+        {cmd:"    set collector-port 4739",cl:"caution"},
+        {cmd:"end",cl:"caution"},
+      ],
+      note:"Port 2055 = NetFlow v5/v9. Port 4739 = IPFIX (NetFlow v10). Most modern collectors support IPFIX."
+    },
+    {
+      title:"Enable NetFlow on specific interfaces",
+      commands:[
+        {cmd:"config system interface",cl:"caution"},
+        {cmd:"    edit <INTF>",cl:"caution"},
+        {cmd:"        set netflow-sampler enable",cl:"caution"},
+        {cmd:"        set netflow-sampler-ingress enable",cl:"caution"},
+        {cmd:"        set netflow-sampler-egress enable",cl:"caution"},
+        {cmd:"    next",cl:"caution"},
+        {cmd:"end",cl:"caution"},
+      ],
+      note:"Per-interface sampling lets you monitor specific interfaces — WAN, LAN or inter-VDOM links separately."
+    },
+    {
+      title:"Configure sFlow",
+      commands:[
+        {cmd:"config system sflow",cl:"caution"},
+        {cmd:"    set status enable",cl:"caution"},
+        {cmd:"    set collector-ip <COLLECTOR_IP>",cl:"caution"},
+        {cmd:"    set collector-port 6343",cl:"caution"},
+        {cmd:"end",cl:"caution"},
+        {cmd:"config system interface",cl:"caution"},
+        {cmd:"    edit <INTF>",cl:"caution"},
+        {cmd:"        set sflow-sampler enable",cl:"caution"},
+        {cmd:"    next",cl:"caution"},
+        {cmd:"end",cl:"caution"},
+      ],
+      note:"sFlow default port 6343. Unlike NetFlow, sFlow samples packets — not flows. Enabled per-interface."
+    },
+    {
+      title:"Verify NetFlow is working",
+      commands:[
+        {cmd:"diagnose netflow stat",cl:"ro"},
+        {cmd:"show system netflow",cl:"ro"},
+        {cmd:"diagnose sniffer packet any 'port 2055 or port 4739' 4 20 l",cl:"ro"},
+        {cmd:"get system netflow",cl:"ro"},
+      ],
+      note:"diagnose netflow stat shows packets sent to collector. If zero — check firewall policy allows UDP to collector."
+    },
+  ];
+  break;
+
