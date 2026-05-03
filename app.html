@@ -203,6 +203,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   .dot.r, .dot.y, .dot.g{display:none}
   /* Make toolkit name visible */
   .ttxt{display:block;max-width:180px;font-size:12px}
+  /* Compact search on mobile */
+  #globalSearch{font-size:11px;padding:5px 10px 5px 28px}
+  #globalSearch::placeholder{font-size:10px}
 
 
   /* Full page layout */
@@ -381,6 +384,17 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()" title="Menu">☰</button>
     <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
     <span class="ttxt">🐺 NetWolf | Fortigate Pro Toolkit</span><span id="nwVerBadge" style="font-family:var(--mono);font-size:9px;background:rgba(29,158,117,.12);color:var(--a);border:1px solid rgba(29,158,117,.2);border-radius:20px;padding:2px 8px;cursor:pointer;white-space:nowrap" onclick="showChangelog()" title="Click to see changelog">v1.2.0</span>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:0 10px">
+      <div style="position:relative;width:100%;max-width:340px">
+        <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:13px;pointer-events:none">🔍</span>
+        <input type="text" id="globalSearch" placeholder="Search categories, commands..." 
+          oninput="globalSearchFn(this.value)"
+          style="width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:6px 12px 6px 32px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none;transition:border-color .2s"
+          onfocus="this.style.borderColor='var(--a)'"
+          onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+        <div id="searchResults" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--b2);border:1px solid var(--br);border-radius:10px;max-height:320px;overflow-y:auto;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>
+      </div>
+    </div>
     <div class="ver" style="display:flex;align-items:center;gap:8px">
       <span>FortiOS 6.x / 7.x</span>
       <div class="theme-switcher">
@@ -978,6 +992,78 @@ cfgbackup:{t:'Backup, Restore & Firmware',s:'high',type:'trouble',chips:['Backup
 {t:'2. Create ZTNA server (access proxy)',cmds:['config firewall access-proxy','edit ZTNA-PROXY','set vip <VIP_OBJECT>','set client-cert enable','set user-agent-detect disable','config api-gateway','edit 1','set url-map /','set service tcp-forwarding','config realservers','edit 1','set ip <BACKEND_SERVER_IP>','set port <BACKEND_PORT>','next','end','next','end','end']},
 {t:'3. Create ZTNA policy',cmds:['config firewall policy','edit <ID>','set name ZTNA-ACCESS','set srcintf <WAN_INTF>','set dstintf <LAN_INTF>','set srcaddr <ZTNA_ADDRESS_OBJECT>','set dstaddr <ZTNA_PROXY_OBJECT>','set ztna-status enable','set ztna-tags-match-logic or','set action accept','next','end']},
 {t:'4. Verify ZTNA is working',cmds:['diagnose test application fcnacd 2','diagnose firewall dynamic list','execute log filter category 0','execute log display']}
+]},
+netflow:{t:'NetFlow / sFlow / IPFIX',s:'medium',type:'trouble',chips:['NetFlow not sending','Collector not receiving','sFlow config','IPFIX setup','Check statistics'],steps:[
+  {title:'Check NetFlow status',commands:[
+    {cmd:'show system netflow',type:'ro'},
+    {cmd:'get system netflow',type:'ro'},
+    {cmd:'diagnose netflow stat',type:'ro'},
+  ],note:'Verify collector IP, port (default 2055), active-flow-timeout and inactive-flow-timeout are correct.'},
+  {title:'Verify collector connectivity',commands:[
+    {cmd:'execute ping <COLLECTOR_IP>',type:'ro'},
+    {cmd:'execute traceroute <COLLECTOR_IP>',type:'ro'},
+    {cmd:'diagnose sniffer packet any \'host <COLLECTOR_IP> and port 2055\' 4 20 l',type:'ro'},
+  ],note:'Port 2055 = NetFlow v5/v9. Port 4739 = IPFIX. Capture confirms FortiGate is sending flows to collector.'},
+  {title:'Check flow export statistics',commands:[
+    {cmd:'diagnose netflow stat',type:'ro'},
+    {cmd:'diagnose netflow reset',type:'caution'},
+    {cmd:'diagnose sniffer packet any \'port 2055 or port 4739\' 4 20 l',type:'ro'},
+  ],note:'diagnose netflow stat shows exported packets and flow records. Zero = not sending. Check policy allows UDP to collector.'},
+  {title:'Check sFlow configuration',commands:[
+    {cmd:'show system sflow',type:'ro'},
+    {cmd:'get system sflow',type:'ro'},
+    {cmd:'diagnose sniffer packet any \'port 6343\' 4 20 l',type:'ro'},
+  ],note:'sFlow default port 6343. Unlike NetFlow it samples packets not flows. Must be enabled per-interface.'},
+  {title:'Verify IPFIX template delivery',commands:[
+    {cmd:'diagnose netflow template',type:'ro'},
+    {cmd:'diagnose sniffer packet any \'port 4739\' 4 20 l',type:'ro'},
+    {cmd:'diagnose debug application proxyd -1',type:'caution'},
+    {cmd:'diagnose debug enable',type:'caution'},
+  ],note:'IPFIX uses port 4739. Templates must be received by collector before data records. Check collector logs for template.'},
+]},
+'cfg-netflow':{t:'NetFlow & sFlow Configuration',s:'low',type:'config',steps:[
+  {title:'Enable NetFlow globally',commands:[
+    {cmd:'config system netflow',type:'caution'},
+    {cmd:'    set status enable',type:'caution'},
+    {cmd:'    set collector-ip <COLLECTOR_IP>',type:'caution'},
+    {cmd:'    set collector-port 2055',type:'caution'},
+    {cmd:'    set source-ip <FORTIGATE_MGMT_IP>',type:'caution'},
+    {cmd:'    set active-flow-timeout 60',type:'caution'},
+    {cmd:'    set inactive-flow-timeout 15',type:'caution'},
+    {cmd:'end',type:'caution'},
+  ],note:'active-flow-timeout: interval to export long flows (seconds). inactive-flow-timeout: delay after flow ends before export.'},
+  {title:'Switch to IPFIX (NetFlow v10)',commands:[
+    {cmd:'config system netflow',type:'caution'},
+    {cmd:'    set collector-ip <COLLECTOR_IP>',type:'caution'},
+    {cmd:'    set collector-port 4739',type:'caution'},
+    {cmd:'end',type:'caution'},
+  ],note:'IPFIX (port 4739) supports flexible templates and is preferred by modern collectors like Elastic, Grafana, ntopng.'},
+  {title:'Enable per-interface NetFlow sampling',commands:[
+    {cmd:'config system interface',type:'caution'},
+    {cmd:'    edit <INTF>',type:'caution'},
+    {cmd:'        set netflow-sampler enable',type:'caution'},
+    {cmd:'        set netflow-sampler-ingress enable',type:'caution'},
+    {cmd:'        set netflow-sampler-egress enable',type:'caution'},
+    {cmd:'    next',type:'caution'},
+    {cmd:'end',type:'caution'},
+  ],note:'Per-interface sampling monitors specific interfaces separately — WAN, LAN, inter-VDOM.'},
+  {title:'Configure sFlow',commands:[
+    {cmd:'config system sflow',type:'caution'},
+    {cmd:'    set status enable',type:'caution'},
+    {cmd:'    set collector-ip <COLLECTOR_IP>',type:'caution'},
+    {cmd:'    set collector-port 6343',type:'caution'},
+    {cmd:'end',type:'caution'},
+    {cmd:'config system interface',type:'caution'},
+    {cmd:'    edit <INTF>',type:'caution'},
+    {cmd:'        set sflow-sampler enable',type:'caution'},
+    {cmd:'    next',type:'caution'},
+    {cmd:'end',type:'caution'},
+  ],note:'sFlow samples packets at the interface level. Port 6343. Enable per interface after global config.'},
+  {title:'Verify NetFlow is working',commands:[
+    {cmd:'diagnose netflow stat',type:'ro'},
+    {cmd:'show system netflow',type:'ro'},
+    {cmd:'diagnose sniffer packet any \'port 2055 or port 4739\' 4 20 l',type:'ro'},
+  ],note:'If stat shows zero packets — check FortiGate has a policy allowing UDP to the collector IP and port.'},
 ]}
 };
 
@@ -5582,6 +5668,80 @@ function showChangelog(){
     </div>`).join('');
   modal.style.display='flex';
 }
+
+function globalSearchFn(query){
+  const resultsDiv = document.getElementById('searchResults');
+  if(!resultsDiv) return;
+  const q = query.toLowerCase().trim();
+  if(!q){ resultsDiv.style.display='none'; return; }
+
+  // Search through D object categories and steps
+  const matches = [];
+  for(const [id, data] of Object.entries(D)){
+    if(!data || !data.t) continue;
+    // Match category title
+    if(data.t.toLowerCase().includes(q)){
+      matches.push({id, title:data.t, type:'category', match:'Category: '+data.t});
+      continue;
+    }
+    // Match chips
+    if(data.chips){
+      const chip = data.chips.find(c=>c.toLowerCase().includes(q));
+      if(chip){ matches.push({id, title:data.t, type:'category', match:'Topic: '+chip}); continue; }
+    }
+    // Match step titles and commands
+    if(data.steps){
+      for(const step of data.steps){
+        if(step.title && step.title.toLowerCase().includes(q)){
+          matches.push({id, title:data.t, type:'step', match:'Step: '+step.title}); break;
+        }
+        if(step.commands){
+          const cmd = step.commands.find(c=>c.cmd && c.cmd.toLowerCase().includes(q));
+          if(cmd){ matches.push({id, title:data.t, type:'command', match:'Command: '+cmd.cmd}); break; }
+        }
+        if(step.note && step.note.toLowerCase().includes(q)){
+          matches.push({id, title:data.t, type:'note', match:'Note: '+step.note.slice(0,60)+'...'}); break;
+        }
+      }
+    }
+  }
+
+  if(!matches.length){
+    resultsDiv.innerHTML='<div style="padding:12px 14px;font-size:12px;color:var(--t3)">No results for "'+escapeHtml(query)+'"</div>';
+    resultsDiv.style.display='block';
+    return;
+  }
+
+  const icons = {category:'📁', step:'📋', command:'💻', note:'💡'};
+  resultsDiv.innerHTML = matches.slice(0,12).map(m=>`
+    <div onclick="globalSearchSelect('${m.id}')" style="padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);transition:background .1s" onmouseover="this.style.background='rgba(29,158,117,.08)'" onmouseout="this.style.background=''">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="font-size:12px">${icons[m.type]||'📋'}</span>
+        <span style="font-size:12px;font-weight:600;color:var(--t)">${escapeHtml(m.title)}</span>
+      </div>
+      <div style="font-size:10.5px;color:var(--t3);margin-top:2px;padding-left:19px">${escapeHtml(m.match)}</div>
+    </div>`).join('');
+  resultsDiv.style.display='block';
+}
+
+function globalSearchSelect(id){
+  const resultsDiv = document.getElementById('searchResults');
+  const searchBox = document.getElementById('globalSearch');
+  if(resultsDiv) resultsDiv.style.display='none';
+  if(searchBox) searchBox.value='';
+  // Switch to guide tab and select the category
+  stab('guide');
+  sel(id);
+}
+
+// Close search results when clicking outside
+document.addEventListener('click', function(e){
+  const search = document.getElementById('globalSearch');
+  const results = document.getElementById('searchResults');
+  if(results && search && !search.contains(e.target) && !results.contains(e.target)){
+    results.style.display='none';
+  }
+});
 
 function toggleSidebar(){
   const sidebar = document.querySelector('.sidebar');
