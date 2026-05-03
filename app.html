@@ -665,7 +665,17 @@ let groqApiKey=localStorage.getItem('groq_key')||'';
 function saveKey(){const v=document.getElementById('apikey').value.trim();if(!v)return;groqApiKey=v;localStorage.setItem('groq_key',v);document.getElementById('apikey').value='';setKst('✓ saved','#3fb950');}
 window.addEventListener('load',()=>{if(groqApiKey)setKst('✓ key loaded','#3fb950');});
 function setKst(t,c){const el=document.getElementById('kst');el.textContent=t;el.style.color=c;}
-function sel(c){cur=c;document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+c))document.getElementById('cat-'+c).classList.add('active');render();}
+function sel(c){
+  cur=c;
+  // Always switch to guide tab when selecting a category
+  tab='guide';
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  const guideTab=document.getElementById('tab-guide');
+  if(guideTab) guideTab.classList.add('active');
+  document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));
+  if(document.getElementById('cat-'+c)) document.getElementById('cat-'+c).classList.add('active');
+  render();
+}
 function stab(t){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');render();}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(t){return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
@@ -1103,10 +1113,50 @@ const QREF=[
 
 
 /* ══ RENDER FUNCTIONS ══ */
-function render(){const el=document.getElementById('mc');if(tab==='guide'){const d=D[cur];if(d.type==='config')renderCfg(el,d);else renderGuide(el,d);}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);}
+function render(){const el=document.getElementById('mc');if(tab==='guide'){
+  const d=D[cur];
+  if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
+  if(d.type==='config') renderCfg(el,d);
+  else renderGuide(el,d);
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);}
 
-function renderGuide(el,d){let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev '+d.s+'">P1 common</span></div>';h+='<div class="chips">'+d.chips.map(c=>'<span class="chip" onclick="askAI(\''+c.replace(/'/g,"\\'")+'  on FortiGate\')">'+c+' ↗</span>').join('')+'</div>';d.steps.forEach((s,i)=>{const real=s.cmds.filter(c=>!c.startsWith('('));const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':'';h+='<div class="cblock '+risk+'"><div class="chdr"><div class="chdr-l"><div class="snum">'+(i+1)+'</div>'+s.t+'</div><div style="display:flex;gap:6px;">'+(risk==='danger'?'<span class="cbadge danger">⚠️ service impact</span>':risk==='warn'?'<span class="cbadge caution">⚠️ config change</span>':'<span class="cbadge ro">read-only</span>')+'<button class="copybtn" onclick="copyAll(this,\''+cur+'\','+i+')">Copy all</button></div></div><div class="cbody">'+(risk==='danger'?'<div class="cdanger">⚠️ One or more commands below will impact live traffic or sessions.</div>':risk==='warn'?'<div class="cwarn">⚠️ One or more commands below will make configuration changes.</div>':'')+'<div class="clines">'+s.cmds.map(c=>{if(c.startsWith('('))return'<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>\n';const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';return'<span style="color:'+col+'">'+esc(c)+'</span>'+(sv==='danger'?' <span style="font-size:10px;color:var(--r);">⚠️CAUTION</span>':'')+'\n';}).join('')+'</div>'+(s.note?'<div class="cnote">'+s.note+'</div>':'')+'</div></div>';});
-  h+=`<div style="margin-top:32px;border-top:2px solid var(--br);padding-top:18px;background:rgba(0,0,0,0.2);border-radius:12px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><span style="font-weight:700;font-size:15px;">📟 CLI Output Reader</span><span style="font-size:11px;color:var(--t2);">Paste command outputs from your terminal session</span></div><textarea id="troubleOutputInput" placeholder="Paste raw FortiGate CLI output here..." style="width:100%;background:#000000;color:#f0f0f0;border:1px solid var(--br);font-family:var(--mono);font-size:12px;padding:12px;border-radius:8px;resize:vertical;" rows="7"></textarea><div style="display:flex;justify-content:flex-end;gap:10px;margin:12px 0 16px;"><button id="troubleOutputRenderBtn" class="sbtn">🖥️ Render Output</button><button id="troubleOutputClearBtn" class="sbtn" style="background:#4b5563;">🗑️ Clear</button></div><pre id="troubleOutputDisplay" style="background:#000000;color:#e6edf3;font-family:var(--mono);font-size:12px;line-height:1.5;padding:14px;border-radius:8px;border:1px solid var(--br);overflow-x:auto;white-space:pre-wrap;word-break:break-word;max-height:450px;margin:0;">— Paste CLI output and click "Render Output" —</pre></div>`;
+function renderGuide(el,d){
+  if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
+  let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev '+(d.s||'info')+'">Troubleshoot</span></div>';
+  h+='<div class="chips">'+((d.chips||[]).map(c=>'<span class="chip" onclick="askAI(\''+c.replace(/'/g,"\\'")+' on FortiGate\')">'+c+' ↗</span>').join(''))+'</div>';
+  d.steps.forEach((s,i)=>{
+    const real=s.cmds.filter(c=>!c.startsWith('('));
+    const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':'';
+    h+='<div class="cblock '+risk+'">';
+    h+='<div class="chdr"><div class="chdr-l"><div class="snum">'+(i+1)+'</div>'+s.t+'</div>';
+    h+='<div style="display:flex;gap:6px;">';
+    h+=(risk==='danger'?'<span class="cbadge danger">⚠️ service impact</span>':risk==='warn'?'<span class="cbadge caution">⚠️ config change</span>':'<span class="cbadge ro">read-only</span>');
+    h+='<button class="copybtn" onclick="copyAll(this,\''+cur+'\','+i+')">Copy all</button>';
+    h+='</div></div>';
+    h+='<div class="cbody">';
+    if(risk==='danger') h+='<div class="cdanger">⚠️ One or more commands below will impact live traffic or sessions.</div>';
+    else if(risk==='warn') h+='<div class="cwarn">⚠️ One or more commands below will make configuration changes.</div>';
+    h+='<div class="clines">'+s.cmds.map(c=>{
+      if(c.startsWith('(')) return '<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>\n';
+      const sv=cmdSafety(c);
+      let col=sv==='danger'?'var(--r)':sv==='caution'?'var(--y)':'var(--g)';
+      return '<span style="color:'+col+'">'+esc(c)+'</span>'+(sv==='danger'?' <span style="font-size:10px;color:var(--r);">⚠️CAUTION</span>':'')+'\n';
+    }).join('')+'</div>';
+    h+=(s.note?'<div class="cnote">'+s.note+'</div>':'');
+    h+='</div></div>';
+  });
+  h+=`<div style="margin-top:32px;border-top:2px solid var(--br);padding-top:18px;background:rgba(0,0,0,0.2);border-radius:12px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <span style="font-weight:700;font-size:15px;">📟 CLI Output Reader</span>
+      <span style="font-size:11px;color:var(--t2);">Paste command outputs from your terminal session</span>
+    </div>
+    <textarea id="troubleOutputInput" placeholder="Paste raw FortiGate CLI output here..." style="width:100%;background:#000000;color:#f0f0f0;border:1px solid var(--br);font-family:var(--mono);font-size:12px;padding:12px;border-radius:8px;resize:vertical;" rows="7"></textarea>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin:12px 0 16px;">
+      <button id="troubleOutputRenderBtn" class="sbtn">🖥️ Render Output</button>
+      <button id="troubleOutputClearBtn" class="sbtn" style="background:#4b5563;">🗑️ Clear</button>
+    </div>
+    <pre id="troubleOutputDisplay" style="background:#000000;color:#e6edf3;font-family:var(--mono);font-size:12px;line-height:1.5;padding:14px;border-radius:8px;border:1px solid var(--br);overflow-x:auto;white-space:pre-wrap;word-break:break-word;max-height:450px;margin:0;">— Paste CLI output and click "Render Output" —</pre>
+  </div>`;
   el.innerHTML=h;
   el.querySelector('#troubleOutputRenderBtn').onclick=()=>{el.querySelector('#troubleOutputDisplay').innerText=el.querySelector('#troubleOutputInput').value||"(no output pasted)";};
   el.querySelector('#troubleOutputClearBtn').onclick=()=>{el.querySelector('#troubleOutputInput').value='';el.querySelector('#troubleOutputDisplay').innerText='— Output will appear here —';};
