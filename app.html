@@ -5682,9 +5682,13 @@ function globalSearchFn(query){
   const resultsDiv = document.getElementById('searchResults');
   if(!resultsDiv) return;
   const q = query.toLowerCase().trim();
-  if(!q){ resultsDiv.style.display='none'; return; }
+  if(q.length < 2){ resultsDiv.style.display='none'; return; }
 
-  // Search through D object categories and steps
+  // Skip if looks like email or URL
+  if(q.includes('@') || q.includes('http') || q.includes('://') || q.includes('.com') || q.includes('.net')){
+    resultsDiv.style.display='none'; return;
+  }
+
   const matches = [];
   for(const [id, data] of Object.entries(D)){
     if(!data || !data.t) continue;
@@ -5693,12 +5697,12 @@ function globalSearchFn(query){
       matches.push({id, title:data.t, type:'category', match:'Category: '+data.t});
       continue;
     }
-    // Match chips
+    // Match chips only
     if(data.chips){
       const chip = data.chips.find(c=>c.toLowerCase().includes(q));
       if(chip){ matches.push({id, title:data.t, type:'category', match:'Topic: '+chip}); continue; }
     }
-    // Match step titles and commands
+    // Match step titles and commands only — NOT notes
     if(data.steps){
       for(const step of data.steps){
         if(step.title && step.title.toLowerCase().includes(q)){
@@ -5708,8 +5712,17 @@ function globalSearchFn(query){
           const cmd = step.commands.find(c=>c.cmd && c.cmd.toLowerCase().includes(q));
           if(cmd){ matches.push({id, title:data.t, type:'command', match:'Command: '+cmd.cmd}); break; }
         }
-        if(step.note && step.note.toLowerCase().includes(q)){
-          matches.push({id, title:data.t, type:'note', match:'Note: '+step.note.slice(0,60)+'...'}); break;
+      }
+    }
+    // Match config sections — titles and commands only
+    if(data.sections){
+      for(const sec of data.sections){
+        if(sec.t && sec.t.toLowerCase().includes(q)){
+          matches.push({id, title:data.t, type:'step', match:'Section: '+sec.t}); break;
+        }
+        if(sec.cmds){
+          const cmd = sec.cmds.find(c=>c && !c.startsWith('(') && c.toLowerCase().includes(q));
+          if(cmd){ matches.push({id, title:data.t, type:'command', match:'Command: '+cmd}); break; }
         }
       }
     }
