@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.groq.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com wss:; frame-ancestors 'none'">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="favicon.svg">
@@ -686,7 +688,7 @@ function sel(c){
 }
 function stab(t){tab=t;localStorage.setItem('nw_tab',t);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');render();}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function fmt(t){return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
+function fmt(t){t=t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
 function copyAll(btn,key,idx){const step=D[cur].steps?D[cur].steps[idx]:D[cur].sections[idx];const cmds=(step.cmds||[]).filter(c=>!c.startsWith('('));navigator.clipboard.writeText(cmds.join('\n')).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy all',1500);});}
 function copyRef(btn,ci,si){navigator.clipboard.writeText(QREF[ci].cmds[si]).then(()=>{btn.textContent='✓';setTimeout(()=>btn.textContent='Copy',1200);});}
 function askAI(q){stab('ai');setTimeout(()=>{const i=document.getElementById('chi');if(i){i.value=q;i.focus();}},50);}
@@ -1219,7 +1221,7 @@ let ipMappings=[];
 function generateFakeIP(real){let hash=0;for(let i=0;i<real.length;i++)hash=((hash<<5)-hash)+real.charCodeAt(i);hash=Math.abs(hash);let last=(hash%254)+1;let r=hash%3;if(r===0)return`192.0.2.${last}`;if(r===1)return`198.51.100.${last}`;return`203.0.113.${last}`;}
 function saveMappings(){localStorage.setItem("forti_masks_standalone",JSON.stringify(ipMappings));renderMaskTableStandalone();}
 function loadMappingsStandalone(){let s=localStorage.getItem("forti_masks_standalone");if(s){try{ipMappings=JSON.parse(s);}catch(e){ipMappings=[];}}else ipMappings=[];renderMaskTableStandalone();}
-function renderMaskTableStandalone(){const cont=document.getElementById("maskTableStandalone");if(!cont)return;if(!ipMappings.length){cont.innerHTML="<div style='color:#FCD34D;'>✨ No IP mappings yet.</div>";return;}let html="<table class='ip-mask-table'><thead><tr><th>Real IP</th><th>Fake IP</th><th>Description</th><th>Action</th></tr></thead><tbody>";ipMappings.forEach(m=>{html+=`<tr><td>${escapeHtml(m.real)}</td><td>${escapeHtml(m.fake)}</td><td>${escapeHtml(m.desc||'')}</td><td><button class='delMaskBtnStandalone' data-real='${m.real}' style='background:#B91C1C;color:white;border:none;border-radius:20px;padding:2px 8px;cursor:pointer;'>❌</button></td></tr>`;});html+="</tbody></table>";cont.innerHTML=html;document.querySelectorAll('.delMaskBtnStandalone').forEach(btn=>{btn.addEventListener('click',()=>{ipMappings=ipMappings.filter(m=>m.real!==btn.getAttribute('data-real'));saveMappings();});});}
+function renderMaskTableStandalone(){const cont=document.getElementById("maskTableStandalone");if(!cont)return;if(!ipMappings.length){cont.innerHTML="<div style='color:#FCD34D;'>✨ No IP mappings yet.</div>";return;}let html="<table class='ip-mask-table'><thead><tr><th>Real IP</th><th>Fake IP</th><th>Description</th><th>Action</th></tr></thead><tbody>";ipMappings.forEach(m=>{html+=`<tr><td>${escapeHtml(m.real)}</td><td>${escapeHtml(m.fake)}</td><td>${escapeHtml(m.desc||'')}</td><td><button class='delMaskBtnStandalone' data-real='${escapeHtml(m.real)}' style='background:#B91C1C;color:white;border:none;border-radius:20px;padding:2px 8px;cursor:pointer;'>❌</button></td></tr>`;});html+="</tbody></table>";cont.innerHTML=html;document.querySelectorAll('.delMaskBtnStandalone').forEach(btn=>{btn.addEventListener('click',()=>{ipMappings=ipMappings.filter(m=>m.real!==btn.getAttribute('data-real'));saveMappings();});});}
 function addMappingStandalone(real,desc){if(ipMappings.find(m=>m.real===real)){alert("IP already mapped");return false;}ipMappings.push({real,fake:generateFakeIP(real),desc:desc||""});saveMappings();return true;}
 function maskTextStandalone(input){let out=input;ipMappings.forEach(m=>{let regex=new RegExp(m.real.replace(/\./g,'\\.'),'g');out=out.replace(regex,m.fake);});return out;}
 function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:var(--b2);border-radius:12px;padding:16px;"><div class="stitle" style="margin-bottom:12px;">🎭 IP Masking</div><div class="mask-input-group"><input type="text" id="realIpMask" placeholder="Real IP (e.g., 192.168.1.100)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><input type="text" id="descMask" placeholder="Description (optional)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><button class="sbtn" id="addMaskBtnStandalone">➕ Add</button></div><div id="maskTableStandalone" style="background:#010409;border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto;"></div><div style="display:flex;gap:8px;margin-bottom:16px;"><button class="sbtn" id="deleteAllMaskStandalone" style="background:#B91C1C;">🗑️ Delete all</button><button class="sbtn" id="exportMaskStandalone" style="background:#15803D;">📄 Export</button></div><textarea id="rawTextMask" rows="10" placeholder="Paste any FortiGate output with real IPs..." style="width:100%;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;"></textarea><button class="sbtn" id="applyMaskStandalone" style="background:var(--a);margin-top:6px;">🎭 Mask this text</button><pre id="maskedPreviewStandalone" class="mask-preview">Masked output will appear here.</pre></div>`;loadMappingsStandalone();document.getElementById("addMaskBtnStandalone")?.addEventListener('click',()=>{let real=document.getElementById("realIpMask").value.trim();let desc=document.getElementById("descMask").value.trim();if(real)addMappingStandalone(real,desc);document.getElementById("realIpMask").value="";document.getElementById("descMask").value="";});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{if(confirm("Delete ALL mappings?")){ipMappings=[];saveMappings();}});const maskPrivNote=document.createElement('div');
@@ -1247,7 +1249,7 @@ function renderFreeAITab(el){
           <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">1</div>
           <span style="font-size:12px;font-weight:700;color:var(--t)">Create free account</span>
         </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Go to <a href="https://console.groq.com" target="_blank" style="color:var(--bl)">console.groq.com</a> and sign up for free — no credit card needed.</div>
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Go to <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">console.groq.com</a> and sign up for free — no credit card needed.</div>
       </div>
       <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
@@ -1290,7 +1292,7 @@ function renderFreeAITab(el){
         style="flex:1;min-width:160px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
       <button class="sbtn" id="saveGroqKeyBtn" style="white-space:nowrap;padding:6px 14px">💾 Save</button>
       <button class="sbtn" id="clearGroqKeyBtn" style="white-space:nowrap;padding:6px 14px;background:#B91C1C">🗑️ Clear Key</button>
-      <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl);white-space:nowrap">Get key →</a>
+      <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--bl);white-space:nowrap">Get key →</a>
     </div>
     <div style="font-size:11px;color:var(--t3);line-height:1.5;border-top:1px solid var(--br);padding-top:8px;">
       🔒 Your key is stored locally in <strong style="color:var(--t2)">your browser only</strong> — never sent to NetWolf servers. On a shared computer, click <strong style="color:var(--r)">Clear Key</strong> before closing.
@@ -3498,7 +3500,7 @@ function renderLabSetup(el){
       <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px">📄 Full Lab Setup Guide — PDF</div>
       <div style="font-size:11.5px;color:var(--t2)">6 phases · All commands included · Download links · Lab exercises</div>
     </div>
-    <a href="https://netwolffortigate.com/NetWolf_FortiGate_Lab_Setup_Guide.pdf" target="_blank"
+    <a href="https://netwolffortigate.com/NetWolf_FortiGate_Lab_Setup_Guide.pdf" target="_blank" rel="noopener noreferrer"
        style="background:linear-gradient(90deg,var(--a),var(--ad));border:none;border-radius:20px;padding:9px 22px;font-size:12px;font-weight:700;color:#fff;text-decoration:none;white-space:nowrap">
       ⬇ Download PDF Guide
     </a>
@@ -3528,7 +3530,7 @@ function renderLabSetup(el){
           ].map(([tool,url,desc,col],i)=>`
             <tr style="background:${i%2?'rgba(0,0,0,.15)':'transparent'}">
               <td style="padding:9px 14px;font-weight:700;color:var(--t);white-space:nowrap">${tool}</td>
-              <td style="padding:9px 14px"><a href="${url}" target="_blank" style="color:var(--bl);font-family:var(--mono);font-size:11px;text-decoration:none">${url}</a></td>
+              <td style="padding:9px 14px"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color:var(--bl);font-family:var(--mono);font-size:11px;text-decoration:none">${url}</a></td>
               <td style="padding:9px 14px;color:var(--t2);font-size:11.5px">${desc}</td>
             </tr>`).join('')}
         </tbody>
@@ -5151,18 +5153,18 @@ function renderLabSetup(el){
           title:'Download VMware Workstation Player (free)',
           desc:'EVE-NG runs as a VM. Install VMware Workstation Player first:',
           content:`<div class="lab-step-desc" style="margin-left:0">
-            1. Go to <a class="lab-link" href="https://www.vmware.com/products/workstation-player.html" target="_blank">vmware.com/products/workstation-player</a><br>
+            1. Go to <a class="lab-link" href="https://www.vmware.com/products/workstation-player.html" target="_blank" rel="noopener noreferrer">vmware.com/products/workstation-player</a><br>
             2. Click <strong>Download for Free</strong><br>
             3. Install VMware Workstation Player (free for personal use)<br>
             4. Restart your PC after installation
           </div>
-          <div class="lab-note">💡 Alternatively use <a class="lab-link" href="https://www.virtualbox.org" target="_blank">VirtualBox</a> (completely free, open source) — works just as well for EVE-NG.</div>`,
+          <div class="lab-note">💡 Alternatively use <a class="lab-link" href="https://www.virtualbox.org" target="_blank" rel="noopener noreferrer">VirtualBox</a> (completely free, open source) — works just as well for EVE-NG.</div>`,
         },
         {
           title:'Download EVE-NG Community OVA',
           desc:'Download the EVE-NG Community Edition virtual appliance:',
           content:`<div class="lab-step-desc" style="margin-left:0">
-            1. Go to <a class="lab-link" href="https://www.eve-ng.net/index.php/download/" target="_blank">eve-ng.net/index.php/download</a><br>
+            1. Go to <a class="lab-link" href="https://www.eve-ng.net/index.php/download/" target="_blank" rel="noopener noreferrer">eve-ng.net/index.php/download</a><br>
             2. Click <strong>Community Edition</strong><br>
             3. Register for a free account if needed<br>
             4. Download the <strong>.OVA file</strong> (~2-3 GB)
@@ -5219,7 +5221,7 @@ function renderLabSetup(el){
           title:'Create a free Fortinet support account',
           desc:'You need a Fortinet account to download the VM image:',
           content:`<div class="lab-step-desc" style="margin-left:0">
-            1. Go to <a class="lab-link" href="https://support.fortinet.com" target="_blank">support.fortinet.com</a><br>
+            1. Go to <a class="lab-link" href="https://support.fortinet.com" target="_blank" rel="noopener noreferrer">support.fortinet.com</a><br>
             2. Click <strong>Register</strong><br>
             3. Fill in your details — use your work email<br>
             4. Verify your email address<br>
@@ -5243,7 +5245,7 @@ function renderLabSetup(el){
           title:'Prepare the FortiGate image for EVE-NG',
           desc:'Connect to EVE-NG via SCP/WinSCP and upload the image:',
           content:`<div class="lab-step-desc" style="margin-left:0">
-            1. Download <a class="lab-link" href="https://winscp.net" target="_blank">WinSCP</a> (free SFTP client for Windows)<br>
+            1. Download <a class="lab-link" href="https://winscp.net" target="_blank" rel="noopener noreferrer">WinSCP</a> (free SFTP client for Windows)<br>
             2. Connect to your EVE-NG VM IP with:<br>
             &nbsp;&nbsp;• Protocol: <strong>SCP</strong><br>
             &nbsp;&nbsp;• Host: <strong>&lt;EVE-NG-IP&gt;</strong><br>
@@ -5728,7 +5730,7 @@ function showGroqGuide(){
               Click the button below to open the Groq Console in a new tab. Groq is a free AI inference platform — no credit card required.
             </p>
             <div style="margin-left:34px">
-              <a href="https://console.groq.com" target="_blank"
+              <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer"
                 style="display:inline-flex;align-items:center;gap:6px;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:20px;padding:7px 16px;font-size:12px;font-weight:700;color:var(--bl);text-decoration:none">
                 🌐 Open console.groq.com →
               </a>
@@ -5968,7 +5970,7 @@ function renderHWRef(el){
   <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6">
     Complete overview of the FortiGate hardware lineup — from the compact desktop 40F to the 12-slot 7121F chassis.
     All throughput figures are from official Fortinet datasheets.
-    <a href="https://www.fortinet.com/products/product-compare" target="_blank" style="color:var(--bl);font-size:11px;margin-left:6px">Official Fortinet comparison tool →</a>
+    <a href="https://www.fortinet.com/products/product-compare" target="_blank" rel="noopener noreferrer" style="color:var(--bl);font-size:11px;margin-left:6px">Official Fortinet comparison tool →</a>
   </p>
 
   <!-- Model naming guide -->
@@ -6498,7 +6500,7 @@ function renderSecurityTab(el){
           </tr>
         </table>
         <div style="margin-top:10px;padding:8px 12px;background:rgba(88,166,255,.05);border-radius:6px;font-size:11px;color:var(--t3)">
-          🏛️ Firebase Auth is operated by Google and is subject to <a href="https://firebase.google.com/support/privacy" target="_blank" style="color:var(--bl)">Google's Privacy Policy</a>. NetWolf has no access to your credentials.
+          🏛️ Firebase Auth is operated by Google and is subject to <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">Google's Privacy Policy</a>. NetWolf has no access to your credentials.
         </div>
       </div>
     </div>
@@ -6581,7 +6583,7 @@ function renderSecurityTab(el){
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
             <td style="padding:8px 10px;color:var(--t2)">Groq's data policy</td>
-            <td style="padding:8px 10px;color:var(--t2)">Groq states they do not train on API request data. See <a href="https://groq.com/privacy-policy/" target="_blank" style="color:var(--bl)">groq.com/privacy-policy</a>.</td>
+            <td style="padding:8px 10px;color:var(--t2)">Groq states they do not train on API request data. See <a href="https://groq.com/privacy-policy/" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">groq.com/privacy-policy</a>.</td>
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
             <td style="padding:8px 10px;color:var(--t2)">IP detection warning</td>
