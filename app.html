@@ -1166,9 +1166,28 @@ function renderCfg(el,d){let h='<div class="sh"><span class="stitle">'+d.t+'</sp
 
 function renderRef(el){let h='<div class="rgrid">';QREF.forEach((s,ci)=>{h+='<div class="cblock"><div class="chdr"><span style="font-weight:700;font-size:13px;">'+s.cat+'</span></div><div class="cbody">';s.cmds.forEach((c,si)=>{const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--br);"><span style="font-family:var(--mono);font-size:11px;color:'+col+';">'+esc(c)+'</span><button class="copybtn" style="margin-left:8px;" onclick="copyRef(this,'+ci+','+si+')">Copy</button></div>';});h+='</div></div>';});h+='</div>';el.innerHTML=h;}
 
-function renderAI(el){let msgs='';if(!chat.length)msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about FortiGate.<br><br>Tip: click any chip to auto-fill a question.<br><br>✨ Powered by Groq (free tier)</div>';else{chat.forEach(m=>{const u=m.role==='user';msgs+='<div class="msg '+(u?'user':'')+'"><div class="av '+(u?'usr':'ai')+'">'+(u?'U':'FG')+'</div><div class="bubble">'+fmt(m.content)+'</div></div>';});if(loading)msgs+='<div class="msg"><div class="av ai">FG</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>';}el.innerHTML='<div class="messages" id="chatm">'+msgs+'</div><div class="irow"><input type="text" id="chi" placeholder="e.g. Phase 2 keeps flapping..." onkeydown="if(event.key===\'Enter\')sendMsg()"/><button class="ibtn" onclick="sendMsg()" '+(loading?'disabled':'')+'>Send ↗</button></div>';const cm=document.getElementById('chatm');if(cm)cm.scrollTop=cm.scrollHeight;}
+function renderAI(el){let msgs='';if(!chat.length)msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about FortiGate.<br><br>Tip: click any chip to auto-fill a question.<br><br>✨ Powered by Groq (free tier)</div>';else{chat.forEach(m=>{const u=m.role==='user';msgs+='<div class="msg '+(u?'user':'')+'"><div class="av '+(u?'usr':'ai')+'">'+(u?'U':'FG')+'</div><div class="bubble">'+fmt(m.content)+'</div></div>';});if(loading)msgs+='<div class="msg"><div class="av ai">FG</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>';}el.innerHTML=
+  '<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5">'
+  +'<span style="flex-shrink:0">⚠️</span>'
+  +'<span>Messages are sent to <strong>Groq API</strong>. Do not share real IPs, credentials or customer data. Use the <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">IP Masking tab</span> to anonymize first.</span>'
+  +'</div>'
+  +'<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:#f87171;line-height:1.5">'
+  +'<span style="flex-shrink:0">🚨</span>'
+  +'<span>Private IPs detected in your message: <strong style="font-family:var(--mono);color:#fca5a5"></strong> — consider anonymizing first.</span>'
+  +'</div>'
+  +'<div class="messages" id="chatm">'+msgs+'</div>'
+  +'<div class="irow"><input type="text" id="chi" placeholder="e.g. Phase 2 keeps flapping..." onkeydown="if(event.key===\'Enter\')sendMsg()"/><button class="ibtn" onclick="sendMsg()" '+(loading?'disabled':'')+'>Send ↗</button></div>';const cm=document.getElementById('chatm');if(cm)cm.scrollTop=cm.scrollHeight;}
 
-async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loading)return;const text=inp.value.trim();if(!text)return;inp.value='';chat.push({role:'user',content:text});loading=true;render();const sys='You are a senior FortiGate engineer. Current category: "'+D[cur].t+'". Give concise, practical FortiGate CLI. Use backticks.';try{if(!groqApiKey)throw new Error('no-key');const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sys},...chat]})});const data=await resp.json();if(data.error)throw new Error(data.error.message);chat.push({role:'assistant',content:data.choices[0].message.content});}catch(e){chat.push({role:'assistant',content:e.message==='no-key'?'No Groq API key set. Enter your key at the top.':'Error: '+e.message});}loading=false;render();}
+async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loading)return;const text=inp.value.trim();if(!text)return;
+  // FIX 2: IP detection in AI Assistant tab
+  const _ipPat=/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g;
+  const _priv=[/^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[01])\./, /^100\.64\./];
+  const _ips=[...new Set(text.match(_ipPat)||[])].filter(ip=>_priv.some(r=>r.test(ip)));
+  if(_ips.length>0){
+    const _w=document.getElementById('aiPrivWarn');
+    if(_w){_w.style.display='flex';_w.querySelector('strong').textContent=_ips.slice(0,4).join(', ')+(_ips.length>4?' …':'');}
+  }
+  inp.value='';chat.push({role:'user',content:text});loading=true;render();const sys='You are a senior FortiGate engineer. Current category: "'+D[cur].t+'". Give concise, practical FortiGate CLI. Use backticks.';try{if(!groqApiKey)throw new Error('no-key');const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sys},...chat]})});const data=await resp.json();if(data.error)throw new Error(data.error.message);chat.push({role:'assistant',content:data.choices[0].message.content});}catch(e){chat.push({role:'assistant',content:e.message==='no-key'?'No Groq API key set. Enter your key at the top.':'Error: '+e.message});}loading=false;render();}
 
 function renderAnalyze(el){el.innerHTML='<div style="margin-bottom:10px;"><div style="font-size:15px;font-weight:700;">Paste CLI output for AI analysis</div><div style="font-size:12px;color:var(--t2);">Mask IPs before sending.</div></div><div style="display:flex;gap:8px;margin-bottom:8px;"><select id="acat" style="font-size:12px;padding:6px;background:var(--b2);"><option value="">-- Context --</option>'+Object.keys(D).map(k=>'<option value="'+k+'">'+D[k].t+'</option>').join('')+'</select><input type="text" id="acmd" placeholder="Command you ran" style="flex:1;font-size:12px;padding:6px;background:var(--bg);"/></div><textarea id="aout" placeholder="Paste raw FortiGate CLI output..." style="width:100%;height:160px;font-family:var(--mono);font-size:12px;padding:12px;background:var(--bg);color:var(--g);border:1px solid var(--br);border-radius:8px;"></textarea><div id="ares" style="margin-top:12px;"></div>';}
 
@@ -1179,7 +1198,14 @@ function loadMappingsStandalone(){let s=localStorage.getItem("forti_masks_standa
 function renderMaskTableStandalone(){const cont=document.getElementById("maskTableStandalone");if(!cont)return;if(!ipMappings.length){cont.innerHTML="<div style='color:#FCD34D;'>✨ No IP mappings yet.</div>";return;}let html="<table class='ip-mask-table'><thead><tr><th>Real IP</th><th>Fake IP</th><th>Description</th><th>Action</th></tr></thead><tbody>";ipMappings.forEach(m=>{html+=`<tr><td>${escapeHtml(m.real)}</td><td>${escapeHtml(m.fake)}</td><td>${escapeHtml(m.desc||'')}</td><td><button class='delMaskBtnStandalone' data-real='${m.real}' style='background:#B91C1C;color:white;border:none;border-radius:20px;padding:2px 8px;cursor:pointer;'>❌</button></td></tr>`;});html+="</tbody></table>";cont.innerHTML=html;document.querySelectorAll('.delMaskBtnStandalone').forEach(btn=>{btn.addEventListener('click',()=>{ipMappings=ipMappings.filter(m=>m.real!==btn.getAttribute('data-real'));saveMappings();});});}
 function addMappingStandalone(real,desc){if(ipMappings.find(m=>m.real===real)){alert("IP already mapped");return false;}ipMappings.push({real,fake:generateFakeIP(real),desc:desc||""});saveMappings();return true;}
 function maskTextStandalone(input){let out=input;ipMappings.forEach(m=>{let regex=new RegExp(m.real.replace(/\./g,'\\.'),'g');out=out.replace(regex,m.fake);});return out;}
-function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:var(--b2);border-radius:12px;padding:16px;"><div class="stitle" style="margin-bottom:12px;">🎭 IP Masking</div><div class="mask-input-group"><input type="text" id="realIpMask" placeholder="Real IP (e.g., 192.168.1.100)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><input type="text" id="descMask" placeholder="Description (optional)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><button class="sbtn" id="addMaskBtnStandalone">➕ Add</button></div><div id="maskTableStandalone" style="background:#010409;border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto;"></div><div style="display:flex;gap:8px;margin-bottom:16px;"><button class="sbtn" id="deleteAllMaskStandalone" style="background:#B91C1C;">🗑️ Delete all</button><button class="sbtn" id="exportMaskStandalone" style="background:#15803D;">📄 Export</button></div><textarea id="rawTextMask" rows="10" placeholder="Paste any FortiGate output with real IPs..." style="width:100%;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;"></textarea><button class="sbtn" id="applyMaskStandalone" style="background:var(--a);margin-top:6px;">🎭 Mask this text</button><pre id="maskedPreviewStandalone" class="mask-preview">Masked output will appear here.</pre></div>`;loadMappingsStandalone();document.getElementById("addMaskBtnStandalone")?.addEventListener('click',()=>{let real=document.getElementById("realIpMask").value.trim();let desc=document.getElementById("descMask").value.trim();if(real)addMappingStandalone(real,desc);document.getElementById("realIpMask").value="";document.getElementById("descMask").value="";});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{if(confirm("Delete ALL mappings?")){ipMappings=[];saveMappings();}});document.getElementById("exportMaskStandalone")?.addEventListener('click',()=>{let content="# NetWolf IP Masking Report\n\n";ipMappings.forEach(m=>{content+=`${m.real} → ${m.fake} (${m.desc||''})\n`;});let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:"text/plain"}));a.download=`netwolf_mask_${Date.now()}.txt`;a.click();});document.getElementById("applyMaskStandalone")?.addEventListener('click',()=>{let raw=document.getElementById("rawTextMask").value;document.getElementById("maskedPreviewStandalone").innerText=maskTextStandalone(raw)||"(nothing to mask)";});}
+function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:var(--b2);border-radius:12px;padding:16px;"><div class="stitle" style="margin-bottom:12px;">🎭 IP Masking</div><div class="mask-input-group"><input type="text" id="realIpMask" placeholder="Real IP (e.g., 192.168.1.100)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><input type="text" id="descMask" placeholder="Description (optional)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><button class="sbtn" id="addMaskBtnStandalone">➕ Add</button></div><div id="maskTableStandalone" style="background:#010409;border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto;"></div><div style="display:flex;gap:8px;margin-bottom:16px;"><button class="sbtn" id="deleteAllMaskStandalone" style="background:#B91C1C;">🗑️ Delete all</button><button class="sbtn" id="exportMaskStandalone" style="background:#15803D;">📄 Export</button></div><textarea id="rawTextMask" rows="10" placeholder="Paste any FortiGate output with real IPs..." style="width:100%;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;"></textarea><button class="sbtn" id="applyMaskStandalone" style="background:var(--a);margin-top:6px;">🎭 Mask this text</button><pre id="maskedPreviewStandalone" class="mask-preview">Masked output will appear here.</pre></div>`;loadMappingsStandalone();document.getElementById("addMaskBtnStandalone")?.addEventListener('click',()=>{let real=document.getElementById("realIpMask").value.trim();let desc=document.getElementById("descMask").value.trim();if(real)addMappingStandalone(real,desc);document.getElementById("realIpMask").value="";document.getElementById("descMask").value="";});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{if(confirm("Delete ALL mappings?")){ipMappings=[];saveMappings();}});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{});
+  // FIX 4: Add privacy note below the table
+  const maskPrivNote=document.createElement('div');
+  maskPrivNote.style.cssText='font-size:11px;color:var(--t3);margin:-6px 0 10px 0;padding:8px 12px;background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.15);border-radius:6px;line-height:1.6';
+  maskPrivNote.innerHTML='🔒 <strong style="color:var(--t2)">Privacy note:</strong> IP mappings are stored in your browser's local storage and never sent externally. Use <strong style="color:var(--r)">🗑️ Delete all</strong> to clear them before using a shared computer.';
+  const maskTable=document.getElementById('maskTableStandalone');
+  if(maskTable && maskTable.parentNode) maskTable.parentNode.insertBefore(maskPrivNote,maskTable.nextSibling);
+  document.getElementById("exportMaskStandalone")?.addEventListener('click',()=>{let content="# NetWolf IP Masking Report\n\n";ipMappings.forEach(m=>{content+=`${m.real} → ${m.fake} (${m.desc||''})\n`;});let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:"text/plain"}));a.download=`netwolf_mask_${Date.now()}.txt`;a.click();});document.getElementById("applyMaskStandalone")?.addEventListener('click',()=>{let raw=document.getElementById("rawTextMask").value;document.getElementById("maskedPreviewStandalone").innerText=maskTextStandalone(raw)||"(nothing to mask)";});}
 
 let groqApiKeyFree=localStorage.getItem('groq_key')||'';
 function renderFreeAITab(el){
@@ -1235,12 +1261,18 @@ function renderFreeAITab(el){
     }
     <button onclick="showGroqGuide()" style="font-size:11px;color:var(--bl);background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:20px;padding:4px 12px;cursor:pointer;white-space:nowrap">❓ How to get a free key</button>
   </div>
-  <div id="groqKeyPanel" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:10px 14px;margin-bottom:12px">
-    <span style="font-size:11px;font-weight:600;color:var(--t2);white-space:nowrap">🔑 API Key</span>
-    <input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}"
-      style="flex:1;min-width:160px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
-    <button class="sbtn" id="saveGroqKeyBtn" style="white-space:nowrap;padding:6px 14px">💾 Save</button>
-    <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl);white-space:nowrap">Get key →</a>
+  <div id="groqKeyPanel" style="display:none;flex-direction:column;gap:8px;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:12px 14px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:600;color:var(--t2);white-space:nowrap">🔑 API Key</span>
+      <input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}"
+        style="flex:1;min-width:160px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+      <button class="sbtn" id="saveGroqKeyBtn" style="white-space:nowrap;padding:6px 14px">💾 Save</button>
+      <button class="sbtn" id="clearGroqKeyBtn" style="white-space:nowrap;padding:6px 14px;background:#B91C1C">🗑️ Clear Key</button>
+      <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl);white-space:nowrap">Get key →</a>
+    </div>
+    <div style="font-size:11px;color:var(--t3);line-height:1.5;border-top:1px solid var(--br);padding-top:8px;">
+      🔒 Your key is stored locally in <strong style="color:var(--t2)">your browser only</strong> — never sent to NetWolf servers. On a shared or work computer, click <strong style="color:var(--r)">Clear Key</strong> before closing to remove it.
+    </div>
   </div>
 
   <!-- Model selector -->
@@ -1252,6 +1284,19 @@ function renderFreeAITab(el){
       <option value="llama-3.1-8b-instant">LLaMA 3.1 8B — Fastest response</option>
     </select>
     <span style="font-size:11px;color:var(--t3)">All models free via Groq API</span>
+  </div>
+
+  <!-- FIX 1: Privacy warning banner -->
+  <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11.5px;color:var(--y);line-height:1.6;">
+    <span style="font-size:15px;flex-shrink:0;">⚠️</span>
+    <span>Text you paste here is sent to <strong>Groq's API</strong> (a third party). <strong>Do not paste real IPs, hostnames, credentials, or customer data.</strong> Use the <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">IP Masking tab</span> to anonymize output first.</span>
+  </div>
+
+  <!-- FIX 2: IP detection warning (hidden by default) -->
+  <div id="groqIpWarning" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:11.5px;color:#f87171;line-height:1.6;">
+    <span style="font-size:15px;flex-shrink:0;">🚨</span>
+    <span>Private IP addresses detected in your input: <strong id="groqIpList" style="font-family:var(--mono);color:#fca5a5"></strong><br>
+    Consider <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">anonymizing these first</span> — or click Analyze to send anyway.</span>
   </div>
 
   <!-- Input area -->
@@ -1284,6 +1329,14 @@ function renderFreeAITab(el){
     const isOpen = panel.style.display === 'flex';
     panel.style.display = isOpen ? 'none' : 'flex';
     if(btn) btn.textContent = isOpen ? 'Change' : 'Cancel';
+  };
+
+  document.getElementById('clearGroqKeyBtn').onclick=()=>{
+    if(!confirm('Clear your saved Groq API key from this browser?')) return;
+    localStorage.removeItem('groq_key');
+    groqApiKeyFree=''; groqApiKey='';
+    showToast('🗑️ Groq API key cleared from browser.');
+    renderFreeAITab(el);
   };
 
   document.getElementById('saveGroqKeyBtn').onclick=()=>{
@@ -1325,6 +1378,22 @@ Npu-flag      : 00`;
     if(!groqApiKeyFree){
       respDiv.innerHTML='<span style="color:var(--r)">⚠️ No API key set. Enter your Groq key above and click Save.</span>';
       return;
+    }
+    // FIX 2: Detect real IPs in pasted text and warn user before sending
+    const ipPattern=/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g;
+    const foundIPs=[...new Set(prompt.match(ipPattern)||[])];
+    const privateRanges=[/^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[01])\./, /^172\.16\./, /^100\.64\./];
+    const sensitiveIPs=foundIPs.filter(ip=>privateRanges.some(r=>r.test(ip)));
+    if(sensitiveIPs.length>0){
+      const warnDiv=document.getElementById('groqIpWarning');
+      if(warnDiv){
+        warnDiv.style.display='flex';
+        document.getElementById('groqIpList').textContent=sensitiveIPs.slice(0,6).join(', ')+(sensitiveIPs.length>6?' …':'');
+      }
+      // Still allow send — warning is non-blocking but visible
+    } else {
+      const warnDiv=document.getElementById('groqIpWarning');
+      if(warnDiv) warnDiv.style.display='none';
     }
     respDiv.innerHTML='<div class="typing"><span></span><span></span><span></span></div>&nbsp; Analyzing with '+document.getElementById('groqModelSelect').options[document.getElementById('groqModelSelect').selectedIndex].text.split('—')[0]+'...';
     try{
