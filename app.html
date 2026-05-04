@@ -366,7 +366,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   </div>
 </div>
 
-<div id="loginOverlay" class="login-overlay">
+<div id="loginOverlay" class="login-overlay" style="display:none">
   <div class="login-card">
     <div class="login-logo">🐺 Net<span>Wolf</span></div>
     <div class="login-sub">FortiGate Pro Toolkit — Sign in to continue</div>
@@ -567,21 +567,16 @@ firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
 
 /* ══ AUTH STATE — show login or toolkit ══ */
-// Instantly hide login overlay if Firebase has a cached session (avoids flash on refresh)
-(function(){
-  try{
-    const hasSession=Object.keys(localStorage).some(function(k){return k.indexOf('firebase:authUser')===0;});
-    if(hasSession){var ov=document.getElementById('loginOverlay');if(ov)ov.style.display='none';}
-  }catch(e){}
-})();
+// Login overlay is hidden by default; shown by onAuthStateChanged if no session
 fbAuth.onAuthStateChanged(function(user){
   if(user){
     document.getElementById('loginOverlay').style.display='none';
     document.getElementById('toolkitContainer').style.display='block';
     const displayName=user.displayName||user.email.split('@')[0];
     document.getElementById('loggedInUser').textContent='👤 '+displayName;
-    if(!sessionStorage.getItem('forti_terms_accepted')){
-      showTermsModal(()=>{sessionStorage.setItem('forti_terms_accepted','true');initAndRender();});
+    const _tk='forti_terms_'+user.email;
+    if(!localStorage.getItem(_tk)){
+      showTermsModal(()=>{localStorage.setItem(_tk,'true');initAndRender();});
     } else {
       initAndRender();
     }
