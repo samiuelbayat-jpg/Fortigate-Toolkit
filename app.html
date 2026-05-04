@@ -1505,7 +1505,217 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 function extractUniqueIPs(text){const re=/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g;return[...new Set((text.match(re)||[]))].sort();}
 function generateFakeIPs(ips){const nets=["203.0.113.","198.51.100.","192.0.2."];const m=new Map();ips.forEach((ip,i)=>{m.set(ip,nets[Math.floor(i/254)]+(i%254+1));});return m;}
 function replaceIPsInText(text,map){let r=text;for(const[real,fake]of map.entries()){r=r.replace(new RegExp('\\b'+real.replace(/\./g,'\\.')+'\\b','g'),fake);}return r;}
-function renderBulkAnonTab(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🔄 Bulk IP Anonymizer</div></div><div class="cbody"><textarea id="bulkAnonInput" rows="10" style="width:100%;background:var(--bg);color:var(--t);font-family:var(--mono);font-size:11px;border:1px solid var(--br);border-radius:6px;padding:10px;" placeholder="Paste FortiGate CLI output with real IPs..."></textarea><div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;"><button class="sbtn" id="bulkAnonConvertBtn">✨ Anonymize</button><button class="sbtn" id="bulkAnonCopyBtn" style="background:#15803D;">📋 Copy</button><button class="sbtn" id="bulkAnonClearBtn" style="background:#4b5563;">🗑️ Clear</button></div></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">Anonymized Output</div></div><div class="cbody"><pre id="bulkAnonOutput" style="background:#010409;border-radius:8px;padding:12px;font-family:var(--mono);font-size:11px;white-space:pre-wrap;overflow-x:auto;max-height:400px;">— Output will appear here —</pre></div></div><div class="cblock"><div class="chdr"><div class="chdr-l">IP Mapping Table</div></div><div class="cbody" id="bulkAnonMappingContainer"><div class="cnote">Run conversion to see mapping.</div></div></div>`;document.getElementById('bulkAnonConvertBtn').onclick=()=>{const raw=document.getElementById('bulkAnonInput').value;const ips=extractUniqueIPs(raw);const map=generateFakeIPs(ips);document.getElementById('bulkAnonOutput').innerText=replaceIPsInText(raw,map);let th='<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;"><thead><tr><th style="text-align:left;border-bottom:1px solid var(--br);">Real</th><th style="text-align:left;border-bottom:1px solid var(--br);">→ Fake</th></tr></thead><tbody>';for(const[r,f]of map.entries())th+=`<tr><td style="padding:3px 0;color:var(--r);">${r}</td><td style="padding:3px 0;color:var(--g);">${f}</td></tr>`;th+='</tbody></table>';document.getElementById('bulkAnonMappingContainer').innerHTML=th;};document.getElementById('bulkAnonCopyBtn').onclick=()=>{navigator.clipboard.writeText(document.getElementById('bulkAnonOutput').innerText);};document.getElementById('bulkAnonClearBtn').onclick=()=>{document.getElementById('bulkAnonInput').value='';document.getElementById('bulkAnonOutput').innerText='— Output will appear here —';document.getElementById('bulkAnonMappingContainer').innerHTML='<div class="cnote">Run conversion to see mapping.</div>';};}
+function renderBulkAnonTab(el){
+  el.innerHTML=`
+  <div class="sh"><span class="stitle">🔄 Bulk Anonymizer</span><span class="sev info">IPs · MACs · Usernames · Passwords · Hostnames</span></div>
+  <p style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6">
+    Paste any FortiGate CLI output — all sensitive data is replaced with safe placeholders before sharing with vendors or colleagues.
+  </p>
+
+  <!-- Options -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
+    <span style="font-size:11px;font-weight:600;color:var(--t2)">Anonymize:</span>
+    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonIPs" checked> IPv4 addresses</label>
+    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonMACs" checked> MAC addresses</label>
+    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonPasswords" checked> Passwords / PSKs</label>
+    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonUsernames" checked> Usernames</label>
+    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonHostnames" checked> Hostnames / SN</label>
+  </div>
+
+  <div class="cblock" style="margin-bottom:10px">
+    <div class="chdr"><div class="chdr-l">📥 Input — Paste CLI output here</div></div>
+    <div class="cbody" style="padding:10px">
+      <textarea id="bulkAnonInput" rows="10" style="width:100%;background:#010409;color:#e6edf3;font-family:var(--mono);font-size:11px;border:1px solid var(--br);border-radius:6px;padding:10px;resize:vertical;outline:none;line-height:1.7" placeholder="Paste FortiGate CLI output here...&#10;&#10;Example:&#10;  set remote-gw 203.0.113.5&#10;  set psksecret MySecret123&#10;  set username admin&#10;  MAC: aa:bb:cc:dd:ee:ff"></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="sbtn" id="bulkAnonConvertBtn" style="padding:8px 20px">✨ Anonymize All</button>
+        <button class="sbtn" id="bulkAnonClearBtn" style="background:var(--b3)">🗑️ Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cblock" style="margin-bottom:10px">
+    <div class="chdr"><div class="chdr-l">📤 Anonymized Output</div><button class="sbtn" id="bulkAnonCopyBtn" style="background:#15803D;font-size:10px;padding:3px 10px">📋 Copy</button></div>
+    <div class="cbody" style="padding:10px">
+      <pre id="bulkAnonOutput" style="background:#010409;color:#e6edf3;border-radius:8px;padding:12px;font-family:var(--mono);font-size:11px;white-space:pre-wrap;overflow-x:auto;max-height:400px;margin:0;line-height:1.7;border:1px solid var(--br)">— Output will appear here —</pre>
+    </div>
+  </div>
+
+  <div class="cblock">
+    <div class="chdr"><div class="chdr-l">🗺️ Replacement Mapping Table</div></div>
+    <div class="cbody" id="bulkAnonMappingContainer"><div class="cnote">Run anonymization to see what was replaced.</div></div>
+  </div>`;
+
+  // ── Core anonymization engine ──
+  function anonProcess(){
+    const raw = document.getElementById('bulkAnonInput').value;
+    if(!raw.trim()){ showToast('⚠️ Paste some CLI output first.'); return; }
+
+    const doIPs      = document.getElementById('anonIPs').checked;
+    const doMACs     = document.getElementById('anonMACs').checked;
+    const doPasswords= document.getElementById('anonPasswords').checked;
+    const doUsernames= document.getElementById('anonUsernames').checked;
+    const doHostnames= document.getElementById('anonHostnames').checked;
+
+    let result = raw;
+    const mappingRows = [];
+
+    // ── 1. IPv4 addresses ──
+    if(doIPs){
+      const ipMap = new Map();
+      const RFC5737 = ['192.0.2.','198.51.100.','203.0.113.'];
+      let ipCounter = [1,1,1];
+      const ipRegex = /\b(?!255\.255\.255\.255|0\.0\.0\.0)(\d{1,3}\.){3}\d{1,3}\b/g;
+      const realIPs = [...new Set(raw.match(ipRegex)||[])].filter(ip=>{
+        const p=ip.split('.').map(Number);
+        return p.length===4 && p.every(n=>n>=0&&n<=255) &&
+               !ip.startsWith('0.0.0.') && !ip.startsWith('255.') &&
+               !ip.startsWith('127.') && ip!=='1.1.1.1' && ip!=='8.8.8.8';
+      });
+      realIPs.forEach(ip=>{
+        const rangeIdx = ipCounter[0]<=254?0:ipCounter[1]<=254?1:2;
+        const fake = RFC5737[rangeIdx]+(ipCounter[rangeIdx]++);
+        ipMap.set(ip, fake);
+        mappingRows.push({type:'IPv4',real:ip,fake});
+      });
+      ipMap.forEach((fake,real)=>{
+        result = result.replace(new RegExp(real.replace(/\./g,'\\.'), 'g'), fake);
+      });
+    }
+
+    // ── 2. MAC addresses ──
+    if(doMACs){
+      const macMap = new Map();
+      let macC = 1;
+      const macRegex = /\b([0-9a-fA-F]{2}[:\-]){5}[0-9a-fA-F]{2}\b/g;
+      const realMACs = [...new Set(raw.match(macRegex)||[])];
+      realMACs.forEach(mac=>{
+        const n = macC.toString(16).padStart(4,'0');
+        const fake = `00:11:22:33:${n.slice(0,2)}:${n.slice(2,4)}`;
+        macMap.set(mac, fake);
+        mappingRows.push({type:'MAC',real:mac,fake});
+        macC++;
+      });
+      macMap.forEach((fake,real)=>{
+        result = result.replace(new RegExp(real.replace(/[:\-]/g,'[:\\-]'),'gi'), fake);
+      });
+    }
+
+    // ── 3. Passwords / PSKs ──
+    if(doPasswords){
+      const passPatterns = [
+        /(\bset\s+psksecret\s+)(\S+)/gi,
+        /(\bset\s+password\s+)(\S+)/gi,
+        /(\bset\s+passwd\s+)(\S+)/gi,
+        /(\bset\s+secret\s+)(\S+)/gi,
+        /(\bset\s+key\s+)(\S+)/gi,
+        /(\bpassword\s*[:=]\s*)(\S+)/gi,
+        /(\bpsk\s*[:=]\s*)(\S+)/gi,
+      ];
+      let passC = 1;
+      passPatterns.forEach(rx=>{
+        result = result.replace(rx, (m, prefix, val)=>{
+          if(['enable','disable','none','aes256','sha256','14'].includes(val.toLowerCase())) return m;
+          const fake = '***REDACTED-PSK-'+passC+'***';
+          mappingRows.push({type:'Password/PSK',real:val,fake});
+          passC++;
+          return prefix+fake;
+        });
+      });
+    }
+
+    // ── 4. Usernames ──
+    if(doUsernames){
+      const userPatterns = [
+        /(\bset\s+username\s+)(\S+)/gi,
+        /(\bset\s+user\s+)(\S+)/gi,
+        /(\bedit\s+)("[^"]+"|'[^']+'|\S+)(?=\s*\n[\s\S]*?set\s+password)/gi,
+        /(\bset\s+bind-dn\s+)(.+)/gi,
+        /(\bset\s+ldap-binddn\s+)(.+)/gi,
+      ];
+      let userC = 1;
+      userPatterns.forEach(rx=>{
+        result = result.replace(rx, (m, prefix, val)=>{
+          if(['admin','administrator','root','enable','disable'].includes(val.toLowerCase())) return m;
+          const fake = 'USER-'+userC;
+          mappingRows.push({type:'Username',real:val,fake});
+          userC++;
+          return prefix+fake;
+        });
+      });
+    }
+
+    // ── 5. Hostnames / Serial numbers ──
+    if(doHostnames){
+      const hostPatterns = [
+        /(\bset\s+hostname\s+)(\S+)/gi,
+        /(\bSerial\s+Number\s*:\s*)(\S+)/gi,
+        /(\bserial\s*:\s*)(\S+)/gi,
+        /(\bset\s+sn\s+)(\S+)/gi,
+        /(\bset\s+device-name\s+)(\S+)/gi,
+        /(\bset\s+alias\s+)("?[A-Za-z0-9\-_]+"?)/gi,
+      ];
+      let hostC = 1;
+      hostPatterns.forEach(rx=>{
+        result = result.replace(rx, (m, prefix, val)=>{
+          const fake = '"DEVICE-'+hostC+'"';
+          mappingRows.push({type:'Hostname/SN',real:val,fake});
+          hostC++;
+          return prefix+fake;
+        });
+      });
+    }
+
+    // ── Display output ──
+    document.getElementById('bulkAnonOutput').textContent = result;
+
+    // ── Mapping table ──
+    if(mappingRows.length === 0){
+      document.getElementById('bulkAnonMappingContainer').innerHTML='<div class="cnote">✅ Nothing sensitive found to replace.</div>';
+    } else {
+      const typeColors = {
+        'IPv4':'var(--bl)',
+        'MAC':'var(--y)',
+        'Password/PSK':'var(--r)',
+        'Username':'#c084fc',
+        'Hostname/SN':'var(--a)',
+      };
+      let th='<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;">';
+      th+='<thead><tr>';
+      th+='<th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--br);font-size:10px;color:var(--t3)">TYPE</th>';
+      th+='<th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--br);font-size:10px;color:var(--t3)">ORIGINAL</th>';
+      th+='<th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--br);font-size:10px;color:var(--t3)">REPLACED WITH</th>';
+      th+='</tr></thead><tbody>';
+      // Deduplicate
+      const seen = new Set();
+      mappingRows.forEach(row=>{
+        const key = row.type+row.real;
+        if(seen.has(key)) return;
+        seen.add(key);
+        const col = typeColors[row.type]||'var(--t)';
+        th+=`<tr>
+          <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.06);color:${col}">${row.type}</span></td>
+          <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--r);word-break:break-all">${escapeHtml(row.real)}</td>
+          <td style="padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--g)">${escapeHtml(row.fake)}</td>
+        </tr>`;
+      });
+      th+='</tbody></table>';
+      th+=`<div style="margin-top:10px;font-size:11px;color:var(--t3)">${[...new Set(mappingRows.map(r=>r.real))].length} unique values replaced across ${mappingRows.length} occurrences.</div>`;
+      document.getElementById('bulkAnonMappingContainer').innerHTML=th;
+    }
+    showToast(`✅ Anonymized — ${mappingRows.length} replacements made`);
+  }
+
+  document.getElementById('bulkAnonConvertBtn').onclick = anonProcess;
+  document.getElementById('bulkAnonCopyBtn').onclick = ()=>{
+    navigator.clipboard.writeText(document.getElementById('bulkAnonOutput').textContent)
+      .then(()=>showToast('✅ Copied to clipboard'));
+  };
+  document.getElementById('bulkAnonClearBtn').onclick = ()=>{
+    document.getElementById('bulkAnonInput').value='';
+    document.getElementById('bulkAnonOutput').textContent='— Output will appear here —';
+    document.getElementById('bulkAnonMappingContainer').innerHTML='<div class="cnote">Run anonymization to see what was replaced.</div>';
+  };
+}
 
 function calculateSubnet(ipCidr){let[ip,prefix]=ipCidr.trim().split('/');let mb=parseInt(prefix);if(isNaN(mb)||mb<0||mb>32)return{error:"Prefix must be 0-32"};let p=ip.split('.').map(Number);if(p.length!==4||p.some(n=>isNaN(n)||n<0||n>255))return{error:"Invalid IP"};let ipI=((p[0]<<24)|(p[1]<<16)|(p[2]<<8)|p[3])>>>0;let mI=mb===0?0:(((1<<mb)-1)<<(32-mb))>>>0;let nI=(ipI&mI)>>>0,bI=(nI|(~mI>>>0))>>>0;const itp=i=>((i>>>24)&255)+'.'+((i>>>16)&255)+'.'+((i>>>8)&255)+'.'+(i&255);let h=mb>=31?Math.pow(2,32-mb):Math.pow(2,32-mb)-2;return{network:itp(nI),broadcast:itp(bI),firstUsable:mb<=30?itp(nI+1):'N/A',lastUsable:mb<=30?itp(bI-1):'N/A',mask:itp(mI),cidr:mb,wildcard:itp((~mI)>>>0),totalHosts:h,binaryIp:ipI.toString(2).padStart(32,'0'),binaryMask:mI.toString(2).padStart(32,'0'),binaryNetwork:nI.toString(2).padStart(32,'0'),error:null};}
 function renderSubnetCalc(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🧮 IPv4 Subnet Calculator</div></div><div class="cbody"><div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;"><input type="text" id="subnetInput" placeholder="e.g., 192.168.1.0/24" style="flex:2;padding:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);"><button class="sbtn" id="calcSubnetBtn">Calculate</button><button class="sbtn" id="exampleSubnetBtn" style="background:var(--b3);">📋 Example</button></div><div id="subnetResult"><div class="cnote">Enter an IPv4 address with CIDR prefix.</div></div></div></div>`;function update(){const info=calculateSubnet(document.getElementById('subnetInput').value);if(info.error){document.getElementById('subnetResult').innerHTML=`<div class="cdanger">⚠️ ${info.error}</div>`;return;}let h=`<div class="subnet-result-grid"><div class="subnet-card"><div class="subnet-label">Network</div><div class="subnet-value">${info.network}</div></div><div class="subnet-card"><div class="subnet-label">Broadcast</div><div class="subnet-value">${info.broadcast}</div></div><div class="subnet-card"><div class="subnet-label">First Usable</div><div class="subnet-value">${info.firstUsable}</div></div><div class="subnet-card"><div class="subnet-label">Last Usable</div><div class="subnet-value">${info.lastUsable}</div></div><div class="subnet-card"><div class="subnet-label">Netmask</div><div class="subnet-value">${info.mask} (/${info.cidr})</div></div><div class="subnet-card"><div class="subnet-label">Wildcard</div><div class="subnet-value">${info.wildcard}</div></div><div class="subnet-card"><div class="subnet-label">Usable Hosts</div><div class="subnet-value">${info.totalHosts.toLocaleString()}</div></div><div class="subnet-card"><div class="subnet-label">CIDR</div><div class="subnet-value">/${info.cidr}</div></div></div><div class="subnet-explanation"><strong>Binary view:</strong><br>IP:&nbsp;&nbsp; ${info.binaryIp.match(/.{8}/g).join('.')}<br>Mask: ${info.binaryMask.match(/.{8}/g).join('.')}<br>Net:&nbsp; ${info.binaryNetwork.match(/.{8}/g).join('.')}</div>`;document.getElementById('subnetResult').innerHTML=h;}document.getElementById('calcSubnetBtn').onclick=update;document.getElementById('exampleSubnetBtn').onclick=()=>{document.getElementById('subnetInput').value='192.168.1.0/24';update();};document.getElementById('subnetInput').addEventListener('keypress',e=>{if(e.key==='Enter')update();});}
