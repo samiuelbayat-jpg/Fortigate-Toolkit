@@ -1505,6 +1505,11 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 function extractUniqueIPs(text){const re=/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g;return[...new Set((text.match(re)||[]))].sort();}
 function generateFakeIPs(ips){const nets=["203.0.113.","198.51.100.","192.0.2."];const m=new Map();ips.forEach((ip,i)=>{m.set(ip,nets[Math.floor(i/254)]+(i%254+1));});return m;}
 function replaceIPsInText(text,map){let r=text;for(const[real,fake]of map.entries()){r=r.replace(new RegExp('\\b'+real.replace(/\./g,'\\.')+'\\b','g'),fake);}return r;}
+// Bulk Anonymizer persistent state
+let _anonInput = '';
+let _anonOutput = '';
+let _anonMapping = '';
+
 function renderBulkAnonTab(el){
   el.innerHTML=`
   <div class="sh"><span class="stitle">🔄 Bulk Anonymizer</span><span class="sev info">IPs · MACs · Usernames · Passwords · Hostnames</span></div>
@@ -1667,6 +1672,8 @@ function renderBulkAnonTab(el){
 
     // ── Display output ──
     document.getElementById('bulkAnonOutput').textContent = result;
+    _anonInput = raw;
+    _anonOutput = result;
 
     // ── Mapping table ──
     if(mappingRows.length === 0){
@@ -1701,9 +1708,20 @@ function renderBulkAnonTab(el){
       th+='</tbody></table>';
       th+=`<div style="margin-top:10px;font-size:11px;color:var(--t3)">${[...new Set(mappingRows.map(r=>r.real))].length} unique values replaced across ${mappingRows.length} occurrences.</div>`;
       document.getElementById('bulkAnonMappingContainer').innerHTML=th;
+      _anonMapping = th;
     }
     showToast(`✅ Anonymized — ${mappingRows.length} replacements made`);
   }
+
+  // Restore saved state
+  if(_anonInput) document.getElementById('bulkAnonInput').value = _anonInput;
+  if(_anonOutput) document.getElementById('bulkAnonOutput').textContent = _anonOutput;
+  if(_anonMapping) document.getElementById('bulkAnonMappingContainer').innerHTML = _anonMapping;
+
+  // Save input as user types
+  document.getElementById('bulkAnonInput').addEventListener('input', function(){
+    _anonInput = this.value;
+  });
 
   document.getElementById('bulkAnonConvertBtn').onclick = anonProcess;
   document.getElementById('bulkAnonCopyBtn').onclick = ()=>{
@@ -1711,6 +1729,9 @@ function renderBulkAnonTab(el){
       .then(()=>showToast('✅ Copied to clipboard'));
   };
   document.getElementById('bulkAnonClearBtn').onclick = ()=>{
+    _anonInput = '';
+    _anonOutput = '';
+    _anonMapping = '';
     document.getElementById('bulkAnonInput').value='';
     document.getElementById('bulkAnonOutput').textContent='— Output will appear here —';
     document.getElementById('bulkAnonMappingContainer').innerHTML='<div class="cnote">Run anonymization to see what was replaced.</div>';
