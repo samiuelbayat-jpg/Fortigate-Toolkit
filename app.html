@@ -1169,17 +1169,36 @@ function renderCfg(el,d){let h='<div class="sh"><span class="stitle">'+d.t+'</sp
 
 function renderRef(el){let h='<div class="rgrid">';QREF.forEach((s,ci)=>{h+='<div class="cblock"><div class="chdr"><span style="font-weight:700;font-size:13px;">'+s.cat+'</span></div><div class="cbody">';s.cmds.forEach((c,si)=>{const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--br);"><span style="font-family:var(--mono);font-size:11px;color:'+col+';">'+esc(c)+'</span><button class="copybtn" style="margin-left:8px;" onclick="copyRef(this,'+ci+','+si+')">Copy</button></div>';});h+='</div></div>';});h+='</div>';el.innerHTML=h;}
 
-function renderAI(el){let msgs='';if(!chat.length)msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about FortiGate.<br><br>Tip: click any chip to auto-fill a question.<br><br>✨ Powered by Groq (free tier)</div>';else{chat.forEach(m=>{const u=m.role==='user';msgs+='<div class="msg '+(u?'user':'')+'"><div class="av '+(u?'usr':'ai')+'">'+(u?'U':'FG')+'</div><div class="bubble">'+fmt(m.content)+'</div></div>';});if(loading)msgs+='<div class="msg"><div class="av ai">FG</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>';}el.innerHTML=
-  '<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5">'
-  +'<span style="flex-shrink:0">⚠️</span>'
-  +'<span>Messages are sent to <strong>Groq API</strong> (third party). Avoid sharing real IPs or credentials. Use the <span style=\"color:var(--a);cursor:pointer;text-decoration:underline\" onclick=\"stab('masking')\">IP Masking tab</span> first.</span>'
-  +'</div>'
-  +'<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:#f87171;line-height:1.5">'
-  +'<span style="flex-shrink:0">🚨</span>'
-  +'<span>Private IPs detected: <strong style="font-family:var(--mono);color:#fca5a5"></strong> — consider anonymizing first.</span>'
-  +'</div>'
-  +'<div class=\"messages\" id=\"chatm\">'+msgs+'</div>'
-  +'<div class=\"irow\"><input type=\"text\" id=\"chi\" placeholder=\"e.g. Phase 2 keeps flapping...\" onkeydown=\"if(event.key===\\'Enter\\')sendMsg()\"/><button class=\"ibtn\" onclick=\"sendMsg()\" '+(loading?'disabled':'')+'>Send ↗</button></div>';const cm=document.getElementById('chatm');if(cm)cm.scrollTop=cm.scrollHeight;}
+function renderAI(el){
+  let msgs='';
+  if(!chat.length){
+    msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about FortiGate.<br><br>Tip: click any chip to auto-fill a question.<br><br>✨ Powered by Groq (free tier)</div>';
+  } else {
+    chat.forEach(m=>{
+      const u=m.role==='user';
+      msgs+='<div class="msg '+(u?'user':'')+'"><div class="av '+(u?'usr':'ai')+'">'+(u?'U':'FG')+'</div><div class="bubble">'+fmt(m.content)+'</div></div>';
+    });
+    if(loading) msgs+='<div class="msg"><div class="av ai">FG</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>';
+  }
+
+  const privBanner='<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5"><span style="flex-shrink:0">⚠️</span><span>Messages are sent to <strong>Groq API</strong> (third party). Avoid sharing real IPs or credentials. Use the <span class="ai-mask-link" style="color:var(--a);cursor:pointer;text-decoration:underline">IP Masking tab</span> first.</span></div>';
+  const ipWarn='<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:#f87171;line-height:1.5"><span style="flex-shrink:0">🚨</span><span>Private IPs detected: <strong style="font-family:var(--mono);color:#fca5a5"></strong> — consider anonymizing first.</span></div>';
+
+  el.innerHTML=privBanner+ipWarn+'<div class="messages" id="chatm">'+msgs+'</div><div class="irow"><input type="text" id="chi" placeholder="e.g. Phase 2 keeps flapping..." /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div>';
+
+  // Wire input events cleanly — no inline handlers
+  const chiEl=document.getElementById('chi');
+  const ibtnEl=el.querySelector('.ibtn');
+  if(chiEl) chiEl.addEventListener('keydown', function(e){ if(e.key==='Enter') sendMsg(); });
+  if(ibtnEl) ibtnEl.addEventListener('click', function(){ sendMsg(); });
+
+  // Wire masking link
+  const maskLink=el.querySelector('.ai-mask-link');
+  if(maskLink) maskLink.addEventListener('click', function(){ stab('masking'); });
+
+  const cm=document.getElementById('chatm');
+  if(cm) cm.scrollTop=cm.scrollHeight;
+}
 
 async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loading)return;const text=inp.value.trim();if(!text)return;
   const _ip=/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g;
