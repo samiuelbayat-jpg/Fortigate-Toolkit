@@ -370,9 +370,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   <div class="login-card">
     <div class="login-logo">🐺 Net<span>Wolf</span></div>
     <div class="login-sub">FortiGate Pro Toolkit — Sign in to continue</div>
-    <input class="login-input" type="email" id="loginEmail" placeholder="Your email address" id="loginEmailInput">
-    <input class="login-input" type="password" id="loginPassword" placeholder="Password" id="loginEmailInput">
-    <button class="login-btn" id="loginBtn" id="loginSubmitBtn">Login</button>
+    <input class="login-input" type="email" id="loginEmail" placeholder="Your email address">
+    <input class="login-input" type="password" id="loginPassword" placeholder="Password">
+    <button class="login-btn" id="loginSubmitBtn">Login</button>
     <button class="login-forgot" id="loginForgotBtn">Forgot password?</button>
     <div id="loginError" class="login-error"></div>
     <div class="login-footer">Don't have an account? <a href="https://netwolffortigate.com">Subscribe here →</a></div>
@@ -6715,7 +6715,7 @@ function renderSecurityTab(el){
 
 // Wire login form — safe here because DOM is ready and functions are defined
 document.addEventListener('DOMContentLoaded', function(){
-  const emailEl  = document.getElementById('loginEmail') || document.getElementById('loginEmailInput');
+  const emailEl  = document.getElementById('loginEmail');
   const passEl   = document.getElementById('loginPassword');
   const loginBtn = document.getElementById('loginSubmitBtn');
   const forgotBtn= document.getElementById('loginForgotBtn');
