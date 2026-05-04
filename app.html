@@ -511,6 +511,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('labsetup')" id="tab-labsetup" title="Lab Setup Guide">
               <span class="tab-icon">🧪</span><span class="tab-lbl">Lab Setup</span>
             </button>
+            <button class="tab" onclick="stab('security')" id="tab-security" title="Security & Privacy">
+              <span class="tab-icon">🔐</span><span class="tab-lbl">Security</span>
+            </button>
           </div>
         </div>
       </div>
@@ -1121,7 +1124,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -6285,6 +6288,260 @@ function renderDHCPDiag(el){el.innerHTML=`
     document.getElementById('rogue-cmd').textContent=c;
     document.getElementById('rogue-out').style.display='block';
   };
+}
+
+function renderSecurityTab(el){
+  el.innerHTML=`
+<div class="cblock">
+  <div class="chdr">
+    <div class="chdr-l">🔐 Security &amp; Privacy Overview</div>
+    <div class="chdr-r" style="font-size:11px;color:var(--t3)">What this tool does — and does not do — with your data</div>
+  </div>
+  <div class="cbody">
+
+    <!-- INTRO -->
+    <div style="padding:14px 16px;background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.25);border-radius:10px;margin-bottom:20px;font-size:13px;color:var(--t);line-height:1.7">
+      <strong style="color:var(--a);font-size:14px;">NetWolf was built for professional network engineers.</strong><br>
+      This page explains exactly how every part of the tool handles your data — transparently and honestly.
+      No marketing language. Just facts.
+    </div>
+
+    <!-- LEGEND -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;font-size:11px;">
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#1D9E75;display:inline-block"></span> Fully local — never leaves your browser</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#d29922;display:inline-block"></span> Stored locally in your browser only</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#58a6ff;display:inline-block"></span> Sent to trusted third party (documented below)</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#f85149;display:inline-block"></span> Action required from you</span>
+    </div>
+
+    <!-- SECTION 1: Authentication -->
+    <div class="cblock" style="margin-bottom:16px;">
+      <div class="chdr"><div class="chdr-l"><span style="margin-right:8px">🔑</span>1. Login &amp; Authentication</div><span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(88,166,255,.1);color:var(--bl);border:1px solid rgba(88,166,255,.2)">Firebase Auth</span></div>
+      <div class="cbody">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2);width:35%">Your email address</td>
+            <td style="padding:8px 10px"><span style="color:#58a6ff">●</span> Sent to Firebase (Google) for authentication only. Never stored by NetWolf servers.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">Your password</td>
+            <td style="padding:8px 10px"><span style="color:#58a6ff">●</span> Never stored anywhere — not locally, not on any server. Firebase handles it with industry-standard hashing. NetWolf never sees your password.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">Session token (login state)</td>
+            <td style="padding:8px 10px"><span style="color:#d29922">●</span> Stored in <code>sessionStorage</code> only — cleared automatically when you close the browser tab.</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px;color:var(--t2)">Terms acceptance</td>
+            <td style="padding:8px 10px"><span style="color:#d29922">●</span> Stored in <code>sessionStorage</code> — cleared on tab close.</td>
+          </tr>
+        </table>
+        <div style="margin-top:10px;padding:8px 12px;background:rgba(88,166,255,.05);border-radius:6px;font-size:11px;color:var(--t3)">
+          🏛️ Firebase Auth is operated by Google and is subject to <a href="https://firebase.google.com/support/privacy" target="_blank" style="color:var(--bl)">Google's Privacy Policy</a>. NetWolf has no access to your credentials.
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: All local tools -->
+    <div class="cblock" style="margin-bottom:16px;">
+      <div class="chdr"><div class="chdr-l"><span style="margin-right:8px">🖥️</span>2. Local-Only Tools — Zero Data Transmission</div><span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.2)">100% Local</span></div>
+      <div class="cbody">
+        <div style="font-size:12px;color:var(--t3);margin-bottom:10px;">These tools run entirely in your browser. No data is sent anywhere — ever.</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead><tr style="border-bottom:1px solid var(--br)">
+            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--t3)">TOOL / TAB</th>
+            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--t3)">WHAT IT DOES WITH DATA</th>
+          </tr></thead>
+          <tbody>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">🔄 Bulk Anonymizer</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> Pure regex — IPs, MACs, passwords, usernames and hostnames are replaced locally. Output never leaves your browser.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">🎭 IP Masking</td>
+            <td style="padding:8px 10px"><span style="color:#d29922">●</span> Mappings stored in <code>localStorage</code> — browser only, never transmitted. Use <strong>Delete All</strong> on shared computers.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">🧮 Subnet Calculator</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> All calculations done in JavaScript locally. No data sent anywhere.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">📡 DHCP Diagnostics</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> Generates CLI commands only — no data collected or sent.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">🧭 Guided Steps</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> Static reference content. No input collected.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">📋 Quick Reference</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> Static content only. No data collected.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">🖥️ Multi-Vendor CLI</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> Static reference content. No data collected.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">⚙️ Config Generator</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> Config built locally from your inputs. Never transmitted.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">🔀 Config Migrator</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> Conversion done locally in JavaScript. No upload occurs.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">🏷️ Hardware Reference</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> Static content. No data collected.</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px;color:var(--t2)">🧪 Lab Setup</td>
+            <td style="padding:8px 10px"><span style="color:#d29922">●</span> Checkbox progress saved in <code>localStorage</code> — browser only, never transmitted.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: AI tabs -->
+    <div class="cblock" style="margin-bottom:16px;">
+      <div class="chdr"><div class="chdr-l"><span style="margin-right:8px">🤖</span>3. AI-Powered Tabs — External API</div><span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">Data leaves browser</span></div>
+      <div class="cbody">
+        <div style="padding:10px 12px;background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.2);border-radius:8px;margin-bottom:14px;font-size:12px;color:#f87171;line-height:1.6">
+          ⚠️ <strong>The AI Assistant and Free AI Analyzer tabs send your input to Groq's API.</strong> This is the only part of NetWolf where data leaves your browser. Read below before using these tabs with production data.
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2);width:35%">What is sent to Groq</td>
+            <td style="padding:8px 10px">The text you type or paste into the AI tabs, plus a system prompt identifying you as a FortiGate engineer. Nothing else.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">Your Groq API key</td>
+            <td style="padding:8px 10px"><span style="color:#d29922">●</span> Stored in <code>localStorage</code> — your browser only. Sent only as an Authorization header to <code>api.groq.com</code>. NetWolf never sees or logs your key.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">Groq's data policy</td>
+            <td style="padding:8px 10px">Groq states they do not train on API request data. See <a href="https://groq.com/privacy-policy/" target="_blank" style="color:var(--bl)">groq.com/privacy-policy</a>.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">IP detection warning</td>
+            <td style="padding:8px 10px"><span style="color:#1D9E75">●</span> NetWolf automatically scans your input for private IP ranges before sending and warns you if detected.</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px;color:var(--t2)">Best practice</td>
+            <td style="padding:8px 10px"><span style="color:#f85149">●</span> Always anonymize CLI output using the <strong>Bulk Anonymizer</strong> tab before pasting into any AI tab. This replaces all IPs, MACs, passwords and hostnames with safe dummy values.</td>
+          </tr>
+        </table>
+        <div style="margin-top:12px;padding:10px 14px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:8px;font-size:12px;color:var(--t2);line-height:1.7">
+          <strong style="color:var(--a)">✅ Recommended workflow:</strong><br>
+          1. Paste raw CLI output into <strong>Bulk Anonymizer</strong> → click <strong>Anonymize All</strong><br>
+          2. Copy the anonymized output<br>
+          3. Paste into <strong>Free AI Analyzer</strong> or <strong>AI Assistant</strong><br>
+          All sensitive values are replaced before anything reaches Groq.
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: localStorage summary -->
+    <div class="cblock" style="margin-bottom:16px;">
+      <div class="chdr"><div class="chdr-l"><span style="margin-right:8px">💾</span>4. Browser Storage — What Is Saved Locally</div><span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(210,153,34,.1);color:var(--y);border:1px solid rgba(210,153,34,.2)">localStorage only</span></div>
+      <div class="cbody">
+        <div style="font-size:12px;color:var(--t3);margin-bottom:10px;">These items persist in your browser until you clear them. They are never transmitted to any server.</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead><tr style="border-bottom:1px solid var(--br)">
+            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--t3)">KEY</th>
+            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--t3)">WHAT IT STORES</th>
+            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--t3)">HOW TO CLEAR</th>
+          </tr></thead>
+          <tbody>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">groq_key</td>
+            <td style="padding:8px 10px">Your Groq API key</td>
+            <td style="padding:8px 10px">Free AI tab → 🔑 key panel → <strong>🗑️ Clear Key</strong></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">forti_masks_standalone</td>
+            <td style="padding:8px 10px">IP masking mappings (real→fake pairs)</td>
+            <td style="padding:8px 10px">IP Masking tab → <strong>🗑️ Delete all</strong></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">nw_theme</td>
+            <td style="padding:8px 10px">Your colour theme preference</td>
+            <td style="padding:8px 10px">Browser settings → Clear site data</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">lab_progress</td>
+            <td style="padding:8px 10px">Lab Setup checklist progress</td>
+            <td style="padding:8px 10px">Browser settings → Clear site data</td>
+          </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:10px;padding:8px 12px;background:rgba(248,81,73,.05);border:1px solid rgba(248,81,73,.15);border-radius:6px;font-size:11px;color:var(--t3)">
+          🖥️ <strong style="color:var(--t2)">Using a shared or work computer?</strong> Clear your Groq key and IP mappings before logging out. These are the only items that could contain network-sensitive data.
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: External connections summary -->
+    <div class="cblock" style="margin-bottom:16px;">
+      <div class="chdr"><div class="chdr-l"><span style="margin-right:8px">🌐</span>5. External Connections — Full List</div></div>
+      <div class="cbody">
+        <div style="font-size:12px;color:var(--t3);margin-bottom:10px;">Every external connection this tool makes — nothing hidden.</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead><tr style="border-bottom:1px solid var(--br)">
+            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--t3)">DESTINATION</th>
+            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--t3)">PURPOSE</th>
+            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--t3)">WHEN</th>
+            <th style="padding:6px 10px;text-align:left;font-size:10px;color:var(--t3)">YOUR DATA SENT</th>
+          </tr></thead>
+          <tbody>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--bl)">gstatic.com</td>
+            <td style="padding:8px 10px">Load Firebase Auth SDK</td>
+            <td style="padding:8px 10px">On page load</td>
+            <td style="padding:8px 10px">None — script download only</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--bl)">firebase.google.com</td>
+            <td style="padding:8px 10px">User authentication</td>
+            <td style="padding:8px 10px">Login / logout only</td>
+            <td style="padding:8px 10px">Email address + password (hashed)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--bl)">api.groq.com</td>
+            <td style="padding:8px 10px">AI analysis (Free AI + AI Assistant tabs)</td>
+            <td style="padding:8px 10px">Only when you click Analyze / Send</td>
+            <td style="padding:8px 10px">Text you typed or pasted + API key</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--bl)">fortinet.com</td>
+            <td style="padding:8px 10px">Hardware reference images</td>
+            <td style="padding:8px 10px">When Hardware Reference tab is open</td>
+            <td style="padding:8px 10px">None — image download only</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">Everything else</td>
+            <td style="padding:8px 10px" colspan="3">No other external connections are made. All other features run 100% locally.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 6: No tracking -->
+    <div class="cblock">
+      <div class="chdr"><div class="chdr-l"><span style="margin-right:8px">🚫</span>6. What NetWolf Does NOT Do</div><span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.2)">No tracking</span></div>
+      <div class="cbody">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;font-size:12px;">
+          ${['No analytics or tracking scripts','No advertising or third-party cookies','No telemetry or usage reporting','No keylogging or input recording','No screen capture or session recording','No data sold or shared with third parties','No background sync or push notifications','No access to files on your device','No geolocation data collected','No ads — ever'].map(item=>'<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--b2);border-radius:6px;border:1px solid var(--br)"><span style="color:var(--a);font-size:14px">✓</span><span style="color:var(--t2)">'+item+'</span></div>').join('')}
+        </div>
+        <div style="margin-top:16px;padding:12px 16px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:8px;font-size:12px;color:var(--t2);line-height:1.7">
+          <strong style="color:var(--a)">Bottom line:</strong> NetWolf is a professional toolkit for network engineers. Your CLI output, your network topology, and your credentials are sensitive. We built this tool so that sensitive data stays on your machine — and when you choose to use AI features, we warn you clearly and give you tools to anonymize first.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>`;
 }
 
 // Wire login form — safe here because DOM is ready and functions are defined
