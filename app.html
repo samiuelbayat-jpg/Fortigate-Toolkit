@@ -591,7 +591,7 @@ window.doLogin=function doLogin(){
   const errEl=document.getElementById('loginError');
   errEl.textContent='';errEl.style.color='var(--r)';
   if(!email||!pass){errEl.textContent='Please enter your email and password.';return;}
-  const btn=document.getElementById('loginBtn');
+  const btn=document.getElementById('loginSubmitBtn');
   btn.disabled=true;btn.textContent='Signing in…';
   fbAuth.signInWithEmailAndPassword(email,pass)
     .catch(err=>{
