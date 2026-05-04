@@ -6248,16 +6248,6 @@ function renderDHCPDiag(el){el.innerHTML=`
           <pre class="code-block" id="rogue-cmd" style="white-space:pre-wrap;"></pre>
           <div class="cnote" style="margin-top:8px;"><strong>How to trigger DHCP renewal:</strong><br>&bull; Windows: <code>ipconfig /release</code> then <code>ipconfig /renew</code><br>&bull; Linux: <code>dhclient -r &amp;&amp; dhclient &lt;interface&gt;</code><br>&bull; FortiGate client: <code>exec dhcp lease-clear &lt;interface&gt;</code><br><br><strong>Reading output:</strong> Look for DHCP Offer packets (port 67&rarr;68). Source IP = DHCP server. Any unexpected source IP = rogue.</div>
         </div>
-        <div style="margin-top:20px;padding:14px;background:var(--b2);border-radius:8px;border:1px solid var(--br);">
-          <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:10px;">🗺️ Diagnostic Flow — DHCP IP Mismatch + No ICMP Reply</div>
-          <div style="font-size:12px;color:var(--t3);line-height:2;">
-            <span style="color:var(--a);">Step 1</span> &rarr; <strong>Tool 1</strong>: Check FortiGate DHCP leases — correct IP? Pool misconfigured?<br>
-            <span style="color:var(--a);">Step 2</span> &rarr; <strong>Tool 2</strong>: ARP check — duplicate MACs = IP conflict<br>
-            <span style="color:var(--a);">Step 3</span> &rarr; <strong>Tool 3</strong>: Sniff for rogue DHCP Offers — unexpected source = rogue server<br>
-            <span style="color:var(--a);">Step 4</span> &rarr; <strong>Tool 4 ↓</strong>: Check VLAN tagging on switchport — client may be on wrong segment<br>
-            <span style="color:var(--a);">Step 5</span> &rarr; <strong>Tool 5 ↓</strong>: Check RPF / anti-spoofing — FortiGate may silently drop return traffic
-          </div>
-        </div>
       </div>
     </div>
 
