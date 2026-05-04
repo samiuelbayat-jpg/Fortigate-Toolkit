@@ -1043,32 +1043,11 @@ cfgbackup:{t:'Backup, Restore & Firmware',s:'high',type:'trouble',chips:['Backup
 {t:'4. Verify ZTNA is working',cmds:['diagnose test application fcnacd 2','diagnose firewall dynamic list','execute log filter category 0','execute log display']}
 ]},
 netflow:{t:'NetFlow / sFlow / IPFIX',s:'medium',type:'trouble',chips:['NetFlow not sending','Collector not receiving','sFlow config','IPFIX setup','Check statistics'],steps:[
-  {title:'Check NetFlow status',commands:[
-    {cmd:'show system netflow',type:'ro'},
-    {cmd:'get system netflow',type:'ro'},
-    {cmd:'diagnose netflow stat',type:'ro'},
-  ],note:'Verify collector IP, port (default 2055), active-flow-timeout and inactive-flow-timeout are correct.'},
-  {title:'Verify collector connectivity',commands:[
-    {cmd:'execute ping <COLLECTOR_IP>',type:'ro'},
-    {cmd:'execute traceroute <COLLECTOR_IP>',type:'ro'},
-    {cmd:'diagnose sniffer packet any \'host <COLLECTOR_IP> and port 2055\' 4 20 l',type:'ro'},
-  ],note:'Port 2055 = NetFlow v5/v9. Port 4739 = IPFIX. Capture confirms FortiGate is sending flows to collector.'},
-  {title:'Check flow export statistics',commands:[
-    {cmd:'diagnose netflow stat',type:'ro'},
-    {cmd:'diagnose netflow reset',type:'caution'},
-    {cmd:'diagnose sniffer packet any \'port 2055 or port 4739\' 4 20 l',type:'ro'},
-  ],note:'diagnose netflow stat shows exported packets and flow records. Zero = not sending. Check policy allows UDP to collector.'},
-  {title:'Check sFlow configuration',commands:[
-    {cmd:'show system sflow',type:'ro'},
-    {cmd:'get system sflow',type:'ro'},
-    {cmd:'diagnose sniffer packet any \'port 6343\' 4 20 l',type:'ro'},
-  ],note:'sFlow default port 6343. Unlike NetFlow it samples packets not flows. Must be enabled per-interface.'},
-  {title:'Verify IPFIX template delivery',commands:[
-    {cmd:'diagnose netflow template',type:'ro'},
-    {cmd:'diagnose sniffer packet any \'port 4739\' 4 20 l',type:'ro'},
-    {cmd:'diagnose debug application proxyd -1',type:'caution'},
-    {cmd:'diagnose debug enable',type:'caution'},
-  ],note:'IPFIX uses port 4739. Templates must be received by collector before data records. Check collector logs for template.'},
+  {t:'Check NetFlow status',cmds:['show system netflow','get system netflow','diagnose netflow stat'],note:'Verify collector IP, port (default 2055), active-flow-timeout and inactive-flow-timeout are correct.'},
+  {t:'Verify collector connectivity',cmds:['execute ping <COLLECTOR_IP>','execute traceroute <COLLECTOR_IP>','diagnose sniffer packet any \'host <COLLECTOR_IP> and port 2055\' 4 20 l'],note:'Port 2055 = NetFlow v5/v9. Port 4739 = IPFIX. Capture confirms FortiGate is sending flows to collector.'},
+  {t:'Check flow export statistics',cmds:['diagnose netflow stat','(caution) diagnose netflow reset','diagnose sniffer packet any \'port 2055 or port 4739\' 4 20 l'],note:'diagnose netflow stat shows exported packets and flow records. Zero = not sending. Check policy allows UDP to collector.'},
+  {t:'Check sFlow configuration',cmds:['show system sflow','get system sflow','diagnose sniffer packet any \'port 6343\' 4 20 l'],note:'sFlow default port 6343. Unlike NetFlow it samples packets not flows. Must be enabled per-interface.'},
+  {t:'Verify IPFIX template delivery',cmds:['diagnose netflow template','diagnose sniffer packet any \'port 4739\' 4 20 l','(caution) diagnose debug application proxyd -1','(caution) diagnose debug enable'],note:'IPFIX uses port 4739. Templates must be received by collector before data records. Check collector logs for template.'},
 ]},
 'cfg-netflow':{t:'NetFlow & sFlow Configuration',s:'info',type:'config',sections:[
   {t:'1. Enable NetFlow globally',icon:'📊',cmds:[
