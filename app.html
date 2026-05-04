@@ -1164,12 +1164,12 @@ function renderGuide(el,d){
     h+='<div class="cbody">';
     if(risk==='danger') h+='<div class="cdanger">⚠️ One or more commands below will impact live traffic or sessions.</div>';
     else if(risk==='warn') h+='<div class="cwarn">⚠️ One or more commands below will make configuration changes.</div>';
-    h+='<div class="clines">'+s.cmds.map(c=>{
+    h+='<div class="clines">'+((s.cmds||[]).map(c=>{
       if(c.startsWith('(')) return '<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>\n';
       const sv=cmdSafety(c);
       let col=sv==='danger'?'var(--r)':sv==='caution'?'var(--y)':'var(--g)';
       return '<span style="color:'+col+'">'+esc(c)+'</span>'+(sv==='danger'?' <span style="font-size:10px;color:var(--r);">⚠️CAUTION</span>':'')+'\n';
-    }).join('')+'</div>';
+    }).join(''))+'</div>';
     h+=(s.note?'<div class="cnote">'+s.note+'</div>':'');
     h+='</div></div>';
   });
@@ -6067,7 +6067,7 @@ function initSidebar(){
   for(let cat of categories){
     html+=`<div class="slbl">${cat.section}</div>`;
     for(let id of cat.items){
-      html+=`<button class="cb ${cur===id?'active':''}" onclick="sel('${id}')" id="cat-${id}">${labelMap[id]}</button>`;
+      if(!labelMap[id])return;html+=`<button class="cb ${cur===id?'active':''}" onclick="sel('${id}')" id="cat-${id}">${labelMap[id]}</button>`;
     }
   }
   sidebar.innerHTML=html;
