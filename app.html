@@ -6349,77 +6349,90 @@ function renderDHCPDiag(el){el.innerHTML=`
   window.genDHCPLease=function(){
     const sid=document.getElementById('dhcp-serverid').value.trim()||'1';
     const filt=document.getElementById('dhcp-filter').value.trim();
-    let c='# Show DHCP server config for ID '+sid+'\nget system dhcp server '+sid+'\n\n# List active leases\nexecute dhcp lease-list '+sid;
-    if(filt) c+='\n\n# Search output for: '+filt;
-    c+='\n\n# Cross-check ARP table\nget system arp\n\n# Detailed ARP with interface info\ndiagnose ip arp list';
-    document.getElementById('dhcp-lease-cmd').textContent=c;
+    let lines=[
+      '# Show DHCP server config for ID '+sid,
+      'get system dhcp server '+sid,
+      '',
+      '# List active leases',
+      'execute dhcp lease-list '+sid
+    ];
+    if(filt) lines.push('','# Search output for: '+filt);
+    lines.push('','# Cross-check ARP table','get system arp','','# Detailed ARP with interface info','diagnose ip arp list');
+    document.getElementById('dhcp-lease-cmd').textContent=lines.join('\n');
     document.getElementById('dhcp-lease-out').style.display='block';
   };
   window.genARPCheck=function(){
     const ip=document.getElementById('arp-ip').value.trim()||'<CLIENT-IP>';
     const iface=document.getElementById('arp-int').value.trim();
-    let c='# Full ARP table\nget system arp\n\n# Detailed ARP with interface and age\ndiagnose ip arp list';
-    if(iface) c+='\n\n# Filter to interface '+iface+'\ndiagnose ip arp list | grep '+iface;
-    c+='\n\n# Ping from FortiGate to client\nexecute ping '+ip;
-    c+='\n\n# Check FortiGate interface IPs (RPF check)\ndiagnose ip address list\n\n# Routing lookup for client IP\nget router info routing-table details '+ip;
-    document.getElementById('arp-cmd').textContent=c;
+    let lines=[
+      '# Full ARP table',
+      'get system arp',
+      '',
+      '# Detailed ARP with interface and age',
+      'diagnose ip arp list'
+    ];
+    if(iface) lines.push('',''+'# Filter to interface '+iface,'diagnose ip arp list | grep '+iface);
+    lines.push('','# Ping from FortiGate to client','execute ping '+ip,'','# Check FortiGate interface IPs (RPF check)','diagnose ip address list','','# Routing lookup for client IP','get router info routing-table details '+ip);
+    document.getElementById('arp-cmd').textContent=lines.join('\n');
     document.getElementById('arp-out').style.display='block';
   };
   window.genVLANCheck=function(){
     const intf=document.getElementById('vlan-intf').value.trim()||'<INTERFACE>';
     const vid=document.getElementById('vlan-id').value.trim();
-    let c='# Show FortiGate interface config — check vlanid and IP
-get system interface '+intf+'
-
-# Full interface detail including VLAN, mode, status
-diagnose netlink interface list '+intf+'
-
-# List all DHCP servers — confirm pool matches expected subnet
-show system dhcp server
-
-# Check all interface IPs and their subnets
-diagnose ip address list';
-    if(vid) c+='
-
-# Tip: expected VLAN ID is '+vid+' — verify vlanid field matches in output above';
-    document.getElementById('vlan-cmd').textContent=c;
+    let lines=[
+      '# Show FortiGate interface config -- check vlanid and IP',
+      'get system interface '+intf,
+      '',
+      '# Full interface detail including VLAN, mode, status',
+      'diagnose netlink interface list '+intf,
+      '',
+      '# List all DHCP servers -- confirm pool matches expected subnet',
+      'show system dhcp server',
+      '',
+      '# Check all interface IPs and their subnets',
+      'diagnose ip address list'
+    ];
+    if(vid) lines.push('','# Tip: expected VLAN ID is '+vid+' -- verify vlanid field matches in output above');
+    document.getElementById('vlan-cmd').textContent=lines.join('\n');
     document.getElementById('vlan-out').style.display='block';
   };
 
   window.genRPFCheck=function(){
     const ip=document.getElementById('rpf-ip').value.trim()||'<CLIENT-IP>';
     const intf=document.getElementById('rpf-intf').value.trim()||'<INTERFACE>';
-    const c='# Step 1: Check all interface subnets — is client IP inside any of them?
-diagnose ip address list
-
-# Step 2: Routing lookup — which interface does FortiGate use to reach client IP?
-get router info routing-table details '+ip+'
-
-# Step 3: Debug flow to catch RPF drop explicitly
-diagnose debug reset
-diagnose debug flow filter addr '+ip+'
-diagnose debug flow filter proto 1
-diagnose debug flow show function-name enable
-diagnose debug flow trace start 20
-diagnose debug enable
-# Now ping the client from another device — look for "reverse path check fail" or "drop by RPF"
-# Then stop debug:
-diagnose debug flow trace stop
-diagnose debug disable
-diagnose debug reset
-
-# Step 4: Check RPF setting on the ingress interface
-config system interface
-    edit '+intf+'
-    get
-end
-# Look for: src-check — "enable" = RPF active, "disable" = RPF off
-
-# Fix (if RPF confirmed as cause — use with caution):
-# config system interface
-#     edit '+intf+'
-#     set src-check disable
-# end';
+    const c=[
+      '# Step 1: Check all interface subnets -- is client IP inside any of them?',
+      'diagnose ip address list',
+      '',
+      '# Step 2: Routing lookup -- which interface does FortiGate use to reach client IP?',
+      'get router info routing-table details '+ip,
+      '',
+      '# Step 3: Debug flow to catch RPF drop explicitly',
+      'diagnose debug reset',
+      'diagnose debug flow filter addr '+ip,
+      'diagnose debug flow filter proto 1',
+      'diagnose debug flow show function-name enable',
+      'diagnose debug flow trace start 20',
+      'diagnose debug enable',
+      '# Now ping client from another device -- look for: reverse path check fail',
+      '# Then stop debug:',
+      'diagnose debug flow trace stop',
+      'diagnose debug disable',
+      'diagnose debug reset',
+      '',
+      '# Step 4: Check RPF setting on the ingress interface',
+      'config system interface',
+      '    edit '+intf,
+      '    get',
+      'end',
+      '# Look for: src-check -- enable = RPF active, disable = RPF off',
+      '',
+      '# Fix if RPF confirmed as cause (use with caution):',
+      '# config system interface',
+      '#     edit '+intf,
+      '#     set src-check disable',
+      '# end'
+    ].join('\n');
     document.getElementById('rpf-cmd').textContent=c;
     document.getElementById('rpf-out').style.display='block';
   };
@@ -6427,8 +6440,21 @@ end
   window.genRogueDHCP=function(){
     const iface=document.getElementById('rogue-int').value.trim()||'any';
     const cnt=parseInt(document.getElementById('rogue-count').value)||20;
-    const c='# Sniff DHCP traffic on interface: '+iface+'\n# Start this, then trigger ipconfig /release + /renew on the client\ndiagnose sniffer packet '+iface+' "port 67 or port 68" 4 '+cnt+' l\n\n# Verbose version (full packet decode):\ndiagnose sniffer packet '+iface+' "port 67 or port 68" 6 '+cnt+' l\n\n# Find rogue device switchport by MAC\ndiagnose netlink brctl name host '+iface+'\n\n# List all legitimate DHCP servers on FortiGate\nshow system dhcp server';
-    document.getElementById('rogue-cmd').textContent=c;
+    const lines=[
+      '# Sniff DHCP traffic on interface: '+iface,
+      '# Start this, then trigger ipconfig /release + /renew on the client',
+      'diagnose sniffer packet '+iface+' "port 67 or port 68" 4 '+cnt+' l',
+      '',
+      '# Verbose version (full packet decode):',
+      'diagnose sniffer packet '+iface+' "port 67 or port 68" 6 '+cnt+' l',
+      '',
+      '# Find rogue device switchport by MAC',
+      'diagnose netlink brctl name host '+iface,
+      '',
+      '# List all legitimate DHCP servers on FortiGate',
+      'show system dhcp server'
+    ];
+    document.getElementById('rogue-cmd').textContent=lines.join('\n');
     document.getElementById('rogue-out').style.display='block';
   };
 }
