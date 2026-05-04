@@ -567,6 +567,13 @@ firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
 
 /* ══ AUTH STATE — show login or toolkit ══ */
+// Instantly hide login overlay if Firebase has a cached session (avoids flash on refresh)
+(function(){
+  try{
+    const hasSession=Object.keys(localStorage).some(function(k){return k.indexOf('firebase:authUser')===0;});
+    if(hasSession){var ov=document.getElementById('loginOverlay');if(ov)ov.style.display='none';}
+  }catch(e){}
+})();
 fbAuth.onAuthStateChanged(function(user){
   if(user){
     document.getElementById('loginOverlay').style.display='none';
@@ -672,7 +679,7 @@ function saveKey(){const v=document.getElementById('apikey').value.trim();if(!v)
 window.addEventListener('load',()=>{if(groqApiKey)setKst('✓ key loaded','#3fb950');});
 function setKst(t,c){const el=document.getElementById('kst');el.textContent=t;el.style.color=c;}
 function sel(c){
-  cur=c;
+  cur=c;localStorage.setItem('nw_cur',c);
   // Always switch to guide tab when selecting a category
   tab='guide';
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
@@ -682,7 +689,7 @@ function sel(c){
   if(document.getElementById('cat-'+c)) document.getElementById('cat-'+c).classList.add('active');
   render();
 }
-function stab(t){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');render();}
+function stab(t){tab=t;localStorage.setItem('nw_tab',t);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');render();}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(t){return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
 function copyAll(btn,key,idx){const step=D[cur].steps?D[cur].steps[idx]:D[cur].sections[idx];const cmds=(step.cmds||[]).filter(c=>!c.startsWith('('));navigator.clipboard.writeText(cmds.join('\n')).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy all',1500);});}
@@ -6715,7 +6722,21 @@ document.addEventListener('DOMContentLoaded', function(){
   if(forgotBtn)forgotBtn.addEventListener('click',  function(){ window.doForgotPassword(); });
 });
 
-function initAndRender(){try{loadSavedTheme();initSidebar();render();}catch(err){const content=document.getElementById('mc');if(content)content.innerHTML=`<div class="cdanger" style="padding:20px;">⚠️ Failed to load toolkit: ${err.message}</div>`;}}
+function initAndRender(){try{
+  loadSavedTheme();
+  initSidebar();
+  // Restore last active tab and sidebar category
+  const savedTab=localStorage.getItem('nw_tab');
+  const savedCur=localStorage.getItem('nw_cur');
+  if(savedCur) cur=savedCur;
+  if(savedTab){
+    tab=savedTab;
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    const tabEl=document.getElementById('tab-'+savedTab);
+    if(tabEl) tabEl.classList.add('active');
+  }
+  render();
+}catch(err){const content=document.getElementById('mc');if(content)content.innerHTML=`<div class="cdanger" style="padding:20px;">⚠️ Failed to load toolkit: ${err.message}</div>`;}}
 </script>
 </body>
 </html>
