@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="X-Frame-Options" content="DENY">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.groq.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com wss:; frame-ancestors 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.groq.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com wss:;">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="favicon.svg">
@@ -1154,7 +1153,7 @@ function renderGuide(el,d){
   let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev '+(d.s||'info')+'">Troubleshoot</span></div>';
   h+='<div class="chips">'+((d.chips||[]).map(c=>'<span class="chip" onclick="askAI(\''+c.replace(/'/g,"\\'")+' on FortiGate\')">'+c+' ↗</span>').join(''))+'</div>';
   d.steps.forEach((s,i)=>{
-    const real=s.cmds.filter(c=>!c.startsWith('('));
+    const real=(s.cmds||[]).filter(c=>!c.startsWith('('));
     const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':'';
     h+='<div class="cblock '+risk+'">';
     h+='<div class="chdr"><div class="chdr-l"><div class="snum">'+(i+1)+'</div>'+s.t+'</div>';
