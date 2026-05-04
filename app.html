@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.groq.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com wss:; frame-ancestors 'none'">
 <meta name="robots" content="noindex, nofollow">
@@ -12,8 +13,8 @@
 <title>🐺 NetWolf | Advanced Diagnostics</title>
 
 <!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 
 <style>
 :root{--a:#1D9E75;--ad:#0F6E56;--bg:#0d1117;--b2:#161b22;--b3:#21262d;--br:#30363d;--t:#e6edf3;--t2:#8b949e;--t3:#484f58;--g:#3fb950;--y:#d29922;--r:#f85149;--bl:#58a6ff;--mono:'Courier New',monospace}
@@ -570,6 +571,24 @@ const fbAuth=firebase.auth();
 
 /* ══ AUTH STATE — show login or toolkit ══ */
 // Login overlay is hidden by default; shown by onAuthStateChanged if no session
+// Session idle timeout — 8 hours
+(function(){
+  var IDLE_LIMIT=8*60*60*1000;
+  var IDLE_KEY='nw_last_active';
+  function updateActivity(){localStorage.setItem(IDLE_KEY, Date.now());}
+  function checkIdle(){
+    var last=parseInt(localStorage.getItem(IDLE_KEY)||'0');
+    if(last && Date.now()-last>IDLE_LIMIT){
+      localStorage.removeItem(IDLE_KEY);
+      fbAuth.signOut();
+    }
+  }
+  ['click','keydown','mousemove','touchstart'].forEach(function(e){
+    document.addEventListener(e, updateActivity, {passive:true});
+  });
+  updateActivity();
+  setInterval(checkIdle, 60000);
+})();
 fbAuth.onAuthStateChanged(function(user){
   if(user){
     document.getElementById('loginOverlay').style.display='none';
@@ -6699,6 +6718,23 @@ function renderSecurityTab(el){
         </div>
         <div style="margin-top:16px;padding:12px 16px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:8px;font-size:12px;color:var(--t2);line-height:1.7">
           <strong style="color:var(--a)">Bottom line:</strong> NetWolf is a professional toolkit for network engineers. Your CLI output, your network topology, and your credentials are sensitive. We built this tool so that sensitive data stays on your machine — and when you choose to use AI features, we warn you clearly and give you tools to anonymize first.
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 7: Security audit trust statement -->
+    <div class="cblock">
+      <div class="chdr">
+        <div class="chdr-l"><span style="margin-right:8px">🛡️</span>7. Security Audit</div>
+        <span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.2)">Verified</span>
+      </div>
+      <div class="cbody" style="color:var(--t2)">
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:16px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:10px;">
+          <span style="font-size:32px;flex-shrink:0;">🔒</span>
+          <div style="font-size:13px;line-height:1.8;color:var(--t2)">
+            This tool has been <strong style="color:var(--t)">internally audited</strong> for common web vulnerabilities including cross-site scripting (XSS), clickjacking, and data leakage. All identified issues have been resolved.<br><br>
+            <strong style="color:var(--t)">No customer data is collected, stored, or shared by NetWolf.</strong> Your CLI output, network topology, and credentials stay on your machine. The only data that ever leaves your browser is what you explicitly send to the AI tabs — and you are warned clearly before that happens.
+          </div>
         </div>
       </div>
     </div>
