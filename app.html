@@ -370,10 +370,10 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   <div class="login-card">
     <div class="login-logo">🐺 Net<span>Wolf</span></div>
     <div class="login-sub">FortiGate Pro Toolkit — Sign in to continue</div>
-    <input class="login-input" type="email" id="loginEmail" placeholder="Your email address" onkeydown="if(event.key==='Enter')doLogin()">
-    <input class="login-input" type="password" id="loginPassword" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="login-btn" id="loginBtn" onclick="doLogin()">Login</button>
-    <button class="login-forgot" onclick="doForgotPassword()">Forgot password?</button>
+    <input class="login-input" type="email" id="loginEmail" placeholder="Your email address" id="loginEmailInput">
+    <input class="login-input" type="password" id="loginPassword" placeholder="Password" id="loginEmailInput">
+    <button class="login-btn" id="loginBtn" id="loginSubmitBtn">Login</button>
+    <button class="login-forgot" id="loginForgotBtn">Forgot password?</button>
     <div id="loginError" class="login-error"></div>
     <div class="login-footer">Don't have an account? <a href="https://netwolffortigate.com">Subscribe here →</a></div>
   </div>
@@ -473,6 +473,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             </button>
             <button class="tab" onclick="stab('subnetcalc')" id="tab-subnetcalc" title="Subnet Calculator">
               <span class="tab-icon">🧮</span><span class="tab-lbl">Subnet Calc</span>
+            </button>
+            <button class="tab" onclick="stab('dhcpdiag')" id="tab-dhcpdiag" title="DHCP Diagnostics">
+              <span class="tab-icon">📡</span><span class="tab-lbl">DHCP Diag</span>
             </button>
           </div>
         </div>
@@ -1118,7 +1121,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -1169,24 +1172,21 @@ function renderRef(el){let h='<div class="rgrid">';QREF.forEach((s,ci)=>{h+='<di
 function renderAI(el){let msgs='';if(!chat.length)msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about FortiGate.<br><br>Tip: click any chip to auto-fill a question.<br><br>✨ Powered by Groq (free tier)</div>';else{chat.forEach(m=>{const u=m.role==='user';msgs+='<div class="msg '+(u?'user':'')+'"><div class="av '+(u?'usr':'ai')+'">'+(u?'U':'FG')+'</div><div class="bubble">'+fmt(m.content)+'</div></div>';});if(loading)msgs+='<div class="msg"><div class="av ai">FG</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>';}el.innerHTML=
   '<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5">'
   +'<span style="flex-shrink:0">⚠️</span>'
-  +'<span>Messages are sent to <strong>Groq API</strong>. Do not share real IPs, credentials or customer data. Use the <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">IP Masking tab</span> to anonymize first.</span>'
+  +'<span>Messages are sent to <strong>Groq API</strong> (third party). Avoid sharing real IPs or credentials. Use the <span style=\"color:var(--a);cursor:pointer;text-decoration:underline\" onclick=\"stab('masking')\">IP Masking tab</span> first.</span>'
   +'</div>'
   +'<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:#f87171;line-height:1.5">'
   +'<span style="flex-shrink:0">🚨</span>'
-  +'<span>Private IPs detected in your message: <strong style="font-family:var(--mono);color:#fca5a5"></strong> — consider anonymizing first.</span>'
+  +'<span>Private IPs detected: <strong style="font-family:var(--mono);color:#fca5a5"></strong> — consider anonymizing first.</span>'
   +'</div>'
-  +'<div class="messages" id="chatm">'+msgs+'</div>'
-  +'<div class="irow"><input type="text" id="chi" placeholder="e.g. Phase 2 keeps flapping..." onkeydown="if(event.key===\'Enter\')sendMsg()"/><button class="ibtn" onclick="sendMsg()" '+(loading?'disabled':'')+'>Send ↗</button></div>';const cm=document.getElementById('chatm');if(cm)cm.scrollTop=cm.scrollHeight;}
+  +'<div class=\"messages\" id=\"chatm\">'+msgs+'</div>'
+  +'<div class=\"irow\"><input type=\"text\" id=\"chi\" placeholder=\"e.g. Phase 2 keeps flapping...\" onkeydown=\"if(event.key===\\'Enter\\')sendMsg()\"/><button class=\"ibtn\" onclick=\"sendMsg()\" '+(loading?'disabled':'')+'>Send ↗</button></div>';const cm=document.getElementById('chatm');if(cm)cm.scrollTop=cm.scrollHeight;}
 
 async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loading)return;const text=inp.value.trim();if(!text)return;
-  // FIX 2: IP detection in AI Assistant tab
-  const _ipPat=/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g;
-  const _priv=[/^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[01])\./, /^100\.64\./];
-  const _ips=[...new Set(text.match(_ipPat)||[])].filter(ip=>_priv.some(r=>r.test(ip)));
-  if(_ips.length>0){
-    const _w=document.getElementById('aiPrivWarn');
-    if(_w){_w.style.display='flex';_w.querySelector('strong').textContent=_ips.slice(0,4).join(', ')+(_ips.length>4?' …':'');}
-  }
+  const _ip=/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g;
+  const _pr=[/^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[01])\./, /^100\.64\./];
+  const _ips=[...new Set(text.match(_ip)||[])].filter(ip=>_pr.some(r=>r.test(ip)));
+  const _aw=document.getElementById('aiPrivWarn');
+  if(_ips.length>0&&_aw){_aw.style.display='flex';_aw.querySelector('strong').textContent=_ips.slice(0,4).join(', ')+(_ips.length>4?' …':'');}
   inp.value='';chat.push({role:'user',content:text});loading=true;render();const sys='You are a senior FortiGate engineer. Current category: "'+D[cur].t+'". Give concise, practical FortiGate CLI. Use backticks.';try{if(!groqApiKey)throw new Error('no-key');const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sys},...chat]})});const data=await resp.json();if(data.error)throw new Error(data.error.message);chat.push({role:'assistant',content:data.choices[0].message.content});}catch(e){chat.push({role:'assistant',content:e.message==='no-key'?'No Groq API key set. Enter your key at the top.':'Error: '+e.message});}loading=false;render();}
 
 function renderAnalyze(el){el.innerHTML='<div style="margin-bottom:10px;"><div style="font-size:15px;font-weight:700;">Paste CLI output for AI analysis</div><div style="font-size:12px;color:var(--t2);">Mask IPs before sending.</div></div><div style="display:flex;gap:8px;margin-bottom:8px;"><select id="acat" style="font-size:12px;padding:6px;background:var(--b2);"><option value="">-- Context --</option>'+Object.keys(D).map(k=>'<option value="'+k+'">'+D[k].t+'</option>').join('')+'</select><input type="text" id="acmd" placeholder="Command you ran" style="flex:1;font-size:12px;padding:6px;background:var(--bg);"/></div><textarea id="aout" placeholder="Paste raw FortiGate CLI output..." style="width:100%;height:160px;font-family:var(--mono);font-size:12px;padding:12px;background:var(--bg);color:var(--g);border:1px solid var(--br);border-radius:8px;"></textarea><div id="ares" style="margin-top:12px;"></div>';}
@@ -1198,13 +1198,11 @@ function loadMappingsStandalone(){let s=localStorage.getItem("forti_masks_standa
 function renderMaskTableStandalone(){const cont=document.getElementById("maskTableStandalone");if(!cont)return;if(!ipMappings.length){cont.innerHTML="<div style='color:#FCD34D;'>✨ No IP mappings yet.</div>";return;}let html="<table class='ip-mask-table'><thead><tr><th>Real IP</th><th>Fake IP</th><th>Description</th><th>Action</th></tr></thead><tbody>";ipMappings.forEach(m=>{html+=`<tr><td>${escapeHtml(m.real)}</td><td>${escapeHtml(m.fake)}</td><td>${escapeHtml(m.desc||'')}</td><td><button class='delMaskBtnStandalone' data-real='${m.real}' style='background:#B91C1C;color:white;border:none;border-radius:20px;padding:2px 8px;cursor:pointer;'>❌</button></td></tr>`;});html+="</tbody></table>";cont.innerHTML=html;document.querySelectorAll('.delMaskBtnStandalone').forEach(btn=>{btn.addEventListener('click',()=>{ipMappings=ipMappings.filter(m=>m.real!==btn.getAttribute('data-real'));saveMappings();});});}
 function addMappingStandalone(real,desc){if(ipMappings.find(m=>m.real===real)){alert("IP already mapped");return false;}ipMappings.push({real,fake:generateFakeIP(real),desc:desc||""});saveMappings();return true;}
 function maskTextStandalone(input){let out=input;ipMappings.forEach(m=>{let regex=new RegExp(m.real.replace(/\./g,'\\.'),'g');out=out.replace(regex,m.fake);});return out;}
-function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:var(--b2);border-radius:12px;padding:16px;"><div class="stitle" style="margin-bottom:12px;">🎭 IP Masking</div><div class="mask-input-group"><input type="text" id="realIpMask" placeholder="Real IP (e.g., 192.168.1.100)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><input type="text" id="descMask" placeholder="Description (optional)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><button class="sbtn" id="addMaskBtnStandalone">➕ Add</button></div><div id="maskTableStandalone" style="background:#010409;border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto;"></div><div style="display:flex;gap:8px;margin-bottom:16px;"><button class="sbtn" id="deleteAllMaskStandalone" style="background:#B91C1C;">🗑️ Delete all</button><button class="sbtn" id="exportMaskStandalone" style="background:#15803D;">📄 Export</button></div><textarea id="rawTextMask" rows="10" placeholder="Paste any FortiGate output with real IPs..." style="width:100%;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;"></textarea><button class="sbtn" id="applyMaskStandalone" style="background:var(--a);margin-top:6px;">🎭 Mask this text</button><pre id="maskedPreviewStandalone" class="mask-preview">Masked output will appear here.</pre></div>`;loadMappingsStandalone();document.getElementById("addMaskBtnStandalone")?.addEventListener('click',()=>{let real=document.getElementById("realIpMask").value.trim();let desc=document.getElementById("descMask").value.trim();if(real)addMappingStandalone(real,desc);document.getElementById("realIpMask").value="";document.getElementById("descMask").value="";});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{if(confirm("Delete ALL mappings?")){ipMappings=[];saveMappings();}});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{});
-  // FIX 4: Add privacy note below the table
-  const maskPrivNote=document.createElement('div');
-  maskPrivNote.style.cssText='font-size:11px;color:var(--t3);margin:-6px 0 10px 0;padding:8px 12px;background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.15);border-radius:6px;line-height:1.6';
-  maskPrivNote.innerHTML='🔒 <strong style="color:var(--t2)">Privacy note:</strong> IP mappings are stored in your browser's local storage and never sent externally. Use <strong style="color:var(--r)">🗑️ Delete all</strong> to clear them before using a shared computer.';
-  const maskTable=document.getElementById('maskTableStandalone');
-  if(maskTable && maskTable.parentNode) maskTable.parentNode.insertBefore(maskPrivNote,maskTable.nextSibling);
+function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:var(--b2);border-radius:12px;padding:16px;"><div class="stitle" style="margin-bottom:12px;">🎭 IP Masking</div><div class="mask-input-group"><input type="text" id="realIpMask" placeholder="Real IP (e.g., 192.168.1.100)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><input type="text" id="descMask" placeholder="Description (optional)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><button class="sbtn" id="addMaskBtnStandalone">➕ Add</button></div><div id="maskTableStandalone" style="background:#010409;border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto;"></div><div style="display:flex;gap:8px;margin-bottom:16px;"><button class="sbtn" id="deleteAllMaskStandalone" style="background:#B91C1C;">🗑️ Delete all</button><button class="sbtn" id="exportMaskStandalone" style="background:#15803D;">📄 Export</button></div><textarea id="rawTextMask" rows="10" placeholder="Paste any FortiGate output with real IPs..." style="width:100%;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;"></textarea><button class="sbtn" id="applyMaskStandalone" style="background:var(--a);margin-top:6px;">🎭 Mask this text</button><pre id="maskedPreviewStandalone" class="mask-preview">Masked output will appear here.</pre></div>`;loadMappingsStandalone();document.getElementById("addMaskBtnStandalone")?.addEventListener('click',()=>{let real=document.getElementById("realIpMask").value.trim();let desc=document.getElementById("descMask").value.trim();if(real)addMappingStandalone(real,desc);document.getElementById("realIpMask").value="";document.getElementById("descMask").value="";});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{if(confirm("Delete ALL mappings?")){ipMappings=[];saveMappings();}});const maskPrivNote=document.createElement('div');
+  maskPrivNote.style.cssText='font-size:11px;color:var(--t3);margin:6px 0 10px;padding:8px 12px;background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.15);border-radius:6px;line-height:1.6';
+  maskPrivNote.innerHTML='🔒 <strong style="color:var(--t2)">Privacy note:</strong> IP mappings are stored in your browser only — never sent externally. Click <strong style="color:var(--r)">🗑️ Delete all</strong> before using a shared computer.';
+  const _mt=document.getElementById('maskTableStandalone');
+  if(_mt&&_mt.parentNode) _mt.parentNode.insertBefore(maskPrivNote,_mt.nextSibling);
   document.getElementById("exportMaskStandalone")?.addEventListener('click',()=>{let content="# NetWolf IP Masking Report\n\n";ipMappings.forEach(m=>{content+=`${m.real} → ${m.fake} (${m.desc||''})\n`;});let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:"text/plain"}));a.download=`netwolf_mask_${Date.now()}.txt`;a.click();});document.getElementById("applyMaskStandalone")?.addEventListener('click',()=>{let raw=document.getElementById("rawTextMask").value;document.getElementById("maskedPreviewStandalone").innerText=maskTextStandalone(raw)||"(nothing to mask)";});}
 
 let groqApiKeyFree=localStorage.getItem('groq_key')||'';
@@ -1271,7 +1269,7 @@ function renderFreeAITab(el){
       <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--bl);white-space:nowrap">Get key →</a>
     </div>
     <div style="font-size:11px;color:var(--t3);line-height:1.5;border-top:1px solid var(--br);padding-top:8px;">
-      🔒 Your key is stored locally in <strong style="color:var(--t2)">your browser only</strong> — never sent to NetWolf servers. On a shared or work computer, click <strong style="color:var(--r)">Clear Key</strong> before closing to remove it.
+      🔒 Your key is stored locally in <strong style="color:var(--t2)">your browser only</strong> — never sent to NetWolf servers. On a shared computer, click <strong style="color:var(--r)">Clear Key</strong> before closing.
     </div>
   </div>
 
@@ -1291,14 +1289,12 @@ function renderFreeAITab(el){
     <span style="font-size:15px;flex-shrink:0;">⚠️</span>
     <span>Text you paste here is sent to <strong>Groq's API</strong> (a third party). <strong>Do not paste real IPs, hostnames, credentials, or customer data.</strong> Use the <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">IP Masking tab</span> to anonymize output first.</span>
   </div>
-
-  <!-- FIX 2: IP detection warning (hidden by default) -->
+  <!-- FIX 2: IP detection warning -->
   <div id="groqIpWarning" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:11.5px;color:#f87171;line-height:1.6;">
     <span style="font-size:15px;flex-shrink:0;">🚨</span>
-    <span>Private IP addresses detected in your input: <strong id="groqIpList" style="font-family:var(--mono);color:#fca5a5"></strong><br>
+    <span>Private IP addresses detected: <strong id="groqIpList" style="font-family:var(--mono);color:#fca5a5"></strong><br>
     Consider <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">anonymizing these first</span> — or click Analyze to send anyway.</span>
   </div>
-
   <!-- Input area -->
   <div style="margin-bottom:10px">
     <label style="font-size:12px;font-weight:600;color:var(--t2);display:block;margin-bottom:6px">📄 Paste CLI output or ask a question:</label>
@@ -1379,22 +1375,13 @@ Npu-flag      : 00`;
       respDiv.innerHTML='<span style="color:var(--r)">⚠️ No API key set. Enter your Groq key above and click Save.</span>';
       return;
     }
-    // FIX 2: Detect real IPs in pasted text and warn user before sending
     const ipPattern=/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g;
-    const foundIPs=[...new Set(prompt.match(ipPattern)||[])];
-    const privateRanges=[/^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[01])\./, /^172\.16\./, /^100\.64\./];
-    const sensitiveIPs=foundIPs.filter(ip=>privateRanges.some(r=>r.test(ip)));
+    const privateRanges=[/^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[01])\./, /^100\.64\./];
+    const sensitiveIPs=[...new Set(prompt.match(ipPattern)||[])].filter(ip=>privateRanges.some(r=>r.test(ip)));
+    const warnDiv=document.getElementById('groqIpWarning');
     if(sensitiveIPs.length>0){
-      const warnDiv=document.getElementById('groqIpWarning');
-      if(warnDiv){
-        warnDiv.style.display='flex';
-        document.getElementById('groqIpList').textContent=sensitiveIPs.slice(0,6).join(', ')+(sensitiveIPs.length>6?' …':'');
-      }
-      // Still allow send — warning is non-blocking but visible
-    } else {
-      const warnDiv=document.getElementById('groqIpWarning');
-      if(warnDiv) warnDiv.style.display='none';
-    }
+      if(warnDiv){warnDiv.style.display='flex';document.getElementById('groqIpList').textContent=sensitiveIPs.slice(0,6).join(', ')+(sensitiveIPs.length>6?' …':'');}
+    } else { if(warnDiv) warnDiv.style.display='none'; }
     respDiv.innerHTML='<div class="typing"><span></span><span></span><span></span></div>&nbsp; Analyzing with '+document.getElementById('groqModelSelect').options[document.getElementById('groqModelSelect').selectedIndex].text.split('—')[0]+'...';
     try{
       const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
@@ -6184,6 +6171,113 @@ window.addEventListener('DOMContentLoaded', ()=>{
       if(btn) btn.textContent = '☰';
     }
   };
+});
+
+function renderDHCPDiag(el){el.innerHTML=`
+<div class="cblock">
+  <div class="chdr"><div class="chdr-l">📡 DHCP Diagnostics</div><div class="chdr-r" style="font-size:11px;color:var(--t3)">FortiGate DHCP Troubleshooting Toolkit</div></div>
+  <div class="cbody">
+    <div class="cnote" style="margin-bottom:16px;">
+      <strong>When to use this tab:</strong> A client received an IP outside the expected range, gets ICMP echo but no reply, or you suspect a rogue DHCP server or IP conflict. Use the three tools below in order.
+    </div>
+    <div class="cblock" style="margin-bottom:16px;">
+      <div class="chdr"><div class="chdr-l">🔍 Tool 1 — DHCP Lease Lookup</div></div>
+      <div class="cbody">
+        <div class="cnote" style="margin-bottom:12px;"><strong>What it does:</strong> Shows all active DHCP leases on a specific DHCP server on the FortiGate. Confirms what IP was handed to a client MAC, when the lease expires, and which pool served it. If the IP does not match your reserved range the client may have been served by a rogue server or misconfigured pool.</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;">
+          <div style="flex:1;min-width:140px;"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px;">DHCP Server ID (integer, e.g. 1)</label><input type="number" id="dhcp-serverid" placeholder="1" min="1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:13px;"></div>
+          <div style="flex:2;min-width:180px;"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px;">Filter by MAC or IP (optional)</label><input type="text" id="dhcp-filter" placeholder="e.g. aa:bb:cc:dd:ee:ff" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:13px;"></div>
+          <button class="sbtn" onclick="genDHCPLease()">Generate Commands</button>
+        </div>
+        <div id="dhcp-lease-out" style="display:none;">
+          <div style="font-size:11px;color:var(--t3);margin-bottom:4px;">Run on FortiGate CLI:</div>
+          <pre class="code-block" id="dhcp-lease-cmd" style="white-space:pre-wrap;"></pre>
+          <div class="cnote" style="margin-top:8px;"><strong>Reading the output:</strong><br>&bull; <code>ip</code> — IP assigned to client<br>&bull; <code>mac</code> — Client MAC (cross-check with ARP table)<br>&bull; <code>expire</code> — Lease expiry. Expired but still in use = stale lease / IP conflict<br>&bull; <code>interface</code> — Which FortiGate interface served this. Unexpected = wrong VLAN or rogue server<br>&bull; <strong>No output?</strong> Client IP likely came from a rogue DHCP server — use Tool 3.</div>
+        </div>
+      </div>
+    </div>
+    <div class="cblock" style="margin-bottom:16px;">
+      <div class="chdr"><div class="chdr-l">⚡ Tool 2 — ARP Table &amp; IP Conflict Check</div></div>
+      <div class="cbody">
+        <div class="cnote" style="margin-bottom:12px;"><strong>What it does:</strong> Queries the ARP table to see which MAC owns a given IP. Two different MACs for the same IP across consecutive checks = IP conflict. This causes ICMP echo-but-no-reply. Also checks if RPF may be silently dropping return traffic.</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;">
+          <div style="flex:2;min-width:180px;"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px;">Client IP Address</label><input type="text" id="arp-ip" placeholder="e.g. 192.168.x.x" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:13px;"></div>
+          <div style="flex:2;min-width:140px;"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px;">Interface Name (optional)</label><input type="text" id="arp-int" placeholder="e.g. port3 or vlan10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:13px;"></div>
+          <button class="sbtn" onclick="genARPCheck()">Generate Commands</button>
+        </div>
+        <div id="arp-out" style="display:none;">
+          <div style="font-size:11px;color:var(--t3);margin-bottom:4px;">Run on FortiGate CLI:</div>
+          <pre class="code-block" id="arp-cmd" style="white-space:pre-wrap;"></pre>
+          <div class="cnote" style="margin-top:8px;"><strong>Reading the output:</strong><br>&bull; Same IP with two different MACs in consecutive checks = IP conflict<br>&bull; ARP entry age resets rapidly = another device reclaiming the IP<br>&bull; Ping succeeds intermittently = both devices answering<br>&bull; IP outside interface subnet = FortiGate may drop return traffic silently (RPF)</div>
+        </div>
+      </div>
+    </div>
+    <div class="cblock">
+      <div class="chdr"><div class="chdr-l">🚨 Tool 3 — Rogue DHCP Server Sniffer</div></div>
+      <div class="cbody">
+        <div class="cnote" style="margin-bottom:12px;"><strong>What it does:</strong> Sniffs for DHCP Offer packets. If offers arrive from an IP other than your FortiGate or known DHCP server, that device is rogue and handing out wrong IPs. Most common cause of a client receiving an IP outside the expected range.</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;">
+          <div style="flex:2;min-width:180px;"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px;">Interface to sniff</label><input type="text" id="rogue-int" placeholder="e.g. port3, vlan10, or any" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:13px;"></div>
+          <div style="flex:1;min-width:100px;"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px;">Packet count</label><input type="number" id="rogue-count" placeholder="20" min="5" max="200" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:13px;"></div>
+          <button class="sbtn" onclick="genRogueDHCP()">Generate Commands</button>
+        </div>
+        <div id="rogue-out" style="display:none;">
+          <div style="font-size:11px;color:var(--t3);margin-bottom:4px;">Start this then trigger ipconfig /release + /renew on the client:</div>
+          <pre class="code-block" id="rogue-cmd" style="white-space:pre-wrap;"></pre>
+          <div class="cnote" style="margin-top:8px;"><strong>How to trigger DHCP renewal:</strong><br>&bull; Windows: <code>ipconfig /release</code> then <code>ipconfig /renew</code><br>&bull; Linux: <code>dhclient -r &amp;&amp; dhclient &lt;interface&gt;</code><br>&bull; FortiGate client: <code>exec dhcp lease-clear &lt;interface&gt;</code><br><br><strong>Reading output:</strong> Look for DHCP Offer packets (port 67&rarr;68). Source IP = DHCP server. Any unexpected source IP = rogue.</div>
+        </div>
+        <div style="margin-top:20px;padding:14px;background:var(--b2);border-radius:8px;border:1px solid var(--br);">
+          <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:10px;">🗺️ Diagnostic Flow — DHCP IP Mismatch + No ICMP Reply</div>
+          <div style="font-size:12px;color:var(--t3);line-height:2;">
+            <span style="color:var(--a);">Step 1</span> &rarr; <strong>Tool 1</strong>: Check FortiGate DHCP leases — correct IP? Pool misconfigured?<br>
+            <span style="color:var(--a);">Step 2</span> &rarr; <strong>Tool 2</strong>: ARP check — duplicate MACs = IP conflict<br>
+            <span style="color:var(--a);">Step 3</span> &rarr; <strong>Tool 3</strong>: Sniff for rogue DHCP Offers — unexpected source = rogue server<br>
+            <span style="color:var(--a);">Step 4</span> &rarr; Check <strong>VLAN tagging</strong> on switchport — client may be on wrong segment<br>
+            <span style="color:var(--a);">Step 5</span> &rarr; Check <strong>RPF / anti-spoofing</strong> — FortiGate may silently drop return traffic
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+  window.genDHCPLease=function(){
+    const sid=document.getElementById('dhcp-serverid').value.trim()||'1';
+    const filt=document.getElementById('dhcp-filter').value.trim();
+    let c='# Show DHCP server config for ID '+sid+'\nget system dhcp server '+sid+'\n\n# List active leases\nexecute dhcp lease-list '+sid;
+    if(filt) c+='\n\n# Search output for: '+filt;
+    c+='\n\n# Cross-check ARP table\nget system arp\n\n# Detailed ARP with interface info\ndiagnose ip arp list';
+    document.getElementById('dhcp-lease-cmd').textContent=c;
+    document.getElementById('dhcp-lease-out').style.display='block';
+  };
+  window.genARPCheck=function(){
+    const ip=document.getElementById('arp-ip').value.trim()||'<CLIENT-IP>';
+    const iface=document.getElementById('arp-int').value.trim();
+    let c='# Full ARP table\nget system arp\n\n# Detailed ARP with interface and age\ndiagnose ip arp list';
+    if(iface) c+='\n\n# Filter to interface '+iface+'\ndiagnose ip arp list | grep '+iface;
+    c+='\n\n# Ping from FortiGate to client\nexecute ping '+ip;
+    c+='\n\n# Check FortiGate interface IPs (RPF check)\ndiagnose ip address list\n\n# Routing lookup for client IP\nget router info routing-table details '+ip;
+    document.getElementById('arp-cmd').textContent=c;
+    document.getElementById('arp-out').style.display='block';
+  };
+  window.genRogueDHCP=function(){
+    const iface=document.getElementById('rogue-int').value.trim()||'any';
+    const cnt=parseInt(document.getElementById('rogue-count').value)||20;
+    const c='# Sniff DHCP traffic on interface: '+iface+'\n# Start this, then trigger ipconfig /release + /renew on the client\ndiagnose sniffer packet '+iface+' "port 67 or port 68" 4 '+cnt+' l\n\n# Verbose version (full packet decode):\ndiagnose sniffer packet '+iface+' "port 67 or port 68" 6 '+cnt+' l\n\n# Find rogue device switchport by MAC\ndiagnose netlink brctl name host '+iface+'\n\n# List all legitimate DHCP servers on FortiGate\nshow system dhcp server';
+    document.getElementById('rogue-cmd').textContent=c;
+    document.getElementById('rogue-out').style.display='block';
+  };
+}
+
+// Wire login form — safe here because DOM is ready and functions are defined
+document.addEventListener('DOMContentLoaded', function(){
+  const emailEl  = document.getElementById('loginEmail') || document.getElementById('loginEmailInput');
+  const passEl   = document.getElementById('loginPassword');
+  const loginBtn = document.getElementById('loginSubmitBtn');
+  const forgotBtn= document.getElementById('loginForgotBtn');
+  if(emailEl)  emailEl.addEventListener('keydown',  function(e){ if(e.key==='Enter') window.doLogin(); });
+  if(passEl)   passEl.addEventListener('keydown',   function(e){ if(e.key==='Enter') window.doLogin(); });
+  if(loginBtn) loginBtn.addEventListener('click',   function(){ window.doLogin(); });
+  if(forgotBtn)forgotBtn.addEventListener('click',  function(){ window.doForgotPassword(); });
 });
 
 function initAndRender(){try{loadSavedTheme();initSidebar();render();}catch(err){const content=document.getElementById('mc');if(content)content.innerHTML=`<div class="cdanger" style="padding:20px;">⚠️ Failed to load toolkit: ${err.message}</div>`;}}
