@@ -45,7 +45,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .login-footer a:hover{text-decoration:underline}
 
 /* TERMS OVERLAY */
-.terms-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);z-index:10000;display:flex;justify-content:center;align-items:center}
+.terms-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);z-index:10000;display:flex;justify-content:center;align-items:center}
 .terms-card{background:rgba(22,27,34,0.96);backdrop-filter:blur(8px);border:1px solid rgba(29,158,117,0.4);border-radius:28px;padding:32px 28px;width:540px;max-width:94%;text-align:left;box-shadow:0 25px 45px rgba(0,0,0,0.6);max-height:85vh;overflow-y:auto}
 .terms-card h3{font-size:20px;margin-bottom:12px;color:var(--a);text-align:center}
 .terms-text{font-size:13px;color:var(--t2);line-height:1.65;margin:16px 0 20px;border-left:2px solid var(--a);padding-left:16px;max-height:360px;overflow-y:auto}
@@ -352,7 +352,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 </style>
 </head>
 <body oncontextmenu="return false">
-<canvas id="matrixCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;"></canvas>
+<canvas id="matrixCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:99998;pointer-events:none;display:none;"></canvas>
 
 <!-- LOGIN OVERLAY -->
 <!-- CHANGELOG MODAL -->
@@ -384,7 +384,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 
 <!-- SCREENSAVER -->
 <style>
-#screensaver{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;background:rgba(0,0,0,0.85)}
+#screensaver{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;background:rgba(0,0,0,0.5)}
 #ssCenter{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:10;pointer-events:none;}
 @keyframes nwBlink{0%,100%{opacity:.2}50%{opacity:.8}}
 @keyframes nwPulse{0%,100%{text-shadow:0 0 20px #00d68f,0 0 40px #00d68f}50%{text-shadow:0 0 40px #00d68f,0 0 80px #00d68f,0 0 100px #00d68f}}
@@ -7160,6 +7160,7 @@ function renderLiveConnect(el){
     if(!toolkit || toolkit.style.display === 'none') return;
     if(ssActive) return;
     ssActive = true;
+    document.getElementById('matrixCanvas').style.display = 'block';
     document.getElementById('screensaver').style.display = 'block';
   }
 
@@ -7167,6 +7168,7 @@ function renderLiveConnect(el){
     if(!ssActive) return;
     ssActive = false;
     document.getElementById('screensaver').style.display = 'none';
+    document.getElementById('matrixCanvas').style.display = 'none';
     resetIdle();
   };
 
