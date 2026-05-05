@@ -516,6 +516,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('security')" id="tab-security" title="Security & Privacy">
               <span class="tab-icon">🔐</span><span class="tab-lbl">Security</span>
             </button>
+            <button class="tab" onclick="stab('liveconnect')" id="tab-liveconnect" title="FortiGate Live Connect">
+              <span class="tab-icon">🔌</span><span class="tab-lbl">Live Connect</span>
+            </button>
           </div>
         </div>
       </div>
@@ -1125,7 +1128,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -6737,6 +6740,199 @@ function renderSecurityTab(el){
 
   </div>
 </div>`;
+}
+
+function renderLiveConnect(el){
+  el.innerHTML=`
+<div class="sh"><span class="stitle">🔌 FortiGate Live Connect</span><span class="sev info">REST API — Coming Soon</span></div>
+
+<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
+  Connect NetWolf directly to a live FortiGate using its built-in REST API. Pull real-time data — interface status,
+  VPN tunnels, routing table, DHCP leases and active sessions — without leaving the tool.
+  No third-party server involved. Your browser talks directly to the FortiGate.
+</p>
+
+<!-- Coming Soon Banner -->
+<div style="background:rgba(88,166,255,.07);border:1px solid rgba(88,166,255,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
+  <span style="font-size:28px;flex-shrink:0;">🚧</span>
+  <div>
+    <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Live API integration is coming in a future update</div>
+    <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">This tab contains everything you need to prepare your FortiGate for the Live Connect feature.
+    Follow the setup steps below now so you are ready the moment it goes live.</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="cblock" style="margin-bottom:14px;">
+  <div class="chdr"><div class="chdr-l">⚙️ How It Works</div></div>
+  <div class="cbody">
+    <div style="font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:14px;">
+      NetWolf uses the FortiGate REST API — the same API Fortinet uses for FortiManager integration.
+      It is read-only, token-based, and requires no agents or plugins on the FortiGate.
+      The connection goes directly from your browser to the FortiGate — nothing passes through NetWolf servers.
+    </div>
+    <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-bottom:6px;">
+      ${['Your Browser','→ HTTPS','FortiGate REST API','→ JSON Response','NetWolf Dashboard'].map((s,i)=>`
+        <div style="padding:8px 14px;background:${i%2===0?'var(--b2)':'transparent'};border:${i%2===0?'1px solid var(--br)':'none'};border-radius:8px;font-size:12px;color:${i%2===0?'var(--t)':'var(--a)'};font-weight:${i%2===0?'600':'400'};white-space:nowrap">${s}</div>
+      `).join('')}
+    </div>
+    <div style="font-size:11px;color:var(--t3);margin-top:8px;">
+      ⚠️ The FortiGate must be reachable from your browser — works when you are on-site, or connected via VPN to the client network.
+    </div>
+  </div>
+</div>
+
+<!-- WHAT YOU CAN SEE -->
+<div class="cblock" style="margin-bottom:14px;">
+  <div class="chdr"><div class="chdr-l">📊 What Live Connect Will Show</div></div>
+  <div class="cbody" style="padding:0">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead>
+        <tr style="background:rgba(29,158,117,.08)">
+          <th style="padding:9px 14px;text-align:left;font-size:11px;color:var(--a);font-family:var(--mono);letter-spacing:.06em;border-bottom:1px solid var(--br)">SECTION</th>
+          <th style="padding:9px 14px;text-align:left;font-size:11px;color:var(--a);font-family:var(--mono);letter-spacing:.06em;border-bottom:1px solid var(--br)">DATA</th>
+          <th style="padding:9px 14px;text-align:left;font-size:11px;color:var(--a);font-family:var(--mono);letter-spacing:.06em;border-bottom:1px solid var(--br)">API ENDPOINT</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${[
+          ['🖥️ System Info','Hostname, firmware version, uptime, CPU & RAM usage','/api/v2/monitor/system/status'],
+          ['🔌 Interfaces','Interface name, IP, status (up/down), speed, duplex','/api/v2/monitor/system/interface'],
+          ['🔒 IPsec VPN','Tunnel name, phase1/2 status, bytes in/out, uptime','/api/v2/monitor/vpn/ipsec'],
+          ['🕵️ SSL VPN','Active users, assigned IPs, session duration','/api/v2/monitor/vpn/ssl'],
+          ['🌐 Routing Table','All routes, type (static/BGP/OSPF), gateway, interface','/api/v2/monitor/router/ipv4'],
+          ['📡 DHCP Leases','IP, MAC, hostname, expiry per DHCP server','/api/v2/cmdb/system.dhcp/server'],
+          ['📊 Active Sessions','Source, destination, policy ID, protocol, state','/api/v2/monitor/firewall/session'],
+          ['🗂️ ARP Table','IP to MAC mapping per interface','/api/v2/monitor/system/arp'],
+        ].map(([sec,data,ep])=>`
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:9px 14px;color:var(--t);font-weight:600">${sec}</td>
+            <td style="padding:9px 14px;color:var(--t2)">${data}</td>
+            <td style="padding:9px 14px;font-family:var(--mono);font-size:10px;color:var(--a)">${ep}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SETUP STEPS -->
+<div class="cblock" style="margin-bottom:14px;">
+  <div class="chdr"><div class="chdr-l">🛠️ Prepare Your FortiGate — Step by Step</div><span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.2)">Do this now</span></div>
+  <div class="cbody">
+    <div style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6">
+      Complete these steps on your FortiGate CLI once. You will then be ready to connect the moment Live Connect goes live in NetWolf.
+    </div>
+
+    ${[
+      {
+        n:'1',title:'Create a read-only API user',
+        desc:'This creates a dedicated API user with read-only access. Never use admin credentials for API access.',
+        cmds:[
+          'config system api-user',
+          '    edit "netwolf-readonly"',
+          '        set accprofile "read-only"',
+          '        set vdom "root"',
+          '        config trusthost',
+          '            edit 1',
+          '                set ipv4-trusthost 0.0.0.0 0.0.0.0',
+          '            next',
+          '        end',
+          '    next',
+          'end',
+        ],
+        note:'Replace 0.0.0.0 0.0.0.0 with your specific IP range for tighter security. E.g. 192.168.1.0 255.255.255.0'
+      },
+      {
+        n:'2',title:'Generate the API token',
+        desc:'Run this command to generate the API key. Copy the token immediately — it is only shown once.',
+        cmds:['execute api-user generate-key netwolf-readonly'],
+        note:'Save the token somewhere safe. You will paste it into NetWolf when Live Connect is released.'
+      },
+      {
+        n:'3',title:'Enable HTTPS API access',
+        desc:'Make sure the REST API is accessible over HTTPS on the management interface.',
+        cmds:[
+          'config system interface',
+          '    edit "mgmt"',
+          '        set allowaccess https ping ssh',
+          '    next',
+          'end',
+        ],
+        note:'Replace "mgmt" with whichever interface you use for management access.'
+      },
+      {
+        n:'4',title:'Allow CORS from NetWolf domain',
+        desc:'This tells the FortiGate to accept API calls coming from the NetWolf website. Required for browser-based API access.',
+        cmds:[
+          'config system global',
+          '    set admin-https-cors-origin "https://netwolffortigate.com"',
+          'end',
+        ],
+        note:'This is only needed if accessing from outside the same network. On-site or VPN access does not require this.'
+      },
+      {
+        n:'5',title:'Verify API access works',
+        desc:'Test the connection from a browser or curl. Replace with your FortiGate IP and token.',
+        cmds:[
+          'curl -k -H "Authorization: Bearer <YOUR-TOKEN>" \\',
+          '  https://<FORTIGATE-IP>/api/v2/monitor/system/status',
+        ],
+        note:'You should get a JSON response with hostname, version and uptime. If you get 401 the token is wrong. If connection refused, check HTTPS is allowed on the interface.'
+      },
+    ].map(step=>`
+      <div style="margin-bottom:16px;padding:14px;background:var(--b2);border:1px solid var(--br);border-radius:8px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="background:var(--a);color:#000;font-weight:700;font-size:11px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">${step.n}</span>
+          <span style="font-size:13px;font-weight:700;color:var(--t)">${step.title}</span>
+        </div>
+        <div style="font-size:12px;color:var(--t2);margin-bottom:10px;line-height:1.6">${step.desc}</div>
+        <pre style="background:#0a0e14;border:1px solid var(--br);border-radius:6px;padding:12px;font-size:11px;color:#e6edf3;font-family:var(--mono);white-space:pre-wrap;margin-bottom:8px">${step.cmds.join('\n')}</pre>
+        <div style="font-size:11px;color:var(--t3);padding:6px 10px;background:rgba(234,179,8,.06);border-radius:6px;border-left:3px solid var(--y)">💡 ${step.note}</div>
+      </div>
+    `).join('')}
+  </div>
+</div>
+
+<!-- SECURITY NOTE -->
+<div class="cblock" style="margin-bottom:14px;">
+  <div class="chdr"><div class="chdr-l">🔐 Security Considerations</div></div>
+  <div class="cbody">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;color:var(--t2);">
+      <thead>
+        <tr style="border-bottom:1px solid var(--br)">
+          <th style="padding:8px 10px;text-align:left;font-size:10px;color:var(--t3)">ITEM</th>
+          <th style="padding:8px 10px;text-align:left;font-size:10px;color:var(--t3)">HOW IT IS HANDLED</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${[
+          ['API token storage','Stored in your browser localStorage only — same as the Groq key. Never sent to NetWolf servers. Clearable with one click.'],
+          ['Read-only access','The API user profile is read-only. NetWolf cannot make any configuration changes to your FortiGate.'],
+          ['Self-signed certificate','If your FortiGate uses a self-signed cert you will need to accept it in the browser once before connecting.'],
+          ['Network requirement','FortiGate must be reachable from your browser. Use VPN if connecting to a remote client site.'],
+          ['Token scope','Restrict the API user trusthost to your IP range in production for tighter access control.'],
+          ['No data to NetWolf','All API responses are processed in your browser only. NetWolf never sees your FortiGate data.'],
+        ].map(([item,desc])=>`
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t);font-weight:600;white-space:nowrap">${item}</td>
+            <td style="padding:8px 10px;color:var(--t2)">${desc}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- NOTIFY BANNER -->
+<div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:14px;">
+  <span style="font-size:24px;flex-shrink:0;">✅</span>
+  <div style="font-size:12px;color:var(--t2);line-height:1.7">
+    <strong style="color:var(--t)">You are all set.</strong> Once you have completed the 5 setup steps above your FortiGate is ready for Live Connect.
+    The feature will be available in a future NetWolf update — keep an eye on the changelog.
+  </div>
+</div>
+`;
 }
 
 // Wire login form — safe here because DOM is ready and functions are defined
