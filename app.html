@@ -24,7 +24,7 @@
 [data-theme="solarized"]{--a:#2aa198;--ad:#1e7d76;--bg:#002b36;--b2:#073642;--b3:#0c4a59;--br:#1a5f70;--t:#fdf6e3;--t2:#93a1a1;--t3:#586e75;--g:#859900;--y:#b58900;--r:#dc322f;--bl:#268bd2}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:100vh;width:100vw;overflow:hidden;background:transparent}
-#matrixCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;pointer-events:none;background:#000000}
+#matrixCanvas{position:absolute;top:0;left:0;z-index:1;}
 
 /* LOGIN OVERLAY */
 .login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);z-index:10000;display:flex;justify-content:center;align-items:center}
@@ -383,19 +383,22 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 </div>
 
 <!-- SCREENSAVER -->
-<div id="screensaver" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;" onclick="dismissScreensaver()" onkeydown="dismissScreensaver()">
-  <canvas id="matrixCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;background:#000000;opacity:1;"></canvas>
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2;pointer-events:none;">
-    <div style="font-size:72px;margin-bottom:16px;filter:drop-shadow(0 0 20px #00d68f);">🐺</div>
-    <div style="font-family:monospace;font-size:42px;font-weight:900;letter-spacing:6px;color:#00d68f;text-shadow:0 0 30px #00d68f,0 0 60px #00d68f;margin-bottom:8px;">NetWolf</div>
-    <div style="font-family:monospace;font-size:13px;letter-spacing:4px;color:#00d68f99;text-transform:uppercase;">FortiGate Pro Toolkit</div>
-    <div style="margin-top:32px;font-family:monospace;font-size:11px;color:#00d68f55;letter-spacing:2px;animation:nwBlink 1.5s infinite;">Click anywhere to continue</div>
+<style>
+#screensaver{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;background:#000}
+#matrixCanvas{position:absolute;top:0;left:0;z-index:1;}
+#ssCenter{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:10;pointer-events:none;}
+@keyframes nwBlink{0%,100%{opacity:.2}50%{opacity:.8}}
+@keyframes nwPulse{0%,100%{text-shadow:0 0 20px #00d68f,0 0 40px #00d68f}50%{text-shadow:0 0 40px #00d68f,0 0 80px #00d68f,0 0 100px #00d68f}}
+</style>
+<div id="screensaver" onclick="dismissScreensaver()">
+  <canvas id="matrixCanvas"></canvas>
+  <div id="ssCenter">
+    <div style="font-size:80px;margin-bottom:12px;filter:drop-shadow(0 0 24px #00d68f);">🐺</div>
+    <div style="font-family:'Courier New',monospace;font-size:48px;font-weight:900;letter-spacing:8px;color:#00d68f;animation:nwPulse 3s ease-in-out infinite;margin-bottom:6px;">NetWolf</div>
+    <div style="font-family:'Courier New',monospace;font-size:12px;letter-spacing:5px;color:rgba(0,214,143,.5);text-transform:uppercase;margin-bottom:40px;">FortiGate Pro Toolkit</div>
+    <div style="font-family:'Courier New',monospace;font-size:11px;color:rgba(0,214,143,.35);letter-spacing:2px;animation:nwBlink 1.5s infinite;">— click anywhere to continue —</div>
   </div>
 </div>
-
-<style>
-@keyframes nwBlink{0%,100%{opacity:.3}50%{opacity:1}}
-</style>
 
 <!-- TOOLKIT -->
 <div id="toolkitContainer" style="display:none;width:100%;height:100%">
@@ -7150,49 +7153,47 @@ function renderLiveConnect(el){
 
 /* ══ SCREENSAVER ══ */
 (function(){
-  const IDLE_MS = 5 * 60 * 1000; // 5 minutes
+  const IDLE_MS = 5 * 60 * 1000;
   let idleTimer = null;
-  let matrixInterval = null;
-  let active = false;
+  let matInterval = null;
+  let ssActive = false;
 
-  function startScreensaver(){
-    if(active) return;
-    // Only show if user is logged in
+  // ── Show screensaver ──
+  function showSS(){
     const toolkit = document.getElementById('toolkitContainer');
     if(!toolkit || toolkit.style.display === 'none') return;
-    active = true;
+    if(ssActive) return;
+    ssActive = true;
     const ss = document.getElementById('screensaver');
     ss.style.display = 'block';
-    startMatrix();
+    runMatrix();
   }
 
+  // ── Hide screensaver ──
   window.dismissScreensaver = function(){
-    if(!active) return;
-    active = false;
+    if(!ssActive) return;
+    ssActive = false;
     document.getElementById('screensaver').style.display = 'none';
-    stopMatrix();
-    resetIdleTimer();
+    clearInterval(matInterval);
+    matInterval = null;
+    resetIdle();
   };
 
-  function resetIdleTimer(){
+  // ── Idle timer ──
+  function resetIdle(){
     clearTimeout(idleTimer);
-    if(active) return;
-    idleTimer = setTimeout(startScreensaver, IDLE_MS);
+    idleTimer = setTimeout(showSS, IDLE_MS);
   }
-
-  // Listen for any user activity
-  ['mousemove','mousedown','keydown','touchstart','scroll','wheel'].forEach(function(evt){
-    document.addEventListener(evt, function(){
-      if(active){ window.dismissScreensaver(); return; }
-      resetIdleTimer();
+  ['mousemove','mousedown','keydown','touchstart','scroll'].forEach(function(e){
+    document.addEventListener(e, function(){
+      if(ssActive){ window.dismissScreensaver(); return; }
+      resetIdle();
     }, {passive:true});
   });
+  document.addEventListener('DOMContentLoaded', resetIdle);
 
-  // Start the idle timer once page loads
-  document.addEventListener('DOMContentLoaded', resetIdleTimer);
-
-  /* ── Matrix rain — same implementation as index.html ── */
-  function startMatrix(){
+  // ── Matrix — identical to index.html ──
+  function runMatrix(){
     const canvas = document.getElementById('matrixCanvas');
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -7204,46 +7205,32 @@ function renderLiveConnect(el){
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
       const cols = Math.floor(W / FS);
-      drops = new Array(cols).fill(0).map(() => Math.random() * -150);
-      // Initial black fill
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, W, H);
+      drops = new Array(cols).fill(0).map(function(){ return Math.random() * -50; });
     }
 
     function draw(){
       ctx.fillStyle = 'rgba(0,0,0,0.04)';
       ctx.fillRect(0, 0, W, H);
       ctx.font = FS + 'px Courier New';
-      drops.forEach((y, i) => {
-        const r = Math.random();
+      for(var i = 0; i < drops.length; i++){
+        var r = Math.random();
         if(r > 0.97)      ctx.fillStyle = '#c0ffe8';
         else if(r > 0.85) ctx.fillStyle = '#3fb950';
         else if(r > 0.5)  ctx.fillStyle = '#1D9E75';
         else               ctx.fillStyle = '#0a4a2e';
-        ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, y * FS);
-        if(y * FS > H && Math.random() > 0.975) drops[i] = 0;
+        ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, drops[i] * FS);
+        if(drops[i] * FS > H && Math.random() > 0.975) drops[i] = 0;
         drops[i] += 0.35 + Math.random() * 0.25;
-      });
+      }
     }
 
     init();
-    matrixInterval = setInterval(draw, 38);
-    window.addEventListener('resize', function(){ if(!active) return; init(); });
+    window.addEventListener('resize', function(){ if(ssActive) init(); });
+    matInterval = setInterval(draw, 38);
   }
-
-  function stopMatrix(){
-    clearInterval(matrixInterval);
-    matrixInterval = null;
-    const canvas = document.getElementById('matrixCanvas');
-    if(canvas){
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-  }
-
 })();
 
-// Wire login form — safe here because DOM is ready and functions are defined
+// Wire login form// Wire login form — safe here because DOM is ready and functions are defined
 document.addEventListener('DOMContentLoaded', function(){
   const emailEl  = document.getElementById('loginEmail');
   const passEl   = document.getElementById('loginPassword');
