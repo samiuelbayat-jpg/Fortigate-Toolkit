@@ -7196,48 +7196,74 @@ function renderLiveConnect(el){
     const canvas = document.getElementById('matrixCanvas');
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
 
-    const cols = Math.floor(canvas.width / 16);
-    const drops = Array(cols).fill(1);
+    function resize(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      // Fill black immediately after resize to avoid flicker
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    resize();
 
-    // FortiGate / network themed characters
-    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ><{}[]|/\\ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@$%&*';
+    const fontSize = 16;
+    const cols = Math.floor(canvas.width / fontSize);
+    const drops = [];
+    for(let i = 0; i < cols; i++){
+      // Stagger start positions so rain doesn't all start at top
+      drops[i] = Math.floor(Math.random() * -canvas.height / fontSize);
+    }
+
+    // Mix of katakana, latin, numbers and network chars
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01><{}[]|/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@$%&*';
 
     function draw(){
-      ctx.fillStyle = 'rgba(0,0,0,0.05)';
+      // Semi-transparent black overlay creates the fade trail effect
+      ctx.fillStyle = 'rgba(0,0,0,0.04)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = fontSize + 'px monospace';
 
       for(let i = 0; i < drops.length; i++){
         const char = chars[Math.floor(Math.random() * chars.length)];
-        const x = i * 16;
-        const y = drops[i] * 16;
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
 
-        // Lead character is bright green, trail fades
-        if(drops[i] * 16 < canvas.height * 0.2){
-          ctx.fillStyle = '#00ff88';
-        } else {
-          ctx.fillStyle = '#00d68f';
+        // Lead character: bright white-green
+        // Recent trail: bright green
+        // Older trail: dim green (handled by fade overlay above)
+        if(drops[i] >= 0){
+          // Leading character is brightest
+          if(Math.random() > 0.95){
+            ctx.fillStyle = '#ffffff';
+          } else {
+            ctx.fillStyle = '#00ff88';
+          }
+          ctx.fillText(char, x, y);
         }
-        ctx.font = '14px monospace';
-        ctx.fillText(char, x, y);
 
-        // Randomly reset drop or advance
-        if(y > canvas.height && Math.random() > 0.975){
-          drops[i] = 0;
+        // Reset drop when it goes past bottom
+        if(y > canvas.height){
+          if(Math.random() > 0.96){
+            drops[i] = Math.floor(Math.random() * -20);
+          }
         }
         drops[i]++;
       }
     }
 
-    matrixInterval = setInterval(draw, 40);
+    // Initial black fill
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Handle window resize
+    matrixInterval = setInterval(draw, 35);
+
     window.addEventListener('resize', function(){
       if(!active) return;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      resize();
+      // Recalculate columns after resize
+      const newCols = Math.floor(canvas.width / fontSize);
+      while(drops.length < newCols) drops.push(0);
     });
   }
 
