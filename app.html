@@ -352,7 +352,6 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 </style>
 </head>
 <body oncontextmenu="return false">
-<canvas id="matrixCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:99998;pointer-events:none;display:none;"></canvas>
 
 <!-- LOGIN OVERLAY -->
 <!-- CHANGELOG MODAL -->
@@ -383,20 +382,19 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 </div>
 
 <!-- SCREENSAVER -->
-<style>
-#screensaver{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;background:rgba(0,0,0,0.5)}
-#ssCenter{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:10;pointer-events:none;}
-@keyframes nwBlink{0%,100%{opacity:.2}50%{opacity:.8}}
-@keyframes nwPulse{0%,100%{text-shadow:0 0 20px #00d68f,0 0 40px #00d68f}50%{text-shadow:0 0 40px #00d68f,0 0 80px #00d68f,0 0 100px #00d68f}}
-</style>
-<div id="screensaver" onclick="dismissScreensaver()">
-  <div id="ssCenter">
-    <div style="font-size:80px;margin-bottom:12px;filter:drop-shadow(0 0 24px #00d68f);">🐺</div>
-    <div style="font-family:'Courier New',monospace;font-size:48px;font-weight:900;letter-spacing:8px;color:#00d68f;animation:nwPulse 3s ease-in-out infinite;margin-bottom:6px;">NetWolf</div>
-    <div style="font-family:'Courier New',monospace;font-size:12px;letter-spacing:5px;color:rgba(0,214,143,.5);text-transform:uppercase;margin-bottom:40px;">FortiGate Pro Toolkit</div>
-    <div style="font-family:'Courier New',monospace;font-size:11px;color:rgba(0,214,143,.35);letter-spacing:2px;animation:nwBlink 1.5s infinite;">— click anywhere to continue —</div>
+<div id="nwScreensaver" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;background:#0d1117;" onclick="nwDismiss()">
+  <canvas id="nwCanvas" style="position:absolute;top:0;left:0;"></canvas>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;">
+    <div style="font-size:80px;margin-bottom:14px;filter:drop-shadow(0 0 24px #1D9E75);">🐺</div>
+    <div style="font-family:'Courier New',monospace;font-size:46px;font-weight:900;letter-spacing:8px;color:#1D9E75;text-shadow:0 0 30px #1D9E75,0 0 60px #1D9E75;margin-bottom:8px;">NetWolf</div>
+    <div style="font-family:'Courier New',monospace;font-size:12px;letter-spacing:5px;color:rgba(29,158,117,0.5);text-transform:uppercase;margin-bottom:36px;">FortiGate Pro Toolkit</div>
+    <div id="nwSsBlink" style="font-family:'Courier New',monospace;font-size:11px;color:rgba(29,158,117,0.4);letter-spacing:2px;">— click anywhere to continue —</div>
   </div>
 </div>
+<style>
+  @keyframes nwBlink{0%,100%{opacity:.2}50%{opacity:.9}}
+  #nwSsBlink{animation:nwBlink 1.5s ease-in-out infinite;}
+</style>
 
 <!-- TOOLKIT -->
 <div id="toolkitContainer" style="display:none;width:100%;height:100%">
@@ -688,37 +686,6 @@ function showTermsModal(onAccept){
   document.getElementById('tAccept').onclick=()=>{div.remove();if(onAccept)onAccept();};
   document.getElementById('tDecline').onclick=()=>{fbAuth.signOut();div.remove();};
 }
-
-/* ══ MATRIX RAIN ══ */
-const matrixCanvas=document.getElementById('matrixCanvas');
-const matrixCtx=matrixCanvas.getContext('2d');
-const MATRIX_CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
-const MATRIX_FS=14;
-let matrixW,matrixH,matrixDrops;
-function initMatrixRain(){
-  matrixW=matrixCanvas.width=window.innerWidth;
-  matrixH=matrixCanvas.height=window.innerHeight;
-  const cols=Math.floor(matrixW/MATRIX_FS);
-  matrixDrops=new Array(cols).fill(0).map(()=>Math.random()*-150);
-}
-function drawMatrixRain(){
-  matrixCtx.fillStyle='rgba(0,0,0,0.04)';
-  matrixCtx.fillRect(0,0,matrixW,matrixH);
-  matrixCtx.font=MATRIX_FS+'px Courier New';
-  matrixDrops.forEach((y,i)=>{
-    const r=Math.random();
-    if(r>0.97) matrixCtx.fillStyle='#c0ffe8';
-    else if(r>0.85) matrixCtx.fillStyle='#3fb950';
-    else if(r>0.5) matrixCtx.fillStyle='#1D9E75';
-    else matrixCtx.fillStyle='#0a4a2e';
-    matrixCtx.fillText(MATRIX_CHARS[Math.floor(Math.random()*MATRIX_CHARS.length)],i*MATRIX_FS,y*MATRIX_FS);
-    if(y*MATRIX_FS>matrixH&&Math.random()>0.975) matrixDrops[i]=0;
-    matrixDrops[i]+=0.35+Math.random()*0.25;
-  });
-}
-window.addEventListener('resize',initMatrixRain);
-initMatrixRain();
-setInterval(drawMatrixRain,38);
 
 /* ══ CORE HELPERS ══ */
 const SAFE={'diagnose':'ro','get ':'ro','show ':'ro','execute ping':'ro','execute nslookup':'ro','execute log':'ro','execute fortiguard':'ro','diagnose debug reset':'caution','diagnose debug disable':'caution','diagnose sys session clear':'danger','execute user clear':'danger','execute ha failover':'danger','execute reboot':'danger','execute shutdown':'danger','execute clear system arp':'caution','execute ha synchronize':'caution','config ':'caution','edit ':'caution','set ':'caution','end':'caution','next':'caution','delete ':'danger','unset ':'danger'};
@@ -7151,43 +7118,236 @@ function renderLiveConnect(el){
 
 /* ══ SCREENSAVER ══ */
 (function(){
-  const IDLE_MS = 5 * 60 * 1000;
-  let idleTimer = null;
-  let ssActive = false;
+  var IDLE = 5 * 60 * 1000;
+  var timer = null;
+  var on = false;
+  var raf = null;
 
-  function showSS(){
-    const toolkit = document.getElementById('toolkitContainer');
-    if(!toolkit || toolkit.style.display === 'none') return;
-    if(ssActive) return;
-    ssActive = true;
-    document.getElementById('matrixCanvas').style.display = 'block';
-    document.getElementById('screensaver').style.display = 'block';
+  var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
+  var FS = 14;
+  var W, H, drops, canvas, ctx;
+
+  function ssInit(){
+    canvas = document.getElementById('nwCanvas');
+    if(!canvas) return;
+    ctx = canvas.getContext('2d');
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    var cols = Math.floor(W / FS);
+    drops = [];
+    for(var i = 0; i < cols; i++) drops.push(Math.random() * -150);
   }
 
-  window.dismissScreensaver = function(){
-    if(!ssActive) return;
-    ssActive = false;
-    document.getElementById('screensaver').style.display = 'none';
-    document.getElementById('matrixCanvas').style.display = 'none';
-    resetIdle();
+  function ssDraw(){
+    if(!on){ raf = null; return; }
+    ctx.fillStyle = 'rgba(0,0,0,0.04)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.font = FS + 'px Courier New';
+    for(var i = 0; i < drops.length; i++){
+      var r = Math.random();
+      if(r > 0.97)      ctx.fillStyle = '#c0ffe8';
+      else if(r > 0.85) ctx.fillStyle = '#3fb950';
+      else if(r > 0.5)  ctx.fillStyle = '#1D9E75';
+      else               ctx.fillStyle = '#0a4a2e';
+      ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, drops[i] * FS);
+      if(drops[i] * FS > H && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += 0.35 + Math.random() * 0.25;
+    }
+    setTimeout(function(){ raf = requestAnimationFrame(ssDraw); }, 38);
+  }
+
+  function show(){
+    var tk = document.getElementById('toolkitContainer');
+    if(!tk || tk.style.display === 'none') return;
+    if(on) return;
+    on = true;
+    document.getElementById('nwScreensaver').style.display = 'block';
+    ssInit();
+    raf = requestAnimationFrame(ssDraw);
+  }
+
+  window.nwDismiss = function(){
+    if(!on) return;
+    on = false;
+    document.getElementById('nwScreensaver').style.display = 'none';
+    if(raf){ cancelAnimationFrame(raf); raf = null; }
+    reset();
   };
 
-  function resetIdle(){
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(showSS, IDLE_MS);
+  function reset(){
+    clearTimeout(timer);
+    timer = setTimeout(show, IDLE);
   }
 
   ['mousemove','mousedown','keydown','touchstart','scroll'].forEach(function(e){
     document.addEventListener(e, function(){
-      if(ssActive){ window.dismissScreensaver(); return; }
-      resetIdle();
+      if(on){ window.nwDismiss(); return; }
+      reset();
     }, {passive:true});
   });
 
-  document.addEventListener('DOMContentLoaded', resetIdle);
+  window.addEventListener('resize', function(){
+    if(on) ssInit();
+  });
+
+  document.addEventListener('DOMContentLoaded', reset);
 })();
 
-// Wire login form// Wire login form// Wire login form — safe here because DOM is ready and functions are defined
+// Wire login form/* ══ SCREENSAVER ══ */
+(function(){
+  var IDLE = 5 * 60 * 1000;
+  var timer = null;
+  var on = false;
+  var raf = null;
+
+  var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
+  var FS = 14;
+  var W, H, drops, canvas, ctx;
+
+  function ssInit(){
+    canvas = document.getElementById('nwCanvas');
+    if(!canvas) return;
+    ctx = canvas.getContext('2d');
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    var cols = Math.floor(W / FS);
+    drops = [];
+    for(var i = 0; i < cols; i++) drops.push(Math.random() * -150);
+  }
+
+  function ssDraw(){
+    if(!on){ raf = null; return; }
+    ctx.fillStyle = 'rgba(0,0,0,0.04)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.font = FS + 'px Courier New';
+    for(var i = 0; i < drops.length; i++){
+      var r = Math.random();
+      if(r > 0.97)      ctx.fillStyle = '#c0ffe8';
+      else if(r > 0.85) ctx.fillStyle = '#3fb950';
+      else if(r > 0.5)  ctx.fillStyle = '#1D9E75';
+      else               ctx.fillStyle = '#0a4a2e';
+      ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, drops[i] * FS);
+      if(drops[i] * FS > H && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += 0.35 + Math.random() * 0.25;
+    }
+    setTimeout(function(){ raf = requestAnimationFrame(ssDraw); }, 38);
+  }
+
+  function show(){
+    var tk = document.getElementById('toolkitContainer');
+    if(!tk || tk.style.display === 'none') return;
+    if(on) return;
+    on = true;
+    document.getElementById('nwScreensaver').style.display = 'block';
+    ssInit();
+    raf = requestAnimationFrame(ssDraw);
+  }
+
+  window.nwDismiss = function(){
+    if(!on) return;
+    on = false;
+    document.getElementById('nwScreensaver').style.display = 'none';
+    if(raf){ cancelAnimationFrame(raf); raf = null; }
+    reset();
+  };
+
+  function reset(){
+    clearTimeout(timer);
+    timer = setTimeout(show, IDLE);
+  }
+
+  ['mousemove','mousedown','keydown','touchstart','scroll'].forEach(function(e){
+    document.addEventListener(e, function(){
+      if(on){ window.nwDismiss(); return; }
+      reset();
+    }, {passive:true});
+  });
+
+  window.addEventListener('resize', function(){
+    if(on) ssInit();
+  });
+
+  document.addEventListener('DOMContentLoaded', reset);
+})();
+
+// Wire login form/* ══ SCREENSAVER ══ */
+(function(){
+  var IDLE = 5 * 60 * 1000;
+  var timer = null;
+  var on = false;
+  var raf = null;
+
+  var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
+  var FS = 14;
+  var W, H, drops, canvas, ctx;
+
+  function ssInit(){
+    canvas = document.getElementById('nwCanvas');
+    if(!canvas) return;
+    ctx = canvas.getContext('2d');
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    var cols = Math.floor(W / FS);
+    drops = [];
+    for(var i = 0; i < cols; i++) drops.push(Math.random() * -150);
+  }
+
+  function ssDraw(){
+    if(!on){ raf = null; return; }
+    ctx.fillStyle = 'rgba(0,0,0,0.04)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.font = FS + 'px Courier New';
+    for(var i = 0; i < drops.length; i++){
+      var r = Math.random();
+      if(r > 0.97)      ctx.fillStyle = '#c0ffe8';
+      else if(r > 0.85) ctx.fillStyle = '#3fb950';
+      else if(r > 0.5)  ctx.fillStyle = '#1D9E75';
+      else               ctx.fillStyle = '#0a4a2e';
+      ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, drops[i] * FS);
+      if(drops[i] * FS > H && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += 0.35 + Math.random() * 0.25;
+    }
+    setTimeout(function(){ raf = requestAnimationFrame(ssDraw); }, 38);
+  }
+
+  function show(){
+    var tk = document.getElementById('toolkitContainer');
+    if(!tk || tk.style.display === 'none') return;
+    if(on) return;
+    on = true;
+    document.getElementById('nwScreensaver').style.display = 'block';
+    ssInit();
+    raf = requestAnimationFrame(ssDraw);
+  }
+
+  window.nwDismiss = function(){
+    if(!on) return;
+    on = false;
+    document.getElementById('nwScreensaver').style.display = 'none';
+    if(raf){ cancelAnimationFrame(raf); raf = null; }
+    reset();
+  };
+
+  function reset(){
+    clearTimeout(timer);
+    timer = setTimeout(show, IDLE);
+  }
+
+  ['mousemove','mousedown','keydown','touchstart','scroll'].forEach(function(e){
+    document.addEventListener(e, function(){
+      if(on){ window.nwDismiss(); return; }
+      reset();
+    }, {passive:true});
+  });
+
+  window.addEventListener('resize', function(){
+    if(on) ssInit();
+  });
+
+  document.addEventListener('DOMContentLoaded', reset);
+})();
+
+// Wire login form — safe here because DOM is ready and functions are defined
 document.addEventListener('DOMContentLoaded', function(){
   const emailEl  = document.getElementById('loginEmail');
   const passEl   = document.getElementById('loginPassword');
