@@ -5087,7 +5087,7 @@ function renderLabSetup(el){
   if(!document.getElementById('labCSS')){
     const s=document.createElement('style');s.id='labCSS';
     s.textContent=`
-      .lab-wrap{padding:16px 20px;max-width:900px}
+      .lab-wrap{padding:16px 20px;width:100%}.lab-two-col{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}.lab-topo-panel{position:sticky;top:16px}
       .lab-phase{background:var(--b2);border:1px solid var(--br);border-radius:12px;margin-bottom:14px;overflow:hidden}
       .lab-phase-hdr{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;user-select:none;transition:background .15s}
       .lab-phase-hdr:hover{background:var(--b3)}
@@ -5459,21 +5459,21 @@ end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div>
         set mode static
         set ip 192.168.100.1 255.255.255.0
         set allowaccess ping https ssh
-        set description &quot;Management&quot;
+        set description "Management"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#e3b341;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#e3b34118;border-radius:4px 4px 0 0;border:1px solid #e3b34140;border-bottom:none;display:inline-block">PORT2 — WAN LINK</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config system interface
     edit port2
         set mode static
         set ip 10.0.0.1 255.255.255.252
         set allowaccess ping
-        set description &quot;WAN-Link to Site-B&quot;
+        set description "WAN-Link to Site-B"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#7c3aed;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#7c3aed18;border-radius:4px 4px 0 0;border:1px solid #7c3aed40;border-bottom:none;display:inline-block">PORT3 — SITE-A LAN</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config system interface
     edit port3
         set mode static
         set ip 192.168.1.1 255.255.255.0
         set allowaccess ping
-        set description &quot;LAN Site-A&quot;
+        set description "LAN Site-A"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div>`,
         },
@@ -5487,21 +5487,21 @@ end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div>
         set mode static
         set ip 192.168.100.2 255.255.255.0
         set allowaccess ping https ssh
-        set description &quot;Management&quot;
+        set description "Management"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#e3b341;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#e3b34118;border-radius:4px 4px 0 0;border:1px solid #e3b34140;border-bottom:none;display:inline-block">PORT2 — WAN LINK</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config system interface
     edit port2
         set mode static
         set ip 10.0.0.2 255.255.255.252
         set allowaccess ping
-        set description &quot;WAN-Link to Site-A&quot;
+        set description "WAN-Link to Site-A"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#7c3aed;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#7c3aed18;border-radius:4px 4px 0 0;border:1px solid #7c3aed40;border-bottom:none;display:inline-block">PORT3 — SITE-B LAN</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config system interface
     edit port3
         set mode static
         set ip 192.168.2.1 255.255.255.0
         set allowaccess ping
-        set description &quot;LAN Site-B&quot;
+        set description "LAN Site-B"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div>`,
         },
@@ -5520,14 +5520,14 @@ end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div>
           desc:'Allow LAN traffic to reach the internet (paste on each unit separately):',
           content:`<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#f85149;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#f8514918;border-radius:4px 4px 0 0;border:1px solid #f8514940;border-bottom:none;display:inline-block">FIREWALL POLICY — LAN TO WAN (paste on each FGT separately)</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config firewall policy
     edit 1
-        set name &quot;LAN-TO-WAN&quot;
-        set srcintf &quot;port3&quot;
-        set dstintf &quot;port2&quot;
-        set srcaddr &quot;all&quot;
-        set dstaddr &quot;all&quot;
+        set name "LAN-TO-WAN"
+        set srcintf "port3"
+        set dstintf "port2"
+        set srcaddr "all"
+        set dstaddr "all"
         set action accept
-        set schedule &quot;always&quot;
-        set service &quot;ALL&quot;
+        set schedule "always"
+        set service "ALL"
         set nat enable
         set logtraffic all
     next
@@ -5543,13 +5543,13 @@ end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div>
           title:'Configure IPsec Phase 1 on FGT-SITE-A',
           desc:'Paste on FGT-SITE-A:',
           content:`<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#58a6ff;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#58a6ff18;border-radius:4px 4px 0 0;border:1px solid #58a6ff40;border-bottom:none;display:inline-block">PHASE 1 — IKEv2 TUNNEL (FGT-SITE-A)</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config vpn ipsec phase1-interface
-    edit &quot;SITE-A-TO-B&quot;
-        set interface &quot;port2&quot;
+    edit "SITE-A-TO-B"
+        set interface "port2"
         set ike-version 2
         set proposal aes256-sha256
         set dhgrp 14
         set remote-gw 10.0.0.2
-        set psksecret &quot;NetWolf@Lab123!&quot;
+        set psksecret "NetWolf@Lab123!"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div>`,
         },
@@ -5557,8 +5557,8 @@ end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div>
           title:'Configure IPsec Phase 2 on FGT-SITE-A',
           desc:'Paste on FGT-SITE-A:',
           content:`<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#58a6ff;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#58a6ff18;border-radius:4px 4px 0 0;border:1px solid #58a6ff40;border-bottom:none;display:inline-block">PHASE 2 — ENCRYPTION DOMAIN (FGT-SITE-A)</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config vpn ipsec phase2-interface
-    edit &quot;SITE-A-TO-B-P2&quot;
-        set phase1name &quot;SITE-A-TO-B&quot;
+    edit "SITE-A-TO-B-P2"
+        set phase1name "SITE-A-TO-B"
         set proposal aes256-sha256
         set dhgrp 14
         set src-subnet 192.168.1.0 255.255.255.0
@@ -5570,17 +5570,17 @@ end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div>
           title:'Configure IPsec on FGT-SITE-B',
           desc:'Paste on FGT-SITE-B (mirror of Site-A):',
           content:`<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#e3b341;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#e3b34118;border-radius:4px 4px 0 0;border:1px solid #e3b34140;border-bottom:none;display:inline-block">PHASE 1 — IKEv2 TUNNEL (FGT-SITE-B)</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config vpn ipsec phase1-interface
-    edit &quot;SITE-B-TO-A&quot;
-        set interface &quot;port2&quot;
+    edit "SITE-B-TO-A"
+        set interface "port2"
         set ike-version 2
         set proposal aes256-sha256
         set dhgrp 14
         set remote-gw 10.0.0.1
-        set psksecret &quot;NetWolf@Lab123!&quot;
+        set psksecret "NetWolf@Lab123!"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#e3b341;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#e3b34118;border-radius:4px 4px 0 0;border:1px solid #e3b34140;border-bottom:none;display:inline-block">PHASE 2 — ENCRYPTION DOMAIN (FGT-SITE-B)</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config vpn ipsec phase2-interface
-    edit &quot;SITE-B-TO-A-P2&quot;
-        set phase1name &quot;SITE-B-TO-A&quot;
+    edit "SITE-B-TO-A-P2"
+        set phase1name "SITE-B-TO-A"
         set proposal aes256-sha256
         set dhgrp 14
         set src-subnet 192.168.2.0 255.255.255.0
@@ -5592,45 +5592,45 @@ end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div>
           title:'Add VPN policies and static routes',
           desc:'Paste on FGT-SITE-A (adjust for Site-B by swapping subnets and interfaces):',
           content:`<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#7c3aed;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#7c3aed18;border-radius:4px 4px 0 0;border:1px solid #7c3aed40;border-bottom:none;display:inline-block">ADDRESS OBJECTS (both FortiGates)</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config firewall address
-    edit &quot;SITE-A-LAN&quot;
+    edit "SITE-A-LAN"
         set subnet 192.168.1.0 255.255.255.0
     next
-    edit &quot;SITE-B-LAN&quot;
+    edit "SITE-B-LAN"
         set subnet 192.168.2.0 255.255.255.0
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#58a6ff;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#58a6ff18;border-radius:4px 4px 0 0;border:1px solid #58a6ff40;border-bottom:none;display:inline-block">VPN POLICY — SITE-A TO SITE-B (on FGT-SITE-A)</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config firewall policy
     edit 2
-        set name &quot;VPN-A-TO-B&quot;
-        set srcintf &quot;port3&quot;
-        set dstintf &quot;SITE-A-TO-B&quot;
-        set srcaddr &quot;SITE-A-LAN&quot;
-        set dstaddr &quot;SITE-B-LAN&quot;
+        set name "VPN-A-TO-B"
+        set srcintf "port3"
+        set dstintf "SITE-A-TO-B"
+        set srcaddr "SITE-A-LAN"
+        set dstaddr "SITE-B-LAN"
         set action accept
-        set schedule &quot;always&quot;
-        set service &quot;ALL&quot;
+        set schedule "always"
+        set service "ALL"
         set logtraffic all
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#e3b341;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#e3b34118;border-radius:4px 4px 0 0;border:1px solid #e3b34140;border-bottom:none;display:inline-block">VPN POLICY — SITE-B TO SITE-A (on FGT-SITE-B)</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config firewall policy
     edit 2
-        set name &quot;VPN-B-TO-A&quot;
-        set srcintf &quot;port3&quot;
-        set dstintf &quot;SITE-B-TO-A&quot;
-        set srcaddr &quot;SITE-B-LAN&quot;
-        set dstaddr &quot;SITE-A-LAN&quot;
+        set name "VPN-B-TO-A"
+        set srcintf "port3"
+        set dstintf "SITE-B-TO-A"
+        set srcaddr "SITE-B-LAN"
+        set dstaddr "SITE-A-LAN"
         set action accept
-        set schedule &quot;always&quot;
-        set service &quot;ALL&quot;
+        set schedule "always"
+        set service "ALL"
         set logtraffic all
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#58a6ff;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#58a6ff18;border-radius:4px 4px 0 0;border:1px solid #58a6ff40;border-bottom:none;display:inline-block">STATIC ROUTE — on FGT-SITE-A</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config router static
     edit 1
         set dst 192.168.2.0 255.255.255.0
-        set device &quot;SITE-A-TO-B&quot;
+        set device "SITE-A-TO-B"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#e3b341;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#e3b34118;border-radius:4px 4px 0 0;border:1px solid #e3b34140;border-bottom:none;display:inline-block">STATIC ROUTE — on FGT-SITE-B</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config router static
     edit 1
         set dst 192.168.1.0 255.255.255.0
-        set device &quot;SITE-B-TO-A&quot;
+        set device "SITE-B-TO-A"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div>`,
         },
@@ -5802,7 +5802,82 @@ execute ping 192.168.2.1<button class="lab-cmd-copy" onclick="labCopyBlock(this)
       Test every playbook in NetWolf against a real FortiOS instance. Tick each step as you complete it.
     </p>
     <div id="labProgressBar">${progressHTML()}</div>
-    <div id="labMain">${buildMain()}</div>
+    <div class="lab-two-col">
+      <div id="labMain">${buildMain()}</div>
+      <div class="lab-topo-panel">
+        <div style="font-size:11px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.08em;margin-bottom:8px;padding:6px 10px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:6px;">📡 LAB NETWORK TOPOLOGY</div>
+        <svg viewBox="0 0 340 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;font-family:monospace;background:#0a0e14;border-radius:10px;border:1px solid #1e2d45;">
+          <defs>
+            <pattern id="tgrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e2d45" stroke-width="0.5"/></pattern>
+            <filter id="tglow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="tarrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#00d68f" opacity="0.7"/></marker>
+          </defs>
+          <rect width="340" height="480" fill="url(#tgrid)"/>
+          <text x="170" y="22" text-anchor="middle" fill="#00d68f" font-size="11" font-weight="bold" letter-spacing="1.5" filter="url(#tglow)">EVE-NG LAB TOPOLOGY</text>
+          <rect x="110" y="35" width="120" height="55" rx="7" fill="#0f1520" stroke="#58a6ff" stroke-width="1.5"/>
+          <text x="170" y="58" text-anchor="middle" fill="#e6edf3" font-size="10" font-weight="bold">Your PC</text>
+          <text x="170" y="72" text-anchor="middle" fill="#8b949e" font-size="8">EVE-NG Browser UI</text>
+          <line x1="170" y1="90" x2="170" y2="120" stroke="#58a6ff" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#tarrow)"/>
+          <text x="178" y="108" fill="#8b949e" font-size="8">Mgmt</text>
+          <ellipse cx="170" cy="138" rx="45" ry="18" fill="#0f1520" stroke="#58a6ff" stroke-width="1.5"/>
+          <text x="170" y="142" text-anchor="middle" fill="#58a6ff" font-size="9">Cloud0 / Mgmt</text>
+          <line x1="130" y1="152" x2="100" y2="185" stroke="#58a6ff" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#tarrow)"/>
+          <text x="100" y="172" text-anchor="middle" fill="#8b949e" font-size="7">port1</text>
+          <line x1="210" y1="152" x2="240" y2="185" stroke="#58a6ff" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#tarrow)"/>
+          <text x="245" y="172" text-anchor="middle" fill="#8b949e" font-size="7">port1</text>
+          <rect x="30" y="185" width="130" height="90" rx="7" fill="#0f1520" stroke="#00d68f" stroke-width="2" filter="url(#tglow)"/>
+          <text x="95" y="203" text-anchor="middle" fill="#00d68f" font-size="10" font-weight="bold">FGT-SITE-A</text>
+          <line x1="40" y1="208" x2="150" y2="208" stroke="#1e2d45" stroke-width="1"/>
+          <text x="95" y="222" text-anchor="middle" fill="#8b949e" font-size="8">port1: 192.168.100.1</text>
+          <text x="95" y="235" text-anchor="middle" fill="#8b949e" font-size="8">port2: 10.0.0.1/30</text>
+          <text x="95" y="248" text-anchor="middle" fill="#8b949e" font-size="8">port3: 192.168.1.1/24</text>
+          <text x="95" y="268" text-anchor="middle" fill="#e3b341" font-size="7">FortiOS VM</text>
+          <rect x="180" y="185" width="130" height="90" rx="7" fill="#0f1520" stroke="#00d68f" stroke-width="2" filter="url(#tglow)"/>
+          <text x="245" y="203" text-anchor="middle" fill="#00d68f" font-size="10" font-weight="bold">FGT-SITE-B</text>
+          <line x1="190" y1="208" x2="300" y2="208" stroke="#1e2d45" stroke-width="1"/>
+          <text x="245" y="222" text-anchor="middle" fill="#8b949e" font-size="8">port1: 192.168.100.2</text>
+          <text x="245" y="235" text-anchor="middle" fill="#8b949e" font-size="8">port2: 10.0.0.2/30</text>
+          <text x="245" y="248" text-anchor="middle" fill="#8b949e" font-size="8">port3: 192.168.2.1/24</text>
+          <text x="245" y="268" text-anchor="middle" fill="#e3b341" font-size="7">FortiOS VM</text>
+          <line x1="95" y1="275" x2="95" y2="310" stroke="#e3b341" stroke-width="1.5"/>
+          <line x1="95" y1="310" x2="170" y2="330" stroke="#e3b341" stroke-width="1.5"/>
+          <line x1="245" y1="275" x2="245" y2="310" stroke="#e3b341" stroke-width="1.5"/>
+          <line x1="245" y1="310" x2="170" y2="330" stroke="#e3b341" stroke-width="1.5"/>
+          <text x="78" y="285" fill="#8b949e" font-size="7">port2</text>
+          <text x="248" y="285" fill="#8b949e" font-size="7">port2</text>
+          <ellipse cx="170" cy="343" rx="38" ry="16" fill="#0f1520" stroke="#e3b341" stroke-width="1.5"/>
+          <text x="170" y="347" text-anchor="middle" fill="#e3b341" font-size="8">WAN 10.0.0.0/30</text>
+          <rect x="20" y="375" width="130" height="50" rx="6" fill="#0f1520" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="85" y="393" text-anchor="middle" fill="#7c3aed" font-size="9" font-weight="bold">SITE-A LAN</text>
+          <text x="85" y="406" text-anchor="middle" fill="#8b949e" font-size="8">192.168.1.0/24</text>
+          <text x="85" y="418" text-anchor="middle" fill="#8b949e" font-size="7">PC-A .100 | Server .200</text>
+          <line x1="85" y1="275" x2="85" y2="375" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#tarrow)"/>
+          <text x="68" y="330" fill="#8b949e" font-size="7">port3</text>
+          <rect x="190" y="375" width="130" height="50" rx="6" fill="#0f1520" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="255" y="393" text-anchor="middle" fill="#7c3aed" font-size="9" font-weight="bold">SITE-B LAN</text>
+          <text x="255" y="406" text-anchor="middle" fill="#8b949e" font-size="8">192.168.2.0/24</text>
+          <text x="255" y="418" text-anchor="middle" fill="#8b949e" font-size="7">PC-B .100 | Server .200</text>
+          <line x1="255" y1="275" x2="255" y2="375" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#tarrow)"/>
+          <text x="258" y="330" fill="#8b949e" font-size="7">port3</text>
+          <rect x="10" y="435" width="320" height="38" rx="5" fill="#0f1520" stroke="#1e2d45" stroke-width="1"/>
+          <line x1="20" y1="450" x2="40" y2="450" stroke="#58a6ff" stroke-width="1.5" stroke-dasharray="3,2"/><text x="44" y="453" fill="#8b949e" font-size="7">Mgmt</text>
+          <line x1="85" y1="450" x2="105" y2="450" stroke="#00d68f" stroke-width="2"/><text x="109" y="453" fill="#8b949e" font-size="7">FortiGate</text>
+          <line x1="165" y1="450" x2="185" y2="450" stroke="#e3b341" stroke-width="1.5"/><text x="189" y="453" fill="#8b949e" font-size="7">WAN</text>
+          <line x1="215" y1="450" x2="235" y2="450" stroke="#7c3aed" stroke-width="1.5"/><text x="239" y="453" fill="#8b949e" font-size="7">LAN</text>
+        </svg>
+        <div style="margin-top:10px;background:#0f1520;border:1px solid #1e2d45;border-radius:8px;padding:10px 12px;font-size:11px;">
+          <div style="font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px;">IP REFERENCE</div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #1e2d45"><span style="color:var(--t3)">Mgmt Network</span><span style="font-family:var(--mono);color:#58a6ff;font-size:10px">192.168.100.0/24</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #1e2d45"><span style="color:var(--t3)">WAN Link</span><span style="font-family:var(--mono);color:#e3b341;font-size:10px">10.0.0.0/30</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #1e2d45"><span style="color:var(--t3)">Site-A LAN</span><span style="font-family:var(--mono);color:#7c3aed;font-size:10px">192.168.1.0/24</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #1e2d45"><span style="color:var(--t3)">Site-B LAN</span><span style="font-family:var(--mono);color:#7c3aed;font-size:10px">192.168.2.0/24</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #1e2d45"><span style="color:var(--t3)">FGT-A mgmt</span><span style="font-family:var(--mono);color:#00d68f;font-size:10px">192.168.100.1</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #1e2d45"><span style="color:var(--t3)">FGT-B mgmt</span><span style="font-family:var(--mono);color:#00d68f;font-size:10px">192.168.100.2</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #1e2d45"><span style="color:var(--t3)">FGT-A WAN</span><span style="font-family:var(--mono);color:#e3b341;font-size:10px">10.0.0.1</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:var(--t3)">FGT-B WAN</span><span style="font-family:var(--mono);color:#e3b341;font-size:10px">10.0.0.2</span></div>
+        </div>
+      </div>
+    </div>
   </div>`;
 }
 
