@@ -384,7 +384,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 
 <!-- SCREENSAVER -->
 <div id="screensaver" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;" onclick="dismissScreensaver()" onkeydown="dismissScreensaver()">
-  <canvas id="matrixCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;"></canvas>
+  <canvas id="matrixCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;background:#000000;opacity:1;"></canvas>
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2;pointer-events:none;">
     <div style="font-size:72px;margin-bottom:16px;filter:drop-shadow(0 0 20px #00d68f);">🐺</div>
     <div style="font-family:monospace;font-size:42px;font-weight:900;letter-spacing:6px;color:#00d68f;text-shadow:0 0 30px #00d68f,0 0 60px #00d68f;margin-bottom:8px;">NetWolf</div>
@@ -7191,80 +7191,44 @@ function renderLiveConnect(el){
   // Start the idle timer once page loads
   document.addEventListener('DOMContentLoaded', resetIdleTimer);
 
-  /* ── Matrix rain ── */
+  /* ── Matrix rain — same implementation as index.html ── */
   function startMatrix(){
     const canvas = document.getElementById('matrixCanvas');
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
+    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
+    const FS = 14;
+    let W, H, drops;
 
-    function resize(){
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      // Fill black immediately after resize to avoid flicker
+    function init(){
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      const cols = Math.floor(W / FS);
+      drops = new Array(cols).fill(0).map(() => Math.random() * -150);
+      // Initial black fill
       ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, W, H);
     }
-    resize();
-
-    const fontSize = 16;
-    const cols = Math.floor(canvas.width / fontSize);
-    const drops = [];
-    for(let i = 0; i < cols; i++){
-      // Stagger start positions so rain doesn't all start at top
-      drops[i] = Math.floor(Math.random() * -canvas.height / fontSize);
-    }
-
-    // Mix of katakana, latin, numbers and network chars
-    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01><{}[]|/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@$%&*';
 
     function draw(){
-      // Semi-transparent black overlay creates the fade trail effect
       ctx.fillStyle = 'rgba(0,0,0,0.04)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.font = fontSize + 'px monospace';
-
-      for(let i = 0; i < drops.length; i++){
-        const char = chars[Math.floor(Math.random() * chars.length)];
-        const x = i * fontSize;
-        const y = drops[i] * fontSize;
-
-        // Lead character: bright white-green
-        // Recent trail: bright green
-        // Older trail: dim green (handled by fade overlay above)
-        if(drops[i] >= 0){
-          // Leading character is brightest
-          if(Math.random() > 0.95){
-            ctx.fillStyle = '#ffffff';
-          } else {
-            ctx.fillStyle = '#00ff88';
-          }
-          ctx.fillText(char, x, y);
-        }
-
-        // Reset drop when it goes past bottom
-        if(y > canvas.height){
-          if(Math.random() > 0.96){
-            drops[i] = Math.floor(Math.random() * -20);
-          }
-        }
-        drops[i]++;
-      }
+      ctx.fillRect(0, 0, W, H);
+      ctx.font = FS + 'px Courier New';
+      drops.forEach((y, i) => {
+        const r = Math.random();
+        if(r > 0.97)      ctx.fillStyle = '#c0ffe8';
+        else if(r > 0.85) ctx.fillStyle = '#3fb950';
+        else if(r > 0.5)  ctx.fillStyle = '#1D9E75';
+        else               ctx.fillStyle = '#0a4a2e';
+        ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, y * FS);
+        if(y * FS > H && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.35 + Math.random() * 0.25;
+      });
     }
 
-    // Initial black fill
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    matrixInterval = setInterval(draw, 35);
-
-    window.addEventListener('resize', function(){
-      if(!active) return;
-      resize();
-      // Recalculate columns after resize
-      const newCols = Math.floor(canvas.width / fontSize);
-      while(drops.length < newCols) drops.push(0);
-    });
+    init();
+    matrixInterval = setInterval(draw, 38);
+    window.addEventListener('resize', function(){ if(!active) return; init(); });
   }
 
   function stopMatrix(){
