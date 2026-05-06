@@ -7776,9 +7776,166 @@ function renderMostUsed(el){
 </div>
 </div>
 </div>
+
+<!-- Tool 13: Full width below the grid -->
+<div style="margin-top:14px">
+
+<div class="cblock" style="margin-bottom:14px;border-color:rgba(0,214,143,.3)">
+  <div class="chdr" style="background:rgba(0,214,143,.05)">
+    <div class="chdr-l" style="color:var(--a)">🎯 13. Port / Protocol Reachability Checker</div>
+    <span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(0,214,143,.1);color:var(--a);border:1px solid rgba(0,214,143,.3)">VPN · Firewall · Services</span>
+  </div>
+  <div class="cbody">
+    <div style="font-size:12px;color:var(--t2);margin-bottom:12px;line-height:1.6">
+      Check if a specific port/protocol is reachable from a source to a destination. Combines policy lookup, debug flow and common service checks in one command block.
+    </div>
+    <div style="margin-bottom:8px">
+      <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Source IP</label>
+      <input type="text" id="mu-reach-src" placeholder="e.g. 192.168.1.100" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px">
+    </div>
+    <div style="margin-bottom:8px">
+      <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Destination IP</label>
+      <input type="text" id="mu-reach-dst" placeholder="e.g. 203.0.113.1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px">
+    </div>
+    <div style="margin-bottom:8px">
+      <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Quick Select — Common Services</label>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+        <button onclick="muReachQuick('500','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">IKE <span style="color:var(--t3)">UDP/500</span></button>
+        <button onclick="muReachQuick('4500','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">NAT-T <span style="color:var(--t3)">UDP/4500</span></button>
+        <button onclick="muReachQuick('443','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">SSL VPN <span style="color:var(--t3)">TCP/443</span></button>
+        <button onclick="muReachQuick('22','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">SSH <span style="color:var(--t3)">TCP/22</span></button>
+        <button onclick="muReachQuick('3389','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">RDP <span style="color:var(--t3)">TCP/3389</span></button>
+        <button onclick="muReachQuick('80','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">HTTP <span style="color:var(--t3)">TCP/80</span></button>
+        <button onclick="muReachQuick('179','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">BGP <span style="color:var(--t3)">TCP/179</span></button>
+        <button onclick="muReachQuick('53','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">DNS <span style="color:var(--t3)">UDP/53</span></button>
+        <button onclick="muReachQuick('161','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">SNMP <span style="color:var(--t3)">UDP/161</span></button>
+        <button onclick="muReachQuick('123','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">NTP <span style="color:var(--t3)">UDP/123</span></button>
+        <button onclick="muReachQuick('1812','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">RADIUS <span style="color:var(--t3)">UDP/1812</span></button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Port</label>
+        <input type="text" id="mu-reach-port" placeholder="e.g. 500" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Protocol</label>
+        <select id="mu-reach-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">
+          <option value="udp">UDP</option>
+          <option value="tcp">TCP</option>
+          <option value="icmp">ICMP</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface (optional)</label>
+      <input type="text" id="mu-reach-intf" placeholder="e.g. port1 or wan1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px">
+    </div>
+    <button class="sbtn" style="margin-top:4px;width:100%;background:var(--a);color:#000;font-weight:700" onclick="muReachCheck()">🎯 Generate Reachability Commands</button>
+    <div id="mu-reach-out" style="display:none;margin-top:10px">
+      <pre class="code-block" id="mu-reach-out-cmd" style="white-space:pre-wrap"></pre>
+    </div>
+  </div>
+</div>
 </div>`;
 
   // ── Helper: show output ──
+  // ── 13. Port/Protocol Reachability Checker ──
+  window.muReachQuick = function(port, proto){
+    document.getElementById('mu-reach-port').value = port;
+    var sel = document.getElementById('mu-reach-proto');
+    if(sel) sel.value = proto;
+  };
+
+  window.muReachCheck = function(){
+    var src   = (document.getElementById('mu-reach-src')||{}).value||'<SRC-IP>';
+    var dst   = (document.getElementById('mu-reach-dst')||{}).value||'<DST-IP>';
+    var port  = (document.getElementById('mu-reach-port')||{}).value||'500';
+    var proto = (document.getElementById('mu-reach-proto')||{}).value||'udp';
+    var intf  = (document.getElementById('mu-reach-intf')||{}).value||'';
+    var protoNum = proto==='tcp'?'6':proto==='udp'?'17':'1';
+
+    // Service label for comments
+    var svcMap = {'500':'IKE (IPsec Phase 1)','4500':'NAT-T (IPsec Phase 2)','443':'HTTPS / SSL VPN',
+      '22':'SSH','3389':'RDP','80':'HTTP','179':'BGP','53':'DNS','161':'SNMP','123':'NTP','1812':'RADIUS'};
+    var svcLabel = svcMap[port] ? svcMap[port]+' — ' : '';
+
+    var lines = [
+      '# ═══════════════════════════════════════════════════',
+      '# REACHABILITY CHECK: '+svcLabel+proto.toUpperCase()+'/'+port,
+      '# From : '+src,
+      '# To   : '+dst,
+      '# ═══════════════════════════════════════════════════',
+      '',
+      '# STEP 1 — Routing: Does FortiGate have a route to destination?',
+      'get router info routing-table details '+dst,
+      '',
+      '# STEP 2 — Policy Lookup: Which policy matches this traffic?',
+      'diagnose firewall iprope lookup '+src+' '+dst+' '+port+' '+proto+(intf?' '+intf:''),
+      '',
+      '# STEP 3 — Packet sniffer: Do packets actually reach FortiGate?',
+      'diagnose sniffer packet '+(intf||'any')+' "host '+src+' and host '+dst+' and port '+port+'" 4 20 l',
+      '',
+      '# STEP 4 — Session table: Is there an active session for this flow?',
+      'diagnose sys session filter src '+src,
+      'diagnose sys session filter dst '+dst,
+      'diagnose sys session filter dport '+port,
+      'diagnose sys session list',
+      '',
+      '# STEP 5 — Debug flow: Full trace (run then trigger traffic)',
+      'diagnose debug reset',
+      'diagnose debug flow filter addr '+src,
+      'diagnose debug flow filter daddr '+dst,
+      'diagnose debug flow filter proto '+protoNum,
+      'diagnose debug flow show function-name enable',
+      'diagnose debug flow trace start 30',
+      'diagnose debug enable',
+      '# → Trigger traffic now, then stop:',
+      'diagnose debug flow trace stop',
+      'diagnose debug disable',
+      'diagnose debug reset',
+    ];
+
+    // Add protocol-specific extra checks
+    if(port==='500'||port==='4500'){
+      lines.push('');
+      lines.push('# EXTRA — IPsec VPN specific checks (UDP '+port+' = '+(port==='500'?'IKE Phase 1':'NAT-T Phase 2')+')');
+      lines.push('diagnose vpn ike gateway list');
+      lines.push('diagnose vpn tunnel list');
+      lines.push('get vpn ipsec tunnel summary');
+    }
+    if(port==='443'){
+      lines.push('');
+      lines.push('# EXTRA — SSL VPN specific checks');
+      lines.push('get vpn ssl monitor');
+      lines.push('diagnose debug application sslvpn -1');
+      lines.push('diagnose debug enable');
+    }
+    if(port==='179'){
+      lines.push('');
+      lines.push('# EXTRA — BGP specific checks');
+      lines.push('get router info bgp summary');
+      lines.push('get router info bgp neighbors '+dst);
+    }
+    if(proto==='icmp'){
+      lines.push('');
+      lines.push('# EXTRA — ICMP ping test from FortiGate');
+      lines.push('execute ping-options source '+src);
+      lines.push('execute ping '+dst);
+    }
+
+    lines.push('');
+    lines.push('# WHAT TO LOOK FOR IN DEBUG FLOW:');
+    lines.push('# "Allowed by policy-id N"   → traffic permitted, check routing');
+    lines.push('# "denied by forward policy"  → no matching allow policy exists');
+    lines.push('# "reverse path check fail"   → RPF/anti-spoofing dropping return traffic');
+    lines.push('# "no matching firewall policy" → add or fix policy for this flow');
+    lines.push('# "iprope_in_check() check failed" → check interface or routing');
+
+    document.getElementById('mu-reach-out').style.display='block';
+    document.getElementById('mu-reach-out-cmd').textContent=lines.join('\n');
+  };
+
   function muShow(id, cmds){
     document.getElementById(id).style.display='block';
     document.getElementById(id+'-cmd').textContent=cmds;
@@ -8924,6 +9081,102 @@ function renderMostUsed(el){
 </div>`;
 
   // ── Helper: show output ──
+  // ── 13. Port/Protocol Reachability Checker ──
+  window.muReachQuick = function(port, proto){
+    document.getElementById('mu-reach-port').value = port;
+    var sel = document.getElementById('mu-reach-proto');
+    if(sel) sel.value = proto;
+  };
+
+  window.muReachCheck = function(){
+    var src   = (document.getElementById('mu-reach-src')||{}).value||'<SRC-IP>';
+    var dst   = (document.getElementById('mu-reach-dst')||{}).value||'<DST-IP>';
+    var port  = (document.getElementById('mu-reach-port')||{}).value||'500';
+    var proto = (document.getElementById('mu-reach-proto')||{}).value||'udp';
+    var intf  = (document.getElementById('mu-reach-intf')||{}).value||'';
+    var protoNum = proto==='tcp'?'6':proto==='udp'?'17':'1';
+
+    // Service label for comments
+    var svcMap = {'500':'IKE (IPsec Phase 1)','4500':'NAT-T (IPsec Phase 2)','443':'HTTPS / SSL VPN',
+      '22':'SSH','3389':'RDP','80':'HTTP','179':'BGP','53':'DNS','161':'SNMP','123':'NTP','1812':'RADIUS'};
+    var svcLabel = svcMap[port] ? svcMap[port]+' — ' : '';
+
+    var lines = [
+      '# ═══════════════════════════════════════════════════',
+      '# REACHABILITY CHECK: '+svcLabel+proto.toUpperCase()+'/'+port,
+      '# From : '+src,
+      '# To   : '+dst,
+      '# ═══════════════════════════════════════════════════',
+      '',
+      '# STEP 1 — Routing: Does FortiGate have a route to destination?',
+      'get router info routing-table details '+dst,
+      '',
+      '# STEP 2 — Policy Lookup: Which policy matches this traffic?',
+      'diagnose firewall iprope lookup '+src+' '+dst+' '+port+' '+proto+(intf?' '+intf:''),
+      '',
+      '# STEP 3 — Packet sniffer: Do packets actually reach FortiGate?',
+      'diagnose sniffer packet '+(intf||'any')+' "host '+src+' and host '+dst+' and port '+port+'" 4 20 l',
+      '',
+      '# STEP 4 — Session table: Is there an active session for this flow?',
+      'diagnose sys session filter src '+src,
+      'diagnose sys session filter dst '+dst,
+      'diagnose sys session filter dport '+port,
+      'diagnose sys session list',
+      '',
+      '# STEP 5 — Debug flow: Full trace (run then trigger traffic)',
+      'diagnose debug reset',
+      'diagnose debug flow filter addr '+src,
+      'diagnose debug flow filter daddr '+dst,
+      'diagnose debug flow filter proto '+protoNum,
+      'diagnose debug flow show function-name enable',
+      'diagnose debug flow trace start 30',
+      'diagnose debug enable',
+      '# → Trigger traffic now, then stop:',
+      'diagnose debug flow trace stop',
+      'diagnose debug disable',
+      'diagnose debug reset',
+    ];
+
+    // Add protocol-specific extra checks
+    if(port==='500'||port==='4500'){
+      lines.push('');
+      lines.push('# EXTRA — IPsec VPN specific checks (UDP '+port+' = '+(port==='500'?'IKE Phase 1':'NAT-T Phase 2')+')');
+      lines.push('diagnose vpn ike gateway list');
+      lines.push('diagnose vpn tunnel list');
+      lines.push('get vpn ipsec tunnel summary');
+    }
+    if(port==='443'){
+      lines.push('');
+      lines.push('# EXTRA — SSL VPN specific checks');
+      lines.push('get vpn ssl monitor');
+      lines.push('diagnose debug application sslvpn -1');
+      lines.push('diagnose debug enable');
+    }
+    if(port==='179'){
+      lines.push('');
+      lines.push('# EXTRA — BGP specific checks');
+      lines.push('get router info bgp summary');
+      lines.push('get router info bgp neighbors '+dst);
+    }
+    if(proto==='icmp'){
+      lines.push('');
+      lines.push('# EXTRA — ICMP ping test from FortiGate');
+      lines.push('execute ping-options source '+src);
+      lines.push('execute ping '+dst);
+    }
+
+    lines.push('');
+    lines.push('# WHAT TO LOOK FOR IN DEBUG FLOW:');
+    lines.push('# "Allowed by policy-id N"   → traffic permitted, check routing');
+    lines.push('# "denied by forward policy"  → no matching allow policy exists');
+    lines.push('# "reverse path check fail"   → RPF/anti-spoofing dropping return traffic');
+    lines.push('# "no matching firewall policy" → add or fix policy for this flow');
+    lines.push('# "iprope_in_check() check failed" → check interface or routing');
+
+    document.getElementById('mu-reach-out').style.display='block';
+    document.getElementById('mu-reach-out-cmd').textContent=lines.join('\n');
+  };
+
   function muShow(id, cmds){
     document.getElementById(id).style.display='block';
     document.getElementById(id+'-cmd').textContent=cmds;
@@ -10069,6 +10322,102 @@ function renderMostUsed(el){
 </div>`;
 
   // ── Helper: show output ──
+  // ── 13. Port/Protocol Reachability Checker ──
+  window.muReachQuick = function(port, proto){
+    document.getElementById('mu-reach-port').value = port;
+    var sel = document.getElementById('mu-reach-proto');
+    if(sel) sel.value = proto;
+  };
+
+  window.muReachCheck = function(){
+    var src   = (document.getElementById('mu-reach-src')||{}).value||'<SRC-IP>';
+    var dst   = (document.getElementById('mu-reach-dst')||{}).value||'<DST-IP>';
+    var port  = (document.getElementById('mu-reach-port')||{}).value||'500';
+    var proto = (document.getElementById('mu-reach-proto')||{}).value||'udp';
+    var intf  = (document.getElementById('mu-reach-intf')||{}).value||'';
+    var protoNum = proto==='tcp'?'6':proto==='udp'?'17':'1';
+
+    // Service label for comments
+    var svcMap = {'500':'IKE (IPsec Phase 1)','4500':'NAT-T (IPsec Phase 2)','443':'HTTPS / SSL VPN',
+      '22':'SSH','3389':'RDP','80':'HTTP','179':'BGP','53':'DNS','161':'SNMP','123':'NTP','1812':'RADIUS'};
+    var svcLabel = svcMap[port] ? svcMap[port]+' — ' : '';
+
+    var lines = [
+      '# ═══════════════════════════════════════════════════',
+      '# REACHABILITY CHECK: '+svcLabel+proto.toUpperCase()+'/'+port,
+      '# From : '+src,
+      '# To   : '+dst,
+      '# ═══════════════════════════════════════════════════',
+      '',
+      '# STEP 1 — Routing: Does FortiGate have a route to destination?',
+      'get router info routing-table details '+dst,
+      '',
+      '# STEP 2 — Policy Lookup: Which policy matches this traffic?',
+      'diagnose firewall iprope lookup '+src+' '+dst+' '+port+' '+proto+(intf?' '+intf:''),
+      '',
+      '# STEP 3 — Packet sniffer: Do packets actually reach FortiGate?',
+      'diagnose sniffer packet '+(intf||'any')+' "host '+src+' and host '+dst+' and port '+port+'" 4 20 l',
+      '',
+      '# STEP 4 — Session table: Is there an active session for this flow?',
+      'diagnose sys session filter src '+src,
+      'diagnose sys session filter dst '+dst,
+      'diagnose sys session filter dport '+port,
+      'diagnose sys session list',
+      '',
+      '# STEP 5 — Debug flow: Full trace (run then trigger traffic)',
+      'diagnose debug reset',
+      'diagnose debug flow filter addr '+src,
+      'diagnose debug flow filter daddr '+dst,
+      'diagnose debug flow filter proto '+protoNum,
+      'diagnose debug flow show function-name enable',
+      'diagnose debug flow trace start 30',
+      'diagnose debug enable',
+      '# → Trigger traffic now, then stop:',
+      'diagnose debug flow trace stop',
+      'diagnose debug disable',
+      'diagnose debug reset',
+    ];
+
+    // Add protocol-specific extra checks
+    if(port==='500'||port==='4500'){
+      lines.push('');
+      lines.push('# EXTRA — IPsec VPN specific checks (UDP '+port+' = '+(port==='500'?'IKE Phase 1':'NAT-T Phase 2')+')');
+      lines.push('diagnose vpn ike gateway list');
+      lines.push('diagnose vpn tunnel list');
+      lines.push('get vpn ipsec tunnel summary');
+    }
+    if(port==='443'){
+      lines.push('');
+      lines.push('# EXTRA — SSL VPN specific checks');
+      lines.push('get vpn ssl monitor');
+      lines.push('diagnose debug application sslvpn -1');
+      lines.push('diagnose debug enable');
+    }
+    if(port==='179'){
+      lines.push('');
+      lines.push('# EXTRA — BGP specific checks');
+      lines.push('get router info bgp summary');
+      lines.push('get router info bgp neighbors '+dst);
+    }
+    if(proto==='icmp'){
+      lines.push('');
+      lines.push('# EXTRA — ICMP ping test from FortiGate');
+      lines.push('execute ping-options source '+src);
+      lines.push('execute ping '+dst);
+    }
+
+    lines.push('');
+    lines.push('# WHAT TO LOOK FOR IN DEBUG FLOW:');
+    lines.push('# "Allowed by policy-id N"   → traffic permitted, check routing');
+    lines.push('# "denied by forward policy"  → no matching allow policy exists');
+    lines.push('# "reverse path check fail"   → RPF/anti-spoofing dropping return traffic');
+    lines.push('# "no matching firewall policy" → add or fix policy for this flow');
+    lines.push('# "iprope_in_check() check failed" → check interface or routing');
+
+    document.getElementById('mu-reach-out').style.display='block';
+    document.getElementById('mu-reach-out-cmd').textContent=lines.join('\n');
+  };
+
   function muShow(id, cmds){
     document.getElementById(id).style.display='block';
     document.getElementById(id+'-cmd').textContent=cmds;
