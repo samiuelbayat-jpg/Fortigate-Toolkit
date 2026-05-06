@@ -534,6 +534,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('liveconnect')" id="tab-liveconnect" title="FortiGate Live Connect">
               <span class="tab-icon">🔌</span><span class="tab-lbl">Live Connect</span>
             </button>
+            <button class="tab" onclick="stab('emailgen')" id="tab-emailgen" title="Customer Email Generator">
+              <span class="tab-icon">✉️</span><span class="tab-lbl">Email</span>
+            </button>
           </div>
         </div>
       </div>
@@ -1130,7 +1133,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -7193,6 +7196,370 @@ function renderLiveConnect(el){
   document.addEventListener('DOMContentLoaded', reset);
 })();
 
+function renderEmailGen(el){
+  el.innerHTML=`
+<div class="sh"><span class="stitle">✉️ Customer Email Generator</span><span class="sev info">Troubleshoot · Changes · Config · Report</span></div>
+<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
+  Build a professional customer email from your troubleshooting session. Fill in the fields, pick a template, and copy the finished email ready to send.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+
+  <!-- LEFT: Form -->
+  <div>
+    <!-- Header info -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Email Details</div></div>
+      <div class="cbody" style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">To (Customer name or company)</label>
+          <input type="text" id="eg-to" placeholder="e.g. John Smith / Acme Corp" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">From (Your name)</label>
+          <input type="text" id="eg-from" placeholder="e.g. Samiuel — NetWolf Engineer" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Device / Site</label>
+          <input type="text" id="eg-device" placeholder="e.g. FGT-HQ-01 / Amsterdam site" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Date / Time</label>
+          <input type="text" id="eg-date" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Ticket / Reference number</label>
+          <input type="text" id="eg-ticket" placeholder="e.g. INC-20240512 (optional)" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Template picker -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📄 Email Type</div></div>
+      <div class="cbody" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="egSetType('troubleshoot')" id="eg-type-troubleshoot" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔍 Troubleshoot Report</button>
+        <button onclick="egSetType('changes')" id="eg-type-changes" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔧 Changes Made</button>
+        <button onclick="egSetType('config')" id="eg-type-config" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">⚙️ Configuration Sent</button>
+        <button onclick="egSetType('report')" id="eg-type-report" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">📊 Status Report</button>
+        <button onclick="egSetType('maintenance')" id="eg-type-maintenance" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🛠️ Maintenance Window</button>
+        <button onclick="egSetType('incident')" id="eg-type-incident" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🚨 Incident Update</button>
+      </div>
+    </div>
+
+    <!-- Content sections -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📝 Issue / Background</div><span style="font-size:10px;color:var(--t3)">What was the problem?</span></div>
+      <div class="cbody">
+        <textarea id="eg-issue" rows="3" placeholder="e.g. SSL VPN users unable to connect from Belgium. User reported hanging at 10% during tunnel establishment." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔎 Root Cause Found</div></div>
+      <div class="cbody">
+        <textarea id="eg-cause" rows="3" placeholder="e.g. IPv6 was disabled on the TDS portal while user had a public IPv6 address. Policy 613 restricted source to Netherlands only." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">✅ Actions Taken / Changes Made</div></div>
+      <div class="cbody">
+        <div id="eg-actions-list" style="margin-bottom:8px"></div>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="eg-action-input" placeholder="e.g. Added Belgium_SSLVPN to policy 613" style="flex:1;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;" onkeydown="if(event.key==='Enter')egAddAction()">
+          <button class="sbtn" onclick="egAddAction()">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Commands Used</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-cmds" rows="3" placeholder="e.g. diagnose sniffer packet any 'port 443' 4 20 l" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:'Courier New',monospace;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔮 Result / Current Status</div></div>
+      <div class="cbody">
+        <textarea id="eg-result" rows="2" placeholder="e.g. SSL VPN connection now works correctly from Belgium. Confirmed with user." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">⏭️ Next Steps / Recommendations</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-next" rows="2" placeholder="e.g. Monitor for 24 hours. Recommend disabling IPv6 on user device as permanent fix." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <!-- Language -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🌐 Language</div></div>
+      <div class="cbody" style="display:flex;gap:8px">
+        <button onclick="egSetLang('en')" id="eg-lang-en" class="sbtn" style="opacity:1">🇬🇧 English</button>
+        <button onclick="egSetLang('nl')" id="eg-lang-nl" class="sbtn" style="opacity:.5">🇳🇱 Nederlands</button>
+        <button onclick="egSetLang('de')" id="eg-lang-de" class="sbtn" style="opacity:.5">🇩🇪 Deutsch</button>
+        <button onclick="egSetLang('fr')" id="eg-lang-fr" class="sbtn" style="opacity:.5">🇫🇷 Français</button>
+      </div>
+    </div>
+
+    <button onclick="egGenerate()" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:var(--a)">✉️ Generate Email</button>
+  </div>
+
+  <!-- RIGHT: Preview -->
+  <div>
+    <div class="cblock" style="position:sticky;top:16px">
+      <div class="chdr">
+        <div class="chdr-l">👁️ Email Preview</div>
+        <button onclick="egCopy()" class="sbtn" style="font-size:11px;padding:4px 12px">📋 Copy</button>
+      </div>
+      <div class="cbody" style="padding:0">
+        <div id="eg-preview" style="padding:16px;font-size:12px;color:var(--t2);line-height:1.8;min-height:400px;white-space:pre-wrap;font-family:inherit">
+          <span style="color:var(--t3);font-style:italic">Fill in the form and click Generate Email to see the preview here.</span>
+        </div>
+      </div>
+      <div style="padding:10px 14px;border-top:1px solid var(--br);display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="egOpenMail()" class="sbtn" style="font-size:11px;padding:6px 14px">📧 Open in Mail</button>
+        <button onclick="egCopySubject()" class="sbtn" style="font-size:11px;padding:6px 14px">📋 Copy Subject</button>
+        <button onclick="egReset()" class="sbtn" style="font-size:11px;padding:6px 14px;background:#B91C1C">🗑️ Reset</button>
+      </div>
+    </div>
+  </div>
+
+</div>`;
+
+  // ── State ──
+  var egLang = 'en';
+  var egType = 'troubleshoot';
+  var egActions = [];
+
+  // Set date default
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('eg-date').value = dateStr;
+
+  // Highlight first type button
+  window.egSetType = function(t){
+    egType = t;
+    ['troubleshoot','changes','config','report','maintenance','incident'].forEach(function(x){
+      var b = document.getElementById('eg-type-'+x);
+      if(b) b.style.opacity = x===t ? '1' : '.5';
+    });
+  };
+  egSetType('troubleshoot');
+
+  window.egSetLang = function(l){
+    egLang = l;
+    ['en','nl','de','fr'].forEach(function(x){
+      var b = document.getElementById('eg-lang-'+x);
+      if(b) b.style.opacity = x===l ? '1' : '.5';
+    });
+  };
+
+  window.egAddAction = function(){
+    var inp = document.getElementById('eg-action-input');
+    var val = inp.value.trim();
+    if(!val) return;
+    egActions.push(val);
+    inp.value = '';
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,i){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+i+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egRemoveAction = function(i){
+    egActions.splice(i,1);
+    egAddAction(); egActions.pop(); // refresh list
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,idx){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egGenerate = function(){
+    var to     = document.getElementById('eg-to').value.trim() || 'Customer';
+    var from   = document.getElementById('eg-from').value.trim() || 'NetWolf Engineer';
+    var device = document.getElementById('eg-device').value.trim();
+    var date   = document.getElementById('eg-date').value.trim();
+    var ticket = document.getElementById('eg-ticket').value.trim();
+    var issue  = document.getElementById('eg-issue').value.trim();
+    var cause  = document.getElementById('eg-cause').value.trim();
+    var cmds   = document.getElementById('eg-cmds').value.trim();
+    var result = document.getElementById('eg-result').value.trim();
+    var next   = document.getElementById('eg-next').value.trim();
+
+    // ── Translations ──
+    var T = {
+      en: {
+        subjects:  {troubleshoot:'Troubleshoot Report',changes:'Changes Made',config:'Configuration Update',report:'Status Report',maintenance:'Maintenance Window',incident:'Incident Update'},
+        subjectPfx:'Subject',
+        greeting:  function(n){ return 'Dear ' + n + ','; },
+        details:   'Details',
+        deviceLbl: 'Device / Site',
+        dateLbl:   'Date / Time',
+        refLbl:    'Reference',
+        issueLbl:  'Issue / Background',
+        causeLbl:  'Root Cause',
+        actionsLbl:'Actions Taken',
+        cmdsLbl:   'Commands Used',
+        resultLbl: 'Result / Current Status',
+        nextLbl:   'Next Steps / Recommendations',
+        closing:   'Please do not hesitate to contact us if you have any questions.',
+        regards:   'Kind regards,'
+      },
+      nl: {
+        subjects:  {troubleshoot:'Troubleshoot Rapport',changes:'Wijzigingen Uitgevoerd',config:'Configuratie Update',report:'Statusrapport',maintenance:'Onderhoudsvenster',incident:'Incident Update'},
+        subjectPfx:'Onderwerp',
+        greeting:  function(n){ return 'Beste ' + n + ','; },
+        details:   'Details',
+        deviceLbl: 'Apparaat / Locatie',
+        dateLbl:   'Datum / Tijd',
+        refLbl:    'Referentie',
+        issueLbl:  'Probleem / Achtergrond',
+        causeLbl:  'Oorzaak',
+        actionsLbl:'Uitgevoerde Werkzaamheden',
+        cmdsLbl:   'Gebruikte Commando’s',
+        resultLbl: 'Resultaat / Huidige Status',
+        nextLbl:   'Vervolgstappen / Aanbevelingen',
+        closing:   'Mocht u nog vragen hebben, neem dan gerust contact met ons op.',
+        regards:   'Met vriendelijke groet,'
+      },
+      de: {
+        subjects:  {troubleshoot:'Fehlerbehebungsbericht',changes:'Durchgeführte Änderungen',config:'Konfigurationsupdate',report:'Statusbericht',maintenance:'Wartungsfenster',incident:'Störungsmeldung'},
+        subjectPfx:'Betreff',
+        greeting:  function(n){ return 'Sehr geehrte Damen und Herren, liebe/r ' + n + ','; },
+        details:   'Details',
+        deviceLbl: 'Gerät / Standort',
+        dateLbl:   'Datum / Uhrzeit',
+        refLbl:    'Referenz',
+        issueLbl:  'Problem / Hintergrund',
+        causeLbl:  'Ursache',
+        actionsLbl:'Durchgeführte Maßnahmen',
+        cmdsLbl:   'Verwendete Befehle',
+        resultLbl: 'Ergebnis / Aktueller Status',
+        nextLbl:   'Nächste Schritte / Empfehlungen',
+        closing:   'Bei Fragen stehen wir Ihnen gerne zur Verfügung.',
+        regards:   'Mit freundlichen Grüßen,'
+      },
+      fr: {
+        subjects:  {troubleshoot:'Rapport de dépannage',changes:'Modifications effectuées',config:'Mise à jour de configuration',report:'Rapport de statut',maintenance:'Fenêtre de maintenance',incident:'Mise à jour incident'},
+        subjectPfx:'Objet',
+        greeting:  function(n){ return 'Madame, Monsieur ' + n + ','; },
+        details:   'Détails',
+        deviceLbl: 'Appareil / Site',
+        dateLbl:   'Date / Heure',
+        refLbl:    'Référence',
+        issueLbl:  'Problème / Contexte',
+        causeLbl:  'Cause identifiée',
+        actionsLbl:'Actions effectuées',
+        cmdsLbl:   'Commandes utilisées',
+        resultLbl: 'Résultat / Statut actuel',
+        nextLbl:   'Prochaines étapes / Recommandations',
+        closing:   "N’hésitez pas à nous contacter pour toute question.",
+        regards:   'Cordialement,'
+      }
+    };
+
+    var lang = T[egLang] || T['en'];
+    var subject = lang.subjects[egType] + (device ? ' — ' + device : '') + (ticket ? ' ['+ticket+']' : '');
+    var lines = [];
+
+    lines.push(lang.subjectPfx + ': ' + subject);
+    lines.push('');
+    lines.push(lang.greeting(to));
+    lines.push('');
+
+    if(device || date || ticket){
+      lines.push(lang.details + ':');
+      if(device)  lines.push('  ' + lang.deviceLbl + ' : ' + device);
+      if(date)    lines.push('  ' + lang.dateLbl   + ' : ' + date);
+      if(ticket)  lines.push('  ' + lang.refLbl    + ' : ' + ticket);
+      lines.push('');
+    }
+    if(issue){
+      lines.push(lang.issueLbl + ':');
+      lines.push(issue);
+      lines.push('');
+    }
+    if(cause){
+      lines.push(lang.causeLbl + ':');
+      lines.push(cause);
+      lines.push('');
+    }
+    if(egActions.length){
+      lines.push(lang.actionsLbl + ':');
+      egActions.forEach(function(a){ lines.push('  • ' + a); });
+      lines.push('');
+    }
+    if(cmds){
+      lines.push(lang.cmdsLbl + ':');
+      cmds.split("\n").forEach(function(c){ if(c.trim()) lines.push('  ' + c.trim()); });
+      lines.push('');
+    }
+    if(result){
+      lines.push(lang.resultLbl + ':');
+      lines.push(result);
+      lines.push('');
+    }
+    if(next){
+      lines.push(lang.nextLbl + ':');
+      lines.push(next);
+      lines.push('');
+    }
+    lines.push(lang.closing);
+    lines.push('');
+    lines.push(lang.regards);
+    lines.push(from);
+
+    var emailText = lines.join('\n');
+    document.getElementById('eg-preview').style.fontFamily = 'inherit';
+    document.getElementById('eg-preview').style.color = 'var(--t)';
+    document.getElementById('eg-preview').textContent = emailText;
+    window._egEmailText = emailText;
+    window._egSubject = subject;
+  };
+
+    window.egCopy = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egEmailText).then(function(){ showToast('✅ Email copied to clipboard!'); }).catch(function(){ showToast('Copy failed — please select and copy manually.'); });
+  };
+
+  window.egCopySubject = function(){
+    if(!window._egSubject){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egSubject).then(function(){ showToast('✅ Subject copied!'); }).catch(function(){ showToast('Copy failed.'); });
+  };
+
+  window.egOpenMail = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    var body = encodeURIComponent(window._egEmailText.replace('Subject: '+window._egSubject+'\n\n',''));
+    var subj = encodeURIComponent(window._egSubject);
+    window.open('mailto:?subject='+subj+'&body='+body);
+  };
+
+  window.egReset = function(){
+    if(!confirm('Clear all fields?')) return;
+    ['eg-to','eg-from','eg-device','eg-ticket','eg-issue','eg-cause','eg-cmds','eg-result','eg-next','eg-action-input'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+    document.getElementById('eg-date').value = dateStr;
+    document.getElementById('eg-actions-list').innerHTML = '';
+    document.getElementById('eg-preview').textContent = '';
+    document.getElementById('eg-preview').style.color = 'var(--t3)';
+    egActions = [];
+    egSetType('troubleshoot');
+    window._egEmailText = null;
+    window._egSubject = null;
+  };
+}
+
 // Wire login form/* ══ SCREENSAVER ══ */
 (function(){
   var IDLE = 5 * 60 * 1000;
@@ -7270,6 +7637,350 @@ function renderLiveConnect(el){
   document.addEventListener('DOMContentLoaded', reset);
 })();
 
+function renderEmailGen(el){
+  el.innerHTML=`
+<div class="sh"><span class="stitle">✉️ Customer Email Generator</span><span class="sev info">Troubleshoot · Changes · Config · Report</span></div>
+<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
+  Build a professional customer email from your troubleshooting session. Fill in the fields, pick a template, and copy the finished email ready to send.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+
+  <!-- LEFT: Form -->
+  <div>
+    <!-- Header info -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Email Details</div></div>
+      <div class="cbody" style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">To (Customer name or company)</label>
+          <input type="text" id="eg-to" placeholder="e.g. John Smith / Acme Corp" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">From (Your name)</label>
+          <input type="text" id="eg-from" placeholder="e.g. Samiuel — NetWolf Engineer" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Device / Site</label>
+          <input type="text" id="eg-device" placeholder="e.g. FGT-HQ-01 / Amsterdam site" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Date / Time</label>
+          <input type="text" id="eg-date" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Ticket / Reference number</label>
+          <input type="text" id="eg-ticket" placeholder="e.g. INC-20240512 (optional)" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Template picker -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📄 Email Type</div></div>
+      <div class="cbody" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="egSetType('troubleshoot')" id="eg-type-troubleshoot" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔍 Troubleshoot Report</button>
+        <button onclick="egSetType('changes')" id="eg-type-changes" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔧 Changes Made</button>
+        <button onclick="egSetType('config')" id="eg-type-config" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">⚙️ Configuration Sent</button>
+        <button onclick="egSetType('report')" id="eg-type-report" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">📊 Status Report</button>
+        <button onclick="egSetType('maintenance')" id="eg-type-maintenance" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🛠️ Maintenance Window</button>
+        <button onclick="egSetType('incident')" id="eg-type-incident" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🚨 Incident Update</button>
+      </div>
+    </div>
+
+    <!-- Content sections -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📝 Issue / Background</div><span style="font-size:10px;color:var(--t3)">What was the problem?</span></div>
+      <div class="cbody">
+        <textarea id="eg-issue" rows="3" placeholder="e.g. SSL VPN users unable to connect from Belgium. User reported hanging at 10% during tunnel establishment." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔎 Root Cause Found</div></div>
+      <div class="cbody">
+        <textarea id="eg-cause" rows="3" placeholder="e.g. IPv6 was disabled on the TDS portal while user had a public IPv6 address. Policy 613 restricted source to Netherlands only." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">✅ Actions Taken / Changes Made</div></div>
+      <div class="cbody">
+        <div id="eg-actions-list" style="margin-bottom:8px"></div>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="eg-action-input" placeholder="e.g. Added Belgium_SSLVPN to policy 613" style="flex:1;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;" onkeydown="if(event.key==='Enter')egAddAction()">
+          <button class="sbtn" onclick="egAddAction()">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Commands Used</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-cmds" rows="3" placeholder="e.g. diagnose sniffer packet any 'port 443' 4 20 l" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:'Courier New',monospace;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔮 Result / Current Status</div></div>
+      <div class="cbody">
+        <textarea id="eg-result" rows="2" placeholder="e.g. SSL VPN connection now works correctly from Belgium. Confirmed with user." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">⏭️ Next Steps / Recommendations</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-next" rows="2" placeholder="e.g. Monitor for 24 hours. Recommend disabling IPv6 on user device as permanent fix." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <!-- Language -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🌐 Language</div></div>
+      <div class="cbody" style="display:flex;gap:8px">
+        <button onclick="egSetLang('en')" id="eg-lang-en" class="sbtn" style="opacity:1">🇬🇧 English</button>
+        <button onclick="egSetLang('nl')" id="eg-lang-nl" class="sbtn" style="opacity:.5">🇳🇱 Nederlands</button>
+        <button onclick="egSetLang('de')" id="eg-lang-de" class="sbtn" style="opacity:.5">🇩🇪 Deutsch</button>
+        <button onclick="egSetLang('fr')" id="eg-lang-fr" class="sbtn" style="opacity:.5">🇫🇷 Français</button>
+      </div>
+    </div>
+
+    <button onclick="egGenerate()" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:var(--a)">✉️ Generate Email</button>
+  </div>
+
+  <!-- RIGHT: Preview -->
+  <div>
+    <div class="cblock" style="position:sticky;top:16px">
+      <div class="chdr">
+        <div class="chdr-l">👁️ Email Preview</div>
+        <button onclick="egCopy()" class="sbtn" style="font-size:11px;padding:4px 12px">📋 Copy</button>
+      </div>
+      <div class="cbody" style="padding:0">
+        <div id="eg-preview" style="padding:16px;font-size:12px;color:var(--t2);line-height:1.8;min-height:400px;white-space:pre-wrap;font-family:inherit">
+          <span style="color:var(--t3);font-style:italic">Fill in the form and click Generate Email to see the preview here.</span>
+        </div>
+      </div>
+      <div style="padding:10px 14px;border-top:1px solid var(--br);display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="egOpenMail()" class="sbtn" style="font-size:11px;padding:6px 14px">📧 Open in Mail</button>
+        <button onclick="egCopySubject()" class="sbtn" style="font-size:11px;padding:6px 14px">📋 Copy Subject</button>
+        <button onclick="egReset()" class="sbtn" style="font-size:11px;padding:6px 14px;background:#B91C1C">🗑️ Reset</button>
+      </div>
+    </div>
+  </div>
+
+</div>`;
+
+  // ── State ──
+  var egLang = 'en';
+  var egType = 'troubleshoot';
+  var egActions = [];
+
+  // Set date default
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('eg-date').value = dateStr;
+
+  // Highlight first type button
+  window.egSetType = function(t){
+    egType = t;
+    ['troubleshoot','changes','config','report','maintenance','incident'].forEach(function(x){
+      var b = document.getElementById('eg-type-'+x);
+      if(b) b.style.opacity = x===t ? '1' : '.5';
+    });
+  };
+  egSetType('troubleshoot');
+
+  window.egSetLang = function(l){
+    egLang = l;
+    ['en','nl','de','fr'].forEach(function(x){
+      var b = document.getElementById('eg-lang-'+x);
+      if(b) b.style.opacity = x===l ? '1' : '.5';
+    });
+  };
+
+  window.egAddAction = function(){
+    var inp = document.getElementById('eg-action-input');
+    var val = inp.value.trim();
+    if(!val) return;
+    egActions.push(val);
+    inp.value = '';
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,i){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+i+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egRemoveAction = function(i){
+    egActions.splice(i,1);
+    egAddAction(); egActions.pop(); // refresh list
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,idx){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egGenerate = function(){
+    var to     = document.getElementById('eg-to').value.trim() || 'Customer';
+    var from   = document.getElementById('eg-from').value.trim() || 'NetWolf Engineer';
+    var device = document.getElementById('eg-device').value.trim();
+    var date   = document.getElementById('eg-date').value.trim();
+    var ticket = document.getElementById('eg-ticket').value.trim();
+    var issue  = document.getElementById('eg-issue').value.trim();
+    var cause  = document.getElementById('eg-cause').value.trim();
+    var cmds   = document.getElementById('eg-cmds').value.trim();
+    var result = document.getElementById('eg-result').value.trim();
+    var next   = document.getElementById('eg-next').value.trim();
+
+    var subjectMap = {
+      en:{troubleshoot:'Troubleshoot Report',changes:'Changes Made',config:'Configuration Update',report:'Status Report',maintenance:'Maintenance Window',incident:'Incident Update'},
+      nl:{troubleshoot:'Troubleshoot Rapport',changes:'Wijzigingen Uitgevoerd',config:'Configuratie Update',report:'Status Rapport',maintenance:'Onderhoudsvenster',incident:'Incident Update'}
+    };
+
+    var subject = subjectMap[egLang][egType] + (device ? ' — ' + device : '') + (ticket ? ' ['+ticket+']' : '');
+
+    var lines = [];
+    if(egLang==='en'){
+      lines.push('Subject: ' + subject);
+      lines.push('');
+      lines.push('Dear ' + to + ',');
+      lines.push('');
+      if(device || date){
+        lines.push('Details:');
+        if(device)  lines.push('  Device / Site   : ' + device);
+        if(date)    lines.push('  Date / Time     : ' + date);
+        if(ticket)  lines.push('  Reference       : ' + ticket);
+        lines.push('');
+      }
+      if(issue){
+        lines.push('Issue / Background:');
+        lines.push(issue);
+        lines.push('');
+      }
+      if(cause){
+        lines.push('Root Cause:');
+        lines.push(cause);
+        lines.push('');
+      }
+      if(egActions.length){
+        lines.push('Actions Taken:');
+        egActions.forEach(function(a){ lines.push('  • ' + a); });
+        lines.push('');
+      }
+      if(cmds){
+        lines.push('Commands Used:');
+        cmds.split("\\n").forEach(function(c){ if(c.trim()) lines.push('  ' + c.trim()); });
+        lines.push('');
+      }
+      if(result){
+        lines.push('Result / Current Status:');
+        lines.push(result);
+        lines.push('');
+      }
+      if(next){
+        lines.push('Next Steps / Recommendations:');
+        lines.push(next);
+        lines.push('');
+      }
+      lines.push('Please do not hesitate to contact us if you have any questions.');
+      lines.push('');
+      lines.push('Kind regards,');
+      lines.push(from);
+    } else {
+      // Dutch
+      lines.push('Onderwerp: ' + subject);
+      lines.push('');
+      lines.push('Beste ' + to + ',');
+      lines.push('');
+      if(device || date){
+        lines.push('Details:');
+        if(device)  lines.push('  Apparaat / Locatie : ' + device);
+        if(date)    lines.push('  Datum / Tijd       : ' + date);
+        if(ticket)  lines.push('  Referentie         : ' + ticket);
+        lines.push('');
+      }
+      if(issue){
+        lines.push('Probleem / Achtergrond:');
+        lines.push(issue);
+        lines.push('');
+      }
+      if(cause){
+        lines.push('Oorzaak:');
+        lines.push(cause);
+        lines.push('');
+      }
+      if(egActions.length){
+        lines.push('Uitgevoerde Acties:');
+        egActions.forEach(function(a){ lines.push('  • ' + a); });
+        lines.push('');
+      }
+      if(cmds){
+        lines.push('Gebruikte Commando\'s:');
+        cmds.split("\n").forEach(function(c){ if(c.trim()) lines.push('  ' + c.trim()); });
+        lines.push('');
+      }
+      if(result){
+        lines.push('Resultaat / Huidige Status:');
+        lines.push(result);
+        lines.push('');
+      }
+      if(next){
+        lines.push('Vervolgstappen / Aanbevelingen:');
+        lines.push(next);
+        lines.push('');
+      }
+      lines.push('Mocht u nog vragen hebben, neem dan gerust contact met ons op.');
+      lines.push('');
+      lines.push('Met vriendelijke groet,');
+      lines.push(from);
+    }
+
+    var emailText = lines.join('\n');
+    document.getElementById('eg-preview').style.fontFamily = 'inherit';
+    document.getElementById('eg-preview').style.color = 'var(--t)';
+    document.getElementById('eg-preview').textContent = emailText;
+    window._egEmailText = emailText;
+    window._egSubject = subject;
+  };
+
+  window.egCopy = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egEmailText).then(function(){ showToast('✅ Email copied to clipboard!'); }).catch(function(){ showToast('Copy failed — please select and copy manually.'); });
+  };
+
+  window.egCopySubject = function(){
+    if(!window._egSubject){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egSubject).then(function(){ showToast('✅ Subject copied!'); }).catch(function(){ showToast('Copy failed.'); });
+  };
+
+  window.egOpenMail = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    var body = encodeURIComponent(window._egEmailText.replace('Subject: '+window._egSubject+'\n\n',''));
+    var subj = encodeURIComponent(window._egSubject);
+    window.open('mailto:?subject='+subj+'&body='+body);
+  };
+
+  window.egReset = function(){
+    if(!confirm('Clear all fields?')) return;
+    ['eg-to','eg-from','eg-device','eg-ticket','eg-issue','eg-cause','eg-cmds','eg-result','eg-next','eg-action-input'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+    document.getElementById('eg-date').value = dateStr;
+    document.getElementById('eg-actions-list').innerHTML = '';
+    document.getElementById('eg-preview').textContent = '';
+    document.getElementById('eg-preview').style.color = 'var(--t3)';
+    egActions = [];
+    egSetType('troubleshoot');
+    window._egEmailText = null;
+    window._egSubject = null;
+  };
+}
+
 // Wire login form/* ══ SCREENSAVER ══ */
 (function(){
   var IDLE = 5 * 60 * 1000;
@@ -7346,6 +8057,350 @@ function renderLiveConnect(el){
 
   document.addEventListener('DOMContentLoaded', reset);
 })();
+
+function renderEmailGen(el){
+  el.innerHTML=`
+<div class="sh"><span class="stitle">✉️ Customer Email Generator</span><span class="sev info">Troubleshoot · Changes · Config · Report</span></div>
+<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
+  Build a professional customer email from your troubleshooting session. Fill in the fields, pick a template, and copy the finished email ready to send.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+
+  <!-- LEFT: Form -->
+  <div>
+    <!-- Header info -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Email Details</div></div>
+      <div class="cbody" style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">To (Customer name or company)</label>
+          <input type="text" id="eg-to" placeholder="e.g. John Smith / Acme Corp" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">From (Your name)</label>
+          <input type="text" id="eg-from" placeholder="e.g. Samiuel — NetWolf Engineer" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Device / Site</label>
+          <input type="text" id="eg-device" placeholder="e.g. FGT-HQ-01 / Amsterdam site" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Date / Time</label>
+          <input type="text" id="eg-date" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Ticket / Reference number</label>
+          <input type="text" id="eg-ticket" placeholder="e.g. INC-20240512 (optional)" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Template picker -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📄 Email Type</div></div>
+      <div class="cbody" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="egSetType('troubleshoot')" id="eg-type-troubleshoot" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔍 Troubleshoot Report</button>
+        <button onclick="egSetType('changes')" id="eg-type-changes" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔧 Changes Made</button>
+        <button onclick="egSetType('config')" id="eg-type-config" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">⚙️ Configuration Sent</button>
+        <button onclick="egSetType('report')" id="eg-type-report" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">📊 Status Report</button>
+        <button onclick="egSetType('maintenance')" id="eg-type-maintenance" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🛠️ Maintenance Window</button>
+        <button onclick="egSetType('incident')" id="eg-type-incident" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🚨 Incident Update</button>
+      </div>
+    </div>
+
+    <!-- Content sections -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📝 Issue / Background</div><span style="font-size:10px;color:var(--t3)">What was the problem?</span></div>
+      <div class="cbody">
+        <textarea id="eg-issue" rows="3" placeholder="e.g. SSL VPN users unable to connect from Belgium. User reported hanging at 10% during tunnel establishment." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔎 Root Cause Found</div></div>
+      <div class="cbody">
+        <textarea id="eg-cause" rows="3" placeholder="e.g. IPv6 was disabled on the TDS portal while user had a public IPv6 address. Policy 613 restricted source to Netherlands only." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">✅ Actions Taken / Changes Made</div></div>
+      <div class="cbody">
+        <div id="eg-actions-list" style="margin-bottom:8px"></div>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="eg-action-input" placeholder="e.g. Added Belgium_SSLVPN to policy 613" style="flex:1;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;" onkeydown="if(event.key==='Enter')egAddAction()">
+          <button class="sbtn" onclick="egAddAction()">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Commands Used</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-cmds" rows="3" placeholder="e.g. diagnose sniffer packet any 'port 443' 4 20 l" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:'Courier New',monospace;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔮 Result / Current Status</div></div>
+      <div class="cbody">
+        <textarea id="eg-result" rows="2" placeholder="e.g. SSL VPN connection now works correctly from Belgium. Confirmed with user." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">⏭️ Next Steps / Recommendations</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-next" rows="2" placeholder="e.g. Monitor for 24 hours. Recommend disabling IPv6 on user device as permanent fix." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <!-- Language -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🌐 Language</div></div>
+      <div class="cbody" style="display:flex;gap:8px">
+        <button onclick="egSetLang('en')" id="eg-lang-en" class="sbtn" style="opacity:1">🇬🇧 English</button>
+        <button onclick="egSetLang('nl')" id="eg-lang-nl" class="sbtn" style="opacity:.5">🇳🇱 Nederlands</button>
+        <button onclick="egSetLang('de')" id="eg-lang-de" class="sbtn" style="opacity:.5">🇩🇪 Deutsch</button>
+        <button onclick="egSetLang('fr')" id="eg-lang-fr" class="sbtn" style="opacity:.5">🇫🇷 Français</button>
+      </div>
+    </div>
+
+    <button onclick="egGenerate()" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:var(--a)">✉️ Generate Email</button>
+  </div>
+
+  <!-- RIGHT: Preview -->
+  <div>
+    <div class="cblock" style="position:sticky;top:16px">
+      <div class="chdr">
+        <div class="chdr-l">👁️ Email Preview</div>
+        <button onclick="egCopy()" class="sbtn" style="font-size:11px;padding:4px 12px">📋 Copy</button>
+      </div>
+      <div class="cbody" style="padding:0">
+        <div id="eg-preview" style="padding:16px;font-size:12px;color:var(--t2);line-height:1.8;min-height:400px;white-space:pre-wrap;font-family:inherit">
+          <span style="color:var(--t3);font-style:italic">Fill in the form and click Generate Email to see the preview here.</span>
+        </div>
+      </div>
+      <div style="padding:10px 14px;border-top:1px solid var(--br);display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="egOpenMail()" class="sbtn" style="font-size:11px;padding:6px 14px">📧 Open in Mail</button>
+        <button onclick="egCopySubject()" class="sbtn" style="font-size:11px;padding:6px 14px">📋 Copy Subject</button>
+        <button onclick="egReset()" class="sbtn" style="font-size:11px;padding:6px 14px;background:#B91C1C">🗑️ Reset</button>
+      </div>
+    </div>
+  </div>
+
+</div>`;
+
+  // ── State ──
+  var egLang = 'en';
+  var egType = 'troubleshoot';
+  var egActions = [];
+
+  // Set date default
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('eg-date').value = dateStr;
+
+  // Highlight first type button
+  window.egSetType = function(t){
+    egType = t;
+    ['troubleshoot','changes','config','report','maintenance','incident'].forEach(function(x){
+      var b = document.getElementById('eg-type-'+x);
+      if(b) b.style.opacity = x===t ? '1' : '.5';
+    });
+  };
+  egSetType('troubleshoot');
+
+  window.egSetLang = function(l){
+    egLang = l;
+    ['en','nl','de','fr'].forEach(function(x){
+      var b = document.getElementById('eg-lang-'+x);
+      if(b) b.style.opacity = x===l ? '1' : '.5';
+    });
+  };
+
+  window.egAddAction = function(){
+    var inp = document.getElementById('eg-action-input');
+    var val = inp.value.trim();
+    if(!val) return;
+    egActions.push(val);
+    inp.value = '';
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,i){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+i+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egRemoveAction = function(i){
+    egActions.splice(i,1);
+    egAddAction(); egActions.pop(); // refresh list
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,idx){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egGenerate = function(){
+    var to     = document.getElementById('eg-to').value.trim() || 'Customer';
+    var from   = document.getElementById('eg-from').value.trim() || 'NetWolf Engineer';
+    var device = document.getElementById('eg-device').value.trim();
+    var date   = document.getElementById('eg-date').value.trim();
+    var ticket = document.getElementById('eg-ticket').value.trim();
+    var issue  = document.getElementById('eg-issue').value.trim();
+    var cause  = document.getElementById('eg-cause').value.trim();
+    var cmds   = document.getElementById('eg-cmds').value.trim();
+    var result = document.getElementById('eg-result').value.trim();
+    var next   = document.getElementById('eg-next').value.trim();
+
+    var subjectMap = {
+      en:{troubleshoot:'Troubleshoot Report',changes:'Changes Made',config:'Configuration Update',report:'Status Report',maintenance:'Maintenance Window',incident:'Incident Update'},
+      nl:{troubleshoot:'Troubleshoot Rapport',changes:'Wijzigingen Uitgevoerd',config:'Configuratie Update',report:'Status Rapport',maintenance:'Onderhoudsvenster',incident:'Incident Update'}
+    };
+
+    var subject = subjectMap[egLang][egType] + (device ? ' — ' + device : '') + (ticket ? ' ['+ticket+']' : '');
+
+    var lines = [];
+    if(egLang==='en'){
+      lines.push('Subject: ' + subject);
+      lines.push('');
+      lines.push('Dear ' + to + ',');
+      lines.push('');
+      if(device || date){
+        lines.push('Details:');
+        if(device)  lines.push('  Device / Site   : ' + device);
+        if(date)    lines.push('  Date / Time     : ' + date);
+        if(ticket)  lines.push('  Reference       : ' + ticket);
+        lines.push('');
+      }
+      if(issue){
+        lines.push('Issue / Background:');
+        lines.push(issue);
+        lines.push('');
+      }
+      if(cause){
+        lines.push('Root Cause:');
+        lines.push(cause);
+        lines.push('');
+      }
+      if(egActions.length){
+        lines.push('Actions Taken:');
+        egActions.forEach(function(a){ lines.push('  • ' + a); });
+        lines.push('');
+      }
+      if(cmds){
+        lines.push('Commands Used:');
+        cmds.split("\n").forEach(function(c){ if(c.trim()) lines.push('  ' + c.trim()); });
+        lines.push('');
+      }
+      if(result){
+        lines.push('Result / Current Status:');
+        lines.push(result);
+        lines.push('');
+      }
+      if(next){
+        lines.push('Next Steps / Recommendations:');
+        lines.push(next);
+        lines.push('');
+      }
+      lines.push('Please do not hesitate to contact us if you have any questions.');
+      lines.push('');
+      lines.push('Kind regards,');
+      lines.push(from);
+    } else {
+      // Dutch
+      lines.push('Onderwerp: ' + subject);
+      lines.push('');
+      lines.push('Beste ' + to + ',');
+      lines.push('');
+      if(device || date){
+        lines.push('Details:');
+        if(device)  lines.push('  Apparaat / Locatie : ' + device);
+        if(date)    lines.push('  Datum / Tijd       : ' + date);
+        if(ticket)  lines.push('  Referentie         : ' + ticket);
+        lines.push('');
+      }
+      if(issue){
+        lines.push('Probleem / Achtergrond:');
+        lines.push(issue);
+        lines.push('');
+      }
+      if(cause){
+        lines.push('Oorzaak:');
+        lines.push(cause);
+        lines.push('');
+      }
+      if(egActions.length){
+        lines.push('Uitgevoerde Acties:');
+        egActions.forEach(function(a){ lines.push('  • ' + a); });
+        lines.push('');
+      }
+      if(cmds){
+        lines.push('Gebruikte Commando\'s:');
+        cmds.split("\n").forEach(function(c){ if(c.trim()) lines.push('  ' + c.trim()); });
+        lines.push('');
+      }
+      if(result){
+        lines.push('Resultaat / Huidige Status:');
+        lines.push(result);
+        lines.push('');
+      }
+      if(next){
+        lines.push('Vervolgstappen / Aanbevelingen:');
+        lines.push(next);
+        lines.push('');
+      }
+      lines.push('Mocht u nog vragen hebben, neem dan gerust contact met ons op.');
+      lines.push('');
+      lines.push('Met vriendelijke groet,');
+      lines.push(from);
+    }
+
+    var emailText = lines.join('\n');
+    document.getElementById('eg-preview').style.fontFamily = 'inherit';
+    document.getElementById('eg-preview').style.color = 'var(--t)';
+    document.getElementById('eg-preview').textContent = emailText;
+    window._egEmailText = emailText;
+    window._egSubject = subject;
+  };
+
+  window.egCopy = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egEmailText).then(function(){ showToast('✅ Email copied to clipboard!'); }).catch(function(){ showToast('Copy failed — please select and copy manually.'); });
+  };
+
+  window.egCopySubject = function(){
+    if(!window._egSubject){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egSubject).then(function(){ showToast('✅ Subject copied!'); }).catch(function(){ showToast('Copy failed.'); });
+  };
+
+  window.egOpenMail = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    var body = encodeURIComponent(window._egEmailText.replace('Subject: '+window._egSubject+'\n\n',''));
+    var subj = encodeURIComponent(window._egSubject);
+    window.open('mailto:?subject='+subj+'&body='+body);
+  };
+
+  window.egReset = function(){
+    if(!confirm('Clear all fields?')) return;
+    ['eg-to','eg-from','eg-device','eg-ticket','eg-issue','eg-cause','eg-cmds','eg-result','eg-next','eg-action-input'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+    document.getElementById('eg-date').value = dateStr;
+    document.getElementById('eg-actions-list').innerHTML = '';
+    document.getElementById('eg-preview').textContent = '';
+    document.getElementById('eg-preview').style.color = 'var(--t3)';
+    egActions = [];
+    egSetType('troubleshoot');
+    window._egEmailText = null;
+    window._egSubject = null;
+  };
+}
 
 // Wire login form — safe here because DOM is ready and functions are defined
 document.addEventListener('DOMContentLoaded', function(){
