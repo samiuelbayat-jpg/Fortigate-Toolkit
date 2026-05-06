@@ -7305,6 +7305,11 @@ function renderEmailGen(el){
       </div>
     </div>
 
+    <div style="margin-bottom:10px;padding:12px 14px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:8px;">
+      <div style="font-size:11px;font-weight:700;color:var(--a);margin-bottom:6px;">⚡ Auto-fill from session</div>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.6">Fetch data from your current troubleshoot session — active guide, AI chat, CLI output and commands used — and populate the form automatically.</div>
+      <button onclick="egFetchSession()" class="sbtn" style="width:100%;padding:9px;font-size:12px;">🔄 Fetch from Current Session</button>
+    </div>
     <button onclick="egGenerate()" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:var(--a)">✉️ Generate Email</button>
   </div>
 
@@ -7381,6 +7386,154 @@ function renderEmailGen(el){
         +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
         +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
     }).join('');
+  };
+
+  window.egFetchSession = function(){
+    var fetched = [];
+
+    // ── 1. Current guide category + title ──
+    try {
+      if(typeof D !== 'undefined' && typeof cur !== 'undefined' && D[cur]){
+        var guide = D[cur];
+        var guideTitle = guide.t || '';
+        var guideType  = guide.type || '';
+
+        // Set issue from guide title
+        var issueEl = document.getElementById('eg-issue');
+        if(issueEl && !issueEl.value){
+          issueEl.value = 'Troubleshooting: ' + guideTitle;
+          fetched.push('Guide: ' + guideTitle);
+        }
+
+        // Collect all commands from guide steps
+        var allCmds = [];
+        var steps = guide.steps || guide.sections || [];
+        steps.forEach(function(s){
+          var cmds = s.cmds || s.commands || [];
+          cmds.forEach(function(c){
+            if(typeof c === 'string' && !c.startsWith('(') && c.trim()){
+              allCmds.push(c);
+            } else if(c && c.cmd){
+              allCmds.push(c.cmd);
+            }
+          });
+        });
+        if(allCmds.length){
+          var cmdsEl = document.getElementById('eg-cmds');
+          if(cmdsEl && !cmdsEl.value){
+            cmdsEl.value = allCmds.join('\n');
+            fetched.push(allCmds.length + ' commands from guide');
+          }
+        }
+
+        // Auto-set email type based on guide type
+        if(guideType === 'config') egSetType('config');
+        else egSetType('troubleshoot');
+      }
+    } catch(e){}
+
+    // ── 2. AI Chat history ──
+    try {
+      if(typeof chat !== 'undefined' && chat.length > 0){
+        var aiSummary = [];
+        var aiActions = [];
+        chat.forEach(function(m){
+          if(m.role === 'assistant' && m.content){
+            // Extract bullet points or numbered items as actions
+            var lines = m.content.split('\n');
+            lines.forEach(function(line){
+              var l = line.trim();
+              // Grab lines that look like actions/findings
+              if(/^[-•*]\s+/.test(l) || /^\d+\.\s+/.test(l)){
+                var clean = l.replace(/^[-•*\d.]\s+/, '').trim();
+                if(clean.length > 10 && clean.length < 200 && aiActions.indexOf(clean) === -1){
+                  aiActions.push(clean);
+                }
+              }
+            });
+            // Grab first meaningful assistant response as root cause
+            if(!aiSummary.length && m.content.length > 50){
+              // Take first 300 chars of first assistant message
+              var snippet = m.content.replace(/```[\s\S]*?```/g,'').replace(/\*\*/g,'').trim();
+              if(snippet.length > 30) aiSummary.push(snippet.substring(0, 300));
+            }
+          }
+        });
+
+        // Populate cause from AI summary
+        if(aiSummary.length){
+          var causeEl = document.getElementById('eg-cause');
+          if(causeEl && !causeEl.value){
+            causeEl.value = aiSummary[0] + (aiSummary[0].length === 300 ? '...' : '');
+            fetched.push('AI analysis fetched');
+          }
+        }
+
+        // Add AI-extracted actions to the actions list
+        if(aiActions.length){
+          var added = 0;
+          aiActions.slice(0, 8).forEach(function(a){
+            if(egActions.indexOf(a) === -1){
+              egActions.push(a);
+              added++;
+            }
+          });
+          if(added > 0){
+            // Refresh actions display
+            var list = document.getElementById('eg-actions-list');
+            if(list){
+              list.innerHTML = egActions.map(function(a, idx){
+                return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+                  +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+                  +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+              }).join('');
+            }
+            fetched.push(added + ' actions from AI chat');
+          }
+        }
+      }
+    } catch(e){}
+
+    // ── 3. CLI output from Analyze tab ──
+    try {
+      var cliOutput = document.getElementById('troubleOutputInput');
+      if(cliOutput && cliOutput.value && cliOutput.value.trim()){
+        var resultEl = document.getElementById('eg-result');
+        if(resultEl && !resultEl.value){
+          // Take first 400 chars of CLI output as result context
+          resultEl.value = cliOutput.value.trim().substring(0, 400) + (cliOutput.value.length > 400 ? '...' : '');
+          fetched.push('CLI output fetched');
+        }
+      }
+    } catch(e){}
+
+    // ── 4. IP masking mappings — note which IPs were involved ──
+    try {
+      if(typeof ipMappings !== 'undefined' && ipMappings.length > 0){
+        var ipNote = 'IPs involved (anonymized): ' + ipMappings.map(function(m){ return m.fake; }).join(', ');
+        var nextEl = document.getElementById('eg-next');
+        if(nextEl && !nextEl.value){
+          nextEl.value = ipNote;
+          fetched.push('IP mappings noted');
+        }
+      }
+    } catch(e){}
+
+    // ── 5. Current date/time (always refresh) ──
+    try {
+      var now = new Date();
+      var ds = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
+              + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('eg-date').value = ds;
+      fetched.push('Date/time updated');
+    } catch(e){}
+
+    // ── Show result toast ──
+    if(fetched.length){
+      showToast('✅ Fetched: ' + fetched.join(' · '));
+    } else {
+      showToast('⚠️ Nothing found in current session. Use a guide or AI tab first.');
+    }
   };
 
   window.egGenerate = function(){
@@ -7746,6 +7899,11 @@ function renderEmailGen(el){
       </div>
     </div>
 
+    <div style="margin-bottom:10px;padding:12px 14px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:8px;">
+      <div style="font-size:11px;font-weight:700;color:var(--a);margin-bottom:6px;">⚡ Auto-fill from session</div>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.6">Fetch data from your current troubleshoot session — active guide, AI chat, CLI output and commands used — and populate the form automatically.</div>
+      <button onclick="egFetchSession()" class="sbtn" style="width:100%;padding:9px;font-size:12px;">🔄 Fetch from Current Session</button>
+    </div>
     <button onclick="egGenerate()" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:var(--a)">✉️ Generate Email</button>
   </div>
 
@@ -7822,6 +7980,154 @@ function renderEmailGen(el){
         +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
         +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
     }).join('');
+  };
+
+  window.egFetchSession = function(){
+    var fetched = [];
+
+    // ── 1. Current guide category + title ──
+    try {
+      if(typeof D !== 'undefined' && typeof cur !== 'undefined' && D[cur]){
+        var guide = D[cur];
+        var guideTitle = guide.t || '';
+        var guideType  = guide.type || '';
+
+        // Set issue from guide title
+        var issueEl = document.getElementById('eg-issue');
+        if(issueEl && !issueEl.value){
+          issueEl.value = 'Troubleshooting: ' + guideTitle;
+          fetched.push('Guide: ' + guideTitle);
+        }
+
+        // Collect all commands from guide steps
+        var allCmds = [];
+        var steps = guide.steps || guide.sections || [];
+        steps.forEach(function(s){
+          var cmds = s.cmds || s.commands || [];
+          cmds.forEach(function(c){
+            if(typeof c === 'string' && !c.startsWith('(') && c.trim()){
+              allCmds.push(c);
+            } else if(c && c.cmd){
+              allCmds.push(c.cmd);
+            }
+          });
+        });
+        if(allCmds.length){
+          var cmdsEl = document.getElementById('eg-cmds');
+          if(cmdsEl && !cmdsEl.value){
+            cmdsEl.value = allCmds.join('\n');
+            fetched.push(allCmds.length + ' commands from guide');
+          }
+        }
+
+        // Auto-set email type based on guide type
+        if(guideType === 'config') egSetType('config');
+        else egSetType('troubleshoot');
+      }
+    } catch(e){}
+
+    // ── 2. AI Chat history ──
+    try {
+      if(typeof chat !== 'undefined' && chat.length > 0){
+        var aiSummary = [];
+        var aiActions = [];
+        chat.forEach(function(m){
+          if(m.role === 'assistant' && m.content){
+            // Extract bullet points or numbered items as actions
+            var lines = m.content.split('\n');
+            lines.forEach(function(line){
+              var l = line.trim();
+              // Grab lines that look like actions/findings
+              if(/^[-•*]\s+/.test(l) || /^\d+\.\s+/.test(l)){
+                var clean = l.replace(/^[-•*\d.]\s+/, '').trim();
+                if(clean.length > 10 && clean.length < 200 && aiActions.indexOf(clean) === -1){
+                  aiActions.push(clean);
+                }
+              }
+            });
+            // Grab first meaningful assistant response as root cause
+            if(!aiSummary.length && m.content.length > 50){
+              // Take first 300 chars of first assistant message
+              var snippet = m.content.replace(/```[\s\S]*?```/g,'').replace(/\*\*/g,'').trim();
+              if(snippet.length > 30) aiSummary.push(snippet.substring(0, 300));
+            }
+          }
+        });
+
+        // Populate cause from AI summary
+        if(aiSummary.length){
+          var causeEl = document.getElementById('eg-cause');
+          if(causeEl && !causeEl.value){
+            causeEl.value = aiSummary[0] + (aiSummary[0].length === 300 ? '...' : '');
+            fetched.push('AI analysis fetched');
+          }
+        }
+
+        // Add AI-extracted actions to the actions list
+        if(aiActions.length){
+          var added = 0;
+          aiActions.slice(0, 8).forEach(function(a){
+            if(egActions.indexOf(a) === -1){
+              egActions.push(a);
+              added++;
+            }
+          });
+          if(added > 0){
+            // Refresh actions display
+            var list = document.getElementById('eg-actions-list');
+            if(list){
+              list.innerHTML = egActions.map(function(a, idx){
+                return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+                  +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+                  +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+              }).join('');
+            }
+            fetched.push(added + ' actions from AI chat');
+          }
+        }
+      }
+    } catch(e){}
+
+    // ── 3. CLI output from Analyze tab ──
+    try {
+      var cliOutput = document.getElementById('troubleOutputInput');
+      if(cliOutput && cliOutput.value && cliOutput.value.trim()){
+        var resultEl = document.getElementById('eg-result');
+        if(resultEl && !resultEl.value){
+          // Take first 400 chars of CLI output as result context
+          resultEl.value = cliOutput.value.trim().substring(0, 400) + (cliOutput.value.length > 400 ? '...' : '');
+          fetched.push('CLI output fetched');
+        }
+      }
+    } catch(e){}
+
+    // ── 4. IP masking mappings — note which IPs were involved ──
+    try {
+      if(typeof ipMappings !== 'undefined' && ipMappings.length > 0){
+        var ipNote = 'IPs involved (anonymized): ' + ipMappings.map(function(m){ return m.fake; }).join(', ');
+        var nextEl = document.getElementById('eg-next');
+        if(nextEl && !nextEl.value){
+          nextEl.value = ipNote;
+          fetched.push('IP mappings noted');
+        }
+      }
+    } catch(e){}
+
+    // ── 5. Current date/time (always refresh) ──
+    try {
+      var now = new Date();
+      var ds = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
+              + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('eg-date').value = ds;
+      fetched.push('Date/time updated');
+    } catch(e){}
+
+    // ── Show result toast ──
+    if(fetched.length){
+      showToast('✅ Fetched: ' + fetched.join(' · '));
+    } else {
+      showToast('⚠️ Nothing found in current session. Use a guide or AI tab first.');
+    }
   };
 
   window.egGenerate = function(){
@@ -8167,6 +8473,11 @@ function renderEmailGen(el){
       </div>
     </div>
 
+    <div style="margin-bottom:10px;padding:12px 14px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:8px;">
+      <div style="font-size:11px;font-weight:700;color:var(--a);margin-bottom:6px;">⚡ Auto-fill from session</div>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.6">Fetch data from your current troubleshoot session — active guide, AI chat, CLI output and commands used — and populate the form automatically.</div>
+      <button onclick="egFetchSession()" class="sbtn" style="width:100%;padding:9px;font-size:12px;">🔄 Fetch from Current Session</button>
+    </div>
     <button onclick="egGenerate()" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:var(--a)">✉️ Generate Email</button>
   </div>
 
@@ -8243,6 +8554,154 @@ function renderEmailGen(el){
         +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
         +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
     }).join('');
+  };
+
+  window.egFetchSession = function(){
+    var fetched = [];
+
+    // ── 1. Current guide category + title ──
+    try {
+      if(typeof D !== 'undefined' && typeof cur !== 'undefined' && D[cur]){
+        var guide = D[cur];
+        var guideTitle = guide.t || '';
+        var guideType  = guide.type || '';
+
+        // Set issue from guide title
+        var issueEl = document.getElementById('eg-issue');
+        if(issueEl && !issueEl.value){
+          issueEl.value = 'Troubleshooting: ' + guideTitle;
+          fetched.push('Guide: ' + guideTitle);
+        }
+
+        // Collect all commands from guide steps
+        var allCmds = [];
+        var steps = guide.steps || guide.sections || [];
+        steps.forEach(function(s){
+          var cmds = s.cmds || s.commands || [];
+          cmds.forEach(function(c){
+            if(typeof c === 'string' && !c.startsWith('(') && c.trim()){
+              allCmds.push(c);
+            } else if(c && c.cmd){
+              allCmds.push(c.cmd);
+            }
+          });
+        });
+        if(allCmds.length){
+          var cmdsEl = document.getElementById('eg-cmds');
+          if(cmdsEl && !cmdsEl.value){
+            cmdsEl.value = allCmds.join('\n');
+            fetched.push(allCmds.length + ' commands from guide');
+          }
+        }
+
+        // Auto-set email type based on guide type
+        if(guideType === 'config') egSetType('config');
+        else egSetType('troubleshoot');
+      }
+    } catch(e){}
+
+    // ── 2. AI Chat history ──
+    try {
+      if(typeof chat !== 'undefined' && chat.length > 0){
+        var aiSummary = [];
+        var aiActions = [];
+        chat.forEach(function(m){
+          if(m.role === 'assistant' && m.content){
+            // Extract bullet points or numbered items as actions
+            var lines = m.content.split('\n');
+            lines.forEach(function(line){
+              var l = line.trim();
+              // Grab lines that look like actions/findings
+              if(/^[-•*]\s+/.test(l) || /^\d+\.\s+/.test(l)){
+                var clean = l.replace(/^[-•*\d.]\s+/, '').trim();
+                if(clean.length > 10 && clean.length < 200 && aiActions.indexOf(clean) === -1){
+                  aiActions.push(clean);
+                }
+              }
+            });
+            // Grab first meaningful assistant response as root cause
+            if(!aiSummary.length && m.content.length > 50){
+              // Take first 300 chars of first assistant message
+              var snippet = m.content.replace(/```[\s\S]*?```/g,'').replace(/\*\*/g,'').trim();
+              if(snippet.length > 30) aiSummary.push(snippet.substring(0, 300));
+            }
+          }
+        });
+
+        // Populate cause from AI summary
+        if(aiSummary.length){
+          var causeEl = document.getElementById('eg-cause');
+          if(causeEl && !causeEl.value){
+            causeEl.value = aiSummary[0] + (aiSummary[0].length === 300 ? '...' : '');
+            fetched.push('AI analysis fetched');
+          }
+        }
+
+        // Add AI-extracted actions to the actions list
+        if(aiActions.length){
+          var added = 0;
+          aiActions.slice(0, 8).forEach(function(a){
+            if(egActions.indexOf(a) === -1){
+              egActions.push(a);
+              added++;
+            }
+          });
+          if(added > 0){
+            // Refresh actions display
+            var list = document.getElementById('eg-actions-list');
+            if(list){
+              list.innerHTML = egActions.map(function(a, idx){
+                return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+                  +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+                  +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+              }).join('');
+            }
+            fetched.push(added + ' actions from AI chat');
+          }
+        }
+      }
+    } catch(e){}
+
+    // ── 3. CLI output from Analyze tab ──
+    try {
+      var cliOutput = document.getElementById('troubleOutputInput');
+      if(cliOutput && cliOutput.value && cliOutput.value.trim()){
+        var resultEl = document.getElementById('eg-result');
+        if(resultEl && !resultEl.value){
+          // Take first 400 chars of CLI output as result context
+          resultEl.value = cliOutput.value.trim().substring(0, 400) + (cliOutput.value.length > 400 ? '...' : '');
+          fetched.push('CLI output fetched');
+        }
+      }
+    } catch(e){}
+
+    // ── 4. IP masking mappings — note which IPs were involved ──
+    try {
+      if(typeof ipMappings !== 'undefined' && ipMappings.length > 0){
+        var ipNote = 'IPs involved (anonymized): ' + ipMappings.map(function(m){ return m.fake; }).join(', ');
+        var nextEl = document.getElementById('eg-next');
+        if(nextEl && !nextEl.value){
+          nextEl.value = ipNote;
+          fetched.push('IP mappings noted');
+        }
+      }
+    } catch(e){}
+
+    // ── 5. Current date/time (always refresh) ──
+    try {
+      var now = new Date();
+      var ds = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
+              + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('eg-date').value = ds;
+      fetched.push('Date/time updated');
+    } catch(e){}
+
+    // ── Show result toast ──
+    if(fetched.length){
+      showToast('✅ Fetched: ' + fetched.join(' · '));
+    } else {
+      showToast('⚠️ Nothing found in current session. Use a guide or AI tab first.');
+    }
   };
 
   window.egGenerate = function(){
