@@ -7757,64 +7757,2439 @@ function renderEmailGen(el){
 }
 
 function renderMostUsed(el){
-  el.innerHTML = '';
+  el.innerHTML='';
+  var wrap = document.createElement('div');
+  wrap.style.cssText='padding:0';
 
-  // Inject the Most Used HTML
-  var wrapper = document.createElement('div');
-  wrapper.innerHTML = '<div class="container">\n  <div class="sh">\n    <span class="stitle">⚡ Most Used Network Tools</span>\n    <span class="sev">13 tools · Generate · Copy · Clear</span>\n    \n  </div>\n\n  <div class="grid-2col">\n    <!-- LEFT COLUMN -->\n    <div>\n      <!-- Tool 1: Policy Lookup -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🔍 1. Policy Lookup</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="pol-src" placeholder="Source IP">\n          <input type="text" id="pol-dst" placeholder="Destination IP">\n          <input type="text" id="pol-port" placeholder="Port">\n          <select id="pol-proto"><option>tcp</option><option>udp</option><option>icmp</option></select>\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genPolicy()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'pol\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'pol\')">🗑️ Clear</button></div>\n          <div id="pol-out" style="display:none"><pre id="pol-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Allowed by policy-id X"</strong> = Traffic matches policy X<br>• <strong>"denied by forward policy"</strong> = No matching policy<br>• <strong>"No matching firewall policy"</strong> = Policy missing or order wrong<br>• <strong>Session shows "policy_id=X"</strong> = Which policy is handling traffic</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 3: Health Check -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🩺 3. Health Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genHealth()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'health\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'health\')">🗑️ Clear</button></div>\n          <div id="health-out" style="display:none"><pre id="health-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>CPU > 80% consistently</strong> = High load, check top processes<br>• <strong>Memory > 80%</strong> = May enter conserve mode<br>• <strong>Conserve mode "ON"</strong> = System dropping new sessions, urgent action needed<br>• <strong>Session count near limit</strong> = Scale issue or session leak</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 5: SSL VPN -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🕵️ 5. SSL VPN User</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="ssl-user" placeholder="Username">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genSSL()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'ssl\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'ssl\')">🗑️ Clear</button></div>\n          <div id="ssl-out" style="display:none"><pre id="ssl-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>User not in list</strong> = Authentication failed or not connected<br>• <strong>"tunnel" vs "web" mode</strong> = Check portal configuration<br>• <strong>Assigned IP from wrong pool</strong> = IP pool misconfiguration<br>• <strong>Auth logs show "group mismatch"</strong> = User not in correct LDAP/RADIUS group</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 7: Certificate -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">📄 7. Certificate Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genCert()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'cert\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'cert\')">🗑️ Clear</button></div>\n          <div id="cert-out" style="display:none"><pre id="cert-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Valid from" / "Valid to"</strong> = Check expiry date (expired = SSL VPN fails)<br>• <strong>"Issuer"</strong> = Must match CA chain (untrusted = browser warnings)<br>• <strong>"Subject"</strong> = CN must match hostname users connect to<br>• <strong>Missing certificate</strong> = Import or generate new certificate</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 9: Bandwidth -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">📊 9. Bandwidth Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="bw-intf" placeholder="Interface (e.g., wan1, port1)">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genBW()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'bw\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'bw\')">🗑️ Clear</button></div>\n          <div id="bw-out" style="display:none"><pre id="bw-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>High error counters (CRC, collisions)</strong> = Physical layer issue (cable, duplex)<br>• <strong>Input/Output drops increasing</strong> = Interface congestion or buffer exhaustion<br>• <strong>Bandwidth shaping drops</strong> = Traffic exceeding configured limits<br>• <strong>Queue depth > 0 consistently</strong> = Congestion, consider traffic shaping</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 11: Firmware -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🔄 11. Firmware Upgrade</div><span class="cbadge warning">caution</span></div>\n        <div class="cbody">\n          <input type="text" id="fw-current" placeholder="Current version (e.g., 7.4.3)">\n          <input type="text" id="fw-target" placeholder="Target version (e.g., 7.4.5)">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genFW()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'fw\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'fw\')">🗑️ Clear</button></div>\n          <div id="fw-out" style="display:none"><pre id="fw-cmd" class="code-block"></pre><div class="cnote-warning"><strong>⚠️ How to interpret & warnings:</strong><br>• <strong>Always backup config first</strong> - Failure without backup = config loss<br>• <strong>Check release notes</strong> - Some versions have upgrade path requirements<br>• <strong>HA cluster:</strong> Upgrade secondary first, then failover, then former primary<br>• <strong>Post-upgrade verify</strong> - Check tunnels, routes, policies, and sessions</div></div>\n        </div>\n      </div>\n    </div>\n\n    <!-- RIGHT COLUMN -->\n    <div>\n      <!-- Tool 2: VPN Status -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🔒 2. VPN Status</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="vpn-name" placeholder="Tunnel Name (e.g., VPN-TO-SITE-B)">\n          <select id="vpn-type"><option>ipsec</option><option>ssl</option><option>both</option></select>\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genVPN()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'vpn\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'vpn\')">🗑️ Clear</button></div>\n          <div id="vpn-out" style="display:none"><pre id="vpn-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"established" status</strong> = Tunnel is up, "down" = not negotiating<br>• <strong>"encap/decap" counters</strong> = Traffic flowing; zero = policy or routing issue<br>• <strong>"no proposal chosen"</strong> = Phase 1/2 settings mismatch between peers<br>• <strong>"AUTH_FAILED"</strong> = PSK mismatch or certificate issue</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 4: BGP/OSPF -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🌐 4. BGP/OSPF Neighbor</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="bgp-ip" placeholder="Neighbor IP Address">\n          <select id="bgp-proto"><option>bgp</option><option>ospf</option><option>both</option></select>\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genBGP()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'bgp\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'bgp\')">🗑️ Clear</button></div>\n          <div id="bgp-out" style="display:none"><pre id="bgp-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>BGP: "Established"</strong> = Peering up; "Idle/Active" = not forming<br>• <strong>BGP prefixes received = 0</strong> = No routes from peer (check policy/filter)<br>• <strong>OSPF: "FULL/DR"</strong> = Adjacency healthy; "EXSTART/EXCHANGE" = MTU mismatch<br>• <strong>OSPF: "DOWN"</strong> = No hello received (check network type / interface)</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 6: Object Search -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🔎 6. Object Search</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="obj-ip" placeholder="IP / Subnet (e.g., 192.168.1.0/24)">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genObj()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'obj\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'obj\')">🗑️ Clear</button></div>\n          <div id="obj-out" style="display:none"><pre id="obj-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Address object found</strong> = See which policies reference it<br>• <strong>No matching address</strong> = Create object before using in policy<br>• <strong>Route found</strong> = Traffic will use that gateway/interface<br>• <strong>ARP entry missing</strong> = L2 connectivity problem to that IP</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 8: HA Failover -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">⚙️ 8. HA Failover</div><span class="cbadge warning">caution</span></div>\n        <div class="cbody">\n          <select id="ha-action"><option>check</option><option>failover</option><option>post</option></select>\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genHA()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'ha\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'ha\')">🗑️ Clear</button></div>\n          <div id="ha-out" style="display:none"><pre id="ha-cmd" class="code-block"></pre><div class="cnote-warning"><strong>⚠️ How to interpret & warnings:</strong><br>• <strong>"Primary/Secondary" roles</strong> = Primary handles traffic, Secondary is standby<br>• <strong>Checksum mismatch</strong> = Config out of sync, run "execute ha synchronize"<br>• <strong>Heartbeat lost</strong> = HA link issue, split brain possible<br>• <strong>Failover warning:</strong> Causes brief traffic interruption (1-5 seconds)</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 10: VLAN -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">💾 10. VLAN Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="vlan-intf" placeholder="VLAN Interface (e.g., VLAN10, port3)">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genVLAN()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'vlan\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'vlan\')">🗑️ Clear</button></div>\n          <div id="vlan-out" style="display:none"><pre id="vlan-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Interface status "up/up"</strong> = Physical and protocol up<br>• <strong>VLAN ID mismatch</strong> = Check switch port configuration matches FortiGate<br>• <strong>No DHCP leases</strong> = DHCP server not configured or client not reaching<br>• <strong>ARP incomplete</strong> = Client not responding or wrong VLAN</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 12: FAZ/FMG -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🏢 12. FAZ/FMG Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="faz-ip" placeholder="FAZ/FMG IP Address">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genFAZ()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'faz\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'faz\')">🗑️ Clear</button></div>\n          <div id="faz-out" style="display:none"><pre id="faz-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Connection status "connected"</strong> = FAZ/FMG reachable and syncing<br>• <strong>Last log seen recent</strong> = Logs are flowing<br>• <strong>Ping fails</strong> = Network connectivity issue (firewall/routing)<br>• <strong>Serial number mismatch</strong> = Device not authorized in FMG/FAZ</div></div>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <hr>\n\n  <!-- TOOL 13: PORT REACHABILITY CHECKER -->\n  <div class="cblock" style="border:2px solid var(--a);background:rgba(29,158,117,.02)">\n    <div class="chdr" style="background:rgba(29,158,117,.1)">\n      <div class="chdr-l"><span style="font-size:18px">🔌</span> <span style="font-size:14px">13. Port / Protocol Reachability Checker</span></div>\n      <div style="display:flex;gap:4px"><span class="cbadge udp">UDP 500</span><span class="cbadge tcp">TCP 443</span><span class="cbadge tcp">SSH 22</span><span class="cbadge tcp">RDP 3389</span><span class="cbadge udp">DNS 53</span></div>\n    </div>\n    <div class="cbody">\n      <div class="pill-group"><span class="pill">🔐 IKE/IPsec VPN</span><span class="pill">🔒 HTTPS/SSL</span><span class="pill">💻 Remote Access</span><span class="pill">🖥️ Windows RDP</span><span class="pill">🌐 DNS Resolution</span></div>\n      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px">\n        <div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">🎯 Destination IP Address</label><input type="text" id="port-dst" placeholder="e.g., 8.8.8.8, 10.0.0.2, 192.168.1.1"></div>\n        <div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">🔧 Port / Protocol</label><select id="port-proto"><option value="udp 500">🔐 UDP 500 - IKE (IPsec VPN)</option><option value="tcp 443">🔒 TCP 443 - HTTPS/SSL</option><option value="tcp 22">💻 TCP 22 - SSH</option><option value="tcp 3389">🖥️ TCP 3389 - RDP</option><option value="udp 53">🌐 UDP 53 - DNS</option><option value="custom">⚙️ Custom Port</option></select></div>\n        <div id="port-custom-wrap" style="display:none;grid-column:1/-1"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">✏️ Custom (protocol port)</label><input type="text" id="port-custom" placeholder="e.g., tcp 8080, udp 161"></div>\n      </div>\n      <div class="button-group"><button class="sbtn sbtn-sm" id="port-btn" style="background:linear-gradient(90deg,var(--a),var(--ad))">🚀 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'port\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'port\')">🗑️ Clear</button></div>\n      <div id="port-out" style="display:none;margin-top:12px"><pre id="port-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret port test results:</strong><br>• <strong>0% packet loss</strong> = Service is reachable at IP level<br>• <strong>100% loss</strong> = Unreachable (check firewall policy, routing, ACL, or if service is listening)<br>• <strong>TCP: Telnet connects</strong> = Port is open and accepting connections<br>• <strong>UDP: Sniffer shows replies</strong> = Service is responding (UDP is connectionless)<br>• <strong>Partial loss</strong> = Intermittent issue (flapping route, congestion, or high latency)</div></div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Theme handling\nfunction setTheme(themeName) {\n  const root = document.documentElement;\n  if (themeName === \'dark\') {\n    root.removeAttribute(\'data-theme\');\n  } else {\n    root.setAttribute(\'data-theme\', themeName);\n  }\n  localStorage.setItem(\'nw_theme\', themeName);\n  // Update active button styling\n  document.querySelectorAll(\'.theme-btn\').forEach(btn => btn.classList.remove(\'active\'));\n  const activeBtn = document.querySelector(`.theme-btn[title="${themeName.charAt(0).toUpperCase() + themeName.slice(1)}"]`);\n  if (activeBtn) activeBtn.classList.add(\'active\');\n}\n\n// Load saved theme\nfunction loadTheme() {\n  const saved = localStorage.getItem(\'nw_theme\') || \'dark\';\n  setTheme(saved);\n}\nloadTheme();\n\n// Helper functions\nfunction g(id){const e=document.getElementById(id);return e?e.value.trim():\'\';}\nfunction showOut(id,text){const d=document.getElementById(id+\'-out\');const p=document.getElementById(id+\'-cmd\');if(d&&p){p.textContent=text;d.style.display=\'block\';}}\nfunction copyOutput(id){const pre=document.getElementById(id+\'-cmd\');if(pre && pre.textContent){navigator.clipboard.writeText(pre.textContent).then(()=>{showToast(\'✅ Copied to clipboard!\');});}else{showToast(\'⚠️ Generate commands first\');}}\nfunction clearOutput(id){const d=document.getElementById(id+\'-out\');if(d){d.style.display=\'none\';}}\nfunction showToast(msg){let t=document.getElementById(\'toast\');if(!t){t=document.createElement(\'div\');t.id=\'toast\';t.style.cssText=\'position:fixed;bottom:20px;right:20px;background:var(--a);color:#fff;padding:8px 16px;border-radius:6px;font-size:12px;z-index:9999;opacity:0;transition:opacity .2s\';document.body.appendChild(t);}t.textContent=msg;t.style.opacity=\'1\';setTimeout(()=>{t.style.opacity=\'0\';},1500);}\n\n// Generate functions for all tools\nfunction genPolicy(){let lines=[\'# Policy Lookup\',\'get router info routing-table details \'+g(\'pol-dst\'),\'\',\'diagnose firewall iprope lookup \'+g(\'pol-src\')+\' \'+g(\'pol-dst\')+\' \'+g(\'pol-port\')+\' \'+g(\'pol-proto\'),\'\',\'diagnose debug reset\',\'diagnose debug flow filter addr \'+g(\'pol-src\'),\'diagnose debug flow filter daddr \'+g(\'pol-dst\'),\'diagnose debug flow trace start 20\',\'diagnose debug enable\',\'# trigger traffic then stop\',\'diagnose debug flow trace stop\',\'diagnose debug disable\',\'diagnose debug reset\',\'\',\'diagnose sys session filter src \'+g(\'pol-src\'),\'diagnose sys session list\'];showOut(\'pol\',lines.join(\'\\n\'));}\nfunction genVPN(){let n=g(\'vpn-name\')||\'<TUNNEL>\';let t=g(\'vpn-type\');let lines=[];if(t===\'ipsec\'||t===\'both\'){lines.push(\'# IPsec VPN Status\',\'get vpn ipsec tunnel summary\',\'diagnose vpn tunnel list name "\'+n+\'"\',\'diagnose vpn ike gateway list name "\'+n+\'"\');}if(t===\'ssl\'||t===\'both\'){lines.push(\'# SSL VPN Status\',\'get vpn ssl monitor\',\'diagnose vpn ssl list\');}showOut(\'vpn\',lines.join(\'\\n\'));}\nfunction genHealth(){let lines=[\'# System Health\',\'get system status\',\'get system performance status\',\'diagnose sys top 5 20\',\'diagnose sys session full-stat\'];showOut(\'health\',lines.join(\'\\n\'));}\nfunction genBGP(){let ip=g(\'bgp-ip\')||\'<IP>\';let p=g(\'bgp-proto\');let lines=[];if(p===\'bgp\'||p===\'both\'){lines.push(\'# BGP Status\',\'get router info bgp summary\',\'get router info bgp neighbors \'+ip,\'get router info bgp neighbors \'+ip+\' received-routes\');}if(p===\'ospf\'||p===\'both\'){lines.push(\'# OSPF Status\',\'get router info ospf neighbor\',\'get router info ospf database brief\');}lines.push(\'\',\'execute ping \'+ip);showOut(\'bgp\',lines.join(\'\\n\'));}\nfunction genSSL(){let lines=[\'# SSL VPN Status\',\'get vpn ssl monitor\',\'diagnose vpn ssl list\',\'diagnose firewall auth list\'];showOut(\'ssl\',lines.join(\'\\n\'));}\nfunction genObj(){let ip=g(\'obj-ip\')||\'<IP>\';let lines=[\'# Object Search\',\'show firewall address | grep "\'+ip+\'"\',\'get router info routing-table details \'+ip,\'get system arp | grep "\'+ip+\'"\'];showOut(\'obj\',lines.join(\'\\n\'));}\nfunction genCert(){let lines=[\'# Certificate Check\',\'get certificate local\',\'diagnose certificate local list\'];showOut(\'cert\',lines.join(\'\\n\'));}\nfunction genHA(){let lines=[\'# HA Status\',\'get system ha status\',\'diagnose sys ha status\'];showOut(\'ha\',lines.join(\'\\n\'));}\nfunction genBW(){let i=g(\'bw-intf\')||\'<INTF>\';let lines=[\'# Bandwidth Check\',\'diagnose netlink interface list \'+i,\'diagnose firewall shaper traffic-shaper list\'];showOut(\'bw\',lines.join(\'\\n\'));}\nfunction genVLAN(){let i=g(\'vlan-intf\')||\'<VLAN>\';let lines=[\'# VLAN Diagnostics\',\'show system interface \'+i,\'get system arp | grep \'+i];showOut(\'vlan\',lines.join(\'\\n\'));}\nfunction genFW(){let lines=[\'# Firmware Upgrade\',\'get system status\',\'execute backup config tftp backup.conf <TFTP-SERVER>\'];showOut(\'fw\',lines.join(\'\\n\'));}\nfunction genFAZ(){let ip=g(\'faz-ip\')||\'<IP>\';let lines=[\'# FAZ/FMG Connectivity\',\'get log fortianalyzer setting\',\'diagnose test application miglogd 6\',\'execute ping \'+ip];showOut(\'faz\',lines.join(\'\\n\'));}\nfunction genPort(){let dst=g(\'port-dst\');if(!dst){alert(\'Enter destination IP\');return;}let sel=document.getElementById(\'port-proto\');let protoPort;if(sel.value===\'custom\'){let custom=g(\'port-custom\');if(!custom){alert(\'Enter custom protocol and port e.g. tcp 8080\');return;}protoPort=custom;}else{protoPort=sel.options[sel.selectedIndex].textContent;}let parts=protoPort.split(\' \');let proto=parts[0].toLowerCase();let port=parts[1];let lines=[`# Port Reachability Test: ${dst}:${port} (${proto.toUpperCase()})`];if(proto===\'tcp\'){lines.push(\'\',\'# 1. Basic ICMP test\',\'execute ping \'+dst,\'\',\'# 2. TCP connect test\',\'execute telnet \'+dst+\' \'+port,\'\',\'# 3. Check session table\',\'diagnose sys session filter dport \'+port,\'diagnose sys session list\');}else if(proto===\'udp\'){lines.push(\'\',\'# 1. UDP sniffer - look for responses\',\'diagnose sniffer packet any "host \'+dst+\' and port \'+port+\'" 4 30 l\',\'\',\'# 2. IKE debug (for UDP 500)\',\'diagnose debug application ike -1\',\'diagnose debug enable\',\'# Wait 10 seconds then:\',\'diagnose debug disable\',\'\',\'# 3. ICMP fallback\',\'execute ping \'+dst);}lines.push(\'\',\'# 4. Verify policy allows this traffic\',\'diagnose firewall iprope lookup <SOURCE_IP> \'+dst+\' \'+port+\' \'+proto);showOut(\'port\',lines.join(\'\\n\'));}\n\n// Event listeners\ndocument.getElementById(\'port-proto\').addEventListener(\'change\',function(){document.getElementById(\'port-custom-wrap\').style.display=this.value===\'custom\'?\'block\':\'none\';});\ndocument.getElementById(\'port-btn\').onclick=genPort;\n</script>';
-  el.appendChild(wrapper);
+  var header = document.createElement('div');
+  header.className='sh';
+  header.innerHTML='<span class="stitle">&#x26A1; Most Used Network Tools</span><span class="sev info">FortiGate diagnostic &amp; operational tools</span>';
+  wrap.appendChild(header);
 
-  // Wire up all event listeners and functions
-  (function(){
-    // Theme handling
-function g(id){const e=document.getElementById(id);return e?e.value.trim():'';}
-function showOut(id,text){const d=document.getElementById(id+'-out');const p=document.getElementById(id+'-cmd');if(d&&p){p.textContent=text;d.style.display='block';}}
-function copyOutput(id){const pre=document.getElementById(id+'-cmd');if(pre && pre.textContent){navigator.clipboard.writeText(pre.textContent).then(()=>{showToast('✅ Copied to clipboard!');});}else{showToast('⚠️ Generate commands first');}}
-function clearOutput(id){const d=document.getElementById(id+'-out');if(d){d.style.display='none';}}
-function showToast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--a);color:#fff;padding:8px 16px;border-radius:6px;font-size:12px;z-index:9999;opacity:0;transition:opacity .2s';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';setTimeout(()=>{t.style.opacity='0';},1500);}
+  var tools = [
+    {
+      id:'pol', title:'&#x1F50D; 1. Policy Lookup',
+      fields:[
+        {id:'mu-pol-src',label:'Source IP',ph:'192.168.1.100'},
+        {id:'mu-pol-dst',label:'Destination IP',ph:'8.8.8.8'},
+        {id:'mu-pol-port',label:'Port',ph:'443'},
+        {id:'mu-pol-proto',label:'Protocol',type:'select',opts:['tcp','udp','icmp']},
+        {id:'mu-pol-intf',label:'Interface (optional)',ph:'port1'}
+      ],
+      fn:'muPolicyLookup'
+    },
+    {
+      id:'vpn', title:'&#x1F512; 2. VPN Status',
+      fields:[
+        {id:'mu-vpn-name',label:'Tunnel Name',ph:'SITE-A-TO-B'},
+        {id:'mu-vpn-type',label:'Type',type:'select',opts:['ipsec','ssl','both']},
+        {id:'mu-vpn-gw',label:'Remote GW IP (optional)',ph:'10.0.0.2'}
+      ],
+      fn:'muVPNStatus'
+    },
+    {
+      id:'hc', title:'&#x1F9EA; 3. Health Check',
+      fields:[
+        {id:'mu-hc-name',label:'Device Name',ph:'FGT-HQ-01'},
+        {id:'mu-hc-type',label:'Type',type:'select',opts:['full','quick','ha','perf']}
+      ],
+      fn:'muHealthCheck'
+    },
+    {
+      id:'bgp', title:'&#x1F310; 4. BGP/OSPF Neighbor',
+      fields:[
+        {id:'mu-bgp-ip',label:'Neighbor IP',ph:'10.0.0.1'},
+        {id:'mu-bgp-proto',label:'Protocol',type:'select',opts:['bgp','ospf','both']},
+        {id:'mu-bgp-intf',label:'Interface (OSPF)',ph:'port2'}
+      ],
+      fn:'muBGPCheck'
+    },
+    {
+      id:'ssl', title:'&#x1F575; 5. SSL VPN User',
+      fields:[
+        {id:'mu-ssl-user',label:'Username',ph:'thomhaasert'},
+        {id:'mu-ssl-portal',label:'Portal (optional)',ph:'tunnel-portal'},
+        {id:'mu-ssl-ip',label:'Source IP (optional)',ph:'external IP'}
+      ],
+      fn:'muSSLVPNUser'
+    },
+    {
+      id:'obj', title:'&#x1F50E; 6. Object Search',
+      fields:[
+        {id:'mu-obj-ip',label:'IP / Subnet',ph:'192.168.1.0/24'},
+        {id:'mu-obj-intf',label:'Interface (optional)',ph:'port3'}
+      ],
+      fn:'muObjectSearch'
+    },
+    {
+      id:'cert', title:'&#x1F4C4; 7. Certificate Check',
+      fields:[
+        {id:'mu-cert-scope',label:'Scope',type:'select',opts:['all','local','ca','remote']},
+        {id:'mu-cert-name',label:'Name filter (optional)',ph:'VPN'}
+      ],
+      fn:'muCertCheck'
+    },
+    {
+      id:'ha', title:'&#x2699;&#xFE0F; 8. HA Failover',
+      fields:[
+        {id:'mu-ha-action',label:'Action',type:'select',opts:['check','failover','post','full']},
+        {id:'mu-ha-primary',label:'Primary unit',ph:'FGT-HQ-01'},
+        {id:'mu-ha-secondary',label:'Secondary unit',ph:'FGT-HQ-02'}
+      ],
+      fn:'muHAChecklist'
+    },
+    {
+      id:'bw', title:'&#x1F4CA; 9. Bandwidth Reporter',
+      fields:[
+        {id:'mu-bw-intf',label:'Interface',ph:'port1'},
+        {id:'mu-bw-type',label:'Type',type:'select',opts:['top','shaping','netflow','full']}
+      ],
+      fn:'muBandwidth'
+    },
+    {
+      id:'vlan', title:'&#x1F4BE; 10. VLAN Decommission',
+      fields:[
+        {id:'mu-vlan-intf',label:'VLAN Interface',ph:'VLAN10'},
+        {id:'mu-vlan-id',label:'VLAN ID',ph:'10',inputtype:'number'},
+        {id:'mu-vlan-subnet',label:'Subnet',ph:'192.168.10.0/24'}
+      ],
+      fn:'muVLANDecom'
+    },
+    {
+      id:'fw', title:'&#x1F504; 11. Firmware Upgrade',
+      fields:[
+        {id:'mu-fw-current',label:'Current version',ph:'7.4.3'},
+        {id:'mu-fw-target',label:'Target version',ph:'7.4.5'},
+        {id:'mu-fw-ha',label:'HA setup',type:'select',opts:['standalone','active-passive','active-active']},
+        {id:'mu-fw-model',label:'Model',ph:'FortiGate 100F'}
+      ],
+      fn:'muFirmwareUpgrade'
+    },
+    {
+      id:'faz', title:'&#x1F3E2; 12. FAZ/FMG Check',
+      fields:[
+        {id:'mu-faz-ip',label:'FAZ/FMG IP',ph:'192.168.100.10'},
+        {id:'mu-faz-type',label:'Product',type:'select',opts:['faz','fmg','both']},
+        {id:'mu-faz-adom',label:'ADOM (optional)',ph:'root'}
+      ],
+      fn:'muFAZCheck'
+    }
+  ];
 
-// Generate functions for all tools
-function genPolicy(){let lines=['# Policy Lookup','get router info routing-table details '+g('pol-dst'),'','diagnose firewall iprope lookup '+g('pol-src')+' '+g('pol-dst')+' '+g('pol-port')+' '+g('pol-proto'),'','diagnose debug reset','diagnose debug flow filter addr '+g('pol-src'),'diagnose debug flow filter daddr '+g('pol-dst'),'diagnose debug flow trace start 20','diagnose debug enable','# trigger traffic then stop','diagnose debug flow trace stop','diagnose debug disable','diagnose debug reset','','diagnose sys session filter src '+g('pol-src'),'diagnose sys session list'];showOut('pol',lines.join('\n'));}
-function genVPN(){let n=g('vpn-name')||'<TUNNEL>';let t=g('vpn-type');let lines=[];if(t==='ipsec'||t==='both'){lines.push('# IPsec VPN Status','get vpn ipsec tunnel summary','diagnose vpn tunnel list name "'+n+'"','diagnose vpn ike gateway list name "'+n+'"');}if(t==='ssl'||t==='both'){lines.push('# SSL VPN Status','get vpn ssl monitor','diagnose vpn ssl list');}showOut('vpn',lines.join('\n'));}
-function genHealth(){let lines=['# System Health','get system status','get system performance status','diagnose sys top 5 20','diagnose sys session full-stat'];showOut('health',lines.join('\n'));}
-function genBGP(){let ip=g('bgp-ip')||'<IP>';let p=g('bgp-proto');let lines=[];if(p==='bgp'||p==='both'){lines.push('# BGP Status','get router info bgp summary','get router info bgp neighbors '+ip,'get router info bgp neighbors '+ip+' received-routes');}if(p==='ospf'||p==='both'){lines.push('# OSPF Status','get router info ospf neighbor','get router info ospf database brief');}lines.push('','execute ping '+ip);showOut('bgp',lines.join('\n'));}
-function genSSL(){let lines=['# SSL VPN Status','get vpn ssl monitor','diagnose vpn ssl list','diagnose firewall auth list'];showOut('ssl',lines.join('\n'));}
-function genObj(){let ip=g('obj-ip')||'<IP>';let lines=['# Object Search','show firewall address | grep "'+ip+'"','get router info routing-table details '+ip,'get system arp | grep "'+ip+'"'];showOut('obj',lines.join('\n'));}
-function genCert(){let lines=['# Certificate Check','get certificate local','diagnose certificate local list'];showOut('cert',lines.join('\n'));}
-function genHA(){let lines=['# HA Status','get system ha status','diagnose sys ha status'];showOut('ha',lines.join('\n'));}
-function genBW(){let i=g('bw-intf')||'<INTF>';let lines=['# Bandwidth Check','diagnose netlink interface list '+i,'diagnose firewall shaper traffic-shaper list'];showOut('bw',lines.join('\n'));}
-function genVLAN(){let i=g('vlan-intf')||'<VLAN>';let lines=['# VLAN Diagnostics','show system interface '+i,'get system arp | grep '+i];showOut('vlan',lines.join('\n'));}
-function genFW(){let lines=['# Firmware Upgrade','get system status','execute backup config tftp backup.conf <TFTP-SERVER>'];showOut('fw',lines.join('\n'));}
-function genFAZ(){let ip=g('faz-ip')||'<IP>';let lines=['# FAZ/FMG Connectivity','get log fortianalyzer setting','diagnose test application miglogd 6','execute ping '+ip];showOut('faz',lines.join('\n'));}
-function genPort(){let dst=g('port-dst');if(!dst){alert('Enter destination IP');return;}let sel=document.getElementById('port-proto');let protoPort;if(sel.value==='custom'){let custom=g('port-custom');if(!custom){alert('Enter custom protocol and port e.g. tcp 8080');return;}protoPort=custom;}else{protoPort=sel.options[sel.selectedIndex].textContent;}let parts=protoPort.split(' ');let proto=parts[0].toLowerCase();let port=parts[1];let lines=[`# Port Reachability Test: ${dst}:${port} (${proto.toUpperCase()})`];if(proto==='tcp'){lines.push('','# 1. Basic ICMP test','execute ping '+dst,'','# 2. TCP connect test','execute telnet '+dst+' '+port,'','# 3. Check session table','diagnose sys session filter dport '+port,'diagnose sys session list');}else if(proto==='udp'){lines.push('','# 1. UDP sniffer - look for responses','diagnose sniffer packet any "host '+dst+' and port '+port+'" 4 30 l','','# 2. IKE debug (for UDP 500)','diagnose debug application ike -1','diagnose debug enable','# Wait 10 seconds then:','diagnose debug disable','','# 3. ICMP fallback','execute ping '+dst);}lines.push('','# 4. Verify policy allows this traffic','diagnose firewall iprope lookup <SOURCE_IP> '+dst+' '+port+' '+proto);showOut('port',lines.join('\n'));}
+  // Build two-column grid for tools 1-12, Tool 13 full width at top
+  var grid12 = tools.slice(0,12);
 
-// Event listeners
-document.getElementById('port-proto').addEventListener('change',function(){document.getElementById('port-custom-wrap').style.display=this.value==='custom'?'block':'none';});
-document.getElementById('port-btn').onclick=genPort;
+  function buildField(f){
+    var d = document.createElement('div');
+    d.style.marginBottom='8px';
+    var lbl = document.createElement('label');
+    lbl.setAttribute('for', f.id);
+    lbl.style.cssText='font-size:11px;color:var(--t3);display:block;margin-bottom:3px';
+    lbl.textContent = f.label;
+    d.appendChild(lbl);
+    if(f.type==='select'){
+      var sel = document.createElement('select');
+      sel.id = f.id;
+      sel.style.cssText='width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px';
+      f.opts.forEach(function(o){ var op=document.createElement('option'); op.value=o; op.textContent=o; sel.appendChild(op); });
+      d.appendChild(sel);
+    } else {
+      var inp = document.createElement('input');
+      inp.type = f.inputtype||'text';
+      inp.id = f.id;
+      inp.placeholder = f.ph||'';
+      inp.style.cssText='width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px';
+      d.appendChild(inp);
+    }
+    return d;
+  }
 
-    // Wire buttons that use onclick attributes
-    var portProto = document.getElementById('port-proto');
-    if(portProto) portProto.addEventListener('change', function(){
-      var wrap = document.getElementById('port-custom-wrap');
-      if(wrap) wrap.style.display = this.value === 'custom' ? 'block' : 'none';
-    });
-    var portBtn = document.getElementById('port-btn');
-    if(portBtn) portBtn.onclick = genPort;
+  function buildTool(t){
+    var card = document.createElement('div');
+    card.className='cblock';
+    card.style.marginBottom='14px';
+    if(t.highlight) card.style.borderColor='rgba(0,214,143,.5)';
 
-    // Wire all generate buttons
-    var btnMap = {
-      'pol-btn': genPolicy, 'vpn-btn': genVPN, 'health-btn': genHealth,
-      'bgp-btn': genBGP, 'ssl-btn': genSSL, 'obj-btn': genObj,
-      'cert-btn': genCert, 'ha-btn': genHA, 'bw-btn': genBW,
-      'vlan-btn': genVLAN, 'fw-btn': genFW, 'faz-btn': genFAZ
-    };
-    Object.keys(btnMap).forEach(function(id){
-      var b = document.getElementById(id);
-      if(b) b.onclick = btnMap[id];
-    });
-  })();
+    var hdr = document.createElement('div');
+    hdr.className='chdr';
+    if(t.highlight) hdr.style.background='rgba(0,214,143,.06)';
+    var title = document.createElement('div');
+    title.className='chdr-l';
+    if(t.highlight) title.style.color='var(--a)';
+    title.innerHTML = t.title;
+    hdr.appendChild(title);
+    card.appendChild(hdr);
+
+    var body = document.createElement('div');
+    body.className='cbody';
+
+    t.fields.forEach(function(f){ body.appendChild(buildField(f)); });
+
+    var btn = document.createElement('button');
+    btn.className='sbtn';
+    btn.style.cssText='width:100%;margin-top:8px;padding:9px';
+    if(t.highlight){ btn.style.background='var(--a)'; btn.style.color='#000'; btn.style.fontWeight='700'; }
+    btn.innerHTML='&#x1F527; Generate Commands';
+    btn.setAttribute('onclick', t.fn+'()');
+    body.appendChild(btn);
+
+    var outDiv = document.createElement('div');
+    outDiv.id='mu-'+t.id+'-out';
+    outDiv.style.display='none';
+    outDiv.style.marginTop='10px';
+    var pre = document.createElement('pre');
+    pre.className='code-block';
+    pre.id='mu-'+t.id+'-out-cmd';
+    pre.style.whiteSpace='pre-wrap';
+    outDiv.appendChild(pre);
+    body.appendChild(outDiv);
+
+    card.appendChild(body);
+    return card;
+  }
+
+  // 12 tools in two columns
+  var grid = document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:14px';
+  var col1=document.createElement('div');
+  var col2=document.createElement('div');
+  grid12.forEach(function(t,i){ (i<6?col1:col2).appendChild(buildTool(t)); });
+  grid.appendChild(col1);
+  grid.appendChild(col2);
+  wrap.appendChild(grid);
+
+  el.appendChild(wrap);
 }
 
+
+function renderEmailGen(el){
+  el.innerHTML=`
+<div class="sh"><span class="stitle">✉️ Customer Email Generator</span><span class="sev info">Troubleshoot · Changes · Config · Report</span></div>
+<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
+  Build a professional customer email from your troubleshooting session. Fill in the fields, pick a template, and copy the finished email ready to send.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+
+  <!-- LEFT: Form -->
+  <div>
+    <!-- Header info -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Email Details</div></div>
+      <div class="cbody" style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">To (Customer name or company)</label>
+          <input type="text" id="eg-to" placeholder="e.g. John Smith / Acme Corp" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">From (Your name)</label>
+          <input type="text" id="eg-from" placeholder="e.g. Samiuel — NetWolf Engineer" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Device / Site</label>
+          <input type="text" id="eg-device" placeholder="e.g. FGT-HQ-01 / Amsterdam site" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Date / Time</label>
+          <input type="text" id="eg-date" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Ticket / Reference number</label>
+          <input type="text" id="eg-ticket" placeholder="e.g. INC-20240512 (optional)" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Template picker -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📄 Email Type</div></div>
+      <div class="cbody" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="egSetType('troubleshoot')" id="eg-type-troubleshoot" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔍 Troubleshoot Report</button>
+        <button onclick="egSetType('changes')" id="eg-type-changes" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔧 Changes Made</button>
+        <button onclick="egSetType('config')" id="eg-type-config" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">⚙️ Configuration Sent</button>
+        <button onclick="egSetType('report')" id="eg-type-report" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">📊 Status Report</button>
+        <button onclick="egSetType('maintenance')" id="eg-type-maintenance" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🛠️ Maintenance Window</button>
+        <button onclick="egSetType('incident')" id="eg-type-incident" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🚨 Incident Update</button>
+      </div>
+    </div>
+
+    <!-- Content sections -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📝 Issue / Background</div><span style="font-size:10px;color:var(--t3)">What was the problem?</span></div>
+      <div class="cbody">
+        <textarea id="eg-issue" rows="3" placeholder="e.g. SSL VPN users unable to connect from Belgium. User reported hanging at 10% during tunnel establishment." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔎 Root Cause Found</div></div>
+      <div class="cbody">
+        <textarea id="eg-cause" rows="3" placeholder="e.g. IPv6 was disabled on the TDS portal while user had a public IPv6 address. Policy 613 restricted source to Netherlands only." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">✅ Actions Taken / Changes Made</div></div>
+      <div class="cbody">
+        <div id="eg-actions-list" style="margin-bottom:8px"></div>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="eg-action-input" placeholder="e.g. Added Belgium_SSLVPN to policy 613" style="flex:1;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;" onkeydown="if(event.key==='Enter')egAddAction()">
+          <button class="sbtn" onclick="egAddAction()">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Commands Used</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-cmds" rows="3" placeholder="e.g. diagnose sniffer packet any 'port 443' 4 20 l" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:'Courier New',monospace;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔮 Result / Current Status</div></div>
+      <div class="cbody">
+        <textarea id="eg-result" rows="2" placeholder="e.g. SSL VPN connection now works correctly from Belgium. Confirmed with user." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">⏭️ Next Steps / Recommendations</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-next" rows="2" placeholder="e.g. Monitor for 24 hours. Recommend disabling IPv6 on user device as permanent fix." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <!-- Language -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🌐 Language</div></div>
+      <div class="cbody" style="display:flex;gap:8px">
+        <button onclick="egSetLang('en')" id="eg-lang-en" class="sbtn" style="opacity:1">🇬🇧 English</button>
+        <button onclick="egSetLang('nl')" id="eg-lang-nl" class="sbtn" style="opacity:.5">🇳🇱 Nederlands</button>
+        <button onclick="egSetLang('de')" id="eg-lang-de" class="sbtn" style="opacity:.5">🇩🇪 Deutsch</button>
+        <button onclick="egSetLang('fr')" id="eg-lang-fr" class="sbtn" style="opacity:.5">🇫🇷 Français</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:10px;padding:12px 14px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:8px;">
+      <div style="font-size:11px;font-weight:700;color:var(--a);margin-bottom:6px;">⚡ Auto-fill from session</div>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.6">Fetch data from your current troubleshoot session — active guide, AI chat, CLI output and commands used — and populate the form automatically.</div>
+      <button onclick="egFetchSession()" class="sbtn" style="width:100%;padding:9px;font-size:12px;">🔄 Fetch from Current Session</button>
+    </div>
+    <button onclick="egGenerate()" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:var(--a)">✉️ Generate Email</button>
+  </div>
+
+  <!-- RIGHT: Preview -->
+  <div>
+    <div class="cblock" style="position:sticky;top:16px">
+      <div class="chdr">
+        <div class="chdr-l">👁️ Email Preview</div>
+        <button onclick="egCopy()" class="sbtn" style="font-size:11px;padding:4px 12px">📋 Copy</button>
+      </div>
+      <div class="cbody" style="padding:0">
+        <div id="eg-preview" style="padding:16px;font-size:12px;color:var(--t2);line-height:1.8;min-height:400px;white-space:pre-wrap;font-family:inherit">
+          <span style="color:var(--t3);font-style:italic">Fill in the form and click Generate Email to see the preview here.</span>
+        </div>
+      </div>
+      <div style="padding:10px 14px;border-top:1px solid var(--br);display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="egOpenMail()" class="sbtn" style="font-size:11px;padding:6px 14px">📧 Open in Mail</button>
+        <button onclick="egCopySubject()" class="sbtn" style="font-size:11px;padding:6px 14px">📋 Copy Subject</button>
+        <button onclick="egReset()" class="sbtn" style="font-size:11px;padding:6px 14px;background:#B91C1C">🗑️ Reset</button>
+      </div>
+    </div>
+  </div>
+
+</div>`;
+
+  // ── State ──
+  var egLang = 'en';
+  var egType = 'troubleshoot';
+  var egActions = [];
+
+  // Set date default
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('eg-date').value = dateStr;
+
+  // Highlight first type button
+  window.egSetType = function(t){
+    egType = t;
+    ['troubleshoot','changes','config','report','maintenance','incident'].forEach(function(x){
+      var b = document.getElementById('eg-type-'+x);
+      if(b) b.style.opacity = x===t ? '1' : '.5';
+    });
+  };
+  egSetType('troubleshoot');
+
+  window.egSetLang = function(l){
+    egLang = l;
+    ['en','nl','de','fr'].forEach(function(x){
+      var b = document.getElementById('eg-lang-'+x);
+      if(b) b.style.opacity = x===l ? '1' : '.5';
+    });
+  };
+
+  window.egAddAction = function(){
+    var inp = document.getElementById('eg-action-input');
+    var val = inp.value.trim();
+    if(!val) return;
+    egActions.push(val);
+    inp.value = '';
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,i){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+i+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egRemoveAction = function(i){
+    egActions.splice(i,1);
+    egAddAction(); egActions.pop(); // refresh list
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,idx){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egFetchSession = function(){
+    var fetched = [];
+
+    // ── 1. Current guide category + title ──
+    try {
+      if(typeof D !== 'undefined' && typeof cur !== 'undefined' && D[cur]){
+        var guide = D[cur];
+        var guideTitle = guide.t || '';
+        var guideType  = guide.type || '';
+
+        // Set issue from guide title
+        var issueEl = document.getElementById('eg-issue');
+        if(issueEl && !issueEl.value){
+          issueEl.value = 'Troubleshooting: ' + guideTitle;
+          fetched.push('Guide: ' + guideTitle);
+        }
+
+        // Collect all commands from guide steps
+        var allCmds = [];
+        var steps = guide.steps || guide.sections || [];
+        steps.forEach(function(s){
+          var cmds = s.cmds || s.commands || [];
+          cmds.forEach(function(c){
+            if(typeof c === 'string' && !c.startsWith('(') && c.trim()){
+              allCmds.push(c);
+            } else if(c && c.cmd){
+              allCmds.push(c.cmd);
+            }
+          });
+        });
+        if(allCmds.length){
+          var cmdsEl = document.getElementById('eg-cmds');
+          if(cmdsEl && !cmdsEl.value){
+            cmdsEl.value = allCmds.join('\n');
+            fetched.push(allCmds.length + ' commands from guide');
+          }
+        }
+
+        // Auto-set email type based on guide type
+        if(guideType === 'config') egSetType('config');
+        else egSetType('troubleshoot');
+      }
+    } catch(e){}
+
+    // ── 2. AI Chat history ──
+    try {
+      if(typeof chat !== 'undefined' && chat.length > 0){
+        var aiSummary = [];
+        var aiActions = [];
+        chat.forEach(function(m){
+          if(m.role === 'assistant' && m.content){
+            // Extract bullet points or numbered items as actions
+            var lines = m.content.split('\n');
+            lines.forEach(function(line){
+              var l = line.trim();
+              // Grab lines that look like actions/findings
+              if(/^[-•*]\s+/.test(l) || /^\d+\.\s+/.test(l)){
+                var clean = l.replace(/^[-•*\d.]\s+/, '').trim();
+                if(clean.length > 10 && clean.length < 200 && aiActions.indexOf(clean) === -1){
+                  aiActions.push(clean);
+                }
+              }
+            });
+            // Grab first meaningful assistant response as root cause
+            if(!aiSummary.length && m.content.length > 50){
+              // Take first 300 chars of first assistant message
+              var snippet = m.content.replace(/```[\s\S]*?```/g,'').replace(/\*\*/g,'').trim();
+              if(snippet.length > 30) aiSummary.push(snippet.substring(0, 300));
+            }
+          }
+        });
+
+        // Populate cause from AI summary
+        if(aiSummary.length){
+          var causeEl = document.getElementById('eg-cause');
+          if(causeEl && !causeEl.value){
+            causeEl.value = aiSummary[0] + (aiSummary[0].length === 300 ? '...' : '');
+            fetched.push('AI analysis fetched');
+          }
+        }
+
+        // Add AI-extracted actions to the actions list
+        if(aiActions.length){
+          var added = 0;
+          aiActions.slice(0, 8).forEach(function(a){
+            if(egActions.indexOf(a) === -1){
+              egActions.push(a);
+              added++;
+            }
+          });
+          if(added > 0){
+            // Refresh actions display
+            var list = document.getElementById('eg-actions-list');
+            if(list){
+              list.innerHTML = egActions.map(function(a, idx){
+                return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+                  +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+                  +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+              }).join('');
+            }
+            fetched.push(added + ' actions from AI chat');
+          }
+        }
+      }
+    } catch(e){}
+
+    // ── 3. CLI output from Analyze tab ──
+    try {
+      var cliOutput = document.getElementById('troubleOutputInput');
+      if(cliOutput && cliOutput.value && cliOutput.value.trim()){
+        var resultEl = document.getElementById('eg-result');
+        if(resultEl && !resultEl.value){
+          // Take first 400 chars of CLI output as result context
+          resultEl.value = cliOutput.value.trim().substring(0, 400) + (cliOutput.value.length > 400 ? '...' : '');
+          fetched.push('CLI output fetched');
+        }
+      }
+    } catch(e){}
+
+    // ── 4. IP masking mappings — note which IPs were involved ──
+    try {
+      if(typeof ipMappings !== 'undefined' && ipMappings.length > 0){
+        var ipNote = 'IPs involved (anonymized): ' + ipMappings.map(function(m){ return m.fake; }).join(', ');
+        var nextEl = document.getElementById('eg-next');
+        if(nextEl && !nextEl.value){
+          nextEl.value = ipNote;
+          fetched.push('IP mappings noted');
+        }
+      }
+    } catch(e){}
+
+    // ── 5. Current date/time (always refresh) ──
+    try {
+      var now = new Date();
+      var ds = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
+              + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('eg-date').value = ds;
+      fetched.push('Date/time updated');
+    } catch(e){}
+
+    // ── Show result toast ──
+    if(fetched.length){
+      showToast('✅ Fetched: ' + fetched.join(' · '));
+    } else {
+      showToast('⚠️ Nothing found in current session. Use a guide or AI tab first.');
+    }
+  };
+
+  window.egGenerate = function(){
+    var to     = document.getElementById('eg-to').value.trim() || 'Customer';
+    var from   = document.getElementById('eg-from').value.trim() || 'NetWolf Engineer';
+    var device = document.getElementById('eg-device').value.trim();
+    var date   = document.getElementById('eg-date').value.trim();
+    var ticket = document.getElementById('eg-ticket').value.trim();
+    var issue  = document.getElementById('eg-issue').value.trim();
+    var cause  = document.getElementById('eg-cause').value.trim();
+    var cmds   = document.getElementById('eg-cmds').value.trim();
+    var result = document.getElementById('eg-result').value.trim();
+    var next   = document.getElementById('eg-next').value.trim();
+
+    var subjectMap = {
+      en:{troubleshoot:'Troubleshoot Report',changes:'Changes Made',config:'Configuration Update',report:'Status Report',maintenance:'Maintenance Window',incident:'Incident Update'},
+      nl:{troubleshoot:'Troubleshoot Rapport',changes:'Wijzigingen Uitgevoerd',config:'Configuratie Update',report:'Status Rapport',maintenance:'Onderhoudsvenster',incident:'Incident Update'}
+    };
+
+    var subject = subjectMap[egLang][egType] + (device ? ' — ' + device : '') + (ticket ? ' ['+ticket+']' : '');
+
+    var lines = [];
+    if(egLang==='en'){
+      lines.push('Subject: ' + subject);
+      lines.push('');
+      lines.push('Dear ' + to + ',');
+      lines.push('');
+      if(device || date){
+        lines.push('Details:');
+        if(device)  lines.push('  Device / Site   : ' + device);
+        if(date)    lines.push('  Date / Time     : ' + date);
+        if(ticket)  lines.push('  Reference       : ' + ticket);
+        lines.push('');
+      }
+      if(issue){
+        lines.push('Issue / Background:');
+        lines.push(issue);
+        lines.push('');
+      }
+      if(cause){
+        lines.push('Root Cause:');
+        lines.push(cause);
+        lines.push('');
+      }
+      if(egActions.length){
+        lines.push('Actions Taken:');
+        egActions.forEach(function(a){ lines.push('  • ' + a); });
+        lines.push('');
+      }
+      if(cmds){
+        lines.push('Commands Used:');
+        cmds.split("\\n").forEach(function(c){ if(c.trim()) lines.push('  ' + c.trim()); });
+        lines.push('');
+      }
+      if(result){
+        lines.push('Result / Current Status:');
+        lines.push(result);
+        lines.push('');
+      }
+      if(next){
+        lines.push('Next Steps / Recommendations:');
+        lines.push(next);
+        lines.push('');
+      }
+      lines.push('Please do not hesitate to contact us if you have any questions.');
+      lines.push('');
+      lines.push('Kind regards,');
+      lines.push(from);
+    } else {
+      // Dutch
+      lines.push('Onderwerp: ' + subject);
+      lines.push('');
+      lines.push('Beste ' + to + ',');
+      lines.push('');
+      if(device || date){
+        lines.push('Details:');
+        if(device)  lines.push('  Apparaat / Locatie : ' + device);
+        if(date)    lines.push('  Datum / Tijd       : ' + date);
+        if(ticket)  lines.push('  Referentie         : ' + ticket);
+        lines.push('');
+      }
+      if(issue){
+        lines.push('Probleem / Achtergrond:');
+        lines.push(issue);
+        lines.push('');
+      }
+      if(cause){
+        lines.push('Oorzaak:');
+        lines.push(cause);
+        lines.push('');
+      }
+      if(egActions.length){
+        lines.push('Uitgevoerde Acties:');
+        egActions.forEach(function(a){ lines.push('  • ' + a); });
+        lines.push('');
+      }
+      if(cmds){
+        lines.push('Gebruikte Commando\'s:');
+        cmds.split("\n").forEach(function(c){ if(c.trim()) lines.push('  ' + c.trim()); });
+        lines.push('');
+      }
+      if(result){
+        lines.push('Resultaat / Huidige Status:');
+        lines.push(result);
+        lines.push('');
+      }
+      if(next){
+        lines.push('Vervolgstappen / Aanbevelingen:');
+        lines.push(next);
+        lines.push('');
+      }
+      lines.push('Mocht u nog vragen hebben, neem dan gerust contact met ons op.');
+      lines.push('');
+      lines.push('Met vriendelijke groet,');
+      lines.push(from);
+    }
+
+    var emailText = lines.join('\n');
+    document.getElementById('eg-preview').style.fontFamily = 'inherit';
+    document.getElementById('eg-preview').style.color = 'var(--t)';
+    document.getElementById('eg-preview').textContent = emailText;
+    window._egEmailText = emailText;
+    window._egSubject = subject;
+  };
+
+  window.egCopy = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egEmailText).then(function(){ showToast('✅ Email copied to clipboard!'); }).catch(function(){ showToast('Copy failed — please select and copy manually.'); });
+  };
+
+  window.egCopySubject = function(){
+    if(!window._egSubject){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egSubject).then(function(){ showToast('✅ Subject copied!'); }).catch(function(){ showToast('Copy failed.'); });
+  };
+
+  window.egOpenMail = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    var body = encodeURIComponent(window._egEmailText.replace('Subject: '+window._egSubject+'\n\n',''));
+    var subj = encodeURIComponent(window._egSubject);
+    window.open('mailto:?subject='+subj+'&body='+body);
+  };
+
+  window.egReset = function(){
+    if(!confirm('Clear all fields?')) return;
+    ['eg-to','eg-from','eg-device','eg-ticket','eg-issue','eg-cause','eg-cmds','eg-result','eg-next','eg-action-input'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+    document.getElementById('eg-date').value = dateStr;
+    document.getElementById('eg-actions-list').innerHTML = '';
+    document.getElementById('eg-preview').textContent = '';
+    document.getElementById('eg-preview').style.color = 'var(--t3)';
+    egActions = [];
+    egSetType('troubleshoot');
+    window._egEmailText = null;
+    window._egSubject = null;
+  };
+}
+
+function renderMostUsed(el){
+  el.innerHTML=`
+<div class="sh"><span class="stitle">⚡ Most Used Network Tools</span><span class="sev info">12 FortiGate diagnostic & operational tools</span></div>    <div style="font-size:11px;color:var(--t3)">Check UDP 500, TCP 443, SSH, RDP and more — click to jump to Tool 13 ↓</div>
+  </div>
+</div>
+<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
+  The most frequently used FortiGate command generators — fill in the fields and copy the commands directly to your CLI session.
+  All commands are read-only unless stated otherwise.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+<div>
+<div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔍 1. Policy Lookup</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Source IP</label><input type="text" id="mu-pol-src" placeholder="e.g. 192.168.1.100" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Destination IP</label><input type="text" id="mu-pol-dst" placeholder="e.g. 8.8.8.8" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Destination Port</label><input type="text" id="mu-pol-port" placeholder="e.g. 443" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Protocol</label><select id="mu-pol-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="tcp">TCP</option><option value="udp">UDP</option><option value="icmp">ICMP</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface (optional)</label><input type="text" id="mu-pol-intf" placeholder="e.g. port1 or leave blank" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muPolicyLookup()">🔧 Generate Policy Lookup</button><div id="mu-pol-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-pol-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔒 2. VPN Status Checker</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Tunnel Name</label><input type="text" id="mu-vpn-name" placeholder="e.g. SITE-A-TO-B" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Type</label><select id="mu-vpn-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="ipsec">IPsec</option><option value="ssl">SSL VPN</option><option value="both">Both</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Remote Gateway IP (optional)</label><input type="text" id="mu-vpn-gw" placeholder="e.g. 10.0.0.2" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muVPNStatus()">🔧 Generate VPN Status Commands</button><div id="mu-vpn-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-vpn-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🩺 3. Health Check Generator</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Device Name (label only)</label><input type="text" id="mu-hc-name" placeholder="e.g. FGT-HQ-01" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Check Type</label><select id="mu-hc-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="full">Full Health Check</option><option value="quick">Quick Status</option><option value="ha">HA Cluster</option><option value="perf">Performance Only</option></select></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muHealthCheck()">🔧 Generate Health Check Commands</button><div id="mu-hc-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-hc-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🌐 4. BGP / OSPF Neighbor Checker</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Neighbor IP</label><input type="text" id="mu-bgp-ip" placeholder="e.g. 10.0.0.1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Protocol</label><select id="mu-bgp-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="bgp">BGP</option><option value="ospf">OSPF</option><option value="both">Both</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface (OSPF only, optional)</label><input type="text" id="mu-bgp-intf" placeholder="e.g. port2" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muBGPCheck()">🔧 Generate Neighbor Check Commands</button><div id="mu-bgp-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-bgp-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🕵️ 5. SSL VPN User Diagnostics</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Username</label><input type="text" id="mu-ssl-user" placeholder="e.g. thomhaasert" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Portal Name (optional)</label><input type="text" id="mu-ssl-portal" placeholder="e.g. tunnel-portal" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Source IP (optional)</label><input type="text" id="mu-ssl-ip" placeholder="e.g. client external IP" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muSSLVPNUser()">🔧 Generate SSL VPN User Commands</button><div id="mu-ssl-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-ssl-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔎 6. FortiGate Object Search</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">IP / Subnet to find</label><input type="text" id="mu-obj-ip" placeholder="e.g. 192.168.1.0/24 or 10.1.2.3" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface filter (optional)</label><input type="text" id="mu-obj-intf" placeholder="e.g. port3" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muObjectSearch()">🔧 Generate Object Search Commands</button><div id="mu-obj-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-obj-out-cmd" style="white-space:pre-wrap"
+</div>
+<div>
+></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">📄 7. Certificate Expiry Checker</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Scope</label><select id="mu-cert-scope" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="all">All Certificates</option><option value="local">Local Certs Only</option><option value="ca">CA Certs Only</option><option value="remote">Remote Certs Only</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Name filter (optional)</label><input type="text" id="mu-cert-name" placeholder="e.g. VPN or Fortinet (leave blank for all)" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muCertCheck()">🔧 Generate Certificate Commands</button><div id="mu-cert-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-cert-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">⚙️ 8. HA Failover Checklist</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Action</label><select id="mu-ha-action" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="check">Pre-Failover Check</option><option value="failover">Trigger Failover</option><option value="post">Post-Failover Verify</option><option value="full">Full Sequence</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Primary unit hostname</label><input type="text" id="mu-ha-primary" placeholder="e.g. FGT-HQ-01" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Secondary unit hostname</label><input type="text" id="mu-ha-secondary" placeholder="e.g. FGT-HQ-02" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muHAChecklist()">🔧 Generate HA Commands</button><div id="mu-ha-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-ha-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">📊 9. Bandwidth Usage Reporter</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface name</label><input type="text" id="mu-bw-intf" placeholder="e.g. port1 or wan1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Report type</label><select id="mu-bw-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="top">Top Talkers</option><option value="shaping">Traffic Shaping Status</option><option value="netflow">NetFlow Stats</option><option value="full">Full Report</option></select></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muBandwidth()">🔧 Generate Bandwidth Commands</button><div id="mu-bw-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-bw-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">💾 10. VLAN Decommission Wizard</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">VLAN Interface name</label><input type="text" id="mu-vlan-intf" placeholder="e.g. VLAN10 or port3.10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">VLAN ID</label><input type="number" id="mu-vlan-id" placeholder="e.g. 10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Subnet</label><input type="text" id="mu-vlan-subnet" placeholder="e.g. 192.168.10.0/24" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muVLANDecom()">🔧 Generate Decommission Checklist</button><div id="mu-vlan-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-vlan-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔄 11. Firmware Upgrade Planner</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Current FortiOS version</label><input type="text" id="mu-fw-current" placeholder="e.g. 7.4.3" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Target FortiOS version</label><input type="text" id="mu-fw-target" placeholder="e.g. 7.4.5" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">HA setup</label><select id="mu-fw-ha" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="standalone">Standalone</option><option value="active-passive">Active-Passive HA</option><option value="active-active">Active-Active HA</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Device model</label><input type="text" id="mu-fw-model" placeholder="e.g. FortiGate 100F" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muFirmwareUpgrade()">🔧 Generate Upgrade Plan</button><div id="mu-fw-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-fw-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🏢 12. FortiAnalyzer / FortiManager Check</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">FAZ/FMG IP or hostname</label><input type="text" id="mu-faz-ip" placeholder="e.g. 192.168.100.10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Product</label><select id="mu-faz-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="faz">FortiAnalyzer</option><option value="fmg">FortiManager</option><option value="both">Both</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">ADOM name (optional)</label><input type="text" id="mu-faz-adom" placeholder="e.g. root" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muFAZCheck()">🔧 Generate Connectivity Commands</button><div id="mu-faz-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-faz-out-cmd" style="white-space:pre-wrap"></pre></div></div></div>
+</div>
+</div>`;
+
+  // ── Helper: show output ──
+
+   function muShow(id, cmds){
+    document.getElementById(id).style.display='block';
+    document.getElementById(id+'-cmd').textContent=cmds;
+  }
+
+  function v(id){ return (document.getElementById(id)||{}).value||''; }
+
+  // ── 1. Policy Lookup ──
+  window.muPolicyLookup=function(){
+    var src=v('mu-pol-src')||'<SRC-IP>';
+    var dst=v('mu-pol-dst')||'<DST-IP>';
+    var port=v('mu-pol-port')||'443';
+    var proto=v('mu-pol-proto')||'tcp';
+    var intf=v('mu-pol-intf');
+    var lines=[
+      '# Step 1: Route lookup -- which interface handles destination',
+      'get router info routing-table details '+dst,
+      '',
+      '# Step 2: Policy lookup -- which policy matches this traffic',
+      'diagnose firewall iprope lookup '+src+' '+dst+' '+port+' '+proto+(intf?' '+intf:''),
+      '',
+      '# Step 3: Debug flow -- trace exactly what happens packet by packet',
+      'diagnose debug reset',
+      'diagnose debug flow filter addr '+src,
+      'diagnose debug flow filter daddr '+dst,
+      'diagnose debug flow filter proto '+(proto==='tcp'?'6':proto==='udp'?'17':'1'),
+      'diagnose debug flow show function-name enable',
+      'diagnose debug flow trace start 20',
+      'diagnose debug enable',
+      '# Now send a packet from the source, then stop:',
+      'diagnose debug flow trace stop',
+      'diagnose debug disable',
+      'diagnose debug reset',
+      '',
+      '# Step 4: Check session table for this flow',
+      'diagnose sys session filter src '+src,
+      'diagnose sys session filter dst '+dst,
+      'diagnose sys session list'
+    ];
+    muShow('mu-pol-out', lines.join('\n'));
+  };
+
+  // ── 2. VPN Status ──
+  window.muVPNStatus=function(){
+    var name=v('mu-vpn-name')||'<TUNNEL-NAME>';
+    var type=v('mu-vpn-type');
+    var gw=v('mu-vpn-gw');
+    var lines=[];
+    if(type==='ipsec'||type==='both'){
+      lines.push('# IPsec Phase 1 status');
+      lines.push('diagnose vpn ike gateway list name "'+name+'"');
+      lines.push('');
+      lines.push('# IPsec Phase 2 / SA status');
+      lines.push('diagnose vpn tunnel list name "'+name+'"');
+      lines.push('');
+      lines.push('# Phase 1 IKE error log');
+      lines.push('diagnose debug application ike -1');
+      lines.push('diagnose debug enable');
+      lines.push('# Trigger re-negotiation then stop:');
+      lines.push('diagnose debug disable');
+      lines.push('');
+      lines.push('# Phase 2 SA stats (bytes in/out)');
+      lines.push('get vpn ipsec tunnel summary');
+      lines.push('');
+      lines.push('# Check tunnel routing');
+      if(gw) lines.push('get router info routing-table details '+gw);
+      lines.push('diagnose netlink interface list');
+    }
+    if(type==='ssl'||type==='both'){
+      lines.push('# SSL VPN active sessions');
+      lines.push('get vpn ssl monitor');
+      lines.push('');
+      lines.push('# SSL VPN settings');
+      lines.push('get vpn ssl settings');
+      lines.push('');
+      lines.push('# SSL VPN debug');
+      lines.push('diagnose debug application sslvpn -1');
+      lines.push('diagnose debug enable');
+    }
+    muShow('mu-vpn-out', lines.join('\n'));
+  };
+
+  // ── 3. Health Check ──
+  window.muHealthCheck=function(){
+    var name=v('mu-hc-name')||'FortiGate';
+    var type=v('mu-hc-type');
+    var lines=['# ═══════════════════════════════════════','# Health Check: '+name,'# Generated: '+new Date().toLocaleString(),'# ═══════════════════════════════════════',''];
+    if(type==='full'||type==='quick'){
+      lines.push('# System Status');
+      lines.push('get system status');
+      lines.push('');
+      lines.push('# Resource Usage (CPU / Memory)');
+      lines.push('get system performance status');
+      lines.push('');
+      lines.push('# Interface Status');
+      lines.push('get system interface physical');
+      lines.push('');
+    }
+    if(type==='full'||type==='perf'){
+      lines.push('# Top Processes by CPU');
+      lines.push('diagnose sys top 5 20');
+      lines.push('');
+      lines.push('# Session Count');
+      lines.push('diagnose sys session full-stat');
+      lines.push('');
+      lines.push('# NTP Status');
+      lines.push('diagnose sys ntp status');
+      lines.push('');
+      lines.push('# Disk Usage');
+      lines.push('diagnose sys df');
+      lines.push('');
+      lines.push('# FortiGuard Update Status');
+      lines.push('diagnose autoupdate status');
+      lines.push('');
+    }
+    if(type==='full'){
+      lines.push('# Routing Table Summary');
+      lines.push('get router info routing-table summary');
+      lines.push('');
+      lines.push('# ARP Table');
+      lines.push('get system arp');
+      lines.push('');
+      lines.push('# Active Admins');
+      lines.push('get system admin logged');
+      lines.push('');
+      lines.push('# Log Status');
+      lines.push('diagnose log test');
+      lines.push('get log disk setting');
+    }
+    if(type==='ha'){
+      lines.push('# HA Status');
+      lines.push('get system ha status');
+      lines.push('');
+      lines.push('# HA Statistics');
+      lines.push('diagnose sys ha dump-by vcluster');
+      lines.push('');
+      lines.push('# HA Sync Status');
+      lines.push('diagnose sys ha showcsum');
+      lines.push('');
+      lines.push('# HA Peer Check');
+      lines.push('diagnose sys ha history read');
+    }
+    muShow('mu-hc-out', lines.join('\n'));
+  };
+
+  // ── 4. BGP/OSPF ──
+  window.muBGPCheck=function(){
+    var ip=v('mu-bgp-ip')||'<NEIGHBOR-IP>';
+    var proto=v('mu-bgp-proto');
+    var intf=v('mu-bgp-intf');
+    var lines=[];
+    if(proto==='bgp'||proto==='both'){
+      lines.push('# BGP Neighbor Summary');
+      lines.push('get router info bgp summary');
+      lines.push('');
+      lines.push('# BGP Neighbor Detail');
+      lines.push('get router info bgp neighbors '+ip);
+      lines.push('');
+      lines.push('# BGP Routes Received from Neighbor');
+      lines.push('get router info bgp neighbors '+ip+' received-routes');
+      lines.push('');
+      lines.push('# BGP Routes Advertised to Neighbor');
+      lines.push('get router info bgp neighbors '+ip+' advertised-routes');
+      lines.push('');
+      lines.push('# BGP Debug');
+      lines.push('diagnose ip router bgp level info');
+      lines.push('diagnose ip router bgp all enable');
+      lines.push('diagnose debug enable');
+    }
+    if(proto==='ospf'||proto==='both'){
+      lines.push('# OSPF Neighbor Status');
+      lines.push('get router info ospf neighbor');
+      lines.push('');
+      lines.push('# OSPF Database');
+      lines.push('get router info ospf database brief');
+      lines.push('');
+      lines.push('# OSPF Interface Status');
+      lines.push('get router info ospf interface'+(intf?' '+intf:''));
+      lines.push('');
+      lines.push('# OSPF Routes');
+      lines.push('get router info routing-table ospf');
+    }
+    lines.push('');
+    lines.push('# Connectivity test to neighbor');
+    lines.push('execute ping '+ip);
+    lines.push('execute traceroute '+ip);
+    muShow('mu-bgp-out', lines.join('\n'));
+  };
+
+  // ── 5. SSL VPN User ──
+  window.muSSLVPNUser=function(){
+    var user=v('mu-ssl-user')||'<USERNAME>';
+    var portal=v('mu-ssl-portal');
+    var ip=v('mu-ssl-ip');
+    var lines=[
+      '# SSL VPN Active Sessions',
+      'get vpn ssl monitor',
+      '',
+      '# SSL VPN Statistics',
+      'diagnose vpn ssl list',
+      '',
+      '# User-specific session info',
+      'diagnose vpn ssl info',
+    ];
+    if(ip){
+      lines.push('');
+      lines.push('# Check session from source IP');
+      lines.push('diagnose sys session filter src '+ip);
+      lines.push('diagnose sys session list');
+    }
+    lines.push('');
+    lines.push('# SSL VPN Debug (reproduce issue while this runs)');
+    lines.push('diagnose debug reset');
+    lines.push('diagnose debug application sslvpn -1');
+    lines.push('diagnose debug enable');
+    lines.push('# Reproduce the issue, then stop:');
+    lines.push('diagnose debug disable');
+    lines.push('diagnose debug reset');
+    lines.push('');
+    lines.push('# Check user group membership');
+    lines.push('diagnose firewall auth list');
+    if(portal){
+      lines.push('');
+      lines.push('# Portal configuration');
+      lines.push('show vpn ssl web portal "'+portal+'"');
+    }
+    muShow('mu-ssl-out', lines.join('\n'));
+  };
+
+  // ── 6. Object Search ──
+  window.muObjectSearch=function(){
+    var ip=v('mu-obj-ip')||'<IP-OR-SUBNET>';
+    var intf=v('mu-obj-intf');
+    var lines=[
+      '# Search firewall address objects containing this IP/subnet',
+      'show firewall address | grep -A5 "'+ip+'"',
+      '',
+      '# Search address groups',
+      'show firewall addrgrp | grep -B2 -A10 "'+ip+'"',
+      '',
+      '# Find all policies referencing this IP',
+      'show firewall policy | grep -B5 -A20 "'+ip+'"',
+      '',
+      '# Find VIPs with this IP',
+      'show firewall vip | grep -B2 -A10 "'+ip+'"',
+      '',
+      '# Find static routes to/via this subnet',
+      'get router info routing-table details '+ip,
+      'show router static | grep -B2 -A5 "'+ip+'"',
+      '',
+      '# Find DHCP pool containing this IP',
+      'show system dhcp server | grep -B5 -A10 "'+ip+'"',
+      '',
+      '# Check ARP for this IP',
+      'get system arp | grep "'+ip+'"',
+    ];
+    if(intf){
+      lines.push('');
+      lines.push('# Filter to interface '+intf);
+      lines.push('diagnose ip address list | grep "'+intf+'"');
+    }
+    muShow('mu-obj-out', lines.join('\n'));
+  };
+
+  // ── 7. Certificate Check ──
+  window.muCertCheck=function(){
+    var scope=v('mu-cert-scope');
+    var name=v('mu-cert-name');
+    var lines=[
+      '# List all certificates with details',
+      'diagnose certificate local list',
+      '',
+    ];
+    if(scope==='all'||scope==='local'){
+      lines.push('# Local certificates (installed)');
+      lines.push('get certificate local'+(name?' | grep -A10 "'+name+'"':''));
+      lines.push('');
+    }
+    if(scope==='all'||scope==='ca'){
+      lines.push('# CA certificates');
+      lines.push('get certificate ca'+(name?' | grep -A10 "'+name+'"':''));
+      lines.push('');
+    }
+    if(scope==='all'||scope==='remote'){
+      lines.push('# Remote certificates');
+      lines.push('get certificate remote'+(name?' | grep -A10 "'+name+'"':''));
+      lines.push('');
+    }
+    lines.push('# Check certificate validity and expiry');
+    lines.push('diagnose certificate verify <CERT-NAME>');
+    lines.push('');
+    lines.push('# Tip: Look for "Valid To" date in the output');
+    lines.push('# Certificates expiring within 30 days need immediate renewal');
+    muShow('mu-cert-out', lines.join('\n'));
+  };
+
+  // ── 8. HA Checklist ──
+  window.muHAChecklist=function(){
+    var action=v('mu-ha-action');
+    var primary=v('mu-ha-primary')||'FGT-PRIMARY';
+    var secondary=v('mu-ha-secondary')||'FGT-SECONDARY';
+    var lines=[];
+    if(action==='check'||action==='full'){
+      lines.push('# ═══ PRE-FAILOVER CHECK ═══');
+      lines.push('# Run on PRIMARY unit');
+      lines.push('');
+      lines.push('# HA status and sync state');
+      lines.push('get system ha status');
+      lines.push('');
+      lines.push('# Config sync checksum (must match on both units)');
+      lines.push('diagnose sys ha showcsum');
+      lines.push('');
+      lines.push('# Session sync status');
+      lines.push('diagnose sys ha dump-by vcluster');
+      lines.push('');
+      lines.push('# HA heartbeat interfaces');
+      lines.push('diagnose sys ha heartbeat');
+      lines.push('');
+    }
+    if(action==='failover'||action==='full'){
+      lines.push('# ═══ TRIGGER FAILOVER ═══');
+      lines.push('# WARNING: This will cause a brief traffic interruption');
+      lines.push('# Run on PRIMARY unit to force failover to secondary');
+      lines.push('');
+      lines.push('# Method 1: Force subordinate role');
+      lines.push('diagnose sys ha reset-uptime');
+      lines.push('');
+      lines.push('# Method 2: Failover via priority change');
+      lines.push('config system ha');
+      lines.push('    set priority 100');
+      lines.push('end');
+      lines.push('# (Set back to original after confirming failover)');
+      lines.push('');
+    }
+    if(action==='post'||action==='full'){
+      lines.push('# ═══ POST-FAILOVER VERIFY ═══');
+      lines.push('# Run on NEW primary (previously secondary)');
+      lines.push('');
+      lines.push('# Confirm new primary');
+      lines.push('get system ha status');
+      lines.push('');
+      lines.push('# Check routing is intact');
+      lines.push('get router info routing-table summary');
+      lines.push('');
+      lines.push('# Check VPN tunnels are up');
+      lines.push('get vpn ipsec tunnel summary');
+      lines.push('');
+      lines.push('# Check session count (should recover within minutes)');
+      lines.push('diagnose sys session full-stat');
+      lines.push('');
+      lines.push('# Verify internet connectivity');
+      lines.push('execute ping 8.8.8.8');
+    }
+    muShow('mu-ha-out', lines.join('\n'));
+  };
+
+  // ── 9. Bandwidth ──
+  window.muBandwidth=function(){
+    var intf=v('mu-bw-intf')||'<INTERFACE>';
+    var type=v('mu-bw-type');
+    var lines=[];
+    if(type==='top'||type==='full'){
+      lines.push('# Top bandwidth consumers (sessions)');
+      lines.push('diagnose sys session filter dport 0');
+      lines.push('diagnose sys session stat');
+      lines.push('');
+      lines.push('# Interface statistics');
+      lines.push('diagnose netlink interface list '+intf);
+      lines.push('');
+      lines.push('# Real-time traffic on interface');
+      lines.push('diagnose sniffer packet '+intf+' "" 1 0 l');
+      lines.push('');
+    }
+    if(type==='shaping'||type==='full'){
+      lines.push('# Traffic shaping policy status');
+      lines.push('diagnose firewall shaper traffic-shaper list');
+      lines.push('');
+      lines.push('# Per-IP shaper stats');
+      lines.push('diagnose firewall shaper per-ip-shaper list');
+      lines.push('');
+    }
+    if(type==='netflow'||type==='full'){
+      lines.push('# NetFlow export statistics');
+      lines.push('diagnose netflow stat');
+      lines.push('');
+      lines.push('# NetFlow settings');
+      lines.push('get system netflow');
+    }
+    muShow('mu-bw-out', lines.join('\n'));
+  };
+
+  // ── 10. VLAN Decommission ──
+  window.muVLANDecom=function(){
+    var intf=v('mu-vlan-intf')||'<VLAN-INTF>';
+    var vid=v('mu-vlan-id')||'<VLAN-ID>';
+    var subnet=v('mu-vlan-subnet')||'<SUBNET>';
+    var lines=[
+      '# ═══ VLAN DECOMMISSION CHECKLIST ═══',
+      '# VLAN: '+intf+' (ID: '+vid+') | Subnet: '+subnet,
+      '',
+      '# STEP 1: Check for active DHCP leases',
+      'get system dhcp server | grep -A5 "'+intf+'"',
+      'execute dhcp lease-list',
+      '',
+      '# STEP 2: Check for active clients (ARP)',
+      'get system arp | grep "'+intf+'"',
+      '',
+      '# STEP 3: Check active sessions from this subnet',
+      'diagnose sys session filter src '+subnet.split('/')[0],
+      'diagnose sys session list',
+      '',
+      '# STEP 4: Find all address objects using this subnet',
+      'show firewall address | grep -B2 -A5 "'+subnet+'"',
+      '',
+      '# STEP 5: Find all policies referencing this interface',
+      'show firewall policy | grep -B5 -A10 "'+intf+'"',
+      '',
+      '# STEP 6: Find routing entries for this subnet',
+      'get router info routing-table details '+subnet.split('/')[0],
+      'show router static | grep "'+subnet+'"',
+      '',
+      '# STEP 7: Check if interface is used in HA override or VRRP',
+      'show system ha | grep "'+intf+'"',
+      '',
+      '# STEP 8: Safe removal sequence (only after above checks are clean)',
+      '# config system dhcp server',
+      '#   delete <SERVER-ID>',
+      '# end',
+      '# config router static',
+      '#   delete <ROUTE-SEQ-NUM>',
+      '# end',
+      '# config system interface',
+      '#   delete "'+intf+'"',
+      '# end',
+    ];
+    muShow('mu-vlan-out', lines.join('\n'));
+  };
+
+  // ── 11. Firmware Upgrade ──
+  window.muFirmwareUpgrade=function(){
+    var cur=v('mu-fw-current')||'<CURRENT>';
+    var tgt=v('mu-fw-target')||'<TARGET>';
+    var ha=v('mu-fw-ha');
+    var model=v('mu-fw-model')||'FortiGate';
+    var lines=[
+      '# ═══ FIRMWARE UPGRADE PLAN ═══',
+      '# Device: '+model+' | '+cur+' → '+tgt,
+      '',
+      '# PRE-UPGRADE CHECKLIST',
+      '',
+      '# 1. Verify current firmware and serial',
+      'get system status',
+      '',
+      '# 2. Backup configuration',
+      'execute backup config ftp <FTP-IP> <PATH> <USER> <PASS>',
+      '# Or via TFTP:',
+      'execute backup config tftp <FTP-IP> <FILENAME>',
+      '',
+      '# 3. Check disk space',
+      'diagnose sys df',
+      '',
+      '# 4. Note current session count (reference)',
+      'diagnose sys session full-stat',
+      '',
+      '# 5. Verify routing table (reference)',
+      'get router info routing-table summary',
+      '',
+    ];
+    if(ha==='active-passive'){
+      lines.push('# HA UPGRADE SEQUENCE (Active-Passive)');
+      lines.push('# Step 1: Upgrade SECONDARY first');
+      lines.push('execute ha manage 1 admin  # Connect to secondary');
+      lines.push('execute restore image tftp <IMAGE> <TFTP-IP>');
+      lines.push('');
+      lines.push('# Step 2: Wait for secondary to come back up and sync');
+      lines.push('get system ha status');
+      lines.push('');
+      lines.push('# Step 3: Force failover to upgraded secondary');
+      lines.push('diagnose sys ha reset-uptime');
+      lines.push('');
+      lines.push('# Step 4: Upgrade original primary (now secondary)');
+      lines.push('execute ha manage 1 admin');
+      lines.push('execute restore image tftp <IMAGE> <TFTP-IP>');
+      lines.push('');
+    } else {
+      lines.push('# UPGRADE COMMAND');
+      lines.push('execute restore image tftp <IMAGE-FILENAME> <TFTP-IP>');
+      lines.push('# Device will reboot automatically');
+      lines.push('');
+    }
+    lines.push('# POST-UPGRADE VERIFICATION');
+    lines.push('get system status');
+    lines.push('get system performance status');
+    lines.push('get router info routing-table summary');
+    lines.push('get vpn ipsec tunnel summary');
+    lines.push('diagnose sys session full-stat');
+    muShow('mu-fw-out', lines.join('\n'));
+  };
+
+  // ── 12. FAZ/FMG Check ──
+  window.muFAZCheck=function(){
+    var ip=v('mu-faz-ip')||'<FAZ-IP>';
+    var type=v('mu-faz-type');
+    var adom=v('mu-faz-adom')||'root';
+    var lines=[];
+    if(type==='faz'||type==='both'){
+      lines.push('# FortiAnalyzer Connection Status');
+      lines.push('get log fortianalyzer setting');
+      lines.push('');
+      lines.push('# FAZ connectivity and log sending status');
+      lines.push('diagnose test application miglogd 6');
+      lines.push('');
+      lines.push('# FAZ heartbeat and registration');
+      lines.push('diagnose fortianalyzer-connectivity test');
+      lines.push('');
+      lines.push('# Log queue status');
+      lines.push('diagnose test application miglogd 4');
+      lines.push('');
+      lines.push('# Ping FAZ');
+      lines.push('execute ping '+ip);
+      lines.push('');
+    }
+    if(type==='fmg'||type==='both'){
+      lines.push('# FortiManager Connection Status');
+      lines.push('get system central-management');
+      lines.push('');
+      lines.push('# FMG registration status');
+      lines.push('diagnose fmgd-connectivity test');
+      lines.push('');
+      lines.push('# FMG heartbeat');
+      lines.push('diagnose debug application fmgd -1');
+      lines.push('diagnose debug enable');
+      lines.push('# Check output then stop:');
+      lines.push('diagnose debug disable');
+      lines.push('');
+      lines.push('# Ping FMG');
+      lines.push('execute ping '+ip);
+    }
+    muShow('mu-faz-out', lines.join('\n'));
+  };
+}
+
+window.groqClearHistory = function(){
+  freeAIHistory = [];
+  freeAIPrompt = '';
+  var h = document.getElementById('groqHistory');
+  if(h) h.innerHTML = '';
+  var r = document.getElementById('groqResponse');
+  if(r) r.innerHTML = 'Paste CLI output above and click Analyze.';
+  var p = document.getElementById('groqPrompt');
+  if(p) p.value = '';
+};
+
+// Wire login form/* ══ SCREENSAVER ══ */
+(function(){
+  var IDLE = 5 * 60 * 1000;
+  var timer = null;
+  var on = false;
+  var raf = null;
+
+  var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
+  var FS = 14;
+  var W, H, drops, canvas, ctx;
+
+  function ssInit(){
+    canvas = document.getElementById('nwCanvas');
+    if(!canvas) return;
+    ctx = canvas.getContext('2d');
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    var cols = Math.floor(W / FS);
+    drops = [];
+    for(var i = 0; i < cols; i++) drops.push(Math.random() * -150);
+  }
+
+  function ssDraw(){
+    if(!on){ raf = null; return; }
+    ctx.fillStyle = 'rgba(0,0,0,0.04)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.font = FS + 'px Courier New';
+    for(var i = 0; i < drops.length; i++){
+      var r = Math.random();
+      if(r > 0.97)      ctx.fillStyle = '#c0ffe8';
+      else if(r > 0.85) ctx.fillStyle = '#3fb950';
+      else if(r > 0.5)  ctx.fillStyle = '#1D9E75';
+      else               ctx.fillStyle = '#0a4a2e';
+      ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, drops[i] * FS);
+      if(drops[i] * FS > H && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += 0.35 + Math.random() * 0.25;
+    }
+    setTimeout(function(){ raf = requestAnimationFrame(ssDraw); }, 38);
+  }
+
+  function show(){
+    var tk = document.getElementById('toolkitContainer');
+    if(!tk || tk.style.display === 'none') return;
+    if(on) return;
+    on = true;
+    document.getElementById('nwScreensaver').style.display = 'block';
+    ssInit();
+    raf = requestAnimationFrame(ssDraw);
+  }
+
+  window.nwDismiss = function(){
+    if(!on) return;
+    on = false;
+    document.getElementById('nwScreensaver').style.display = 'none';
+    if(raf){ cancelAnimationFrame(raf); raf = null; }
+    reset();
+  };
+
+  function reset(){
+    clearTimeout(timer);
+    timer = setTimeout(show, IDLE);
+  }
+
+  ['mousemove','mousedown','keydown','touchstart','scroll'].forEach(function(e){
+    document.addEventListener(e, function(){
+      if(on){ window.nwDismiss(); return; }
+      reset();
+    }, {passive:true});
+  });
+
+  window.addEventListener('resize', function(){
+    if(on) ssInit();
+  });
+
+  document.addEventListener('DOMContentLoaded', reset);
+})();
+
+function renderEmailGen(el){
+  el.innerHTML=`
+<div class="sh"><span class="stitle">✉️ Customer Email Generator</span><span class="sev info">Troubleshoot · Changes · Config · Report</span></div>
+<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
+  Build a professional customer email from your troubleshooting session. Fill in the fields, pick a template, and copy the finished email ready to send.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+
+  <!-- LEFT: Form -->
+  <div>
+    <!-- Header info -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Email Details</div></div>
+      <div class="cbody" style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">To (Customer name or company)</label>
+          <input type="text" id="eg-to" placeholder="e.g. John Smith / Acme Corp" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">From (Your name)</label>
+          <input type="text" id="eg-from" placeholder="e.g. Samiuel — NetWolf Engineer" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Device / Site</label>
+          <input type="text" id="eg-device" placeholder="e.g. FGT-HQ-01 / Amsterdam site" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Date / Time</label>
+          <input type="text" id="eg-date" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Ticket / Reference number</label>
+          <input type="text" id="eg-ticket" placeholder="e.g. INC-20240512 (optional)" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Template picker -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📄 Email Type</div></div>
+      <div class="cbody" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="egSetType('troubleshoot')" id="eg-type-troubleshoot" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔍 Troubleshoot Report</button>
+        <button onclick="egSetType('changes')" id="eg-type-changes" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🔧 Changes Made</button>
+        <button onclick="egSetType('config')" id="eg-type-config" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">⚙️ Configuration Sent</button>
+        <button onclick="egSetType('report')" id="eg-type-report" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">📊 Status Report</button>
+        <button onclick="egSetType('maintenance')" id="eg-type-maintenance" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🛠️ Maintenance Window</button>
+        <button onclick="egSetType('incident')" id="eg-type-incident" class="sbtn" style="text-align:left;padding:8px 12px;font-size:11px;opacity:.6">🚨 Incident Update</button>
+      </div>
+    </div>
+
+    <!-- Content sections -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📝 Issue / Background</div><span style="font-size:10px;color:var(--t3)">What was the problem?</span></div>
+      <div class="cbody">
+        <textarea id="eg-issue" rows="3" placeholder="e.g. SSL VPN users unable to connect from Belgium. User reported hanging at 10% during tunnel establishment." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔎 Root Cause Found</div></div>
+      <div class="cbody">
+        <textarea id="eg-cause" rows="3" placeholder="e.g. IPv6 was disabled on the TDS portal while user had a public IPv6 address. Policy 613 restricted source to Netherlands only." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">✅ Actions Taken / Changes Made</div></div>
+      <div class="cbody">
+        <div id="eg-actions-list" style="margin-bottom:8px"></div>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="eg-action-input" placeholder="e.g. Added Belgium_SSLVPN to policy 613" style="flex:1;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;" onkeydown="if(event.key==='Enter')egAddAction()">
+          <button class="sbtn" onclick="egAddAction()">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">📋 Commands Used</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-cmds" rows="3" placeholder="e.g. diagnose sniffer packet any 'port 443' 4 20 l" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:'Courier New',monospace;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🔮 Result / Current Status</div></div>
+      <div class="cbody">
+        <textarea id="eg-result" rows="2" placeholder="e.g. SSL VPN connection now works correctly from Belgium. Confirmed with user." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">⏭️ Next Steps / Recommendations</div><span style="font-size:10px;color:var(--t3)">optional</span></div>
+      <div class="cbody">
+        <textarea id="eg-next" rows="2" placeholder="e.g. Monitor for 24 hours. Recommend disabling IPv6 on user device as permanent fix." style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+    </div>
+
+    <!-- Language -->
+    <div class="cblock" style="margin-bottom:14px">
+      <div class="chdr"><div class="chdr-l">🌐 Language</div></div>
+      <div class="cbody" style="display:flex;gap:8px">
+        <button onclick="egSetLang('en')" id="eg-lang-en" class="sbtn" style="opacity:1">🇬🇧 English</button>
+        <button onclick="egSetLang('nl')" id="eg-lang-nl" class="sbtn" style="opacity:.5">🇳🇱 Nederlands</button>
+        <button onclick="egSetLang('de')" id="eg-lang-de" class="sbtn" style="opacity:.5">🇩🇪 Deutsch</button>
+        <button onclick="egSetLang('fr')" id="eg-lang-fr" class="sbtn" style="opacity:.5">🇫🇷 Français</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:10px;padding:12px 14px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:8px;">
+      <div style="font-size:11px;font-weight:700;color:var(--a);margin-bottom:6px;">⚡ Auto-fill from session</div>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.6">Fetch data from your current troubleshoot session — active guide, AI chat, CLI output and commands used — and populate the form automatically.</div>
+      <button onclick="egFetchSession()" class="sbtn" style="width:100%;padding:9px;font-size:12px;">🔄 Fetch from Current Session</button>
+    </div>
+    <button onclick="egGenerate()" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:var(--a)">✉️ Generate Email</button>
+  </div>
+
+  <!-- RIGHT: Preview -->
+  <div>
+    <div class="cblock" style="position:sticky;top:16px">
+      <div class="chdr">
+        <div class="chdr-l">👁️ Email Preview</div>
+        <button onclick="egCopy()" class="sbtn" style="font-size:11px;padding:4px 12px">📋 Copy</button>
+      </div>
+      <div class="cbody" style="padding:0">
+        <div id="eg-preview" style="padding:16px;font-size:12px;color:var(--t2);line-height:1.8;min-height:400px;white-space:pre-wrap;font-family:inherit">
+          <span style="color:var(--t3);font-style:italic">Fill in the form and click Generate Email to see the preview here.</span>
+        </div>
+      </div>
+      <div style="padding:10px 14px;border-top:1px solid var(--br);display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="egOpenMail()" class="sbtn" style="font-size:11px;padding:6px 14px">📧 Open in Mail</button>
+        <button onclick="egCopySubject()" class="sbtn" style="font-size:11px;padding:6px 14px">📋 Copy Subject</button>
+        <button onclick="egReset()" class="sbtn" style="font-size:11px;padding:6px 14px;background:#B91C1C">🗑️ Reset</button>
+      </div>
+    </div>
+  </div>
+
+</div>`;
+
+  // ── State ──
+  var egLang = 'en';
+  var egType = 'troubleshoot';
+  var egActions = [];
+
+  // Set date default
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('eg-date').value = dateStr;
+
+  // Highlight first type button
+  window.egSetType = function(t){
+    egType = t;
+    ['troubleshoot','changes','config','report','maintenance','incident'].forEach(function(x){
+      var b = document.getElementById('eg-type-'+x);
+      if(b) b.style.opacity = x===t ? '1' : '.5';
+    });
+  };
+  egSetType('troubleshoot');
+
+  window.egSetLang = function(l){
+    egLang = l;
+    ['en','nl','de','fr'].forEach(function(x){
+      var b = document.getElementById('eg-lang-'+x);
+      if(b) b.style.opacity = x===l ? '1' : '.5';
+    });
+  };
+
+  window.egAddAction = function(){
+    var inp = document.getElementById('eg-action-input');
+    var val = inp.value.trim();
+    if(!val) return;
+    egActions.push(val);
+    inp.value = '';
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,i){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+i+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egRemoveAction = function(i){
+    egActions.splice(i,1);
+    egAddAction(); egActions.pop(); // refresh list
+    var list = document.getElementById('eg-actions-list');
+    list.innerHTML = egActions.map(function(a,idx){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+        +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+        +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+    }).join('');
+  };
+
+  window.egFetchSession = function(){
+    var fetched = [];
+
+    // ── 1. Current guide category + title ──
+    try {
+      if(typeof D !== 'undefined' && typeof cur !== 'undefined' && D[cur]){
+        var guide = D[cur];
+        var guideTitle = guide.t || '';
+        var guideType  = guide.type || '';
+
+        // Set issue from guide title
+        var issueEl = document.getElementById('eg-issue');
+        if(issueEl && !issueEl.value){
+          issueEl.value = 'Troubleshooting: ' + guideTitle;
+          fetched.push('Guide: ' + guideTitle);
+        }
+
+        // Collect all commands from guide steps
+        var allCmds = [];
+        var steps = guide.steps || guide.sections || [];
+        steps.forEach(function(s){
+          var cmds = s.cmds || s.commands || [];
+          cmds.forEach(function(c){
+            if(typeof c === 'string' && !c.startsWith('(') && c.trim()){
+              allCmds.push(c);
+            } else if(c && c.cmd){
+              allCmds.push(c.cmd);
+            }
+          });
+        });
+        if(allCmds.length){
+          var cmdsEl = document.getElementById('eg-cmds');
+          if(cmdsEl && !cmdsEl.value){
+            cmdsEl.value = allCmds.join('\n');
+            fetched.push(allCmds.length + ' commands from guide');
+          }
+        }
+
+        // Auto-set email type based on guide type
+        if(guideType === 'config') egSetType('config');
+        else egSetType('troubleshoot');
+      }
+    } catch(e){}
+
+    // ── 2. AI Chat history ──
+    try {
+      if(typeof chat !== 'undefined' && chat.length > 0){
+        var aiSummary = [];
+        var aiActions = [];
+        chat.forEach(function(m){
+          if(m.role === 'assistant' && m.content){
+            // Extract bullet points or numbered items as actions
+            var lines = m.content.split('\n');
+            lines.forEach(function(line){
+              var l = line.trim();
+              // Grab lines that look like actions/findings
+              if(/^[-•*]\s+/.test(l) || /^\d+\.\s+/.test(l)){
+                var clean = l.replace(/^[-•*\d.]\s+/, '').trim();
+                if(clean.length > 10 && clean.length < 200 && aiActions.indexOf(clean) === -1){
+                  aiActions.push(clean);
+                }
+              }
+            });
+            // Grab first meaningful assistant response as root cause
+            if(!aiSummary.length && m.content.length > 50){
+              // Take first 300 chars of first assistant message
+              var snippet = m.content.replace(/```[\s\S]*?```/g,'').replace(/\*\*/g,'').trim();
+              if(snippet.length > 30) aiSummary.push(snippet.substring(0, 300));
+            }
+          }
+        });
+
+        // Populate cause from AI summary
+        if(aiSummary.length){
+          var causeEl = document.getElementById('eg-cause');
+          if(causeEl && !causeEl.value){
+            causeEl.value = aiSummary[0] + (aiSummary[0].length === 300 ? '...' : '');
+            fetched.push('AI analysis fetched');
+          }
+        }
+
+        // Add AI-extracted actions to the actions list
+        if(aiActions.length){
+          var added = 0;
+          aiActions.slice(0, 8).forEach(function(a){
+            if(egActions.indexOf(a) === -1){
+              egActions.push(a);
+              added++;
+            }
+          });
+          if(added > 0){
+            // Refresh actions display
+            var list = document.getElementById('eg-actions-list');
+            if(list){
+              list.innerHTML = egActions.map(function(a, idx){
+                return '<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--b2);border-radius:5px;margin-bottom:4px;font-size:12px;color:var(--t2)">'
+                  +'<span style="color:var(--a)">✓</span><span style="flex:1">'+a+'</span>'
+                  +'<span onclick="egRemoveAction('+idx+')" style="cursor:pointer;color:var(--r);font-size:14px">×</span></div>';
+              }).join('');
+            }
+            fetched.push(added + ' actions from AI chat');
+          }
+        }
+      }
+    } catch(e){}
+
+    // ── 3. CLI output from Analyze tab ──
+    try {
+      var cliOutput = document.getElementById('troubleOutputInput');
+      if(cliOutput && cliOutput.value && cliOutput.value.trim()){
+        var resultEl = document.getElementById('eg-result');
+        if(resultEl && !resultEl.value){
+          // Take first 400 chars of CLI output as result context
+          resultEl.value = cliOutput.value.trim().substring(0, 400) + (cliOutput.value.length > 400 ? '...' : '');
+          fetched.push('CLI output fetched');
+        }
+      }
+    } catch(e){}
+
+    // ── 4. IP masking mappings — note which IPs were involved ──
+    try {
+      if(typeof ipMappings !== 'undefined' && ipMappings.length > 0){
+        var ipNote = 'IPs involved (anonymized): ' + ipMappings.map(function(m){ return m.fake; }).join(', ');
+        var nextEl = document.getElementById('eg-next');
+        if(nextEl && !nextEl.value){
+          nextEl.value = ipNote;
+          fetched.push('IP mappings noted');
+        }
+      }
+    } catch(e){}
+
+    // ── 5. Current date/time (always refresh) ──
+    try {
+      var now = new Date();
+      var ds = now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
+              + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('eg-date').value = ds;
+      fetched.push('Date/time updated');
+    } catch(e){}
+
+    // ── Show result toast ──
+    if(fetched.length){
+      showToast('✅ Fetched: ' + fetched.join(' · '));
+    } else {
+      showToast('⚠️ Nothing found in current session. Use a guide or AI tab first.');
+    }
+  };
+
+  window.egGenerate = function(){
+    var to     = document.getElementById('eg-to').value.trim() || 'Customer';
+    var from   = document.getElementById('eg-from').value.trim() || 'NetWolf Engineer';
+    var device = document.getElementById('eg-device').value.trim();
+    var date   = document.getElementById('eg-date').value.trim();
+    var ticket = document.getElementById('eg-ticket').value.trim();
+    var issue  = document.getElementById('eg-issue').value.trim();
+    var cause  = document.getElementById('eg-cause').value.trim();
+    var cmds   = document.getElementById('eg-cmds').value.trim();
+    var result = document.getElementById('eg-result').value.trim();
+    var next   = document.getElementById('eg-next').value.trim();
+
+    var subjectMap = {
+      en:{troubleshoot:'Troubleshoot Report',changes:'Changes Made',config:'Configuration Update',report:'Status Report',maintenance:'Maintenance Window',incident:'Incident Update'},
+      nl:{troubleshoot:'Troubleshoot Rapport',changes:'Wijzigingen Uitgevoerd',config:'Configuratie Update',report:'Status Rapport',maintenance:'Onderhoudsvenster',incident:'Incident Update'}
+    };
+
+    var subject = subjectMap[egLang][egType] + (device ? ' — ' + device : '') + (ticket ? ' ['+ticket+']' : '');
+
+    var lines = [];
+    if(egLang==='en'){
+      lines.push('Subject: ' + subject);
+      lines.push('');
+      lines.push('Dear ' + to + ',');
+      lines.push('');
+      if(device || date){
+        lines.push('Details:');
+        if(device)  lines.push('  Device / Site   : ' + device);
+        if(date)    lines.push('  Date / Time     : ' + date);
+        if(ticket)  lines.push('  Reference       : ' + ticket);
+        lines.push('');
+      }
+      if(issue){
+        lines.push('Issue / Background:');
+        lines.push(issue);
+        lines.push('');
+      }
+      if(cause){
+        lines.push('Root Cause:');
+        lines.push(cause);
+        lines.push('');
+      }
+      if(egActions.length){
+        lines.push('Actions Taken:');
+        egActions.forEach(function(a){ lines.push('  • ' + a); });
+        lines.push('');
+      }
+      if(cmds){
+        lines.push('Commands Used:');
+        cmds.split("\n").forEach(function(c){ if(c.trim()) lines.push('  ' + c.trim()); });
+        lines.push('');
+      }
+      if(result){
+        lines.push('Result / Current Status:');
+        lines.push(result);
+        lines.push('');
+      }
+      if(next){
+        lines.push('Next Steps / Recommendations:');
+        lines.push(next);
+        lines.push('');
+      }
+      lines.push('Please do not hesitate to contact us if you have any questions.');
+      lines.push('');
+      lines.push('Kind regards,');
+      lines.push(from);
+    } else {
+      // Dutch
+      lines.push('Onderwerp: ' + subject);
+      lines.push('');
+      lines.push('Beste ' + to + ',');
+      lines.push('');
+      if(device || date){
+        lines.push('Details:');
+        if(device)  lines.push('  Apparaat / Locatie : ' + device);
+        if(date)    lines.push('  Datum / Tijd       : ' + date);
+        if(ticket)  lines.push('  Referentie         : ' + ticket);
+        lines.push('');
+      }
+      if(issue){
+        lines.push('Probleem / Achtergrond:');
+        lines.push(issue);
+        lines.push('');
+      }
+      if(cause){
+        lines.push('Oorzaak:');
+        lines.push(cause);
+        lines.push('');
+      }
+      if(egActions.length){
+        lines.push('Uitgevoerde Acties:');
+        egActions.forEach(function(a){ lines.push('  • ' + a); });
+        lines.push('');
+      }
+      if(cmds){
+        lines.push('Gebruikte Commando\'s:');
+        cmds.split("\n").forEach(function(c){ if(c.trim()) lines.push('  ' + c.trim()); });
+        lines.push('');
+      }
+      if(result){
+        lines.push('Resultaat / Huidige Status:');
+        lines.push(result);
+        lines.push('');
+      }
+      if(next){
+        lines.push('Vervolgstappen / Aanbevelingen:');
+        lines.push(next);
+        lines.push('');
+      }
+      lines.push('Mocht u nog vragen hebben, neem dan gerust contact met ons op.');
+      lines.push('');
+      lines.push('Met vriendelijke groet,');
+      lines.push(from);
+    }
+
+    var emailText = lines.join('\n');
+    document.getElementById('eg-preview').style.fontFamily = 'inherit';
+    document.getElementById('eg-preview').style.color = 'var(--t)';
+    document.getElementById('eg-preview').textContent = emailText;
+    window._egEmailText = emailText;
+    window._egSubject = subject;
+  };
+
+  window.egCopy = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egEmailText).then(function(){ showToast('✅ Email copied to clipboard!'); }).catch(function(){ showToast('Copy failed — please select and copy manually.'); });
+  };
+
+  window.egCopySubject = function(){
+    if(!window._egSubject){ showToast('Generate an email first.'); return; }
+    navigator.clipboard.writeText(window._egSubject).then(function(){ showToast('✅ Subject copied!'); }).catch(function(){ showToast('Copy failed.'); });
+  };
+
+  window.egOpenMail = function(){
+    if(!window._egEmailText){ showToast('Generate an email first.'); return; }
+    var body = encodeURIComponent(window._egEmailText.replace('Subject: '+window._egSubject+'\n\n',''));
+    var subj = encodeURIComponent(window._egSubject);
+    window.open('mailto:?subject='+subj+'&body='+body);
+  };
+
+  window.egReset = function(){
+    if(!confirm('Clear all fields?')) return;
+    ['eg-to','eg-from','eg-device','eg-ticket','eg-issue','eg-cause','eg-cmds','eg-result','eg-next','eg-action-input'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.value = '';
+    });
+    document.getElementById('eg-date').value = dateStr;
+    document.getElementById('eg-actions-list').innerHTML = '';
+    document.getElementById('eg-preview').textContent = '';
+    document.getElementById('eg-preview').style.color = 'var(--t3)';
+    egActions = [];
+    egSetType('troubleshoot');
+    window._egEmailText = null;
+    window._egSubject = null;
+  };
+}
+
+function renderMostUsed(el){
+  el.innerHTML=`
+<div class="sh"><span class="stitle">⚡ Most Used Network Tools</span><span class="sev info">12 FortiGate diagnostic & operational tools</span></div>
+<div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(0,214,143,.1);border:2px solid rgba(0,214,143,.4);border-radius:8px;margin-bottom:14px;cursor:pointer;box-shadow:0 0 12px rgba(0,214,143,.15)" >
+  <span style="font-size:20px">🎯</span>
+  <div>
+    <div style="font-size:12px;font-weight:700;color:var(--a)">New: Port / Protocol Reachability Checker</div>
+    <div style="font-size:11px;color:var(--t3)">Check UDP 500, TCP 443, SSH, RDP and more — click to jump to Tool 13 ↓</div>
+  </div>
+</div>
+<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
+  The most frequently used FortiGate command generators — fill in the fields and copy the commands directly to your CLI session.
+  All commands are read-only unless stated otherwise.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+<div>
+<div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔍 1. Policy Lookup</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Source IP</label><input type="text" id="mu-pol-src" placeholder="e.g. 192.168.1.100" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Destination IP</label><input type="text" id="mu-pol-dst" placeholder="e.g. 8.8.8.8" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Destination Port</label><input type="text" id="mu-pol-port" placeholder="e.g. 443" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Protocol</label><select id="mu-pol-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="tcp">TCP</option><option value="udp">UDP</option><option value="icmp">ICMP</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface (optional)</label><input type="text" id="mu-pol-intf" placeholder="e.g. port1 or leave blank" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muPolicyLookup()">🔧 Generate Policy Lookup</button><div id="mu-pol-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-pol-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔒 2. VPN Status Checker</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Tunnel Name</label><input type="text" id="mu-vpn-name" placeholder="e.g. SITE-A-TO-B" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Type</label><select id="mu-vpn-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="ipsec">IPsec</option><option value="ssl">SSL VPN</option><option value="both">Both</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Remote Gateway IP (optional)</label><input type="text" id="mu-vpn-gw" placeholder="e.g. 10.0.0.2" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muVPNStatus()">🔧 Generate VPN Status Commands</button><div id="mu-vpn-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-vpn-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🩺 3. Health Check Generator</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Device Name (label only)</label><input type="text" id="mu-hc-name" placeholder="e.g. FGT-HQ-01" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Check Type</label><select id="mu-hc-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="full">Full Health Check</option><option value="quick">Quick Status</option><option value="ha">HA Cluster</option><option value="perf">Performance Only</option></select></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muHealthCheck()">🔧 Generate Health Check Commands</button><div id="mu-hc-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-hc-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🌐 4. BGP / OSPF Neighbor Checker</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Neighbor IP</label><input type="text" id="mu-bgp-ip" placeholder="e.g. 10.0.0.1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Protocol</label><select id="mu-bgp-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="bgp">BGP</option><option value="ospf">OSPF</option><option value="both">Both</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface (OSPF only, optional)</label><input type="text" id="mu-bgp-intf" placeholder="e.g. port2" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muBGPCheck()">🔧 Generate Neighbor Check Commands</button><div id="mu-bgp-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-bgp-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🕵️ 5. SSL VPN User Diagnostics</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Username</label><input type="text" id="mu-ssl-user" placeholder="e.g. thomhaasert" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Portal Name (optional)</label><input type="text" id="mu-ssl-portal" placeholder="e.g. tunnel-portal" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Source IP (optional)</label><input type="text" id="mu-ssl-ip" placeholder="e.g. client external IP" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muSSLVPNUser()">🔧 Generate SSL VPN User Commands</button><div id="mu-ssl-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-ssl-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔎 6. FortiGate Object Search</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">IP / Subnet to find</label><input type="text" id="mu-obj-ip" placeholder="e.g. 192.168.1.0/24 or 10.1.2.3" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface filter (optional)</label><input type="text" id="mu-obj-intf" placeholder="e.g. port3" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muObjectSearch()">🔧 Generate Object Search Commands</button><div id="mu-obj-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-obj-out-cmd" style="white-space:pre-wrap"
+</div>
+<div>
+></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">📄 7. Certificate Expiry Checker</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Scope</label><select id="mu-cert-scope" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="all">All Certificates</option><option value="local">Local Certs Only</option><option value="ca">CA Certs Only</option><option value="remote">Remote Certs Only</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Name filter (optional)</label><input type="text" id="mu-cert-name" placeholder="e.g. VPN or Fortinet (leave blank for all)" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muCertCheck()">🔧 Generate Certificate Commands</button><div id="mu-cert-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-cert-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">⚙️ 8. HA Failover Checklist</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Action</label><select id="mu-ha-action" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="check">Pre-Failover Check</option><option value="failover">Trigger Failover</option><option value="post">Post-Failover Verify</option><option value="full">Full Sequence</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Primary unit hostname</label><input type="text" id="mu-ha-primary" placeholder="e.g. FGT-HQ-01" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Secondary unit hostname</label><input type="text" id="mu-ha-secondary" placeholder="e.g. FGT-HQ-02" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muHAChecklist()">🔧 Generate HA Commands</button><div id="mu-ha-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-ha-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">📊 9. Bandwidth Usage Reporter</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface name</label><input type="text" id="mu-bw-intf" placeholder="e.g. port1 or wan1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Report type</label><select id="mu-bw-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="top">Top Talkers</option><option value="shaping">Traffic Shaping Status</option><option value="netflow">NetFlow Stats</option><option value="full">Full Report</option></select></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muBandwidth()">🔧 Generate Bandwidth Commands</button><div id="mu-bw-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-bw-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">💾 10. VLAN Decommission Wizard</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">VLAN Interface name</label><input type="text" id="mu-vlan-intf" placeholder="e.g. VLAN10 or port3.10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">VLAN ID</label><input type="number" id="mu-vlan-id" placeholder="e.g. 10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Subnet</label><input type="text" id="mu-vlan-subnet" placeholder="e.g. 192.168.10.0/24" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muVLANDecom()">🔧 Generate Decommission Checklist</button><div id="mu-vlan-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-vlan-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔄 11. Firmware Upgrade Planner</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Current FortiOS version</label><input type="text" id="mu-fw-current" placeholder="e.g. 7.4.3" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Target FortiOS version</label><input type="text" id="mu-fw-target" placeholder="e.g. 7.4.5" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">HA setup</label><select id="mu-fw-ha" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="standalone">Standalone</option><option value="active-passive">Active-Passive HA</option><option value="active-active">Active-Active HA</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Device model</label><input type="text" id="mu-fw-model" placeholder="e.g. FortiGate 100F" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muFirmwareUpgrade()">🔧 Generate Upgrade Plan</button><div id="mu-fw-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-fw-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🏢 12. FortiAnalyzer / FortiManager Check</div></div><div class="cbody"><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">FAZ/FMG IP or hostname</label><input type="text" id="mu-faz-ip" placeholder="e.g. 192.168.100.10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Product</label><select id="mu-faz-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="faz">FortiAnalyzer</option><option value="fmg">FortiManager</option><option value="both">Both</option></select></div><div style="margin-bottom:8px"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">ADOM name (optional)</label><input type="text" id="mu-faz-adom" placeholder="e.g. root" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muFAZCheck()">🔧 Generate Connectivity Commands</button><div id="mu-faz-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-faz-out-cmd" style="white-space:pre-wrap"></pre></div></div></div>
+</div>
+</div>`;
+
+  // ── Helper: show output ──
+  // ── 13. Port/Protocol Reachability Checker ──
+
+  window.muPolicyLookup=function(){
+    var src=v('mu-pol-src')||'<SRC-IP>';
+    var dst=v('mu-pol-dst')||'<DST-IP>';
+    var port=v('mu-pol-port')||'443';
+    var proto=v('mu-pol-proto')||'tcp';
+    var intf=v('mu-pol-intf');
+    var lines=[
+      '# Step 1: Route lookup -- which interface handles destination',
+      'get router info routing-table details '+dst,
+      '',
+      '# Step 2: Policy lookup -- which policy matches this traffic',
+      'diagnose firewall iprope lookup '+src+' '+dst+' '+port+' '+proto+(intf?' '+intf:''),
+      '',
+      '# Step 3: Debug flow -- trace exactly what happens packet by packet',
+      'diagnose debug reset',
+      'diagnose debug flow filter addr '+src,
+      'diagnose debug flow filter daddr '+dst,
+      'diagnose debug flow filter proto '+(proto==='tcp'?'6':proto==='udp'?'17':'1'),
+      'diagnose debug flow show function-name enable',
+      'diagnose debug flow trace start 20',
+      'diagnose debug enable',
+      '# Now send a packet from the source, then stop:',
+      'diagnose debug flow trace stop',
+      'diagnose debug disable',
+      'diagnose debug reset',
+      '',
+      '# Step 4: Check session table for this flow',
+      'diagnose sys session filter src '+src,
+      'diagnose sys session filter dst '+dst,
+      'diagnose sys session list'
+    ];
+    muShow('mu-pol-out', lines.join('\n'));
+  };
+
+  // ── 2. VPN Status ──
+  window.muVPNStatus=function(){
+    var name=v('mu-vpn-name')||'<TUNNEL-NAME>';
+    var type=v('mu-vpn-type');
+    var gw=v('mu-vpn-gw');
+    var lines=[];
+    if(type==='ipsec'||type==='both'){
+      lines.push('# IPsec Phase 1 status');
+      lines.push('diagnose vpn ike gateway list name "'+name+'"');
+      lines.push('');
+      lines.push('# IPsec Phase 2 / SA status');
+      lines.push('diagnose vpn tunnel list name "'+name+'"');
+      lines.push('');
+      lines.push('# Phase 1 IKE error log');
+      lines.push('diagnose debug application ike -1');
+      lines.push('diagnose debug enable');
+      lines.push('# Trigger re-negotiation then stop:');
+      lines.push('diagnose debug disable');
+      lines.push('');
+      lines.push('# Phase 2 SA stats (bytes in/out)');
+      lines.push('get vpn ipsec tunnel summary');
+      lines.push('');
+      lines.push('# Check tunnel routing');
+      if(gw) lines.push('get router info routing-table details '+gw);
+      lines.push('diagnose netlink interface list');
+    }
+    if(type==='ssl'||type==='both'){
+      lines.push('# SSL VPN active sessions');
+      lines.push('get vpn ssl monitor');
+      lines.push('');
+      lines.push('# SSL VPN settings');
+      lines.push('get vpn ssl settings');
+      lines.push('');
+      lines.push('# SSL VPN debug');
+      lines.push('diagnose debug application sslvpn -1');
+      lines.push('diagnose debug enable');
+    }
+    muShow('mu-vpn-out', lines.join('\n'));
+  };
+
+  // ── 3. Health Check ──
+  window.muHealthCheck=function(){
+    var name=v('mu-hc-name')||'FortiGate';
+    var type=v('mu-hc-type');
+    var lines=['# ═══════════════════════════════════════','# Health Check: '+name,'# Generated: '+new Date().toLocaleString(),'# ═══════════════════════════════════════',''];
+    if(type==='full'||type==='quick'){
+      lines.push('# System Status');
+      lines.push('get system status');
+      lines.push('');
+      lines.push('# Resource Usage (CPU / Memory)');
+      lines.push('get system performance status');
+      lines.push('');
+      lines.push('# Interface Status');
+      lines.push('get system interface physical');
+      lines.push('');
+    }
+    if(type==='full'||type==='perf'){
+      lines.push('# Top Processes by CPU');
+      lines.push('diagnose sys top 5 20');
+      lines.push('');
+      lines.push('# Session Count');
+      lines.push('diagnose sys session full-stat');
+      lines.push('');
+      lines.push('# NTP Status');
+      lines.push('diagnose sys ntp status');
+      lines.push('');
+      lines.push('# Disk Usage');
+      lines.push('diagnose sys df');
+      lines.push('');
+      lines.push('# FortiGuard Update Status');
+      lines.push('diagnose autoupdate status');
+      lines.push('');
+    }
+    if(type==='full'){
+      lines.push('# Routing Table Summary');
+      lines.push('get router info routing-table summary');
+      lines.push('');
+      lines.push('# ARP Table');
+      lines.push('get system arp');
+      lines.push('');
+      lines.push('# Active Admins');
+      lines.push('get system admin logged');
+      lines.push('');
+      lines.push('# Log Status');
+      lines.push('diagnose log test');
+      lines.push('get log disk setting');
+    }
+    if(type==='ha'){
+      lines.push('# HA Status');
+      lines.push('get system ha status');
+      lines.push('');
+      lines.push('# HA Statistics');
+      lines.push('diagnose sys ha dump-by vcluster');
+      lines.push('');
+      lines.push('# HA Sync Status');
+      lines.push('diagnose sys ha showcsum');
+      lines.push('');
+      lines.push('# HA Peer Check');
+      lines.push('diagnose sys ha history read');
+    }
+    muShow('mu-hc-out', lines.join('\n'));
+  };
+
+  // ── 4. BGP/OSPF ──
+  window.muBGPCheck=function(){
+    var ip=v('mu-bgp-ip')||'<NEIGHBOR-IP>';
+    var proto=v('mu-bgp-proto');
+    var intf=v('mu-bgp-intf');
+    var lines=[];
+    if(proto==='bgp'||proto==='both'){
+      lines.push('# BGP Neighbor Summary');
+      lines.push('get router info bgp summary');
+      lines.push('');
+      lines.push('# BGP Neighbor Detail');
+      lines.push('get router info bgp neighbors '+ip);
+      lines.push('');
+      lines.push('# BGP Routes Received from Neighbor');
+      lines.push('get router info bgp neighbors '+ip+' received-routes');
+      lines.push('');
+      lines.push('# BGP Routes Advertised to Neighbor');
+      lines.push('get router info bgp neighbors '+ip+' advertised-routes');
+      lines.push('');
+      lines.push('# BGP Debug');
+      lines.push('diagnose ip router bgp level info');
+      lines.push('diagnose ip router bgp all enable');
+      lines.push('diagnose debug enable');
+    }
+    if(proto==='ospf'||proto==='both'){
+      lines.push('# OSPF Neighbor Status');
+      lines.push('get router info ospf neighbor');
+      lines.push('');
+      lines.push('# OSPF Database');
+      lines.push('get router info ospf database brief');
+      lines.push('');
+      lines.push('# OSPF Interface Status');
+      lines.push('get router info ospf interface'+(intf?' '+intf:''));
+      lines.push('');
+      lines.push('# OSPF Routes');
+      lines.push('get router info routing-table ospf');
+    }
+    lines.push('');
+    lines.push('# Connectivity test to neighbor');
+    lines.push('execute ping '+ip);
+    lines.push('execute traceroute '+ip);
+    muShow('mu-bgp-out', lines.join('\n'));
+  };
+
+  // ── 5. SSL VPN User ──
+  window.muSSLVPNUser=function(){
+    var user=v('mu-ssl-user')||'<USERNAME>';
+    var portal=v('mu-ssl-portal');
+    var ip=v('mu-ssl-ip');
+    var lines=[
+      '# SSL VPN Active Sessions',
+      'get vpn ssl monitor',
+      '',
+      '# SSL VPN Statistics',
+      'diagnose vpn ssl list',
+      '',
+      '# User-specific session info',
+      'diagnose vpn ssl info',
+    ];
+    if(ip){
+      lines.push('');
+      lines.push('# Check session from source IP');
+      lines.push('diagnose sys session filter src '+ip);
+      lines.push('diagnose sys session list');
+    }
+    lines.push('');
+    lines.push('# SSL VPN Debug (reproduce issue while this runs)');
+    lines.push('diagnose debug reset');
+    lines.push('diagnose debug application sslvpn -1');
+    lines.push('diagnose debug enable');
+    lines.push('# Reproduce the issue, then stop:');
+    lines.push('diagnose debug disable');
+    lines.push('diagnose debug reset');
+    lines.push('');
+    lines.push('# Check user group membership');
+    lines.push('diagnose firewall auth list');
+    if(portal){
+      lines.push('');
+      lines.push('# Portal configuration');
+      lines.push('show vpn ssl web portal "'+portal+'"');
+    }
+    muShow('mu-ssl-out', lines.join('\n'));
+  };
+
+  // ── 6. Object Search ──
+  window.muObjectSearch=function(){
+    var ip=v('mu-obj-ip')||'<IP-OR-SUBNET>';
+    var intf=v('mu-obj-intf');
+    var lines=[
+      '# Search firewall address objects containing this IP/subnet',
+      'show firewall address | grep -A5 "'+ip+'"',
+      '',
+      '# Search address groups',
+      'show firewall addrgrp | grep -B2 -A10 "'+ip+'"',
+      '',
+      '# Find all policies referencing this IP',
+      'show firewall policy | grep -B5 -A20 "'+ip+'"',
+      '',
+      '# Find VIPs with this IP',
+      'show firewall vip | grep -B2 -A10 "'+ip+'"',
+      '',
+      '# Find static routes to/via this subnet',
+      'get router info routing-table details '+ip,
+      'show router static | grep -B2 -A5 "'+ip+'"',
+      '',
+      '# Find DHCP pool containing this IP',
+      'show system dhcp server | grep -B5 -A10 "'+ip+'"',
+      '',
+      '# Check ARP for this IP',
+      'get system arp | grep "'+ip+'"',
+    ];
+    if(intf){
+      lines.push('');
+      lines.push('# Filter to interface '+intf);
+      lines.push('diagnose ip address list | grep "'+intf+'"');
+    }
+    muShow('mu-obj-out', lines.join('\n'));
+  };
+
+  // ── 7. Certificate Check ──
+  window.muCertCheck=function(){
+    var scope=v('mu-cert-scope');
+    var name=v('mu-cert-name');
+    var lines=[
+      '# List all certificates with details',
+      'diagnose certificate local list',
+      '',
+    ];
+    if(scope==='all'||scope==='local'){
+      lines.push('# Local certificates (installed)');
+      lines.push('get certificate local'+(name?' | grep -A10 "'+name+'"':''));
+      lines.push('');
+    }
+    if(scope==='all'||scope==='ca'){
+      lines.push('# CA certificates');
+      lines.push('get certificate ca'+(name?' | grep -A10 "'+name+'"':''));
+      lines.push('');
+    }
+    if(scope==='all'||scope==='remote'){
+      lines.push('# Remote certificates');
+      lines.push('get certificate remote'+(name?' | grep -A10 "'+name+'"':''));
+      lines.push('');
+    }
+    lines.push('# Check certificate validity and expiry');
+    lines.push('diagnose certificate verify <CERT-NAME>');
+    lines.push('');
+    lines.push('# Tip: Look for "Valid To" date in the output');
+    lines.push('# Certificates expiring within 30 days need immediate renewal');
+    muShow('mu-cert-out', lines.join('\n'));
+  };
+
+  // ── 8. HA Checklist ──
+  window.muHAChecklist=function(){
+    var action=v('mu-ha-action');
+    var primary=v('mu-ha-primary')||'FGT-PRIMARY';
+    var secondary=v('mu-ha-secondary')||'FGT-SECONDARY';
+    var lines=[];
+    if(action==='check'||action==='full'){
+      lines.push('# ═══ PRE-FAILOVER CHECK ═══');
+      lines.push('# Run on PRIMARY unit');
+      lines.push('');
+      lines.push('# HA status and sync state');
+      lines.push('get system ha status');
+      lines.push('');
+      lines.push('# Config sync checksum (must match on both units)');
+      lines.push('diagnose sys ha showcsum');
+      lines.push('');
+      lines.push('# Session sync status');
+      lines.push('diagnose sys ha dump-by vcluster');
+      lines.push('');
+      lines.push('# HA heartbeat interfaces');
+      lines.push('diagnose sys ha heartbeat');
+      lines.push('');
+    }
+    if(action==='failover'||action==='full'){
+      lines.push('# ═══ TRIGGER FAILOVER ═══');
+      lines.push('# WARNING: This will cause a brief traffic interruption');
+      lines.push('# Run on PRIMARY unit to force failover to secondary');
+      lines.push('');
+      lines.push('# Method 1: Force subordinate role');
+      lines.push('diagnose sys ha reset-uptime');
+      lines.push('');
+      lines.push('# Method 2: Failover via priority change');
+      lines.push('config system ha');
+      lines.push('    set priority 100');
+      lines.push('end');
+      lines.push('# (Set back to original after confirming failover)');
+      lines.push('');
+    }
+    if(action==='post'||action==='full'){
+      lines.push('# ═══ POST-FAILOVER VERIFY ═══');
+      lines.push('# Run on NEW primary (previously secondary)');
+      lines.push('');
+      lines.push('# Confirm new primary');
+      lines.push('get system ha status');
+      lines.push('');
+      lines.push('# Check routing is intact');
+      lines.push('get router info routing-table summary');
+      lines.push('');
+      lines.push('# Check VPN tunnels are up');
+      lines.push('get vpn ipsec tunnel summary');
+      lines.push('');
+      lines.push('# Check session count (should recover within minutes)');
+      lines.push('diagnose sys session full-stat');
+      lines.push('');
+      lines.push('# Verify internet connectivity');
+      lines.push('execute ping 8.8.8.8');
+    }
+    muShow('mu-ha-out', lines.join('\n'));
+  };
+
+  // ── 9. Bandwidth ──
+  window.muBandwidth=function(){
+    var intf=v('mu-bw-intf')||'<INTERFACE>';
+    var type=v('mu-bw-type');
+    var lines=[];
+    if(type==='top'||type==='full'){
+      lines.push('# Top bandwidth consumers (sessions)');
+      lines.push('diagnose sys session filter dport 0');
+      lines.push('diagnose sys session stat');
+      lines.push('');
+      lines.push('# Interface statistics');
+      lines.push('diagnose netlink interface list '+intf);
+      lines.push('');
+      lines.push('# Real-time traffic on interface');
+      lines.push('diagnose sniffer packet '+intf+' "" 1 0 l');
+      lines.push('');
+    }
+    if(type==='shaping'||type==='full'){
+      lines.push('# Traffic shaping policy status');
+      lines.push('diagnose firewall shaper traffic-shaper list');
+      lines.push('');
+      lines.push('# Per-IP shaper stats');
+      lines.push('diagnose firewall shaper per-ip-shaper list');
+      lines.push('');
+    }
+    if(type==='netflow'||type==='full'){
+      lines.push('# NetFlow export statistics');
+      lines.push('diagnose netflow stat');
+      lines.push('');
+      lines.push('# NetFlow settings');
+      lines.push('get system netflow');
+    }
+    muShow('mu-bw-out', lines.join('\n'));
+  };
+
+  // ── 10. VLAN Decommission ──
+  window.muVLANDecom=function(){
+    var intf=v('mu-vlan-intf')||'<VLAN-INTF>';
+    var vid=v('mu-vlan-id')||'<VLAN-ID>';
+    var subnet=v('mu-vlan-subnet')||'<SUBNET>';
+    var lines=[
+      '# ═══ VLAN DECOMMISSION CHECKLIST ═══',
+      '# VLAN: '+intf+' (ID: '+vid+') | Subnet: '+subnet,
+      '',
+      '# STEP 1: Check for active DHCP leases',
+      'get system dhcp server | grep -A5 "'+intf+'"',
+      'execute dhcp lease-list',
+      '',
+      '# STEP 2: Check for active clients (ARP)',
+      'get system arp | grep "'+intf+'"',
+      '',
+      '# STEP 3: Check active sessions from this subnet',
+      'diagnose sys session filter src '+subnet.split('/')[0],
+      'diagnose sys session list',
+      '',
+      '# STEP 4: Find all address objects using this subnet',
+      'show firewall address | grep -B2 -A5 "'+subnet+'"',
+      '',
+      '# STEP 5: Find all policies referencing this interface',
+      'show firewall policy | grep -B5 -A10 "'+intf+'"',
+      '',
+      '# STEP 6: Find routing entries for this subnet',
+      'get router info routing-table details '+subnet.split('/')[0],
+      'show router static | grep "'+subnet+'"',
+      '',
+      '# STEP 7: Check if interface is used in HA override or VRRP',
+      'show system ha | grep "'+intf+'"',
+      '',
+      '# STEP 8: Safe removal sequence (only after above checks are clean)',
+      '# config system dhcp server',
+      '#   delete <SERVER-ID>',
+      '# end',
+      '# config router static',
+      '#   delete <ROUTE-SEQ-NUM>',
+      '# end',
+      '# config system interface',
+      '#   delete "'+intf+'"',
+      '# end',
+    ];
+    muShow('mu-vlan-out', lines.join('\n'));
+  };
+
+  // ── 11. Firmware Upgrade ──
+  window.muFirmwareUpgrade=function(){
+    var cur=v('mu-fw-current')||'<CURRENT>';
+    var tgt=v('mu-fw-target')||'<TARGET>';
+    var ha=v('mu-fw-ha');
+    var model=v('mu-fw-model')||'FortiGate';
+    var lines=[
+      '# ═══ FIRMWARE UPGRADE PLAN ═══',
+      '# Device: '+model+' | '+cur+' → '+tgt,
+      '',
+      '# PRE-UPGRADE CHECKLIST',
+      '',
+      '# 1. Verify current firmware and serial',
+      'get system status',
+      '',
+      '# 2. Backup configuration',
+      'execute backup config ftp <FTP-IP> <PATH> <USER> <PASS>',
+      '# Or via TFTP:',
+      'execute backup config tftp <FTP-IP> <FILENAME>',
+      '',
+      '# 3. Check disk space',
+      'diagnose sys df',
+      '',
+      '# 4. Note current session count (reference)',
+      'diagnose sys session full-stat',
+      '',
+      '# 5. Verify routing table (reference)',
+      'get router info routing-table summary',
+      '',
+    ];
+    if(ha==='active-passive'){
+      lines.push('# HA UPGRADE SEQUENCE (Active-Passive)');
+      lines.push('# Step 1: Upgrade SECONDARY first');
+      lines.push('execute ha manage 1 admin  # Connect to secondary');
+      lines.push('execute restore image tftp <IMAGE> <TFTP-IP>');
+      lines.push('');
+      lines.push('# Step 2: Wait for secondary to come back up and sync');
+      lines.push('get system ha status');
+      lines.push('');
+      lines.push('# Step 3: Force failover to upgraded secondary');
+      lines.push('diagnose sys ha reset-uptime');
+      lines.push('');
+      lines.push('# Step 4: Upgrade original primary (now secondary)');
+      lines.push('execute ha manage 1 admin');
+      lines.push('execute restore image tftp <IMAGE> <TFTP-IP>');
+      lines.push('');
+    } else {
+      lines.push('# UPGRADE COMMAND');
+      lines.push('execute restore image tftp <IMAGE-FILENAME> <TFTP-IP>');
+      lines.push('# Device will reboot automatically');
+      lines.push('');
+    }
+    lines.push('# POST-UPGRADE VERIFICATION');
+    lines.push('get system status');
+    lines.push('get system performance status');
+    lines.push('get router info routing-table summary');
+    lines.push('get vpn ipsec tunnel summary');
+    lines.push('diagnose sys session full-stat');
+    muShow('mu-fw-out', lines.join('\n'));
+  };
+
+  // ── 12. FAZ/FMG Check ──
+  window.muFAZCheck=function(){
+    var ip=v('mu-faz-ip')||'<FAZ-IP>';
+    var type=v('mu-faz-type');
+    var adom=v('mu-faz-adom')||'root';
+    var lines=[];
+    if(type==='faz'||type==='both'){
+      lines.push('# FortiAnalyzer Connection Status');
+      lines.push('get log fortianalyzer setting');
+      lines.push('');
+      lines.push('# FAZ connectivity and log sending status');
+      lines.push('diagnose test application miglogd 6');
+      lines.push('');
+      lines.push('# FAZ heartbeat and registration');
+      lines.push('diagnose fortianalyzer-connectivity test');
+      lines.push('');
+      lines.push('# Log queue status');
+      lines.push('diagnose test application miglogd 4');
+      lines.push('');
+      lines.push('# Ping FAZ');
+      lines.push('execute ping '+ip);
+      lines.push('');
+    }
+    if(type==='fmg'||type==='both'){
+      lines.push('# FortiManager Connection Status');
+      lines.push('get system central-management');
+      lines.push('');
+      lines.push('# FMG registration status');
+      lines.push('diagnose fmgd-connectivity test');
+      lines.push('');
+      lines.push('# FMG heartbeat');
+      lines.push('diagnose debug application fmgd -1');
+      lines.push('diagnose debug enable');
+      lines.push('# Check output then stop:');
+      lines.push('diagnose debug disable');
+      lines.push('');
+      lines.push('# Ping FMG');
+      lines.push('execute ping '+ip);
+    }
+    muShow('mu-faz-out', lines.join('\n'));
+  };
+}
+
+window.groqClearHistory = function(){
+  freeAIHistory = [];
+  freeAIPrompt = '';
+  var h = document.getElementById('groqHistory');
+  if(h) h.innerHTML = '';
+  var r = document.getElementById('groqResponse');
+  if(r) r.innerHTML = 'Paste CLI output above and click Analyze.';
+  var p = document.getElementById('groqPrompt');
+  if(p) p.value = '';
+};
+
+// Wire login form — safe here because DOM is ready and functions are defined
+document.addEventListener('DOMContentLoaded', function(){
+  const emailEl  = document.getElementById('loginEmail');
+  const passEl   = document.getElementById('loginPassword');
+  const loginBtn = document.getElementById('loginSubmitBtn');
+  const forgotBtn= document.getElementById('loginForgotBtn');
+  if(emailEl)  emailEl.addEventListener('keydown',  function(e){ if(e.key==='Enter') window.doLogin(); });
+  if(passEl)   passEl.addEventListener('keydown',   function(e){ if(e.key==='Enter') window.doLogin(); });
+  if(loginBtn) loginBtn.addEventListener('click',   function(){ window.doLogin(); });
+  if(forgotBtn)forgotBtn.addEventListener('click',  function(){ window.doForgotPassword(); });
+});
 
 function initAndRender(){try{
   loadSavedTheme();
