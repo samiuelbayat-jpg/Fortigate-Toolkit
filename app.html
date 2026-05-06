@@ -7779,6 +7779,17 @@ var _muStore = {};
 function renderMostUsed(el){
   el.innerHTML = '';
   
+  // Add custom CSS for button hover effects
+  const style = document.createElement('style');
+  style.textContent = `
+    .btn-copy-hover:hover { background: var(--b2) !important; border-color: var(--a) !important; color: var(--a) !important; transform: translateY(-1px); }
+    .btn-clear-hover:hover { background: rgba(248,81,73,.25) !important; color: #ff7b6e !important; transform: translateY(-1px); }
+    .btn-gen-hover:hover { background: var(--ad) !important; transform: translateY(-1px); }
+    .mu-button-group { display: flex; gap: 8px; margin-top: 8px; }
+    .mu-button-group button { transition: all 0.2s ease; cursor: pointer; }
+  `;
+  el.appendChild(style);
+  
   // Header
   const header = document.createElement('div');
   header.className = 'sh';
@@ -7802,76 +7813,137 @@ function renderMostUsed(el){
   // RIGHT COLUMN (Tools 2,4,6,8,10,12)
   const rightCol = document.createElement('div');
 
+  // Helper to create button group HTML
+  function getButtonGroup(onclickGen, copyId, clearId) {
+    return `<div class="mu-button-group">
+      <button class="sbtn btn-gen-hover" onclick="${onclickGen}()" style="flex:1">🔧 Generate</button>
+      <button class="sbtn btn-copy-hover" style="background:var(--b3);flex:1" onclick="copyMuOutput('${copyId}')">📋 Copy</button>
+      <button class="sbtn btn-clear-hover" style="background:rgba(248,81,73,.1);color:var(--r);flex:1" onclick="clearMuOutput('${clearId}')">🗑️ Clear</button>
+    </div>`;
+  }
+
   // ========== TOOL 1: POLICY LOOKUP (LEFT) ==========
   const tool1 = document.createElement('div');
   tool1.className = 'cblock';
-  tool1.innerHTML = `<div class="chdr"><div class="chdr-l">🔍 1. Policy Lookup</div><span class="cbadge ro">read-only</span></div><div class="cbody"><input type="text" id="mu-pol-src" placeholder="Source IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><input type="text" id="mu-pol-dst" placeholder="Destination IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><input type="text" id="mu-pol-port" placeholder="Port" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><select id="mu-pol-proto" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>tcp</option><option>udp</option><option>icmp</option></select><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_pol()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('pol')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('pol')">🗑️ Clear</button></div><div id="mu-pol-out" style="display:none;margin-top:10px"><pre id="mu-pol-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Allowed by policy-id X"</strong> = Traffic matches policy X<br>• <strong>"denied by forward policy"</strong> = No matching policy<br>• <strong>Session shows "policy_id=X"</strong> = Which policy is handling traffic</div></div></div>`;
+  tool1.innerHTML = `<div class="chdr"><div class="chdr-l">🔍 1. Policy Lookup</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    <input type="text" id="mu-pol-src" placeholder="Source IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    <input type="text" id="mu-pol-dst" placeholder="Destination IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    <input type="text" id="mu-pol-port" placeholder="Port" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    <select id="mu-pol-proto" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>tcp</option><option>udp</option><option>icmp</option></select>
+    ${getButtonGroup('mu_pol', 'pol', 'pol')}
+    <div id="mu-pol-out" style="display:none;margin-top:10px"><pre id="mu-pol-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Allowed by policy-id X"</strong> = Traffic matches policy X<br>• <strong>"denied by forward policy"</strong> = No matching policy<br>• <strong>Session shows "policy_id=X"</strong> = Which policy is handling traffic</div></div>
+  </div>`;
   leftCol.appendChild(tool1);
 
   // ========== TOOL 2: VPN STATUS (RIGHT) ==========
   const tool2 = document.createElement('div');
   tool2.className = 'cblock';
-  tool2.innerHTML = `<div class="chdr"><div class="chdr-l">🔒 2. VPN Status</div><span class="cbadge ro">read-only</span></div><div class="cbody"><input type="text" id="mu-vpn-name" placeholder="Tunnel Name" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><select id="mu-vpn-type" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>ipsec</option><option>ssl</option><option>both</option></select><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_vpn()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('vpn')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('vpn')">🗑️ Clear</button></div><div id="mu-vpn-out" style="display:none;margin-top:10px"><pre id="mu-vpn-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"established" status</strong> = Tunnel is up<br>• <strong>"encap/decap" counters</strong> = Traffic flowing; zero = issue<br>• <strong>"no proposal chosen"</strong> = Settings mismatch between peers</div></div></div>`;
+  tool2.innerHTML = `<div class="chdr"><div class="chdr-l">🔒 2. VPN Status</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    <input type="text" id="mu-vpn-name" placeholder="Tunnel Name" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    <select id="mu-vpn-type" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>ipsec</option><option>ssl</option><option>both</option></select>
+    ${getButtonGroup('mu_vpn', 'vpn', 'vpn')}
+    <div id="mu-vpn-out" style="display:none;margin-top:10px"><pre id="mu-vpn-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"established" status</strong> = Tunnel is up<br>• <strong>"encap/decap" counters</strong> = Traffic flowing; zero = issue<br>• <strong>"no proposal chosen"</strong> = Settings mismatch between peers</div></div>
+  </div>`;
   rightCol.appendChild(tool2);
 
   // ========== TOOL 3: HEALTH CHECK (LEFT) ==========
   const tool3 = document.createElement('div');
   tool3.className = 'cblock';
-  tool3.innerHTML = `<div class="chdr"><div class="chdr-l">🩺 3. Health Check</div><span class="cbadge ro">read-only</span></div><div class="cbody"><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_hc()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('hc')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('hc')">🗑️ Clear</button></div><div id="mu-hc-out" style="display:none;margin-top:10px"><pre id="mu-hc-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>CPU > 80%</strong> = High load<br>• <strong>Memory > 80%</strong> = May enter conserve mode<br>• <strong>Conserve mode "ON"</strong> = System dropping sessions</div></div></div>`;
+  tool3.innerHTML = `<div class="chdr"><div class="chdr-l">🩺 3. Health Check</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    ${getButtonGroup('mu_hc', 'hc', 'hc')}
+    <div id="mu-hc-out" style="display:none;margin-top:10px"><pre id="mu-hc-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>CPU > 80%</strong> = High load<br>• <strong>Memory > 80%</strong> = May enter conserve mode<br>• <strong>Conserve mode "ON"</strong> = System dropping sessions</div></div>
+  </div>`;
   leftCol.appendChild(tool3);
 
   // ========== TOOL 4: BGP/OSPF (RIGHT) ==========
   const tool4 = document.createElement('div');
   tool4.className = 'cblock';
-  tool4.innerHTML = `<div class="chdr"><div class="chdr-l">🌐 4. BGP/OSPF Neighbor</div><span class="cbadge ro">read-only</span></div><div class="cbody"><input type="text" id="mu-bgp-ip" placeholder="Neighbor IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><select id="mu-bgp-proto" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>bgp</option><option>ospf</option><option>both</option></select><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_bgp()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('bgp')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('bgp')">🗑️ Clear</button></div><div id="mu-bgp-out" style="display:none;margin-top:10px"><pre id="mu-bgp-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>BGP: "Established"</strong> = Peering up<br>• <strong>OSPF: "FULL/DR"</strong> = Adjacency healthy<br>• <strong>OSPF: "EXSTART/EXCHANGE"</strong> = MTU mismatch</div></div></div>`;
+  tool4.innerHTML = `<div class="chdr"><div class="chdr-l">🌐 4. BGP/OSPF Neighbor</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    <input type="text" id="mu-bgp-ip" placeholder="Neighbor IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    <select id="mu-bgp-proto" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>bgp</option><option>ospf</option><option>both</option></select>
+    ${getButtonGroup('mu_bgp', 'bgp', 'bgp')}
+    <div id="mu-bgp-out" style="display:none;margin-top:10px"><pre id="mu-bgp-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>BGP: "Established"</strong> = Peering up<br>• <strong>OSPF: "FULL/DR"</strong> = Adjacency healthy<br>• <strong>OSPF: "EXSTART/EXCHANGE"</strong> = MTU mismatch</div></div>
+  </div>`;
   rightCol.appendChild(tool4);
 
   // ========== TOOL 5: SSL VPN (LEFT) ==========
   const tool5 = document.createElement('div');
   tool5.className = 'cblock';
-  tool5.innerHTML = `<div class="chdr"><div class="chdr-l">🕵️ 5. SSL VPN User</div><span class="cbadge ro">read-only</span></div><div class="cbody"><input type="text" id="mu-ssl-user" placeholder="Username" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_ssl()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('ssl')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('ssl')">🗑️ Clear</button></div><div id="mu-ssl-out" style="display:none;margin-top:10px"><pre id="mu-ssl-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>User not in list</strong> = Authentication failed<br>• <strong>"tunnel" vs "web" mode</strong> = Check portal config</div></div></div>`;
+  tool5.innerHTML = `<div class="chdr"><div class="chdr-l">🕵️ 5. SSL VPN User</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    <input type="text" id="mu-ssl-user" placeholder="Username" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    ${getButtonGroup('mu_ssl', 'ssl', 'ssl')}
+    <div id="mu-ssl-out" style="display:none;margin-top:10px"><pre id="mu-ssl-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>User not in list</strong> = Authentication failed<br>• <strong>"tunnel" vs "web" mode</strong> = Check portal config</div></div>
+  </div>`;
   leftCol.appendChild(tool5);
 
   // ========== TOOL 6: OBJECT SEARCH (RIGHT) ==========
   const tool6 = document.createElement('div');
   tool6.className = 'cblock';
-  tool6.innerHTML = `<div class="chdr"><div class="chdr-l">🔎 6. Object Search</div><span class="cbadge ro">read-only</span></div><div class="cbody"><input type="text" id="mu-obj-ip" placeholder="IP / Subnet" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_obj()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('obj')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('obj')">🗑️ Clear</button></div><div id="mu-obj-out" style="display:none;margin-top:10px"><pre id="mu-obj-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Address object found</strong> = See which policies reference it<br>• <strong>Route found</strong> = Traffic uses that gateway</div></div></div>`;
+  tool6.innerHTML = `<div class="chdr"><div class="chdr-l">🔎 6. Object Search</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    <input type="text" id="mu-obj-ip" placeholder="IP / Subnet" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    ${getButtonGroup('mu_obj', 'obj', 'obj')}
+    <div id="mu-obj-out" style="display:none;margin-top:10px"><pre id="mu-obj-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Address object found</strong> = See which policies reference it<br>• <strong>Route found</strong> = Traffic uses that gateway</div></div>
+  </div>`;
   rightCol.appendChild(tool6);
 
   // ========== TOOL 7: CERTIFICATE (LEFT) ==========
   const tool7 = document.createElement('div');
   tool7.className = 'cblock';
-  tool7.innerHTML = `<div class="chdr"><div class="chdr-l">📄 7. Certificate Check</div><span class="cbadge ro">read-only</span></div><div class="cbody"><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_cert()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('cert')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('cert')">🗑️ Clear</button></div><div id="mu-cert-out" style="display:none;margin-top:10px"><pre id="mu-cert-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Valid from" / "Valid to"</strong> = Check expiry date<br>• <strong>"Issuer"</strong> = Must match CA chain</div></div></div>`;
+  tool7.innerHTML = `<div class="chdr"><div class="chdr-l">📄 7. Certificate Check</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    ${getButtonGroup('mu_cert', 'cert', 'cert')}
+    <div id="mu-cert-out" style="display:none;margin-top:10px"><pre id="mu-cert-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Valid from" / "Valid to"</strong> = Check expiry date<br>• <strong>"Issuer"</strong> = Must match CA chain</div></div>
+  </div>`;
   leftCol.appendChild(tool7);
 
   // ========== TOOL 8: HA FAILOVER (RIGHT) ==========
   const tool8 = document.createElement('div');
   tool8.className = 'cblock';
-  tool8.innerHTML = `<div class="chdr"><div class="chdr-l">⚙️ 8. HA Failover</div><span class="cbadge caution">caution</span></div><div class="cbody"><select id="mu-ha-action" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>check</option><option>failover</option><option>post</option></select><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_ha()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('ha')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('ha')">🗑️ Clear</button></div><div id="mu-ha-out" style="display:none;margin-top:10px"><pre id="mu-ha-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>⚠️ How to interpret:</strong><br>• <strong>"Primary/Secondary" roles</strong> = Primary handles traffic<br>• <strong>Checksum mismatch</strong> = Config out of sync<br>• <strong>Failover warning:</strong> Causes brief traffic interruption</div></div></div>`;
+  tool8.innerHTML = `<div class="chdr"><div class="chdr-l">⚙️ 8. HA Failover</div><span class="cbadge caution">caution</span></div><div class="cbody">
+    <select id="mu-ha-action" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>check</option><option>failover</option><option>post</option></select>
+    ${getButtonGroup('mu_ha', 'ha', 'ha')}
+    <div id="mu-ha-out" style="display:none;margin-top:10px"><pre id="mu-ha-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>⚠️ How to interpret:</strong><br>• <strong>"Primary/Secondary" roles</strong> = Primary handles traffic<br>• <strong>Checksum mismatch</strong> = Config out of sync<br>• <strong>Failover warning:</strong> Causes brief traffic interruption</div></div>
+  </div>`;
   rightCol.appendChild(tool8);
 
   // ========== TOOL 9: BANDWIDTH (LEFT) ==========
   const tool9 = document.createElement('div');
   tool9.className = 'cblock';
-  tool9.innerHTML = `<div class="chdr"><div class="chdr-l">📊 9. Bandwidth Check</div><span class="cbadge ro">read-only</span></div><div class="cbody"><input type="text" id="mu-bw-intf" placeholder="Interface" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_bw()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('bw')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('bw')">🗑️ Clear</button></div><div id="mu-bw-out" style="display:none;margin-top:10px"><pre id="mu-bw-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>High error counters</strong> = Physical layer issue<br>• <strong>Drops increasing</strong> = Interface congestion</div></div></div>`;
+  tool9.innerHTML = `<div class="chdr"><div class="chdr-l">📊 9. Bandwidth Check</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    <input type="text" id="mu-bw-intf" placeholder="Interface" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    ${getButtonGroup('mu_bw', 'bw', 'bw')}
+    <div id="mu-bw-out" style="display:none;margin-top:10px"><pre id="mu-bw-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>High error counters</strong> = Physical layer issue<br>• <strong>Drops increasing</strong> = Interface congestion</div></div>
+  </div>`;
   leftCol.appendChild(tool9);
 
   // ========== TOOL 10: VLAN (RIGHT) ==========
   const tool10 = document.createElement('div');
   tool10.className = 'cblock';
-  tool10.innerHTML = `<div class="chdr"><div class="chdr-l">💾 10. VLAN Check</div><span class="cbadge ro">read-only</span></div><div class="cbody"><input type="text" id="mu-vlan-intf" placeholder="VLAN Interface" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_vlan()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('vlan')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('vlan')">🗑️ Clear</button></div><div id="mu-vlan-out" style="display:none;margin-top:10px"><pre id="mu-vlan-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Interface status "up/up"</strong> = Physical and protocol up<br>• <strong>VLAN ID mismatch</strong> = Check switch port config</div></div></div>`;
+  tool10.innerHTML = `<div class="chdr"><div class="chdr-l">💾 10. VLAN Check</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    <input type="text" id="mu-vlan-intf" placeholder="VLAN Interface" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    ${getButtonGroup('mu_vlan', 'vlan', 'vlan')}
+    <div id="mu-vlan-out" style="display:none;margin-top:10px"><pre id="mu-vlan-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Interface status "up/up"</strong> = Physical and protocol up<br>• <strong>VLAN ID mismatch</strong> = Check switch port config</div></div>
+  </div>`;
   rightCol.appendChild(tool10);
 
   // ========== TOOL 11: FIRMWARE (LEFT) ==========
   const tool11 = document.createElement('div');
   tool11.className = 'cblock';
-  tool11.innerHTML = `<div class="chdr"><div class="chdr-l">🔄 11. Firmware Upgrade</div><span class="cbadge caution">caution</span></div><div class="cbody"><input type="text" id="mu-fw-current" placeholder="Current version" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><input type="text" id="mu-fw-target" placeholder="Target version" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_fw()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('fw')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('fw')">🗑️ Clear</button></div><div id="mu-fw-out" style="display:none;margin-top:10px"><pre id="mu-fw-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>⚠️ Warning:</strong> Always backup config first! HA cluster: upgrade secondary first.</div></div></div>`;
+  tool11.innerHTML = `<div class="chdr"><div class="chdr-l">🔄 11. Firmware Upgrade</div><span class="cbadge caution">caution</span></div><div class="cbody">
+    <input type="text" id="mu-fw-current" placeholder="Current version" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    <input type="text" id="mu-fw-target" placeholder="Target version" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    ${getButtonGroup('mu_fw', 'fw', 'fw')}
+    <div id="mu-fw-out" style="display:none;margin-top:10px"><pre id="mu-fw-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>⚠️ Warning:</strong> Always backup config first! HA cluster: upgrade secondary first.</div></div>
+  </div>`;
   leftCol.appendChild(tool11);
 
   // ========== TOOL 12: FAZ/FMG (RIGHT) ==========
   const tool12 = document.createElement('div');
   tool12.className = 'cblock';
-  tool12.innerHTML = `<div class="chdr"><div class="chdr-l">🏢 12. FAZ/FMG Check</div><span class="cbadge ro">read-only</span></div><div class="cbody"><input type="text" id="mu-faz-ip" placeholder="FAZ/FMG IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)"><div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_faz()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('faz')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('faz')">🗑️ Clear</button></div><div id="mu-faz-out" style="display:none;margin-top:10px"><pre id="mu-faz-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Connection status "connected"</strong> = FAZ/FMG reachable<br>• <strong>Ping fails</strong> = Network connectivity issue</div></div></div>`;
+  tool12.innerHTML = `<div class="chdr"><div class="chdr-l">🏢 12. FAZ/FMG Check</div><span class="cbadge ro">read-only</span></div><div class="cbody">
+    <input type="text" id="mu-faz-ip" placeholder="FAZ/FMG IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
+    ${getButtonGroup('mu_faz', 'faz', 'faz')}
+    <div id="mu-faz-out" style="display:none;margin-top:10px"><pre id="mu-faz-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Connection status "connected"</strong> = FAZ/FMG reachable<br>• <strong>Ping fails</strong> = Network connectivity issue</div></div>
+  </div>`;
   rightCol.appendChild(tool12);
 
   // Add columns to grid container
@@ -7884,7 +7956,19 @@ function renderMostUsed(el){
   portCard.className = 'cblock';
   portCard.style.border = '2px solid var(--a)';
   portCard.style.background = 'rgba(29,158,117,.02)';
-  portCard.innerHTML = `<div class="chdr" style="background:rgba(29,158,117,.1)"><div class="chdr-l"><span style="font-size:18px">🔌</span> 13. Port / Protocol Reachability Checker</div><span class="cbadge ro">UDP/TCP</span></div><div class="cbody"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px"><div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Destination IP</label><input type="text" id="mu-port-dst" placeholder="e.g., 8.8.8.8, 10.0.0.2" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:monospace"></div><div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Port / Protocol</label><select id="mu-port-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t)"><option value="udp 500">UDP 500 (IKE/IPsec)</option><option value="tcp 443">TCP 443 (HTTPS/SSL)</option><option value="tcp 22">TCP 22 (SSH)</option><option value="tcp 3389">TCP 3389 (RDP)</option><option value="udp 53">UDP 53 (DNS)</option><option value="custom">Custom</option></select></div><div id="mu-port-custom-wrap" style="display:none;grid-column:1/-1"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Custom (protocol port)</label><input type="text" id="mu-port-custom" placeholder="tcp 8080" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:monospace"></div></div><div style="display:flex;gap:8px"><button class="sbtn" id="mu-port-btn" style="background:linear-gradient(90deg,var(--a),var(--ad))">🚀 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('port')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('port')">🗑️ Clear</button></div><div id="mu-port-out" style="display:none;margin-top:12px"><pre id="mu-port-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>0% loss</strong> = Reachable | <strong>100% loss</strong> = Unreachable<br>• <strong>TCP: Telnet connects</strong> = Port open | <strong>UDP: Sniffer shows replies</strong> = Service responding</div></div></div>`;
+  portCard.innerHTML = `<div class="chdr" style="background:rgba(29,158,117,.1)"><div class="chdr-l"><span style="font-size:18px">🔌</span> 13. Port / Protocol Reachability Checker</div><span class="cbadge ro">UDP/TCP</span></div><div class="cbody">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Destination IP</label><input type="text" id="mu-port-dst" placeholder="e.g., 8.8.8.8, 10.0.0.2" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:monospace"></div>
+      <div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Port / Protocol</label><select id="mu-port-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t)"><option value="udp 500">UDP 500 (IKE/IPsec)</option><option value="tcp 443">TCP 443 (HTTPS/SSL)</option><option value="tcp 22">TCP 22 (SSH)</option><option value="tcp 3389">TCP 3389 (RDP)</option><option value="udp 53">UDP 53 (DNS)</option><option value="custom">Custom</option></select></div>
+      <div id="mu-port-custom-wrap" style="display:none;grid-column:1/-1"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Custom (protocol port)</label><input type="text" id="mu-port-custom" placeholder="tcp 8080" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:monospace"></div>
+    </div>
+    <div class="mu-button-group">
+      <button class="sbtn btn-gen-hover" id="mu-port-btn" style="background:linear-gradient(90deg,var(--a),var(--ad));flex:1">🚀 Generate</button>
+      <button class="sbtn btn-copy-hover" style="background:var(--b3);flex:1" onclick="copyMuOutput('port')">📋 Copy</button>
+      <button class="sbtn btn-clear-hover" style="background:rgba(248,81,73,.1);color:var(--r);flex:1" onclick="clearMuOutput('port')">🗑️ Clear</button>
+    </div>
+    <div id="mu-port-out" style="display:none;margin-top:12px"><pre id="mu-port-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>0% loss</strong> = Reachable | <strong>100% loss</strong> = Unreachable<br>• <strong>TCP: Telnet connects</strong> = Port open | <strong>UDP: Sniffer shows replies</strong> = Service responding</div></div>
+  </div>`;
   el.appendChild(portCard);
 
   // ========== GENERATE FUNCTIONS ==========
@@ -7903,8 +7987,15 @@ function renderMostUsed(el){
   window.mu_port = function() { let dst = getVal('mu-port-dst'); if (!dst) { alert('Enter destination IP'); return; } let sel = document.getElementById('mu-port-proto'); let protoPort; if (sel.value === 'custom') { let custom = getVal('mu-port-custom'); if (!custom) { alert('Enter custom protocol and port e.g. tcp 8080'); return; } protoPort = custom; } else { protoPort = sel.options[sel.selectedIndex].textContent; } let parts = protoPort.split(' '); let proto = parts[0].toLowerCase(); let port = parts[1]; let lines = [`# Port Reachability Test: ${dst}:${port} (${proto.toUpperCase()})`]; if (proto === 'tcp') { lines.push('', '# 1. Basic ICMP test', 'execute ping ' + dst, '', '# 2. TCP connect test', 'execute telnet ' + dst + ' ' + port, '', '# 3. Check session table', 'diagnose sys session filter dport ' + port, 'diagnose sys session list'); } else if (proto === 'udp') { lines.push('', '# 1. UDP sniffer - look for responses', 'diagnose sniffer packet any "host ' + dst + ' and port ' + port + '" 4 30 l', '', '# 2. IKE debug (for UDP 500)', 'diagnose debug application ike -1', 'diagnose debug enable', '# Wait 10 seconds then:', 'diagnose debug disable', '', '# 3. ICMP fallback', 'execute ping ' + dst); } lines.push('', '# 4. Verify policy allows this traffic', 'diagnose firewall iprope lookup <SOURCE_IP> ' + dst + ' ' + port + ' ' + proto); showOut('port', lines.join('\n')); };
 
   // Event listeners for port tool
-  document.getElementById('mu-port-proto').addEventListener('change', function() { document.getElementById('mu-port-custom-wrap').style.display = this.value === 'custom' ? 'block' : 'none'; });
-  document.getElementById('mu-port-btn').onclick = window.mu_port;
+  const portProto = document.getElementById('mu-port-proto');
+  if (portProto) {
+    portProto.addEventListener('change', function() { 
+      const customWrap = document.getElementById('mu-port-custom-wrap');
+      if (customWrap) customWrap.style.display = this.value === 'custom' ? 'block' : 'none'; 
+    });
+  }
+  const portBtn = document.getElementById('mu-port-btn');
+  if (portBtn) portBtn.onclick = window.mu_port;
 
   // Attach copy/clear to window
   window.copyMuOutput = copyMuOutput;
