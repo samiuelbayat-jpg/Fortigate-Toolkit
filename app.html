@@ -7757,812 +7757,256 @@ function renderEmailGen(el){
 }
 
 function renderMostUsed(el){
-  el.innerHTML=`
-<div class="sh"><span class="stitle">⚡ Most Used Network Tools</span><span class="sev info">12 FortiGate diagnostic & operational tools</span></div>
-<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
-  The most frequently used FortiGate command generators — fill in the fields and copy the commands directly to your CLI session.
-  All commands are read-only unless stated otherwise.
-</p>
+  el.innerHTML='';
+  var wrap = document.createElement('div');
+  wrap.style.cssText='padding:0';
 
+  var header = document.createElement('div');
+  header.className='sh';
+  header.innerHTML='<span class="stitle">&#x26A1; Most Used Network Tools</span><span class="sev info">FortiGate diagnostic &amp; operational tools</span>';
+  wrap.appendChild(header);
 
-<div id="tool13" class="cblock" style="margin-bottom:14px;border-color:rgba(0,214,143,.3)">
-  <div class="chdr" style="background:rgba(0,214,143,.05)">
-    <div class="chdr-l" style="color:var(--a)">🎯 13. Port / Protocol Reachability Checker</div>
-    <span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(0,214,143,.1);color:var(--a);border:1px solid rgba(0,214,143,.3)">VPN · Firewall · Services</span>
-  </div>
-  <div class="cbody">
-    <div style="font-size:12px;color:var(--t2);margin-bottom:12px;line-height:1.6">
-      Check if a specific port/protocol is reachable from a source to a destination. Combines policy lookup, debug flow and common service checks in one command block.
-    </div>
-    <div style="margin-bottom:8px">
-      <label for="mu-reach-src" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Source IP</label>
-      <input type="text" id="mu-reach-src" placeholder="e.g. 192.168.1.100" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px">
-    </div>
-    <div style="margin-bottom:8px">
-      <label for="mu-reach-dst" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Destination IP</label>
-      <input type="text" id="mu-reach-dst" placeholder="e.g. 203.0.113.1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px">
-    </div>
-    <div style="margin-bottom:8px">
-      <label for="mu-reach-port" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Quick Select — Common Services</label>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-        <button onclick="muReachQuick('500','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">IKE <span style="color:var(--t3)">UDP/500</span></button>
-        <button onclick="muReachQuick('4500','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">NAT-T <span style="color:var(--t3)">UDP/4500</span></button>
-        <button onclick="muReachQuick('443','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">SSL VPN <span style="color:var(--t3)">TCP/443</span></button>
-        <button onclick="muReachQuick('22','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">SSH <span style="color:var(--t3)">TCP/22</span></button>
-        <button onclick="muReachQuick('3389','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">RDP <span style="color:var(--t3)">TCP/3389</span></button>
-        <button onclick="muReachQuick('80','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">HTTP <span style="color:var(--t3)">TCP/80</span></button>
-        <button onclick="muReachQuick('179','tcp')" class="sbtn" style="font-size:10px;padding:3px 10px">BGP <span style="color:var(--t3)">TCP/179</span></button>
-        <button onclick="muReachQuick('53','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">DNS <span style="color:var(--t3)">UDP/53</span></button>
-        <button onclick="muReachQuick('161','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">SNMP <span style="color:var(--t3)">UDP/161</span></button>
-        <button onclick="muReachQuick('123','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">NTP <span style="color:var(--t3)">UDP/123</span></button>
-        <button onclick="muReachQuick('1812','udp')" class="sbtn" style="font-size:10px;padding:3px 10px">RADIUS <span style="color:var(--t3)">UDP/1812</span></button>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <div>
-        <label for="mu-reach-port" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Port</label>
-        <input type="text" id="mu-reach-port" placeholder="e.g. 500" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px">
-      </div>
-      <div>
-        <label for="mu-reach-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Protocol</label>
-        <select id="mu-reach-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">
-          <option value="udp">UDP</option>
-          <option value="tcp">TCP</option>
-          <option value="icmp">ICMP</option>
-        </select>
-      </div>
-    </div>
-    <div style="margin-bottom:10px">
-      <label for="mu-reach-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface (optional)</label>
-      <input type="text" id="mu-reach-intf" placeholder="e.g. port1 or wan1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px">
-    </div>
-    <button class="sbtn" style="margin-top:4px;width:100%;background:var(--a);color:#000;font-weight:700" onclick="muReachCheck()">🎯 Generate Reachability Commands</button>
-    <div id="mu-reach-out" style="display:none;margin-top:10px">
-      <pre class="code-block" id="mu-reach-out-cmd" style="white-space:pre-wrap"></pre>
-    </div>
-  </div>
-</div>
-
-<div style="margin-top:16px;font-size:11px;font-weight:700;color:var(--t3);font-family:var(--mono);letter-spacing:.08em;padding:6px 0;border-bottom:1px solid var(--br);margin-bottom:14px;">⚡ ALL TOOLS</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-<div>
-<div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔍 1. Policy Lookup</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-pol-src" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Source IP</label><input type="text" id="mu-pol-src" placeholder="e.g. 192.168.1.100" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-pol-dst" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Destination IP</label><input type="text" id="mu-pol-dst" placeholder="e.g. 8.8.8.8" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-pol-port" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Destination Port</label><input type="text" id="mu-pol-port" placeholder="e.g. 443" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-pol-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Protocol</label><select id="mu-pol-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="tcp">TCP</option><option value="udp">UDP</option><option value="icmp">ICMP</option></select></div><div style="margin-bottom:8px"><label for="mu-pol-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface (optional)</label><input type="text" id="mu-pol-intf" placeholder="e.g. port1 or leave blank" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muPolicyLookup()">🔧 Generate Policy Lookup</button><div id="mu-pol-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-pol-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔒 2. VPN Status Checker</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-vpn-name" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Tunnel Name</label><input type="text" id="mu-vpn-name" placeholder="e.g. SITE-A-TO-B" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-vpn-gw" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Type</label><select id="mu-vpn-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="ipsec">IPsec</option><option value="ssl">SSL VPN</option><option value="both">Both</option></select></div><div style="margin-bottom:8px"><label for="mu-vpn-gw" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Remote Gateway IP (optional)</label><input type="text" id="mu-vpn-gw" placeholder="e.g. 10.0.0.2" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muVPNStatus()">🔧 Generate VPN Status Commands</button><div id="mu-vpn-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-vpn-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🩺 3. Health Check Generator</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-hc-name" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Device Name (label only)</label><input type="text" id="mu-hc-name" placeholder="e.g. FGT-HQ-01" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-bgp-ip" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Check Type</label><select id="mu-hc-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="full">Full Health Check</option><option value="quick">Quick Status</option><option value="ha">HA Cluster</option><option value="perf">Performance Only</option></select></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muHealthCheck()">🔧 Generate Health Check Commands</button><div id="mu-hc-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-hc-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🌐 4. BGP / OSPF Neighbor Checker</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-bgp-ip" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Neighbor IP</label><input type="text" id="mu-bgp-ip" placeholder="e.g. 10.0.0.1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-bgp-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Protocol</label><select id="mu-bgp-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="bgp">BGP</option><option value="ospf">OSPF</option><option value="both">Both</option></select></div><div style="margin-bottom:8px"><label for="mu-bgp-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface (OSPF only, optional)</label><input type="text" id="mu-bgp-intf" placeholder="e.g. port2" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muBGPCheck()">🔧 Generate Neighbor Check Commands</button><div id="mu-bgp-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-bgp-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🕵️ 5. SSL VPN User Diagnostics</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-ssl-user" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Username</label><input type="text" id="mu-ssl-user" placeholder="e.g. thomhaasert" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-ssl-portal" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Portal Name (optional)</label><input type="text" id="mu-ssl-portal" placeholder="e.g. tunnel-portal" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-ssl-ip" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Source IP (optional)</label><input type="text" id="mu-ssl-ip" placeholder="e.g. client external IP" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muSSLVPNUser()">🔧 Generate SSL VPN User Commands</button><div id="mu-ssl-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-ssl-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔎 6. FortiGate Object Search</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-obj-ip" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">IP / Subnet to find</label><input type="text" id="mu-obj-ip" placeholder="e.g. 192.168.1.0/24 or 10.1.2.3" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-obj-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface filter (optional)</label><input type="text" id="mu-obj-intf" placeholder="e.g. port3" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muObjectSearch()">🔧 Generate Object Search Commands</button><div id="mu-obj-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-obj-out-cmd" style="white-space:pre-wrap"
-</div>
-<div>
-></pre></div></div></div>
-</div>
-<div>
-<div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">📄 7. Certificate Expiry Checker</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-cert-name" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Scope</label><select id="mu-cert-scope" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="all">All Certificates</option><option value="local">Local Certs Only</option><option value="ca">CA Certs Only</option><option value="remote">Remote Certs Only</option></select></div><div style="margin-bottom:8px"><label for="mu-cert-name" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Name filter (optional)</label><input type="text" id="mu-cert-name" placeholder="e.g. VPN or Fortinet (leave blank for all)" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muCertCheck()">🔧 Generate Certificate Commands</button><div id="mu-cert-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-cert-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">⚙️ 8. HA Failover Checklist</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-ha-primary" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Action</label><select id="mu-ha-action" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="check">Pre-Failover Check</option><option value="failover">Trigger Failover</option><option value="post">Post-Failover Verify</option><option value="full">Full Sequence</option></select></div><div style="margin-bottom:8px"><label for="mu-ha-primary" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Primary unit hostname</label><input type="text" id="mu-ha-primary" placeholder="e.g. FGT-HQ-01" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-ha-secondary" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Secondary unit hostname</label><input type="text" id="mu-ha-secondary" placeholder="e.g. FGT-HQ-02" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muHAChecklist()">🔧 Generate HA Commands</button><div id="mu-ha-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-ha-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">📊 9. Bandwidth Usage Reporter</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-bw-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Interface name</label><input type="text" id="mu-bw-intf" placeholder="e.g. port1 or wan1" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-vlan-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Report type</label><select id="mu-bw-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="top">Top Talkers</option><option value="shaping">Traffic Shaping Status</option><option value="netflow">NetFlow Stats</option><option value="full">Full Report</option></select></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muBandwidth()">🔧 Generate Bandwidth Commands</button><div id="mu-bw-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-bw-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">💾 10. VLAN Decommission Wizard</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-vlan-intf" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">VLAN Interface name</label><input type="text" id="mu-vlan-intf" placeholder="e.g. VLAN10 or port3.10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-vlan-id" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">VLAN ID</label><input type="number" id="mu-vlan-id" placeholder="e.g. 10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-vlan-subnet" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Subnet</label><input type="text" id="mu-vlan-subnet" placeholder="e.g. 192.168.10.0/24" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muVLANDecom()">🔧 Generate Decommission Checklist</button><div id="mu-vlan-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-vlan-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🔄 11. Firmware Upgrade Planner</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-fw-current" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Current FortiOS version</label><input type="text" id="mu-fw-current" placeholder="e.g. 7.4.3" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-fw-target" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Target FortiOS version</label><input type="text" id="mu-fw-target" placeholder="e.g. 7.4.5" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-fw-model" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">HA setup</label><select id="mu-fw-ha" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="standalone">Standalone</option><option value="active-passive">Active-Passive HA</option><option value="active-active">Active-Active HA</option></select></div><div style="margin-bottom:8px"><label for="mu-fw-model" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Device model</label><input type="text" id="mu-fw-model" placeholder="e.g. FortiGate 100F" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muFirmwareUpgrade()">🔧 Generate Upgrade Plan</button><div id="mu-fw-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-fw-out-cmd" style="white-space:pre-wrap"></pre></div></div></div><div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🏢 12. FortiAnalyzer / FortiManager Check</div></div><div class="cbody"><div style="margin-bottom:8px"><label for="mu-faz-ip" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">FAZ/FMG IP or hostname</label><input type="text" id="mu-faz-ip" placeholder="e.g. 192.168.100.10" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><div style="margin-bottom:8px"><label for="mu-faz-adom" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">Product</label><select id="mu-faz-type" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="faz">FortiAnalyzer</option><option value="fmg">FortiManager</option><option value="both">Both</option></select></div><div style="margin-bottom:8px"><label for="mu-faz-adom" style="font-size:11px;color:var(--t3);display:block;margin-bottom:3px">ADOM name (optional)</label><input type="text" id="mu-faz-adom" placeholder="e.g. root" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div><button class="sbtn" style="margin-top:10px;width:100%" onclick="muFAZCheck()">🔧 Generate Connectivity Commands</button><div id="mu-faz-out" style="display:none;margin-top:10px"><pre class="code-block" id="mu-faz-out-cmd" style="white-space:pre-wrap"></pre></div></div></div>
-</div>
-</div>
-`;
-
-  // ── Helper: show output ──
-  // ── 13. Port/Protocol Reachability Checker ──
-  window.muReachQuick = function(port, proto){
-    document.getElementById('mu-reach-port').value = port;
-    var sel = document.getElementById('mu-reach-proto');
-    if(sel) sel.value = proto;
-  };
-
-  window.muReachCheck = function(){
-    var src   = (document.getElementById('mu-reach-src')||{}).value||'<SRC-IP>';
-    var dst   = (document.getElementById('mu-reach-dst')||{}).value||'<DST-IP>';
-    var port  = (document.getElementById('mu-reach-port')||{}).value||'500';
-    var proto = (document.getElementById('mu-reach-proto')||{}).value||'udp';
-    var intf  = (document.getElementById('mu-reach-intf')||{}).value||'';
-    var protoNum = proto==='tcp'?'6':proto==='udp'?'17':'1';
-
-    // Service label for comments
-    var svcMap = {'500':'IKE (IPsec Phase 1)','4500':'NAT-T (IPsec Phase 2)','443':'HTTPS / SSL VPN',
-      '22':'SSH','3389':'RDP','80':'HTTP','179':'BGP','53':'DNS','161':'SNMP','123':'NTP','1812':'RADIUS'};
-    var svcLabel = svcMap[port] ? svcMap[port]+' — ' : '';
-
-    var lines = [
-      '# ═══════════════════════════════════════════════════',
-      '# REACHABILITY CHECK: '+svcLabel+proto.toUpperCase()+'/'+port,
-      '# From : '+src,
-      '# To   : '+dst,
-      '# ═══════════════════════════════════════════════════',
-      '',
-      '# STEP 1 — Routing: Does FortiGate have a route to destination?',
-      'get router info routing-table details '+dst,
-      '',
-      '# STEP 2 — Policy Lookup: Which policy matches this traffic?',
-      'diagnose firewall iprope lookup '+src+' '+dst+' '+port+' '+proto+(intf?' '+intf:''),
-      '',
-      '# STEP 3 — Packet sniffer: Do packets actually reach FortiGate?',
-      'diagnose sniffer packet '+(intf||'any')+' "host '+src+' and host '+dst+' and port '+port+'" 4 20 l',
-      '',
-      '# STEP 4 — Session table: Is there an active session for this flow?',
-      'diagnose sys session filter src '+src,
-      'diagnose sys session filter dst '+dst,
-      'diagnose sys session filter dport '+port,
-      'diagnose sys session list',
-      '',
-      '# STEP 5 — Debug flow: Full trace (run then trigger traffic)',
-      'diagnose debug reset',
-      'diagnose debug flow filter addr '+src,
-      'diagnose debug flow filter daddr '+dst,
-      'diagnose debug flow filter proto '+protoNum,
-      'diagnose debug flow show function-name enable',
-      'diagnose debug flow trace start 30',
-      'diagnose debug enable',
-      '# → Trigger traffic now, then stop:',
-      'diagnose debug flow trace stop',
-      'diagnose debug disable',
-      'diagnose debug reset',
-    ];
-
-    // Add protocol-specific extra checks
-    if(port==='500'||port==='4500'){
-      lines.push('');
-      lines.push('# EXTRA — IPsec VPN specific checks (UDP '+port+' = '+(port==='500'?'IKE Phase 1':'NAT-T Phase 2')+')');
-      lines.push('diagnose vpn ike gateway list');
-      lines.push('diagnose vpn tunnel list');
-      lines.push('get vpn ipsec tunnel summary');
+  var tools = [
+    {
+      id:'pol', title:'&#x1F50D; 1. Policy Lookup',
+      fields:[
+        {id:'mu-pol-src',label:'Source IP',ph:'192.168.1.100'},
+        {id:'mu-pol-dst',label:'Destination IP',ph:'8.8.8.8'},
+        {id:'mu-pol-port',label:'Port',ph:'443'},
+        {id:'mu-pol-proto',label:'Protocol',type:'select',opts:['tcp','udp','icmp']},
+        {id:'mu-pol-intf',label:'Interface (optional)',ph:'port1'}
+      ],
+      fn:'muPolicyLookup'
+    },
+    {
+      id:'vpn', title:'&#x1F512; 2. VPN Status',
+      fields:[
+        {id:'mu-vpn-name',label:'Tunnel Name',ph:'SITE-A-TO-B'},
+        {id:'mu-vpn-type',label:'Type',type:'select',opts:['ipsec','ssl','both']},
+        {id:'mu-vpn-gw',label:'Remote GW IP (optional)',ph:'10.0.0.2'}
+      ],
+      fn:'muVPNStatus'
+    },
+    {
+      id:'hc', title:'&#x1F9EA; 3. Health Check',
+      fields:[
+        {id:'mu-hc-name',label:'Device Name',ph:'FGT-HQ-01'},
+        {id:'mu-hc-type',label:'Type',type:'select',opts:['full','quick','ha','perf']}
+      ],
+      fn:'muHealthCheck'
+    },
+    {
+      id:'bgp', title:'&#x1F310; 4. BGP/OSPF Neighbor',
+      fields:[
+        {id:'mu-bgp-ip',label:'Neighbor IP',ph:'10.0.0.1'},
+        {id:'mu-bgp-proto',label:'Protocol',type:'select',opts:['bgp','ospf','both']},
+        {id:'mu-bgp-intf',label:'Interface (OSPF)',ph:'port2'}
+      ],
+      fn:'muBGPCheck'
+    },
+    {
+      id:'ssl', title:'&#x1F575; 5. SSL VPN User',
+      fields:[
+        {id:'mu-ssl-user',label:'Username',ph:'thomhaasert'},
+        {id:'mu-ssl-portal',label:'Portal (optional)',ph:'tunnel-portal'},
+        {id:'mu-ssl-ip',label:'Source IP (optional)',ph:'external IP'}
+      ],
+      fn:'muSSLVPNUser'
+    },
+    {
+      id:'obj', title:'&#x1F50E; 6. Object Search',
+      fields:[
+        {id:'mu-obj-ip',label:'IP / Subnet',ph:'192.168.1.0/24'},
+        {id:'mu-obj-intf',label:'Interface (optional)',ph:'port3'}
+      ],
+      fn:'muObjectSearch'
+    },
+    {
+      id:'cert', title:'&#x1F4C4; 7. Certificate Check',
+      fields:[
+        {id:'mu-cert-scope',label:'Scope',type:'select',opts:['all','local','ca','remote']},
+        {id:'mu-cert-name',label:'Name filter (optional)',ph:'VPN'}
+      ],
+      fn:'muCertCheck'
+    },
+    {
+      id:'ha', title:'&#x2699;&#xFE0F; 8. HA Failover',
+      fields:[
+        {id:'mu-ha-action',label:'Action',type:'select',opts:['check','failover','post','full']},
+        {id:'mu-ha-primary',label:'Primary unit',ph:'FGT-HQ-01'},
+        {id:'mu-ha-secondary',label:'Secondary unit',ph:'FGT-HQ-02'}
+      ],
+      fn:'muHAChecklist'
+    },
+    {
+      id:'bw', title:'&#x1F4CA; 9. Bandwidth Reporter',
+      fields:[
+        {id:'mu-bw-intf',label:'Interface',ph:'port1'},
+        {id:'mu-bw-type',label:'Type',type:'select',opts:['top','shaping','netflow','full']}
+      ],
+      fn:'muBandwidth'
+    },
+    {
+      id:'vlan', title:'&#x1F4BE; 10. VLAN Decommission',
+      fields:[
+        {id:'mu-vlan-intf',label:'VLAN Interface',ph:'VLAN10'},
+        {id:'mu-vlan-id',label:'VLAN ID',ph:'10',inputtype:'number'},
+        {id:'mu-vlan-subnet',label:'Subnet',ph:'192.168.10.0/24'}
+      ],
+      fn:'muVLANDecom'
+    },
+    {
+      id:'fw', title:'&#x1F504; 11. Firmware Upgrade',
+      fields:[
+        {id:'mu-fw-current',label:'Current version',ph:'7.4.3'},
+        {id:'mu-fw-target',label:'Target version',ph:'7.4.5'},
+        {id:'mu-fw-ha',label:'HA setup',type:'select',opts:['standalone','active-passive','active-active']},
+        {id:'mu-fw-model',label:'Model',ph:'FortiGate 100F'}
+      ],
+      fn:'muFirmwareUpgrade'
+    },
+    {
+      id:'faz', title:'&#x1F3E2; 12. FAZ/FMG Check',
+      fields:[
+        {id:'mu-faz-ip',label:'FAZ/FMG IP',ph:'192.168.100.10'},
+        {id:'mu-faz-type',label:'Product',type:'select',opts:['faz','fmg','both']},
+        {id:'mu-faz-adom',label:'ADOM (optional)',ph:'root'}
+      ],
+      fn:'muFAZCheck'
+    },
+    {
+      id:'reach', title:'&#x1F3AF; 13. Port/Protocol Reachability',
+      highlight: true,
+      fields:[
+        {id:'mu-reach-src',label:'Source IP',ph:'192.168.1.100'},
+        {id:'mu-reach-dst',label:'Destination IP',ph:'203.0.113.1'},
+        {id:'mu-reach-port',label:'Port',ph:'500'},
+        {id:'mu-reach-proto',label:'Protocol',type:'select',opts:['udp','tcp','icmp']},
+        {id:'mu-reach-intf',label:'Interface (optional)',ph:'port1 or wan1'}
+      ],
+      fn:'muReachCheck',
+      quickbtns: true
     }
-    if(port==='443'){
-      lines.push('');
-      lines.push('# EXTRA — SSL VPN specific checks');
-      lines.push('get vpn ssl monitor');
-      lines.push('diagnose debug application sslvpn -1');
-      lines.push('diagnose debug enable');
-    }
-    if(port==='179'){
-      lines.push('');
-      lines.push('# EXTRA — BGP specific checks');
-      lines.push('get router info bgp summary');
-      lines.push('get router info bgp neighbors '+dst);
-    }
-    if(proto==='icmp'){
-      lines.push('');
-      lines.push('# EXTRA — ICMP ping test from FortiGate');
-      lines.push('execute ping-options source '+src);
-      lines.push('execute ping '+dst);
-    }
+  ];
 
-    lines.push('');
-    lines.push('# WHAT TO LOOK FOR IN DEBUG FLOW:');
-    lines.push('# "Allowed by policy-id N"   → traffic permitted, check routing');
-    lines.push('# "denied by forward policy"  → no matching allow policy exists');
-    lines.push('# "reverse path check fail"   → RPF/anti-spoofing dropping return traffic');
-    lines.push('# "no matching firewall policy" → add or fix policy for this flow');
-    lines.push('# "iprope_in_check() check failed" → check interface or routing');
+  // Build two-column grid for tools 1-12, Tool 13 full width at top
+  var tool13data = tools[12];
+  var grid12 = tools.slice(0,12);
 
-    document.getElementById('mu-reach-out').style.display='block';
-    document.getElementById('mu-reach-out-cmd').textContent=lines.join('\n');
-  };
-
-  function muShow(id, cmds){
-    document.getElementById(id).style.display='block';
-    document.getElementById(id+'-cmd').textContent=cmds;
+  function buildField(f){
+    var d = document.createElement('div');
+    d.style.marginBottom='8px';
+    var lbl = document.createElement('label');
+    lbl.setAttribute('for', f.id);
+    lbl.style.cssText='font-size:11px;color:var(--t3);display:block;margin-bottom:3px';
+    lbl.textContent = f.label;
+    d.appendChild(lbl);
+    if(f.type==='select'){
+      var sel = document.createElement('select');
+      sel.id = f.id;
+      sel.style.cssText='width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px';
+      f.opts.forEach(function(o){ var op=document.createElement('option'); op.value=o; op.textContent=o; sel.appendChild(op); });
+      d.appendChild(sel);
+    } else {
+      var inp = document.createElement('input');
+      inp.type = f.inputtype||'text';
+      inp.id = f.id;
+      inp.placeholder = f.ph||'';
+      inp.style.cssText='width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px';
+      d.appendChild(inp);
+    }
+    return d;
   }
 
-  function v(id){ return (document.getElementById(id)||{}).value||''; }
+  function buildTool(t){
+    var card = document.createElement('div');
+    card.className='cblock';
+    card.style.marginBottom='14px';
+    if(t.highlight) card.style.borderColor='rgba(0,214,143,.5)';
 
-  // ── 1. Policy Lookup ──
-  window.muPolicyLookup=function(){
-    var src=v('mu-pol-src')||'<SRC-IP>';
-    var dst=v('mu-pol-dst')||'<DST-IP>';
-    var port=v('mu-pol-port')||'443';
-    var proto=v('mu-pol-proto')||'tcp';
-    var intf=v('mu-pol-intf');
-    var lines=[
-      '# Step 1: Route lookup -- which interface handles destination',
-      'get router info routing-table details '+dst,
-      '',
-      '# Step 2: Policy lookup -- which policy matches this traffic',
-      'diagnose firewall iprope lookup '+src+' '+dst+' '+port+' '+proto+(intf?' '+intf:''),
-      '',
-      '# Step 3: Debug flow -- trace exactly what happens packet by packet',
-      'diagnose debug reset',
-      'diagnose debug flow filter addr '+src,
-      'diagnose debug flow filter daddr '+dst,
-      'diagnose debug flow filter proto '+(proto==='tcp'?'6':proto==='udp'?'17':'1'),
-      'diagnose debug flow show function-name enable',
-      'diagnose debug flow trace start 20',
-      'diagnose debug enable',
-      '# Now send a packet from the source, then stop:',
-      'diagnose debug flow trace stop',
-      'diagnose debug disable',
-      'diagnose debug reset',
-      '',
-      '# Step 4: Check session table for this flow',
-      'diagnose sys session filter src '+src,
-      'diagnose sys session filter dst '+dst,
-      'diagnose sys session list'
-    ];
-    muShow('mu-pol-out', lines.join('\n'));
-  };
+    var hdr = document.createElement('div');
+    hdr.className='chdr';
+    if(t.highlight) hdr.style.background='rgba(0,214,143,.06)';
+    var title = document.createElement('div');
+    title.className='chdr-l';
+    if(t.highlight) title.style.color='var(--a)';
+    title.innerHTML = t.title;
+    hdr.appendChild(title);
+    card.appendChild(hdr);
 
-  // ── 2. VPN Status ──
-  window.muVPNStatus=function(){
-    var name=v('mu-vpn-name')||'<TUNNEL-NAME>';
-    var type=v('mu-vpn-type');
-    var gw=v('mu-vpn-gw');
-    var lines=[];
-    if(type==='ipsec'||type==='both'){
-      lines.push('# IPsec Phase 1 status');
-      lines.push('diagnose vpn ike gateway list name "'+name+'"');
-      lines.push('');
-      lines.push('# IPsec Phase 2 / SA status');
-      lines.push('diagnose vpn tunnel list name "'+name+'"');
-      lines.push('');
-      lines.push('# Phase 1 IKE error log');
-      lines.push('diagnose debug application ike -1');
-      lines.push('diagnose debug enable');
-      lines.push('# Trigger re-negotiation then stop:');
-      lines.push('diagnose debug disable');
-      lines.push('');
-      lines.push('# Phase 2 SA stats (bytes in/out)');
-      lines.push('get vpn ipsec tunnel summary');
-      lines.push('');
-      lines.push('# Check tunnel routing');
-      if(gw) lines.push('get router info routing-table details '+gw);
-      lines.push('diagnose netlink interface list');
-    }
-    if(type==='ssl'||type==='both'){
-      lines.push('# SSL VPN active sessions');
-      lines.push('get vpn ssl monitor');
-      lines.push('');
-      lines.push('# SSL VPN settings');
-      lines.push('get vpn ssl settings');
-      lines.push('');
-      lines.push('# SSL VPN debug');
-      lines.push('diagnose debug application sslvpn -1');
-      lines.push('diagnose debug enable');
-    }
-    muShow('mu-vpn-out', lines.join('\n'));
-  };
+    var body = document.createElement('div');
+    body.className='cbody';
 
-  // ── 3. Health Check ──
-  window.muHealthCheck=function(){
-    var name=v('mu-hc-name')||'FortiGate';
-    var type=v('mu-hc-type');
-    var lines=['# ═══════════════════════════════════════','# Health Check: '+name,'# Generated: '+new Date().toLocaleString(),'# ═══════════════════════════════════════',''];
-    if(type==='full'||type==='quick'){
-      lines.push('# System Status');
-      lines.push('get system status');
-      lines.push('');
-      lines.push('# Resource Usage (CPU / Memory)');
-      lines.push('get system performance status');
-      lines.push('');
-      lines.push('# Interface Status');
-      lines.push('get system interface physical');
-      lines.push('');
+    // Quick buttons for Tool 13
+    if(t.quickbtns){
+      var qwrap = document.createElement('div');
+      qwrap.style.cssText='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px';
+      [['IKE','500','udp'],['NAT-T','4500','udp'],['SSL VPN','443','tcp'],
+       ['SSH','22','tcp'],['RDP','3389','tcp'],['BGP','179','tcp'],
+       ['DNS','53','udp'],['SNMP','161','udp'],['NTP','123','udp'],['RADIUS','1812','udp']
+      ].forEach(function(s){
+        var b=document.createElement('button');
+        b.className='sbtn';
+        b.style.cssText='font-size:10px;padding:3px 10px';
+        b.innerHTML=s[0]+' <span style="color:var(--t3)">'+s[2].toUpperCase()+'/'+s[1]+'</span>';
+        b.onclick=(function(port,proto){ return function(){
+          var pe=document.getElementById('mu-reach-port');
+          var pr=document.getElementById('mu-reach-proto');
+          if(pe) pe.value=port;
+          if(pr) pr.value=proto;
+        }; })(s[1],s[2]);
+        qwrap.appendChild(b);
+      });
+      body.appendChild(qwrap);
     }
-    if(type==='full'||type==='perf'){
-      lines.push('# Top Processes by CPU');
-      lines.push('diagnose sys top 5 20');
-      lines.push('');
-      lines.push('# Session Count');
-      lines.push('diagnose sys session full-stat');
-      lines.push('');
-      lines.push('# NTP Status');
-      lines.push('diagnose sys ntp status');
-      lines.push('');
-      lines.push('# Disk Usage');
-      lines.push('diagnose sys df');
-      lines.push('');
-      lines.push('# FortiGuard Update Status');
-      lines.push('diagnose autoupdate status');
-      lines.push('');
-    }
-    if(type==='full'){
-      lines.push('# Routing Table Summary');
-      lines.push('get router info routing-table summary');
-      lines.push('');
-      lines.push('# ARP Table');
-      lines.push('get system arp');
-      lines.push('');
-      lines.push('# Active Admins');
-      lines.push('get system admin logged');
-      lines.push('');
-      lines.push('# Log Status');
-      lines.push('diagnose log test');
-      lines.push('get log disk setting');
-    }
-    if(type==='ha'){
-      lines.push('# HA Status');
-      lines.push('get system ha status');
-      lines.push('');
-      lines.push('# HA Statistics');
-      lines.push('diagnose sys ha dump-by vcluster');
-      lines.push('');
-      lines.push('# HA Sync Status');
-      lines.push('diagnose sys ha showcsum');
-      lines.push('');
-      lines.push('# HA Peer Check');
-      lines.push('diagnose sys ha history read');
-    }
-    muShow('mu-hc-out', lines.join('\n'));
-  };
 
-  // ── 4. BGP/OSPF ──
-  window.muBGPCheck=function(){
-    var ip=v('mu-bgp-ip')||'<NEIGHBOR-IP>';
-    var proto=v('mu-bgp-proto');
-    var intf=v('mu-bgp-intf');
-    var lines=[];
-    if(proto==='bgp'||proto==='both'){
-      lines.push('# BGP Neighbor Summary');
-      lines.push('get router info bgp summary');
-      lines.push('');
-      lines.push('# BGP Neighbor Detail');
-      lines.push('get router info bgp neighbors '+ip);
-      lines.push('');
-      lines.push('# BGP Routes Received from Neighbor');
-      lines.push('get router info bgp neighbors '+ip+' received-routes');
-      lines.push('');
-      lines.push('# BGP Routes Advertised to Neighbor');
-      lines.push('get router info bgp neighbors '+ip+' advertised-routes');
-      lines.push('');
-      lines.push('# BGP Debug');
-      lines.push('diagnose ip router bgp level info');
-      lines.push('diagnose ip router bgp all enable');
-      lines.push('diagnose debug enable');
-    }
-    if(proto==='ospf'||proto==='both'){
-      lines.push('# OSPF Neighbor Status');
-      lines.push('get router info ospf neighbor');
-      lines.push('');
-      lines.push('# OSPF Database');
-      lines.push('get router info ospf database brief');
-      lines.push('');
-      lines.push('# OSPF Interface Status');
-      lines.push('get router info ospf interface'+(intf?' '+intf:''));
-      lines.push('');
-      lines.push('# OSPF Routes');
-      lines.push('get router info routing-table ospf');
-    }
-    lines.push('');
-    lines.push('# Connectivity test to neighbor');
-    lines.push('execute ping '+ip);
-    lines.push('execute traceroute '+ip);
-    muShow('mu-bgp-out', lines.join('\n'));
-  };
+    t.fields.forEach(function(f){ body.appendChild(buildField(f)); });
 
-  // ── 5. SSL VPN User ──
-  window.muSSLVPNUser=function(){
-    var user=v('mu-ssl-user')||'<USERNAME>';
-    var portal=v('mu-ssl-portal');
-    var ip=v('mu-ssl-ip');
-    var lines=[
-      '# SSL VPN Active Sessions',
-      'get vpn ssl monitor',
-      '',
-      '# SSL VPN Statistics',
-      'diagnose vpn ssl list',
-      '',
-      '# User-specific session info',
-      'diagnose vpn ssl info',
-    ];
-    if(ip){
-      lines.push('');
-      lines.push('# Check session from source IP');
-      lines.push('diagnose sys session filter src '+ip);
-      lines.push('diagnose sys session list');
-    }
-    lines.push('');
-    lines.push('# SSL VPN Debug (reproduce issue while this runs)');
-    lines.push('diagnose debug reset');
-    lines.push('diagnose debug application sslvpn -1');
-    lines.push('diagnose debug enable');
-    lines.push('# Reproduce the issue, then stop:');
-    lines.push('diagnose debug disable');
-    lines.push('diagnose debug reset');
-    lines.push('');
-    lines.push('# Check user group membership');
-    lines.push('diagnose firewall auth list');
-    if(portal){
-      lines.push('');
-      lines.push('# Portal configuration');
-      lines.push('show vpn ssl web portal "'+portal+'"');
-    }
-    muShow('mu-ssl-out', lines.join('\n'));
-  };
+    var btn = document.createElement('button');
+    btn.className='sbtn';
+    btn.style.cssText='width:100%;margin-top:8px;padding:9px';
+    if(t.highlight){ btn.style.background='var(--a)'; btn.style.color='#000'; btn.style.fontWeight='700'; }
+    btn.innerHTML='&#x1F527; Generate Commands';
+    btn.setAttribute('onclick', t.fn+'()');
+    body.appendChild(btn);
 
-  // ── 6. Object Search ──
-  window.muObjectSearch=function(){
-    var ip=v('mu-obj-ip')||'<IP-OR-SUBNET>';
-    var intf=v('mu-obj-intf');
-    var lines=[
-      '# Search firewall address objects containing this IP/subnet',
-      'show firewall address | grep -A5 "'+ip+'"',
-      '',
-      '# Search address groups',
-      'show firewall addrgrp | grep -B2 -A10 "'+ip+'"',
-      '',
-      '# Find all policies referencing this IP',
-      'show firewall policy | grep -B5 -A20 "'+ip+'"',
-      '',
-      '# Find VIPs with this IP',
-      'show firewall vip | grep -B2 -A10 "'+ip+'"',
-      '',
-      '# Find static routes to/via this subnet',
-      'get router info routing-table details '+ip,
-      'show router static | grep -B2 -A5 "'+ip+'"',
-      '',
-      '# Find DHCP pool containing this IP',
-      'show system dhcp server | grep -B5 -A10 "'+ip+'"',
-      '',
-      '# Check ARP for this IP',
-      'get system arp | grep "'+ip+'"',
-    ];
-    if(intf){
-      lines.push('');
-      lines.push('# Filter to interface '+intf);
-      lines.push('diagnose ip address list | grep "'+intf+'"');
-    }
-    muShow('mu-obj-out', lines.join('\n'));
-  };
+    var outDiv = document.createElement('div');
+    outDiv.id='mu-'+t.id+'-out';
+    outDiv.style.display='none';
+    outDiv.style.marginTop='10px';
+    var pre = document.createElement('pre');
+    pre.className='code-block';
+    pre.id='mu-'+t.id+'-out-cmd';
+    pre.style.whiteSpace='pre-wrap';
+    outDiv.appendChild(pre);
+    body.appendChild(outDiv);
 
-  // ── 7. Certificate Check ──
-  window.muCertCheck=function(){
-    var scope=v('mu-cert-scope');
-    var name=v('mu-cert-name');
-    var lines=[
-      '# List all certificates with details',
-      'diagnose certificate local list',
-      '',
-    ];
-    if(scope==='all'||scope==='local'){
-      lines.push('# Local certificates (installed)');
-      lines.push('get certificate local'+(name?' | grep -A10 "'+name+'"':''));
-      lines.push('');
-    }
-    if(scope==='all'||scope==='ca'){
-      lines.push('# CA certificates');
-      lines.push('get certificate ca'+(name?' | grep -A10 "'+name+'"':''));
-      lines.push('');
-    }
-    if(scope==='all'||scope==='remote'){
-      lines.push('# Remote certificates');
-      lines.push('get certificate remote'+(name?' | grep -A10 "'+name+'"':''));
-      lines.push('');
-    }
-    lines.push('# Check certificate validity and expiry');
-    lines.push('diagnose certificate verify <CERT-NAME>');
-    lines.push('');
-    lines.push('# Tip: Look for "Valid To" date in the output');
-    lines.push('# Certificates expiring within 30 days need immediate renewal');
-    muShow('mu-cert-out', lines.join('\n'));
-  };
+    card.appendChild(body);
+    return card;
+  }
 
-  // ── 8. HA Checklist ──
-  window.muHAChecklist=function(){
-    var action=v('mu-ha-action');
-    var primary=v('mu-ha-primary')||'FGT-PRIMARY';
-    var secondary=v('mu-ha-secondary')||'FGT-SECONDARY';
-    var lines=[];
-    if(action==='check'||action==='full'){
-      lines.push('# ═══ PRE-FAILOVER CHECK ═══');
-      lines.push('# Run on PRIMARY unit');
-      lines.push('');
-      lines.push('# HA status and sync state');
-      lines.push('get system ha status');
-      lines.push('');
-      lines.push('# Config sync checksum (must match on both units)');
-      lines.push('diagnose sys ha showcsum');
-      lines.push('');
-      lines.push('# Session sync status');
-      lines.push('diagnose sys ha dump-by vcluster');
-      lines.push('');
-      lines.push('# HA heartbeat interfaces');
-      lines.push('diagnose sys ha heartbeat');
-      lines.push('');
-    }
-    if(action==='failover'||action==='full'){
-      lines.push('# ═══ TRIGGER FAILOVER ═══');
-      lines.push('# WARNING: This will cause a brief traffic interruption');
-      lines.push('# Run on PRIMARY unit to force failover to secondary');
-      lines.push('');
-      lines.push('# Method 1: Force subordinate role');
-      lines.push('diagnose sys ha reset-uptime');
-      lines.push('');
-      lines.push('# Method 2: Failover via priority change');
-      lines.push('config system ha');
-      lines.push('    set priority 100');
-      lines.push('end');
-      lines.push('# (Set back to original after confirming failover)');
-      lines.push('');
-    }
-    if(action==='post'||action==='full'){
-      lines.push('# ═══ POST-FAILOVER VERIFY ═══');
-      lines.push('# Run on NEW primary (previously secondary)');
-      lines.push('');
-      lines.push('# Confirm new primary');
-      lines.push('get system ha status');
-      lines.push('');
-      lines.push('# Check routing is intact');
-      lines.push('get router info routing-table summary');
-      lines.push('');
-      lines.push('# Check VPN tunnels are up');
-      lines.push('get vpn ipsec tunnel summary');
-      lines.push('');
-      lines.push('# Check session count (should recover within minutes)');
-      lines.push('diagnose sys session full-stat');
-      lines.push('');
-      lines.push('# Verify internet connectivity');
-      lines.push('execute ping 8.8.8.8');
-    }
-    muShow('mu-ha-out', lines.join('\n'));
-  };
+  // Tool 13 full width at top
+  wrap.appendChild(buildTool(tool13data));
 
-  // ── 9. Bandwidth ──
-  window.muBandwidth=function(){
-    var intf=v('mu-bw-intf')||'<INTERFACE>';
-    var type=v('mu-bw-type');
-    var lines=[];
-    if(type==='top'||type==='full'){
-      lines.push('# Top bandwidth consumers (sessions)');
-      lines.push('diagnose sys session filter dport 0');
-      lines.push('diagnose sys session stat');
-      lines.push('');
-      lines.push('# Interface statistics');
-      lines.push('diagnose netlink interface list '+intf);
-      lines.push('');
-      lines.push('# Real-time traffic on interface');
-      lines.push('diagnose sniffer packet '+intf+' "" 1 0 l');
-      lines.push('');
-    }
-    if(type==='shaping'||type==='full'){
-      lines.push('# Traffic shaping policy status');
-      lines.push('diagnose firewall shaper traffic-shaper list');
-      lines.push('');
-      lines.push('# Per-IP shaper stats');
-      lines.push('diagnose firewall shaper per-ip-shaper list');
-      lines.push('');
-    }
-    if(type==='netflow'||type==='full'){
-      lines.push('# NetFlow export statistics');
-      lines.push('diagnose netflow stat');
-      lines.push('');
-      lines.push('# NetFlow settings');
-      lines.push('get system netflow');
-    }
-    muShow('mu-bw-out', lines.join('\n'));
-  };
+  // Divider
+  var divider = document.createElement('div');
+  divider.style.cssText='font-size:11px;font-weight:700;color:var(--t3);font-family:var(--mono);letter-spacing:.08em;padding:6px 0;border-bottom:1px solid var(--br);margin:4px 0 14px';
+  divider.textContent='ALL TOOLS';
+  wrap.appendChild(divider);
 
-  // ── 10. VLAN Decommission ──
-  window.muVLANDecom=function(){
-    var intf=v('mu-vlan-intf')||'<VLAN-INTF>';
-    var vid=v('mu-vlan-id')||'<VLAN-ID>';
-    var subnet=v('mu-vlan-subnet')||'<SUBNET>';
-    var lines=[
-      '# ═══ VLAN DECOMMISSION CHECKLIST ═══',
-      '# VLAN: '+intf+' (ID: '+vid+') | Subnet: '+subnet,
-      '',
-      '# STEP 1: Check for active DHCP leases',
-      'get system dhcp server | grep -A5 "'+intf+'"',
-      'execute dhcp lease-list',
-      '',
-      '# STEP 2: Check for active clients (ARP)',
-      'get system arp | grep "'+intf+'"',
-      '',
-      '# STEP 3: Check active sessions from this subnet',
-      'diagnose sys session filter src '+subnet.split('/')[0],
-      'diagnose sys session list',
-      '',
-      '# STEP 4: Find all address objects using this subnet',
-      'show firewall address | grep -B2 -A5 "'+subnet+'"',
-      '',
-      '# STEP 5: Find all policies referencing this interface',
-      'show firewall policy | grep -B5 -A10 "'+intf+'"',
-      '',
-      '# STEP 6: Find routing entries for this subnet',
-      'get router info routing-table details '+subnet.split('/')[0],
-      'show router static | grep "'+subnet+'"',
-      '',
-      '# STEP 7: Check if interface is used in HA override or VRRP',
-      'show system ha | grep "'+intf+'"',
-      '',
-      '# STEP 8: Safe removal sequence (only after above checks are clean)',
-      '# config system dhcp server',
-      '#   delete <SERVER-ID>',
-      '# end',
-      '# config router static',
-      '#   delete <ROUTE-SEQ-NUM>',
-      '# end',
-      '# config system interface',
-      '#   delete "'+intf+'"',
-      '# end',
-    ];
-    muShow('mu-vlan-out', lines.join('\n'));
-  };
+  // 12 tools in two columns
+  var grid = document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:14px';
+  var col1=document.createElement('div');
+  var col2=document.createElement('div');
+  grid12.forEach(function(t,i){ (i<6?col1:col2).appendChild(buildTool(t)); });
+  grid.appendChild(col1);
+  grid.appendChild(col2);
+  wrap.appendChild(grid);
 
-  // ── 11. Firmware Upgrade ──
-  window.muFirmwareUpgrade=function(){
-    var cur=v('mu-fw-current')||'<CURRENT>';
-    var tgt=v('mu-fw-target')||'<TARGET>';
-    var ha=v('mu-fw-ha');
-    var model=v('mu-fw-model')||'FortiGate';
-    var lines=[
-      '# ═══ FIRMWARE UPGRADE PLAN ═══',
-      '# Device: '+model+' | '+cur+' → '+tgt,
-      '',
-      '# PRE-UPGRADE CHECKLIST',
-      '',
-      '# 1. Verify current firmware and serial',
-      'get system status',
-      '',
-      '# 2. Backup configuration',
-      'execute backup config ftp <FTP-IP> <PATH> <USER> <PASS>',
-      '# Or via TFTP:',
-      'execute backup config tftp <FTP-IP> <FILENAME>',
-      '',
-      '# 3. Check disk space',
-      'diagnose sys df',
-      '',
-      '# 4. Note current session count (reference)',
-      'diagnose sys session full-stat',
-      '',
-      '# 5. Verify routing table (reference)',
-      'get router info routing-table summary',
-      '',
-    ];
-    if(ha==='active-passive'){
-      lines.push('# HA UPGRADE SEQUENCE (Active-Passive)');
-      lines.push('# Step 1: Upgrade SECONDARY first');
-      lines.push('execute ha manage 1 admin  # Connect to secondary');
-      lines.push('execute restore image tftp <IMAGE> <TFTP-IP>');
-      lines.push('');
-      lines.push('# Step 2: Wait for secondary to come back up and sync');
-      lines.push('get system ha status');
-      lines.push('');
-      lines.push('# Step 3: Force failover to upgraded secondary');
-      lines.push('diagnose sys ha reset-uptime');
-      lines.push('');
-      lines.push('# Step 4: Upgrade original primary (now secondary)');
-      lines.push('execute ha manage 1 admin');
-      lines.push('execute restore image tftp <IMAGE> <TFTP-IP>');
-      lines.push('');
-    } else {
-      lines.push('# UPGRADE COMMAND');
-      lines.push('execute restore image tftp <IMAGE-FILENAME> <TFTP-IP>');
-      lines.push('# Device will reboot automatically');
-      lines.push('');
-    }
-    lines.push('# POST-UPGRADE VERIFICATION');
-    lines.push('get system status');
-    lines.push('get system performance status');
-    lines.push('get router info routing-table summary');
-    lines.push('get vpn ipsec tunnel summary');
-    lines.push('diagnose sys session full-stat');
-    muShow('mu-fw-out', lines.join('\n'));
-  };
-
-  // ── 12. FAZ/FMG Check ──
-  window.muFAZCheck=function(){
-    var ip=v('mu-faz-ip')||'<FAZ-IP>';
-    var type=v('mu-faz-type');
-    var adom=v('mu-faz-adom')||'root';
-    var lines=[];
-    if(type==='faz'||type==='both'){
-      lines.push('# FortiAnalyzer Connection Status');
-      lines.push('get log fortianalyzer setting');
-      lines.push('');
-      lines.push('# FAZ connectivity and log sending status');
-      lines.push('diagnose test application miglogd 6');
-      lines.push('');
-      lines.push('# FAZ heartbeat and registration');
-      lines.push('diagnose fortianalyzer-connectivity test');
-      lines.push('');
-      lines.push('# Log queue status');
-      lines.push('diagnose test application miglogd 4');
-      lines.push('');
-      lines.push('# Ping FAZ');
-      lines.push('execute ping '+ip);
-      lines.push('');
-    }
-    if(type==='fmg'||type==='both'){
-      lines.push('# FortiManager Connection Status');
-      lines.push('get system central-management');
-      lines.push('');
-      lines.push('# FMG registration status');
-      lines.push('diagnose fmgd-connectivity test');
-      lines.push('');
-      lines.push('# FMG heartbeat');
-      lines.push('diagnose debug application fmgd -1');
-      lines.push('diagnose debug enable');
-      lines.push('# Check output then stop:');
-      lines.push('diagnose debug disable');
-      lines.push('');
-      lines.push('# Ping FMG');
-      lines.push('execute ping '+ip);
-    }
-    muShow('mu-faz-out', lines.join('\n'));
-  };
+  el.appendChild(wrap);
 }
 
-window.groqClearHistory = function(){
-  freeAIHistory = [];
-  freeAIPrompt = '';
-  var h = document.getElementById('groqHistory');
-  if(h) h.innerHTML = '';
-  var r = document.getElementById('groqResponse');
-  if(r) r.innerHTML = 'Paste CLI output above and click Analyze.';
-  var p = document.getElementById('groqPrompt');
-  if(p) p.value = '';
-};
-
-// Wire login form/* ══ SCREENSAVER ══ */
-(function(){
-  var IDLE = 5 * 60 * 1000;
-  var timer = null;
-  var on = false;
-  var raf = null;
-
-  var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
-  var FS = 14;
-  var W, H, drops, canvas, ctx;
-
-  function ssInit(){
-    canvas = document.getElementById('nwCanvas');
-    if(!canvas) return;
-    ctx = canvas.getContext('2d');
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    var cols = Math.floor(W / FS);
-    drops = [];
-    for(var i = 0; i < cols; i++) drops.push(Math.random() * -150);
-  }
-
-  function ssDraw(){
-    if(!on){ raf = null; return; }
-    ctx.fillStyle = 'rgba(0,0,0,0.04)';
-    ctx.fillRect(0, 0, W, H);
-    ctx.font = FS + 'px Courier New';
-    for(var i = 0; i < drops.length; i++){
-      var r = Math.random();
-      if(r > 0.97)      ctx.fillStyle = '#c0ffe8';
-      else if(r > 0.85) ctx.fillStyle = '#3fb950';
-      else if(r > 0.5)  ctx.fillStyle = '#1D9E75';
-      else               ctx.fillStyle = '#0a4a2e';
-      ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FS, drops[i] * FS);
-      if(drops[i] * FS > H && Math.random() > 0.975) drops[i] = 0;
-      drops[i] += 0.35 + Math.random() * 0.25;
-    }
-    setTimeout(function(){ raf = requestAnimationFrame(ssDraw); }, 38);
-  }
-
-  function show(){
-    var tk = document.getElementById('toolkitContainer');
-    if(!tk || tk.style.display === 'none') return;
-    if(on) return;
-    on = true;
-    document.getElementById('nwScreensaver').style.display = 'block';
-    ssInit();
-    raf = requestAnimationFrame(ssDraw);
-  }
-
-  window.nwDismiss = function(){
-    if(!on) return;
-    on = false;
-    document.getElementById('nwScreensaver').style.display = 'none';
-    if(raf){ cancelAnimationFrame(raf); raf = null; }
-    reset();
-  };
-
-  function reset(){
-    clearTimeout(timer);
-    timer = setTimeout(show, IDLE);
-  }
-
-  ['mousemove','mousedown','keydown','touchstart','scroll'].forEach(function(e){
-    document.addEventListener(e, function(){
-      if(on){ window.nwDismiss(); return; }
-      reset();
-    }, {passive:true});
-  });
-
-  window.addEventListener('resize', function(){
-    if(on) ssInit();
-  });
-
-  document.addEventListener('DOMContentLoaded', reset);
-})();
 
 function renderEmailGen(el){
   el.innerHTML=`
