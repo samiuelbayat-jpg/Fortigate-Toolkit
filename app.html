@@ -701,6 +701,7 @@ function hasHighRisk(cmds){return cmds.some(c=>cmdSafety(c)==='danger');}
 function hasCaution(cmds){return cmds.some(c=>cmdSafety(c)==='caution');}
 
 let cur='vpn',tab='guide',chat=[],loading=false;
+let freeAIPrompt='',freeAIHistory=[];
 let groqApiKey=localStorage.getItem('groq_key')||'';
 function saveKey(){const v=document.getElementById('apikey').value.trim();if(!v)return;groqApiKey=v;localStorage.setItem('groq_key',v);document.getElementById('apikey').value='';setKst('✓ saved','#3fb950');}
 window.addEventListener('load',()=>{if(groqApiKey)setKst('✓ key loaded','#3fb950');});
@@ -1333,7 +1334,7 @@ function renderFreeAITab(el){
   <!-- Input area -->
   <div style="margin-bottom:10px">
     <label style="font-size:12px;font-weight:600;color:var(--t2);display:block;margin-bottom:6px">📄 Paste CLI output or ask a question:</label>
-    <textarea id="groqPrompt" rows="8"
+    <textarea id="groqPrompt" rows="8" oninput="freeAIPrompt=this.value"
       placeholder="Paste any FortiGate CLI output here — e.g. get vpn ipsec tunnel summary, diagnose sys session list, debug flow output...&#10;&#10;Or ask a question like: How do I check if a policy is matching traffic?"
       style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--t);resize:vertical;outline:none;line-height:1.7"></textarea>
   </div>
@@ -1366,6 +1367,22 @@ function renderFreeAITab(el){
     panel.style.display = isOpen ? 'none' : 'flex';
     if(btn) btn.textContent = isOpen ? 'Change' : 'Cancel';
   };
+
+  // Restore persisted prompt and history after re-render
+  const _gp = document.getElementById('groqPrompt');
+  if(_gp && freeAIPrompt) _gp.value = freeAIPrompt;
+  const _gh = document.getElementById('groqHistory');
+  if(_gh && freeAIHistory.length){
+    _gh.innerHTML = freeAIHistory.map(function(h){
+      return '<div style="margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:8px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid var(--br);padding-bottom:6px">'
+        +'<span style="font-size:10px;color:var(--t3);font-family:var(--mono)">&#x26A1; '+h.ts+'</span>'
+        +'<span style="font-size:10px;color:var(--t3);font-family:var(--mono);max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escapeHtml(h.prompt.substring(0,60))+(h.prompt.length>60?'...':'')+'</span>'
+        +'</div>'
+        +'<div style="font-size:12px;color:var(--t2);line-height:1.7">'+h.response+'</div>'
+        +'</div>';
+    }).join('');
+  }
 
   document.getElementById('clearGroqKeyBtn').onclick=()=>{
     if(!confirm('Clear your saved Groq API key from this browser?')) return;
@@ -1441,14 +1458,21 @@ Npu-flag      : 00`;
       if(data.error) throw new Error(data.error.message);
       const _rt = data.choices[0].message.content;
         respDiv.innerHTML=fmt(_rt);
+        // Save to persistent history
+        const _ts = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+        freeAIHistory.unshift({ts:_ts, prompt:prompt, response:fmt(_rt)});
+        // Rebuild history div
         const _hd = document.getElementById('groqHistory');
         if(_hd){
-          const _en = document.createElement('div');
-          _en.style.cssText='margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:8px';
-          const _ts = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-          _en.innerHTML='<div style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-bottom:6px;border-bottom:1px solid var(--br);padding-bottom:4px">&#x26A1; Analysis — '+_ts+'</div>'
-            +'<div style="font-size:12px;color:var(--t2);line-height:1.7">'+fmt(_rt)+'</div>';
-          _hd.insertBefore(_en, _hd.firstChild);
+          _hd.innerHTML = freeAIHistory.map(function(h){
+            return '<div style="margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:8px">'
+              +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid var(--br);padding-bottom:6px">'
+              +'<span style="font-size:10px;color:var(--t3);font-family:var(--mono)">&#x26A1; '+h.ts+'</span>'
+              +'<span style="font-size:10px;color:var(--t3);font-family:var(--mono);max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escapeHtml(h.prompt.substring(0,60))+(h.prompt.length>60?'...':'')+'</span>'
+              +'</div>'
+              +'<div style="font-size:12px;color:var(--t2);line-height:1.7">'+h.response+'</div>'
+              +'</div>';
+          }).join('');
         }
     }catch(err){
       respDiv.innerHTML=`<span style="color:var(--r)">❌ ${err.message}</span><br><span style="font-size:11px;color:var(--t3)">Check your API key is correct and has not expired.</span>`;
@@ -8298,10 +8322,14 @@ function renderMostUsed(el){
 }
 
 window.groqClearHistory = function(){
+  freeAIHistory = [];
+  freeAIPrompt = '';
   var h = document.getElementById('groqHistory');
   if(h) h.innerHTML = '';
   var r = document.getElementById('groqResponse');
-  if(r) r.innerHTML = 'Paste CLI output and click Analyze.';
+  if(r) r.innerHTML = 'Paste CLI output above and click Analyze.';
+  var p = document.getElementById('groqPrompt');
+  if(p) p.value = '';
 };
 
 // Wire login form/* ══ SCREENSAVER ══ */
@@ -9439,10 +9467,14 @@ function renderMostUsed(el){
 }
 
 window.groqClearHistory = function(){
+  freeAIHistory = [];
+  freeAIPrompt = '';
   var h = document.getElementById('groqHistory');
   if(h) h.innerHTML = '';
   var r = document.getElementById('groqResponse');
-  if(r) r.innerHTML = 'Paste CLI output and click Analyze.';
+  if(r) r.innerHTML = 'Paste CLI output above and click Analyze.';
+  var p = document.getElementById('groqPrompt');
+  if(p) p.value = '';
 };
 
 // Wire login form/* ══ SCREENSAVER ══ */
@@ -10580,10 +10612,14 @@ function renderMostUsed(el){
 }
 
 window.groqClearHistory = function(){
+  freeAIHistory = [];
+  freeAIPrompt = '';
   var h = document.getElementById('groqHistory');
   if(h) h.innerHTML = '';
   var r = document.getElementById('groqResponse');
-  if(r) r.innerHTML = 'Paste CLI output and click Analyze.';
+  if(r) r.innerHTML = 'Paste CLI output above and click Analyze.';
+  var p = document.getElementById('groqPrompt');
+  if(p) p.value = '';
 };
 
 // Wire login form — safe here because DOM is ready and functions are defined
