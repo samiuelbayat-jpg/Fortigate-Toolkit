@@ -7779,14 +7779,14 @@ var _muStore = {};
 function renderMostUsed(el){
   el.innerHTML = '';
   
-  // Add custom CSS for button hover effects
+  // Add custom CSS for button hover effects (keeping original sizes)
   const style = document.createElement('style');
   style.textContent = `
-    .btn-copy-hover:hover { background: var(--b2) !important; border-color: var(--a) !important; color: var(--a) !important; transform: translateY(-1px); }
-    .btn-clear-hover:hover { background: rgba(248,81,73,.25) !important; color: #ff7b6e !important; transform: translateY(-1px); }
-    .btn-gen-hover:hover { background: var(--ad) !important; transform: translateY(-1px); }
+    .btn-copy-hover:hover { background: var(--b2) !important; border-color: var(--a) !important; color: var(--a) !important; }
+    .btn-clear-hover:hover { background: rgba(248,81,73,.25) !important; color: #ff7b6e !important; }
+    .btn-gen-hover:hover { background: var(--ad) !important; }
     .mu-button-group { display: flex; gap: 8px; margin-top: 8px; }
-    .mu-button-group button { transition: all 0.2s ease; cursor: pointer; }
+    .mu-button-group button { transition: all 0.2s ease; cursor: pointer; font-size: 11px; padding: 5px 12px; }
   `;
   el.appendChild(style);
   
@@ -7813,12 +7813,12 @@ function renderMostUsed(el){
   // RIGHT COLUMN (Tools 2,4,6,8,10,12)
   const rightCol = document.createElement('div');
 
-  // Helper to create button group HTML
+  // Helper to create button group HTML (keeping original small button size)
   function getButtonGroup(onclickGen, copyId, clearId) {
     return `<div class="mu-button-group">
-      <button class="sbtn btn-gen-hover" onclick="${onclickGen}()" style="flex:1">🔧 Generate</button>
-      <button class="sbtn btn-copy-hover" style="background:var(--b3);flex:1" onclick="copyMuOutput('${copyId}')">📋 Copy</button>
-      <button class="sbtn btn-clear-hover" style="background:rgba(248,81,73,.1);color:var(--r);flex:1" onclick="clearMuOutput('${clearId}')">🗑️ Clear</button>
+      <button class="sbtn btn-gen-hover" onclick="${onclickGen}()">🔧 Generate</button>
+      <button class="sbtn btn-copy-hover" style="background:var(--b3)" onclick="copyMuOutput('${copyId}')">📋 Copy</button>
+      <button class="sbtn btn-clear-hover" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('${clearId}')">🗑️ Clear</button>
     </div>`;
   }
 
@@ -7963,9 +7963,9 @@ function renderMostUsed(el){
       <div id="mu-port-custom-wrap" style="display:none;grid-column:1/-1"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Custom (protocol port)</label><input type="text" id="mu-port-custom" placeholder="tcp 8080" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:monospace"></div>
     </div>
     <div class="mu-button-group">
-      <button class="sbtn btn-gen-hover" id="mu-port-btn" style="background:linear-gradient(90deg,var(--a),var(--ad));flex:1">🚀 Generate</button>
-      <button class="sbtn btn-copy-hover" style="background:var(--b3);flex:1" onclick="copyMuOutput('port')">📋 Copy</button>
-      <button class="sbtn btn-clear-hover" style="background:rgba(248,81,73,.1);color:var(--r);flex:1" onclick="clearMuOutput('port')">🗑️ Clear</button>
+      <button class="sbtn btn-gen-hover" id="mu-port-btn" style="background:linear-gradient(90deg,var(--a),var(--ad))">🚀 Generate</button>
+      <button class="sbtn btn-copy-hover" style="background:var(--b3)" onclick="copyMuOutput('port')">📋 Copy</button>
+      <button class="sbtn btn-clear-hover" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('port')">🗑️ Clear</button>
     </div>
     <div id="mu-port-out" style="display:none;margin-top:12px"><pre id="mu-port-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>0% loss</strong> = Reachable | <strong>100% loss</strong> = Unreachable<br>• <strong>TCP: Telnet connects</strong> = Port open | <strong>UDP: Sniffer shows replies</strong> = Service responding</div></div>
   </div>`;
@@ -8001,7 +8001,6 @@ function renderMostUsed(el){
   window.copyMuOutput = copyMuOutput;
   window.clearMuOutput = clearMuOutput;
 }
-
 function initAndRender(){try{
   loadSavedTheme();
   initSidebar();
