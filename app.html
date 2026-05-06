@@ -7758,311 +7758,65 @@ function renderEmailGen(el){
 
 function renderMostUsed(el){
   el.innerHTML = '';
-  
-  // Header
-  const header = document.createElement('div');
-  header.className = 'sh';
-  header.innerHTML = '<span class="stitle">⚡ Most Used Network Tools</span><span class="sev info">13 tools · Generate · Copy · Clear</span>';
-  el.appendChild(header);
 
-  // Helper functions
-  function getVal(id) { const e = document.getElementById(id); return e ? e.value.trim() : ''; }
-  function showOut(id, text) { const d = document.getElementById('mu-' + id + '-out'); const p = document.getElementById('mu-' + id + '-cmd'); if (d && p) { p.textContent = text; d.style.display = 'block'; } }
-  function copyMuOutput(id) { const pre = document.getElementById('mu-' + id + '-cmd'); if (pre && pre.textContent) { navigator.clipboard.writeText(pre.textContent).then(() => { showToast('✅ Copied!'); }); } else { showToast('⚠️ Generate first'); } }
-  function clearMuOutput(id) { const d = document.getElementById('mu-' + id + '-out'); if (d) d.style.display = 'none'; }
-  function showToast(msg) { let t = document.getElementById('toast'); if (!t) { t = document.createElement('div'); t.id = 'toast'; t.style.cssText = 'position:fixed;bottom:20px;right:20px;background:var(--a);color:#fff;padding:8px 16px;border-radius:6px;font-size:12px;z-index:9999;opacity:0;transition:opacity .2s'; document.body.appendChild(t); } t.textContent = msg; t.style.opacity = '1'; setTimeout(() => { t.style.opacity = '0'; }, 1500); }
+  // Inject the Most Used HTML
+  var wrapper = document.createElement('div');
+  wrapper.innerHTML = '<div class="container">\n  <div class="sh">\n    <span class="stitle">⚡ Most Used Network Tools</span>\n    <span class="sev">13 tools · Generate · Copy · Clear</span>\n    \n  </div>\n\n  <div class="grid-2col">\n    <!-- LEFT COLUMN -->\n    <div>\n      <!-- Tool 1: Policy Lookup -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🔍 1. Policy Lookup</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="pol-src" placeholder="Source IP">\n          <input type="text" id="pol-dst" placeholder="Destination IP">\n          <input type="text" id="pol-port" placeholder="Port">\n          <select id="pol-proto"><option>tcp</option><option>udp</option><option>icmp</option></select>\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genPolicy()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'pol\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'pol\')">🗑️ Clear</button></div>\n          <div id="pol-out" style="display:none"><pre id="pol-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Allowed by policy-id X"</strong> = Traffic matches policy X<br>• <strong>"denied by forward policy"</strong> = No matching policy<br>• <strong>"No matching firewall policy"</strong> = Policy missing or order wrong<br>• <strong>Session shows "policy_id=X"</strong> = Which policy is handling traffic</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 3: Health Check -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🩺 3. Health Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genHealth()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'health\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'health\')">🗑️ Clear</button></div>\n          <div id="health-out" style="display:none"><pre id="health-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>CPU > 80% consistently</strong> = High load, check top processes<br>• <strong>Memory > 80%</strong> = May enter conserve mode<br>• <strong>Conserve mode "ON"</strong> = System dropping new sessions, urgent action needed<br>• <strong>Session count near limit</strong> = Scale issue or session leak</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 5: SSL VPN -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🕵️ 5. SSL VPN User</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="ssl-user" placeholder="Username">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genSSL()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'ssl\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'ssl\')">🗑️ Clear</button></div>\n          <div id="ssl-out" style="display:none"><pre id="ssl-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>User not in list</strong> = Authentication failed or not connected<br>• <strong>"tunnel" vs "web" mode</strong> = Check portal configuration<br>• <strong>Assigned IP from wrong pool</strong> = IP pool misconfiguration<br>• <strong>Auth logs show "group mismatch"</strong> = User not in correct LDAP/RADIUS group</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 7: Certificate -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">📄 7. Certificate Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genCert()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'cert\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'cert\')">🗑️ Clear</button></div>\n          <div id="cert-out" style="display:none"><pre id="cert-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Valid from" / "Valid to"</strong> = Check expiry date (expired = SSL VPN fails)<br>• <strong>"Issuer"</strong> = Must match CA chain (untrusted = browser warnings)<br>• <strong>"Subject"</strong> = CN must match hostname users connect to<br>• <strong>Missing certificate</strong> = Import or generate new certificate</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 9: Bandwidth -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">📊 9. Bandwidth Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="bw-intf" placeholder="Interface (e.g., wan1, port1)">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genBW()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'bw\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'bw\')">🗑️ Clear</button></div>\n          <div id="bw-out" style="display:none"><pre id="bw-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>High error counters (CRC, collisions)</strong> = Physical layer issue (cable, duplex)<br>• <strong>Input/Output drops increasing</strong> = Interface congestion or buffer exhaustion<br>• <strong>Bandwidth shaping drops</strong> = Traffic exceeding configured limits<br>• <strong>Queue depth > 0 consistently</strong> = Congestion, consider traffic shaping</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 11: Firmware -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🔄 11. Firmware Upgrade</div><span class="cbadge warning">caution</span></div>\n        <div class="cbody">\n          <input type="text" id="fw-current" placeholder="Current version (e.g., 7.4.3)">\n          <input type="text" id="fw-target" placeholder="Target version (e.g., 7.4.5)">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genFW()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'fw\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'fw\')">🗑️ Clear</button></div>\n          <div id="fw-out" style="display:none"><pre id="fw-cmd" class="code-block"></pre><div class="cnote-warning"><strong>⚠️ How to interpret & warnings:</strong><br>• <strong>Always backup config first</strong> - Failure without backup = config loss<br>• <strong>Check release notes</strong> - Some versions have upgrade path requirements<br>• <strong>HA cluster:</strong> Upgrade secondary first, then failover, then former primary<br>• <strong>Post-upgrade verify</strong> - Check tunnels, routes, policies, and sessions</div></div>\n        </div>\n      </div>\n    </div>\n\n    <!-- RIGHT COLUMN -->\n    <div>\n      <!-- Tool 2: VPN Status -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🔒 2. VPN Status</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="vpn-name" placeholder="Tunnel Name (e.g., VPN-TO-SITE-B)">\n          <select id="vpn-type"><option>ipsec</option><option>ssl</option><option>both</option></select>\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genVPN()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'vpn\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'vpn\')">🗑️ Clear</button></div>\n          <div id="vpn-out" style="display:none"><pre id="vpn-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"established" status</strong> = Tunnel is up, "down" = not negotiating<br>• <strong>"encap/decap" counters</strong> = Traffic flowing; zero = policy or routing issue<br>• <strong>"no proposal chosen"</strong> = Phase 1/2 settings mismatch between peers<br>• <strong>"AUTH_FAILED"</strong> = PSK mismatch or certificate issue</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 4: BGP/OSPF -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🌐 4. BGP/OSPF Neighbor</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="bgp-ip" placeholder="Neighbor IP Address">\n          <select id="bgp-proto"><option>bgp</option><option>ospf</option><option>both</option></select>\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genBGP()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'bgp\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'bgp\')">🗑️ Clear</button></div>\n          <div id="bgp-out" style="display:none"><pre id="bgp-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>BGP: "Established"</strong> = Peering up; "Idle/Active" = not forming<br>• <strong>BGP prefixes received = 0</strong> = No routes from peer (check policy/filter)<br>• <strong>OSPF: "FULL/DR"</strong> = Adjacency healthy; "EXSTART/EXCHANGE" = MTU mismatch<br>• <strong>OSPF: "DOWN"</strong> = No hello received (check network type / interface)</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 6: Object Search -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🔎 6. Object Search</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="obj-ip" placeholder="IP / Subnet (e.g., 192.168.1.0/24)">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genObj()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'obj\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'obj\')">🗑️ Clear</button></div>\n          <div id="obj-out" style="display:none"><pre id="obj-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Address object found</strong> = See which policies reference it<br>• <strong>No matching address</strong> = Create object before using in policy<br>• <strong>Route found</strong> = Traffic will use that gateway/interface<br>• <strong>ARP entry missing</strong> = L2 connectivity problem to that IP</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 8: HA Failover -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">⚙️ 8. HA Failover</div><span class="cbadge warning">caution</span></div>\n        <div class="cbody">\n          <select id="ha-action"><option>check</option><option>failover</option><option>post</option></select>\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genHA()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'ha\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'ha\')">🗑️ Clear</button></div>\n          <div id="ha-out" style="display:none"><pre id="ha-cmd" class="code-block"></pre><div class="cnote-warning"><strong>⚠️ How to interpret & warnings:</strong><br>• <strong>"Primary/Secondary" roles</strong> = Primary handles traffic, Secondary is standby<br>• <strong>Checksum mismatch</strong> = Config out of sync, run "execute ha synchronize"<br>• <strong>Heartbeat lost</strong> = HA link issue, split brain possible<br>• <strong>Failover warning:</strong> Causes brief traffic interruption (1-5 seconds)</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 10: VLAN -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">💾 10. VLAN Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="vlan-intf" placeholder="VLAN Interface (e.g., VLAN10, port3)">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genVLAN()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'vlan\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'vlan\')">🗑️ Clear</button></div>\n          <div id="vlan-out" style="display:none"><pre id="vlan-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Interface status "up/up"</strong> = Physical and protocol up<br>• <strong>VLAN ID mismatch</strong> = Check switch port configuration matches FortiGate<br>• <strong>No DHCP leases</strong> = DHCP server not configured or client not reaching<br>• <strong>ARP incomplete</strong> = Client not responding or wrong VLAN</div></div>\n        </div>\n      </div>\n\n      <!-- Tool 12: FAZ/FMG -->\n      <div class="cblock">\n        <div class="chdr"><div class="chdr-l">🏢 12. FAZ/FMG Check</div><span class="cbadge ro">read-only</span></div>\n        <div class="cbody">\n          <input type="text" id="faz-ip" placeholder="FAZ/FMG IP Address">\n          <div class="button-group"><button class="sbtn sbtn-sm" onclick="genFAZ()">🔧 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'faz\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'faz\')">🗑️ Clear</button></div>\n          <div id="faz-out" style="display:none"><pre id="faz-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Connection status "connected"</strong> = FAZ/FMG reachable and syncing<br>• <strong>Last log seen recent</strong> = Logs are flowing<br>• <strong>Ping fails</strong> = Network connectivity issue (firewall/routing)<br>• <strong>Serial number mismatch</strong> = Device not authorized in FMG/FAZ</div></div>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <hr>\n\n  <!-- TOOL 13: PORT REACHABILITY CHECKER -->\n  <div class="cblock" style="border:2px solid var(--a);background:rgba(29,158,117,.02)">\n    <div class="chdr" style="background:rgba(29,158,117,.1)">\n      <div class="chdr-l"><span style="font-size:18px">🔌</span> <span style="font-size:14px">13. Port / Protocol Reachability Checker</span></div>\n      <div style="display:flex;gap:4px"><span class="cbadge udp">UDP 500</span><span class="cbadge tcp">TCP 443</span><span class="cbadge tcp">SSH 22</span><span class="cbadge tcp">RDP 3389</span><span class="cbadge udp">DNS 53</span></div>\n    </div>\n    <div class="cbody">\n      <div class="pill-group"><span class="pill">🔐 IKE/IPsec VPN</span><span class="pill">🔒 HTTPS/SSL</span><span class="pill">💻 Remote Access</span><span class="pill">🖥️ Windows RDP</span><span class="pill">🌐 DNS Resolution</span></div>\n      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px">\n        <div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">🎯 Destination IP Address</label><input type="text" id="port-dst" placeholder="e.g., 8.8.8.8, 10.0.0.2, 192.168.1.1"></div>\n        <div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">🔧 Port / Protocol</label><select id="port-proto"><option value="udp 500">🔐 UDP 500 - IKE (IPsec VPN)</option><option value="tcp 443">🔒 TCP 443 - HTTPS/SSL</option><option value="tcp 22">💻 TCP 22 - SSH</option><option value="tcp 3389">🖥️ TCP 3389 - RDP</option><option value="udp 53">🌐 UDP 53 - DNS</option><option value="custom">⚙️ Custom Port</option></select></div>\n        <div id="port-custom-wrap" style="display:none;grid-column:1/-1"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">✏️ Custom (protocol port)</label><input type="text" id="port-custom" placeholder="e.g., tcp 8080, udp 161"></div>\n      </div>\n      <div class="button-group"><button class="sbtn sbtn-sm" id="port-btn" style="background:linear-gradient(90deg,var(--a),var(--ad))">🚀 Generate</button><button class="sbtn sbtn-sm sbtn-secondary" onclick="copyOutput(\'port\')">📋 Copy</button><button class="sbtn sbtn-sm sbtn-clear" onclick="clearOutput(\'port\')">🗑️ Clear</button></div>\n      <div id="port-out" style="display:none;margin-top:12px"><pre id="port-cmd" class="code-block"></pre><div class="cnote"><strong>🔍 How to interpret port test results:</strong><br>• <strong>0% packet loss</strong> = Service is reachable at IP level<br>• <strong>100% loss</strong> = Unreachable (check firewall policy, routing, ACL, or if service is listening)<br>• <strong>TCP: Telnet connects</strong> = Port is open and accepting connections<br>• <strong>UDP: Sniffer shows replies</strong> = Service is responding (UDP is connectionless)<br>• <strong>Partial loss</strong> = Intermittent issue (flapping route, congestion, or high latency)</div></div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Theme handling\nfunction setTheme(themeName) {\n  const root = document.documentElement;\n  if (themeName === \'dark\') {\n    root.removeAttribute(\'data-theme\');\n  } else {\n    root.setAttribute(\'data-theme\', themeName);\n  }\n  localStorage.setItem(\'nw_theme\', themeName);\n  // Update active button styling\n  document.querySelectorAll(\'.theme-btn\').forEach(btn => btn.classList.remove(\'active\'));\n  const activeBtn = document.querySelector(`.theme-btn[title="${themeName.charAt(0).toUpperCase() + themeName.slice(1)}"]`);\n  if (activeBtn) activeBtn.classList.add(\'active\');\n}\n\n// Load saved theme\nfunction loadTheme() {\n  const saved = localStorage.getItem(\'nw_theme\') || \'dark\';\n  setTheme(saved);\n}\nloadTheme();\n\n// Helper functions\nfunction g(id){const e=document.getElementById(id);return e?e.value.trim():\'\';}\nfunction showOut(id,text){const d=document.getElementById(id+\'-out\');const p=document.getElementById(id+\'-cmd\');if(d&&p){p.textContent=text;d.style.display=\'block\';}}\nfunction copyOutput(id){const pre=document.getElementById(id+\'-cmd\');if(pre && pre.textContent){navigator.clipboard.writeText(pre.textContent).then(()=>{showToast(\'✅ Copied to clipboard!\');});}else{showToast(\'⚠️ Generate commands first\');}}\nfunction clearOutput(id){const d=document.getElementById(id+\'-out\');if(d){d.style.display=\'none\';}}\nfunction showToast(msg){let t=document.getElementById(\'toast\');if(!t){t=document.createElement(\'div\');t.id=\'toast\';t.style.cssText=\'position:fixed;bottom:20px;right:20px;background:var(--a);color:#fff;padding:8px 16px;border-radius:6px;font-size:12px;z-index:9999;opacity:0;transition:opacity .2s\';document.body.appendChild(t);}t.textContent=msg;t.style.opacity=\'1\';setTimeout(()=>{t.style.opacity=\'0\';},1500);}\n\n// Generate functions for all tools\nfunction genPolicy(){let lines=[\'# Policy Lookup\',\'get router info routing-table details \'+g(\'pol-dst\'),\'\',\'diagnose firewall iprope lookup \'+g(\'pol-src\')+\' \'+g(\'pol-dst\')+\' \'+g(\'pol-port\')+\' \'+g(\'pol-proto\'),\'\',\'diagnose debug reset\',\'diagnose debug flow filter addr \'+g(\'pol-src\'),\'diagnose debug flow filter daddr \'+g(\'pol-dst\'),\'diagnose debug flow trace start 20\',\'diagnose debug enable\',\'# trigger traffic then stop\',\'diagnose debug flow trace stop\',\'diagnose debug disable\',\'diagnose debug reset\',\'\',\'diagnose sys session filter src \'+g(\'pol-src\'),\'diagnose sys session list\'];showOut(\'pol\',lines.join(\'\\n\'));}\nfunction genVPN(){let n=g(\'vpn-name\')||\'<TUNNEL>\';let t=g(\'vpn-type\');let lines=[];if(t===\'ipsec\'||t===\'both\'){lines.push(\'# IPsec VPN Status\',\'get vpn ipsec tunnel summary\',\'diagnose vpn tunnel list name "\'+n+\'"\',\'diagnose vpn ike gateway list name "\'+n+\'"\');}if(t===\'ssl\'||t===\'both\'){lines.push(\'# SSL VPN Status\',\'get vpn ssl monitor\',\'diagnose vpn ssl list\');}showOut(\'vpn\',lines.join(\'\\n\'));}\nfunction genHealth(){let lines=[\'# System Health\',\'get system status\',\'get system performance status\',\'diagnose sys top 5 20\',\'diagnose sys session full-stat\'];showOut(\'health\',lines.join(\'\\n\'));}\nfunction genBGP(){let ip=g(\'bgp-ip\')||\'<IP>\';let p=g(\'bgp-proto\');let lines=[];if(p===\'bgp\'||p===\'both\'){lines.push(\'# BGP Status\',\'get router info bgp summary\',\'get router info bgp neighbors \'+ip,\'get router info bgp neighbors \'+ip+\' received-routes\');}if(p===\'ospf\'||p===\'both\'){lines.push(\'# OSPF Status\',\'get router info ospf neighbor\',\'get router info ospf database brief\');}lines.push(\'\',\'execute ping \'+ip);showOut(\'bgp\',lines.join(\'\\n\'));}\nfunction genSSL(){let lines=[\'# SSL VPN Status\',\'get vpn ssl monitor\',\'diagnose vpn ssl list\',\'diagnose firewall auth list\'];showOut(\'ssl\',lines.join(\'\\n\'));}\nfunction genObj(){let ip=g(\'obj-ip\')||\'<IP>\';let lines=[\'# Object Search\',\'show firewall address | grep "\'+ip+\'"\',\'get router info routing-table details \'+ip,\'get system arp | grep "\'+ip+\'"\'];showOut(\'obj\',lines.join(\'\\n\'));}\nfunction genCert(){let lines=[\'# Certificate Check\',\'get certificate local\',\'diagnose certificate local list\'];showOut(\'cert\',lines.join(\'\\n\'));}\nfunction genHA(){let lines=[\'# HA Status\',\'get system ha status\',\'diagnose sys ha status\'];showOut(\'ha\',lines.join(\'\\n\'));}\nfunction genBW(){let i=g(\'bw-intf\')||\'<INTF>\';let lines=[\'# Bandwidth Check\',\'diagnose netlink interface list \'+i,\'diagnose firewall shaper traffic-shaper list\'];showOut(\'bw\',lines.join(\'\\n\'));}\nfunction genVLAN(){let i=g(\'vlan-intf\')||\'<VLAN>\';let lines=[\'# VLAN Diagnostics\',\'show system interface \'+i,\'get system arp | grep \'+i];showOut(\'vlan\',lines.join(\'\\n\'));}\nfunction genFW(){let lines=[\'# Firmware Upgrade\',\'get system status\',\'execute backup config tftp backup.conf <TFTP-SERVER>\'];showOut(\'fw\',lines.join(\'\\n\'));}\nfunction genFAZ(){let ip=g(\'faz-ip\')||\'<IP>\';let lines=[\'# FAZ/FMG Connectivity\',\'get log fortianalyzer setting\',\'diagnose test application miglogd 6\',\'execute ping \'+ip];showOut(\'faz\',lines.join(\'\\n\'));}\nfunction genPort(){let dst=g(\'port-dst\');if(!dst){alert(\'Enter destination IP\');return;}let sel=document.getElementById(\'port-proto\');let protoPort;if(sel.value===\'custom\'){let custom=g(\'port-custom\');if(!custom){alert(\'Enter custom protocol and port e.g. tcp 8080\');return;}protoPort=custom;}else{protoPort=sel.options[sel.selectedIndex].textContent;}let parts=protoPort.split(\' \');let proto=parts[0].toLowerCase();let port=parts[1];let lines=[`# Port Reachability Test: ${dst}:${port} (${proto.toUpperCase()})`];if(proto===\'tcp\'){lines.push(\'\',\'# 1. Basic ICMP test\',\'execute ping \'+dst,\'\',\'# 2. TCP connect test\',\'execute telnet \'+dst+\' \'+port,\'\',\'# 3. Check session table\',\'diagnose sys session filter dport \'+port,\'diagnose sys session list\');}else if(proto===\'udp\'){lines.push(\'\',\'# 1. UDP sniffer - look for responses\',\'diagnose sniffer packet any "host \'+dst+\' and port \'+port+\'" 4 30 l\',\'\',\'# 2. IKE debug (for UDP 500)\',\'diagnose debug application ike -1\',\'diagnose debug enable\',\'# Wait 10 seconds then:\',\'diagnose debug disable\',\'\',\'# 3. ICMP fallback\',\'execute ping \'+dst);}lines.push(\'\',\'# 4. Verify policy allows this traffic\',\'diagnose firewall iprope lookup <SOURCE_IP> \'+dst+\' \'+port+\' \'+proto);showOut(\'port\',lines.join(\'\\n\'));}\n\n// Event listeners\ndocument.getElementById(\'port-proto\').addEventListener(\'change\',function(){document.getElementById(\'port-custom-wrap\').style.display=this.value===\'custom\'?\'block\':\'none\';});\ndocument.getElementById(\'port-btn\').onclick=genPort;\n</script>';
+  el.appendChild(wrapper);
 
-  // ========== TOOL 1: POLICY LOOKUP ==========
-  const polCard = document.createElement('div');
-  polCard.className = 'cblock';
-  polCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">🔍 1. Policy Lookup</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <input type="text" id="mu-pol-src" placeholder="Source IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <input type="text" id="mu-pol-dst" placeholder="Destination IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <input type="text" id="mu-pol-port" placeholder="Port" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <select id="mu-pol-proto" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>tcp</option><option>udp</option><option>icmp</option></select>
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_pol()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('pol')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('pol')">🗑️ Clear</button></div>
-      <div id="mu-pol-out" style="display:none;margin-top:10px"><pre id="mu-pol-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Allowed by policy-id X"</strong> = Traffic matches policy X<br>• <strong>"denied by forward policy"</strong> = No matching policy<br>• <strong>Session shows "policy_id=X"</strong> = Which policy is handling traffic</div></div>
-    </div>
-  `;
-  el.appendChild(polCard);
+  // Wire up all event listeners and functions
+  (function(){
+    // Theme handling
+function g(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function showOut(id,text){const d=document.getElementById(id+'-out');const p=document.getElementById(id+'-cmd');if(d&&p){p.textContent=text;d.style.display='block';}}
+function copyOutput(id){const pre=document.getElementById(id+'-cmd');if(pre && pre.textContent){navigator.clipboard.writeText(pre.textContent).then(()=>{showToast('✅ Copied to clipboard!');});}else{showToast('⚠️ Generate commands first');}}
+function clearOutput(id){const d=document.getElementById(id+'-out');if(d){d.style.display='none';}}
+function showToast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--a);color:#fff;padding:8px 16px;border-radius:6px;font-size:12px;z-index:9999;opacity:0;transition:opacity .2s';document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';setTimeout(()=>{t.style.opacity='0';},1500);}
 
-  // ========== TOOL 2: VPN STATUS ==========
-  const vpnCard = document.createElement('div');
-  vpnCard.className = 'cblock';
-  vpnCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">🔒 2. VPN Status</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <input type="text" id="mu-vpn-name" placeholder="Tunnel Name" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <select id="mu-vpn-type" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>ipsec</option><option>ssl</option><option>both</option></select>
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_vpn()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('vpn')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('vpn')">🗑️ Clear</button></div>
-      <div id="mu-vpn-out" style="display:none;margin-top:10px"><pre id="mu-vpn-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"established" status</strong> = Tunnel is up<br>• <strong>"encap/decap" counters</strong> = Traffic flowing; zero = issue<br>• <strong>"no proposal chosen"</strong> = Settings mismatch between peers</div></div>
-    </div>
-  `;
-  el.appendChild(vpnCard);
+// Generate functions for all tools
+function genPolicy(){let lines=['# Policy Lookup','get router info routing-table details '+g('pol-dst'),'','diagnose firewall iprope lookup '+g('pol-src')+' '+g('pol-dst')+' '+g('pol-port')+' '+g('pol-proto'),'','diagnose debug reset','diagnose debug flow filter addr '+g('pol-src'),'diagnose debug flow filter daddr '+g('pol-dst'),'diagnose debug flow trace start 20','diagnose debug enable','# trigger traffic then stop','diagnose debug flow trace stop','diagnose debug disable','diagnose debug reset','','diagnose sys session filter src '+g('pol-src'),'diagnose sys session list'];showOut('pol',lines.join('\n'));}
+function genVPN(){let n=g('vpn-name')||'<TUNNEL>';let t=g('vpn-type');let lines=[];if(t==='ipsec'||t==='both'){lines.push('# IPsec VPN Status','get vpn ipsec tunnel summary','diagnose vpn tunnel list name "'+n+'"','diagnose vpn ike gateway list name "'+n+'"');}if(t==='ssl'||t==='both'){lines.push('# SSL VPN Status','get vpn ssl monitor','diagnose vpn ssl list');}showOut('vpn',lines.join('\n'));}
+function genHealth(){let lines=['# System Health','get system status','get system performance status','diagnose sys top 5 20','diagnose sys session full-stat'];showOut('health',lines.join('\n'));}
+function genBGP(){let ip=g('bgp-ip')||'<IP>';let p=g('bgp-proto');let lines=[];if(p==='bgp'||p==='both'){lines.push('# BGP Status','get router info bgp summary','get router info bgp neighbors '+ip,'get router info bgp neighbors '+ip+' received-routes');}if(p==='ospf'||p==='both'){lines.push('# OSPF Status','get router info ospf neighbor','get router info ospf database brief');}lines.push('','execute ping '+ip);showOut('bgp',lines.join('\n'));}
+function genSSL(){let lines=['# SSL VPN Status','get vpn ssl monitor','diagnose vpn ssl list','diagnose firewall auth list'];showOut('ssl',lines.join('\n'));}
+function genObj(){let ip=g('obj-ip')||'<IP>';let lines=['# Object Search','show firewall address | grep "'+ip+'"','get router info routing-table details '+ip,'get system arp | grep "'+ip+'"'];showOut('obj',lines.join('\n'));}
+function genCert(){let lines=['# Certificate Check','get certificate local','diagnose certificate local list'];showOut('cert',lines.join('\n'));}
+function genHA(){let lines=['# HA Status','get system ha status','diagnose sys ha status'];showOut('ha',lines.join('\n'));}
+function genBW(){let i=g('bw-intf')||'<INTF>';let lines=['# Bandwidth Check','diagnose netlink interface list '+i,'diagnose firewall shaper traffic-shaper list'];showOut('bw',lines.join('\n'));}
+function genVLAN(){let i=g('vlan-intf')||'<VLAN>';let lines=['# VLAN Diagnostics','show system interface '+i,'get system arp | grep '+i];showOut('vlan',lines.join('\n'));}
+function genFW(){let lines=['# Firmware Upgrade','get system status','execute backup config tftp backup.conf <TFTP-SERVER>'];showOut('fw',lines.join('\n'));}
+function genFAZ(){let ip=g('faz-ip')||'<IP>';let lines=['# FAZ/FMG Connectivity','get log fortianalyzer setting','diagnose test application miglogd 6','execute ping '+ip];showOut('faz',lines.join('\n'));}
+function genPort(){let dst=g('port-dst');if(!dst){alert('Enter destination IP');return;}let sel=document.getElementById('port-proto');let protoPort;if(sel.value==='custom'){let custom=g('port-custom');if(!custom){alert('Enter custom protocol and port e.g. tcp 8080');return;}protoPort=custom;}else{protoPort=sel.options[sel.selectedIndex].textContent;}let parts=protoPort.split(' ');let proto=parts[0].toLowerCase();let port=parts[1];let lines=[`# Port Reachability Test: ${dst}:${port} (${proto.toUpperCase()})`];if(proto==='tcp'){lines.push('','# 1. Basic ICMP test','execute ping '+dst,'','# 2. TCP connect test','execute telnet '+dst+' '+port,'','# 3. Check session table','diagnose sys session filter dport '+port,'diagnose sys session list');}else if(proto==='udp'){lines.push('','# 1. UDP sniffer - look for responses','diagnose sniffer packet any "host '+dst+' and port '+port+'" 4 30 l','','# 2. IKE debug (for UDP 500)','diagnose debug application ike -1','diagnose debug enable','# Wait 10 seconds then:','diagnose debug disable','','# 3. ICMP fallback','execute ping '+dst);}lines.push('','# 4. Verify policy allows this traffic','diagnose firewall iprope lookup <SOURCE_IP> '+dst+' '+port+' '+proto);showOut('port',lines.join('\n'));}
 
-  // ========== TOOL 3: HEALTH CHECK ==========
-  const healthCard = document.createElement('div');
-  healthCard.className = 'cblock';
-  healthCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">🩺 3. Health Check</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_hc()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('hc')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('hc')">🗑️ Clear</button></div>
-      <div id="mu-hc-out" style="display:none;margin-top:10px"><pre id="mu-hc-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>CPU > 80%</strong> = High load<br>• <strong>Memory > 80%</strong> = May enter conserve mode<br>• <strong>Conserve mode "ON"</strong> = System dropping sessions</div></div>
-    </div>
-  `;
-  el.appendChild(healthCard);
+// Event listeners
+document.getElementById('port-proto').addEventListener('change',function(){document.getElementById('port-custom-wrap').style.display=this.value==='custom'?'block':'none';});
+document.getElementById('port-btn').onclick=genPort;
 
-  // ========== TOOL 4: BGP/OSPF ==========
-  const bgpCard = document.createElement('div');
-  bgpCard.className = 'cblock';
-  bgpCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">🌐 4. BGP/OSPF Neighbor</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <input type="text" id="mu-bgp-ip" placeholder="Neighbor IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <select id="mu-bgp-proto" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>bgp</option><option>ospf</option><option>both</option></select>
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_bgp()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('bgp')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('bgp')">🗑️ Clear</button></div>
-      <div id="mu-bgp-out" style="display:none;margin-top:10px"><pre id="mu-bgp-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>BGP: "Established"</strong> = Peering up<br>• <strong>OSPF: "FULL/DR"</strong> = Adjacency healthy<br>• <strong>OSPF: "EXSTART/EXCHANGE"</strong> = MTU mismatch</div></div>
-    </div>
-  `;
-  el.appendChild(bgpCard);
+    // Wire buttons that use onclick attributes
+    var portProto = document.getElementById('port-proto');
+    if(portProto) portProto.addEventListener('change', function(){
+      var wrap = document.getElementById('port-custom-wrap');
+      if(wrap) wrap.style.display = this.value === 'custom' ? 'block' : 'none';
+    });
+    var portBtn = document.getElementById('port-btn');
+    if(portBtn) portBtn.onclick = genPort;
 
-  // ========== TOOL 5: SSL VPN ==========
-  const sslCard = document.createElement('div');
-  sslCard.className = 'cblock';
-  sslCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">🕵️ 5. SSL VPN User</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <input type="text" id="mu-ssl-user" placeholder="Username" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_ssl()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('ssl')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('ssl')">🗑️ Clear</button></div>
-      <div id="mu-ssl-out" style="display:none;margin-top:10px"><pre id="mu-ssl-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>User not in list</strong> = Authentication failed<br>• <strong>"tunnel" vs "web" mode</strong> = Check portal config</div></div>
-    </div>
-  `;
-  el.appendChild(sslCard);
-
-  // ========== TOOL 6: OBJECT SEARCH ==========
-  const objCard = document.createElement('div');
-  objCard.className = 'cblock';
-  objCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">🔎 6. Object Search</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <input type="text" id="mu-obj-ip" placeholder="IP / Subnet" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_obj()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('obj')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('obj')">🗑️ Clear</button></div>
-      <div id="mu-obj-out" style="display:none;margin-top:10px"><pre id="mu-obj-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Address object found</strong> = See which policies reference it<br>• <strong>Route found</strong> = Traffic uses that gateway</div></div>
-    </div>
-  `;
-  el.appendChild(objCard);
-
-  // ========== TOOL 7: CERTIFICATE ==========
-  const certCard = document.createElement('div');
-  certCard.className = 'cblock';
-  certCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">📄 7. Certificate Check</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_cert()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('cert')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('cert')">🗑️ Clear</button></div>
-      <div id="mu-cert-out" style="display:none;margin-top:10px"><pre id="mu-cert-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>"Valid from" / "Valid to"</strong> = Check expiry date<br>• <strong>"Issuer"</strong> = Must match CA chain</div></div>
-    </div>
-  `;
-  el.appendChild(certCard);
-
-  // ========== TOOL 8: HA FAILOVER ==========
-  const haCard = document.createElement('div');
-  haCard.className = 'cblock';
-  haCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">⚙️ 8. HA Failover</div><span class="cbadge caution">caution</span></div>
-    <div class="cbody">
-      <select id="mu-ha-action" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t)"><option>check</option><option>failover</option><option>post</option></select>
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_ha()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('ha')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('ha')">🗑️ Clear</button></div>
-      <div id="mu-ha-out" style="display:none;margin-top:10px"><pre id="mu-ha-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>⚠️ How to interpret:</strong><br>• <strong>"Primary/Secondary" roles</strong> = Primary handles traffic<br>• <strong>Checksum mismatch</strong> = Config out of sync<br>• <strong>Failover warning:</strong> Causes brief traffic interruption</div></div>
-    </div>
-  `;
-  el.appendChild(haCard);
-
-  // ========== TOOL 9: BANDWIDTH ==========
-  const bwCard = document.createElement('div');
-  bwCard.className = 'cblock';
-  bwCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">📊 9. Bandwidth Check</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <input type="text" id="mu-bw-intf" placeholder="Interface" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_bw()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('bw')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('bw')">🗑️ Clear</button></div>
-      <div id="mu-bw-out" style="display:none;margin-top:10px"><pre id="mu-bw-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>High error counters</strong> = Physical layer issue<br>• <strong>Drops increasing</strong> = Interface congestion</div></div>
-    </div>
-  `;
-  el.appendChild(bwCard);
-
-  // ========== TOOL 10: VLAN ==========
-  const vlanCard = document.createElement('div');
-  vlanCard.className = 'cblock';
-  vlanCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">💾 10. VLAN Check</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <input type="text" id="mu-vlan-intf" placeholder="VLAN Interface" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_vlan()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('vlan')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('vlan')">🗑️ Clear</button></div>
-      <div id="mu-vlan-out" style="display:none;margin-top:10px"><pre id="mu-vlan-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Interface status "up/up"</strong> = Physical and protocol up<br>• <strong>VLAN ID mismatch</strong> = Check switch port config</div></div>
-    </div>
-  `;
-  el.appendChild(vlanCard);
-
-  // ========== TOOL 11: FIRMWARE ==========
-  const fwCard = document.createElement('div');
-  fwCard.className = 'cblock';
-  fwCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">🔄 11. Firmware Upgrade</div><span class="cbadge caution">caution</span></div>
-    <div class="cbody">
-      <input type="text" id="mu-fw-current" placeholder="Current version" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <input type="text" id="mu-fw-target" placeholder="Target version" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_fw()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('fw')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('fw')">🗑️ Clear</button></div>
-      <div id="mu-fw-out" style="display:none;margin-top:10px"><pre id="mu-fw-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>⚠️ Warning:</strong> Always backup config first! HA cluster: upgrade secondary first.</div></div>
-    </div>
-  `;
-  el.appendChild(fwCard);
-
-  // ========== TOOL 12: FAZ/FMG ==========
-  const fazCard = document.createElement('div');
-  fazCard.className = 'cblock';
-  fazCard.innerHTML = `
-    <div class="chdr"><div class="chdr-l">🏢 12. FAZ/FMG Check</div><span class="cbadge ro">read-only</span></div>
-    <div class="cbody">
-      <input type="text" id="mu-faz-ip" placeholder="FAZ/FMG IP" style="width:100%;margin-bottom:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:8px 10px;color:var(--t);font-family:var(--mono)">
-      <div style="display:flex;gap:8px;margin-top:8px"><button class="sbtn" onclick="mu_faz()">🔧 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('faz')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('faz')">🗑️ Clear</button></div>
-      <div id="mu-faz-out" style="display:none;margin-top:10px"><pre id="mu-faz-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>Connection status "connected"</strong> = FAZ/FMG reachable<br>• <strong>Ping fails</strong> = Network connectivity issue</div></div>
-    </div>
-  `;
-  el.appendChild(fazCard);
-
-  // ========== TOOL 13: PORT REACHABILITY CHECKER ==========
-  const portCard = document.createElement('div');
-  portCard.className = 'cblock';
-  portCard.style.border = '2px solid var(--a)';
-  portCard.style.background = 'rgba(29,158,117,.02)';
-  portCard.innerHTML = `
-    <div class="chdr" style="background:rgba(29,158,117,.1)"><div class="chdr-l"><span style="font-size:18px">🔌</span> 13. Port / Protocol Reachability Checker</div><span class="cbadge ro">UDP/TCP</span></div>
-    <div class="cbody">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-        <div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Destination IP</label><input type="text" id="mu-port-dst" placeholder="e.g., 8.8.8.8, 10.0.0.2" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:monospace"></div>
-        <div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Port / Protocol</label><select id="mu-port-proto" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t)"><option value="udp 500">UDP 500 (IKE/IPsec)</option><option value="tcp 443">TCP 443 (HTTPS/SSL)</option><option value="tcp 22">TCP 22 (SSH)</option><option value="tcp 3389">TCP 3389 (RDP)</option><option value="udp 53">UDP 53 (DNS)</option><option value="custom">Custom</option></select></div>
-        <div id="mu-port-custom-wrap" style="display:none;grid-column:1/-1"><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Custom (protocol port)</label><input type="text" id="mu-port-custom" placeholder="tcp 8080" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:monospace"></div>
-      </div>
-      <div style="display:flex;gap:8px"><button class="sbtn" id="mu-port-btn" style="background:linear-gradient(90deg,var(--a),var(--ad))">🚀 Generate</button><button class="sbtn" style="background:var(--b3)" onclick="copyMuOutput('port')">📋 Copy</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r)" onclick="clearMuOutput('port')">🗑️ Clear</button></div>
-      <div id="mu-port-out" style="display:none;margin-top:12px"><pre id="mu-port-cmd" class="clines" style="background:#010409;padding:10px;border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g);white-space:pre-wrap"></pre><div class="cnote"><strong>🔍 How to interpret:</strong><br>• <strong>0% loss</strong> = Reachable | <strong>100% loss</strong> = Unreachable<br>• <strong>TCP: Telnet connects</strong> = Port open | <strong>UDP: Sniffer shows replies</strong> = Service responding</div></div>
-    </div>
-  `;
-  el.appendChild(portCard);
-
-  // ========== OVERRIDE EXISTING FUNCTIONS (add Copy/Clear capability) ==========
-  // These will replace your existing mu_* functions but keep the same names
-  window.mu_pol = function() { 
-    let lines = ['# Policy Lookup', 'get router info routing-table details ' + getVal('mu-pol-dst'), '', 'diagnose firewall iprope lookup ' + getVal('mu-pol-src') + ' ' + getVal('mu-pol-dst') + ' ' + getVal('mu-pol-port') + ' ' + getVal('mu-pol-proto'), '', 'diagnose debug reset', 'diagnose debug flow filter addr ' + getVal('mu-pol-src'), 'diagnose debug flow filter daddr ' + getVal('mu-pol-dst'), 'diagnose debug flow trace start 20', 'diagnose debug enable', '# trigger traffic then stop', 'diagnose debug flow trace stop', 'diagnose debug disable', 'diagnose debug reset', '', 'diagnose sys session filter src ' + getVal('mu-pol-src'), 'diagnose sys session list']; 
-    showOut('pol', lines.join('\n')); 
-  };
-  
-  window.mu_vpn = function() { 
-    let n = getVal('mu-vpn-name') || '<TUNNEL>'; 
-    let t = getVal('mu-vpn-type'); 
-    let lines = []; 
-    if (t === 'ipsec' || t === 'both') { lines.push('# IPsec VPN Status', 'get vpn ipsec tunnel summary', 'diagnose vpn tunnel list name "' + n + '"', 'diagnose vpn ike gateway list name "' + n + '"'); } 
-    if (t === 'ssl' || t === 'both') { lines.push('# SSL VPN Status', 'get vpn ssl monitor', 'diagnose vpn ssl list'); } 
-    showOut('vpn', lines.join('\n')); 
-  };
-  
-  window.mu_hc = function() { 
-    let lines = ['# System Health', 'get system status', 'get system performance status', 'diagnose sys top 5 20', 'diagnose sys session full-stat']; 
-    showOut('hc', lines.join('\n')); 
-  };
-  
-  window.mu_bgp = function() { 
-    let ip = getVal('mu-bgp-ip') || '<IP>'; 
-    let p = getVal('mu-bgp-proto'); 
-    let lines = []; 
-    if (p === 'bgp' || p === 'both') { lines.push('# BGP Status', 'get router info bgp summary', 'get router info bgp neighbors ' + ip, 'get router info bgp neighbors ' + ip + ' received-routes'); } 
-    if (p === 'ospf' || p === 'both') { lines.push('# OSPF Status', 'get router info ospf neighbor', 'get router info ospf database brief'); } 
-    lines.push('', 'execute ping ' + ip); 
-    showOut('bgp', lines.join('\n')); 
-  };
-  
-  window.mu_ssl = function() { 
-    let lines = ['# SSL VPN Status', 'get vpn ssl monitor', 'diagnose vpn ssl list', 'diagnose firewall auth list']; 
-    showOut('ssl', lines.join('\n')); 
-  };
-  
-  window.mu_obj = function() { 
-    let ip = getVal('mu-obj-ip') || '<IP>'; 
-    let lines = ['# Object Search', 'show firewall address | grep "' + ip + '"', 'get router info routing-table details ' + ip, 'get system arp | grep "' + ip + '"']; 
-    showOut('obj', lines.join('\n')); 
-  };
-  
-  window.mu_cert = function() { 
-    let lines = ['# Certificate Check', 'get certificate local', 'diagnose certificate local list']; 
-    showOut('cert', lines.join('\n')); 
-  };
-  
-  window.mu_ha = function() { 
-    let lines = ['# HA Status', 'get system ha status', 'diagnose sys ha status']; 
-    showOut('ha', lines.join('\n')); 
-  };
-  
-  window.mu_bw = function() { 
-    let i = getVal('mu-bw-intf') || '<INTF>'; 
-    let lines = ['# Bandwidth Check', 'diagnose netlink interface list ' + i, 'diagnose firewall shaper traffic-shaper list']; 
-    showOut('bw', lines.join('\n')); 
-  };
-  
-  window.mu_vlan = function() { 
-    let i = getVal('mu-vlan-intf') || '<VLAN>'; 
-    let lines = ['# VLAN Diagnostics', 'show system interface ' + i, 'get system arp | grep ' + i]; 
-    showOut('vlan', lines.join('\n')); 
-  };
-  
-  window.mu_fw = function() { 
-    let lines = ['# Firmware Upgrade', 'get system status', 'execute backup config tftp backup.conf <TFTP-SERVER>']; 
-    showOut('fw', lines.join('\n')); 
-  };
-  
-  window.mu_faz = function() { 
-    let ip = getVal('mu-faz-ip') || '<IP>'; 
-    let lines = ['# FAZ/FMG Connectivity', 'get log fortianalyzer setting', 'diagnose test application miglogd 6', 'execute ping ' + ip]; 
-    showOut('faz', lines.join('\n')); 
-  };
-  
-  window.mu_port = function() { 
-    let dst = getVal('mu-port-dst'); 
-    if (!dst) { alert('Enter destination IP'); return; } 
-    let sel = document.getElementById('mu-port-proto'); 
-    let protoPort; 
-    if (sel.value === 'custom') { 
-      let custom = getVal('mu-port-custom'); 
-      if (!custom) { alert('Enter custom protocol and port e.g. tcp 8080'); return; } 
-      protoPort = custom; 
-    } else { 
-      protoPort = sel.options[sel.selectedIndex].textContent; 
-    } 
-    let parts = protoPort.split(' '); 
-    let proto = parts[0].toLowerCase(); 
-    let port = parts[1]; 
-    let lines = [`# Port Reachability Test: ${dst}:${port} (${proto.toUpperCase()})`]; 
-    if (proto === 'tcp') { 
-      lines.push('', '# 1. Basic ICMP test', 'execute ping ' + dst, '', '# 2. TCP connect test', 'execute telnet ' + dst + ' ' + port, '', '# 3. Check session table', 'diagnose sys session filter dport ' + port, 'diagnose sys session list'); 
-    } else if (proto === 'udp') { 
-      lines.push('', '# 1. UDP sniffer - look for responses', 'diagnose sniffer packet any "host ' + dst + ' and port ' + port + '" 4 30 l', '', '# 2. IKE debug (for UDP 500)', 'diagnose debug application ike -1', 'diagnose debug enable', '# Wait 10 seconds then:', 'diagnose debug disable', '', '# 3. ICMP fallback', 'execute ping ' + dst); 
-    } 
-    lines.push('', '# 4. Verify policy allows this traffic', 'diagnose firewall iprope lookup <SOURCE_IP> ' + dst + ' ' + port + ' ' + proto); 
-    showOut('port', lines.join('\n')); 
-  };
-
-  // Event listeners for port tool
-  document.getElementById('mu-port-proto').addEventListener('change', function() { 
-    document.getElementById('mu-port-custom-wrap').style.display = this.value === 'custom' ? 'block' : 'none'; 
-  });
-  document.getElementById('mu-port-btn').onclick = window.mu_port;
-
-  // Attach copy/clear to window for onclick access
-  window.copyMuOutput = copyMuOutput;
-  window.clearMuOutput = clearMuOutput;
+    // Wire all generate buttons
+    var btnMap = {
+      'pol-btn': genPolicy, 'vpn-btn': genVPN, 'health-btn': genHealth,
+      'bgp-btn': genBGP, 'ssl-btn': genSSL, 'obj-btn': genObj,
+      'cert-btn': genCert, 'ha-btn': genHA, 'bw-btn': genBW,
+      'vlan-btn': genVLAN, 'fw-btn': genFW, 'faz-btn': genFAZ
+    };
+    Object.keys(btnMap).forEach(function(id){
+      var b = document.getElementById(id);
+      if(b) b.onclick = btnMap[id];
+    });
+  })();
 }
 
-}function initAndRender(){try{
+
+function initAndRender(){try{
   loadSavedTheme();
   initSidebar();
   // Restore last active tab and sidebar category
