@@ -672,72 +672,338 @@ fbAuth.onAuthStateChanged(function(user){
 /* ══ LOGIN ══ */
 function renderPSMaker(el){
   el.innerHTML="";
-  var h=document.createElement("div");
-  h.className="sh";
-  h.innerHTML='<span class="stitle">&#x1FA9F; Smart PowerShell Script Maker</span><span class="sev info">AI-powered &middot; Colorized &middot; Read/Write annotated</span>';
-  el.appendChild(h);
-  var intro=document.createElement("p");
-  intro.style.cssText="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7";
-  intro.innerHTML='Describe your Windows issue or task. The AI generates a PowerShell script with <span style="color:#3fb950;font-weight:700">&#x25BA; READ</span> and <span style="color:#f85149;font-weight:700">&#x270F; WRITE</span> annotations on every command.';
-  el.appendChild(intro);
+  // ── CSS ──
+  var css=document.createElement("style");
+  css.textContent=
+    ".ps-msg{margin-bottom:12px;animation:psFadeIn .3s ease}"
+    +"@keyframes psFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}"
+    +".ps-user-msg{background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.25);border-radius:10px 10px 2px 10px;padding:10px 14px;font-size:12px;color:var(--t);margin-left:20%}"
+    +".ps-ai-msg{background:var(--b2);border:1px solid var(--br);border-radius:10px 10px 10px 2px;padding:10px 14px;font-size:12px;color:var(--t);margin-right:20%}"
+    +".ps-cmd-block{background:#0a0e14;border-radius:8px;padding:12px 14px;margin:8px 0;font-family:'Courier New',monospace;font-size:12px;line-height:1.9;border:1px solid #30363d}"
+    +".ps-cmd-line{padding:2px 0;display:flex;align-items:flex-start;gap:8px}"
+    +".ps-badge{font-size:9px;padding:1px 6px;border-radius:3px;font-weight:700;white-space:nowrap;margin-top:2px;flex-shrink:0}"
+    +".ps-expl{font-size:11px;color:var(--t3);margin:0 0 4px 0;padding-left:4px;border-left:2px solid var(--br);line-height:1.5}"
+    +".ps-opt-btn{background:var(--b2);border:1px solid var(--a);border-radius:20px;color:var(--a);font-size:11px;padding:5px 14px;cursor:pointer;transition:all .2s}"
+    +".ps-opt-btn:hover{background:var(--a);color:#000}"
+    +".ps-typing{color:var(--t3);font-size:11px;font-style:italic;padding:8px 0}"
+    +".ps-section-hdr{color:#58a6ff;font-weight:700;margin-top:8px;font-size:13px}"
+    +".ps-copy-btn{font-size:10px;padding:3px 10px;background:var(--b3);border:1px solid var(--br);color:var(--t2);border-radius:6px;cursor:pointer;margin-top:8px}"
+    +".ps-copy-btn:hover{border-color:var(--a);color:var(--a)}";
+  document.head.appendChild(css);
+
+  // ── Header ──
+  var hdr=document.createElement("div");
+  hdr.className="sh";
+  hdr.innerHTML='<span class="stitle">&#x1FA9F; Smart PowerShell Assistant</span><span class="sev info">AI-powered &middot; Interactive &middot; Explained</span>';
+  el.appendChild(hdr);
+
+  // ── Layout ──
   var isMobile=window.innerWidth<=768;
   var layout=document.createElement("div");
-  layout.style.cssText=isMobile?"display:grid;grid-template-columns:1fr;gap:16px":"display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start";
+  layout.style.cssText=isMobile
+    ?"display:grid;grid-template-columns:1fr;gap:14px;height:calc(100vh - 200px)"
+    :"display:grid;grid-template-columns:280px 1fr;gap:14px;height:calc(100vh - 200px)";
   el.appendChild(layout);
-  var LP=document.createElement("div");
-  layout.appendChild(LP);
+
+  // ── LEFT SIDEBAR ──
+  var sb=document.createElement("div");
+  sb.style.cssText="display:flex;flex-direction:column;gap:10px;overflow-y:auto";
+  layout.appendChild(sb);
 
   // Key card
   var kc=document.createElement("div");
-  kc.className="cblock";kc.style.marginBottom="14px";
-  kc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F511; Groq API Key</div></div><div class="cbody"><div style="display:flex;gap:8px"><input type="password" id="ps-key" placeholder="Enter Groq API key..." style="flex:1;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><button class="sbtn" onclick="psSaveKey()" style="white-space:nowrap">Save</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2);white-space:nowrap" onclick="psClearKey()">Clear</button></div><div id="ps-key-st" style="font-size:11px;color:var(--t3);margin-top:6px"></div></div>';
-  LP.appendChild(kc);
-  var sk=localStorage.getItem("groq_key");
-  if(sk){document.getElementById("ps-key").value=sk;document.getElementById("ps-key-st").textContent="Key loaded";document.getElementById("ps-key-st").style.color="var(--g)";}
-
-  // Issue card
-  var ic=document.createElement("div");
-  ic.className="cblock";ic.style.marginBottom="14px";
-  ic.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F4DD; Describe Your Windows Issue or Task</div></div><div class="cbody"><textarea id="ps-issue" rows="5" placeholder="e.g. My PC is slow, check CPU, memory, running services..." style="width:100%;padding:10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.6;margin-bottom:10px"></textarea><div style="font-size:11px;color:var(--t3);margin-bottom:6px">Quick templates:</div><div id="ps-tpl" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Script style</label><select id="ps-style" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="diagnostic">Diagnostic (read-only, safe)</option><option value="fix">Fix &amp; Repair (makes changes)</option><option value="report">Export Report to file</option><option value="both">Diagnose then Fix</option></select></div><div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Windows version</label><select id="ps-winver" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option>Windows 10/11</option><option>Windows Server 2019/2022</option><option>Windows Server 2016</option><option>Any Windows</option></select></div></div><button onclick="psGenerate()" id="ps-gen-btn" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:linear-gradient(90deg,var(--a),var(--ad))">&#x1F680; Generate PowerShell Script</button><div id="ps-loading" style="display:none;text-align:center;padding:16px;color:var(--t2);font-size:12px">&#x23F3; Generating script with AI...</div></div>';
-  LP.appendChild(ic);
-
-  // Quick templates
-  var tpls=[
-    ["&#x1F422; Slow PC","Check CPU, memory, disk usage, top processes and running services"],
-    ["&#x1F310; Network Issue","Check network adapters, IP config, DNS, ping gateway and firewall rules"],
-    ["&#x1F4CB; Event Log","Get all critical and error events from last 24 hours from system and application log"],
-    ["&#x1F4BE; Disk Space","Find large files over 500MB, check disk usage per drive and temp files"],
-    ["&#x1F510; Users","List local users, groups, admin accounts and last login times"],
-    ["&#x1F504; Windows Update","Check pending updates, update history and Windows Update service status"],
-    ["&#x1F6E1; Security","Check firewall status, antivirus, open ports and suspicious scheduled tasks"],
-    ["&#x1F680; Startup","List all startup programs and scheduled tasks"],
-  ];
-  var tplDiv=document.getElementById("ps-tpl");
-  tpls.forEach(function(t){
-    var b=document.createElement("button");
-    b.className="sbtn";
-    b.style.cssText="font-size:10px;padding:3px 10px;background:var(--b3);border:1px solid var(--br);color:var(--t2)";
-    b.innerHTML=t[0];
-    b.onclick=(function(txt){return function(){document.getElementById("ps-issue").value=txt;};})(t[1]);
-    tplDiv.appendChild(b);
-  });
+  kc.className="cblock";
+  kc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F511; Groq Key</div></div>'
+    +'<div class="cbody" style="padding:10px 12px">'
+    +'<input type="password" id="ps-key" placeholder="API key..." style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:11px;margin-bottom:6px">'
+    +'<div style="display:flex;gap:6px">'
+    +'<button class="sbtn" onclick="psSaveKey()" style="flex:1;font-size:11px;padding:5px">Save</button>'
+    +'<button class="sbtn" style="flex:1;font-size:11px;padding:5px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)" onclick="psClearKey()">Clear</button>'
+    +'</div><div id="ps-key-st" style="font-size:10px;color:var(--t3);margin-top:5px"></div></div>';
+  sb.appendChild(kc);
 
   // Legend card
   var lc=document.createElement("div");
   lc.className="cblock";
-  lc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F3A8; Color Legend</div></div><div class="cbody"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px"><div style="padding:8px 12px;background:#0a0e14;border-radius:6px;border-left:3px solid #3fb950"><span style="color:#3fb950;font-weight:700;font-family:var(--mono)">&#x25BA; READ</span><div style="color:#8b949e;font-size:11px;margin-top:3px">Get-*, Select-*, Test-* — Safe, no changes</div></div><div style="padding:8px 12px;background:#0a0e14;border-radius:6px;border-left:3px solid #f85149"><span style="color:#f85149;font-weight:700;font-family:var(--mono)">&#x270F; WRITE</span><div style="color:#8b949e;font-size:11px;margin-top:3px">Set-*, Stop-*, Remove-* — Modifies system</div></div><div style="padding:8px 12px;background:#0a0e14;border-radius:6px;border-left:3px solid #58a6ff"><span style="color:#58a6ff;font-weight:700;font-family:var(--mono)"># INFO</span><div style="color:#8b949e;font-size:11px;margin-top:3px">Comments and section headers</div></div><div style="padding:8px 12px;background:#0a0e14;border-radius:6px;border-left:3px solid #d29922"><span style="color:#d29922;font-weight:700;font-family:var(--mono)">$ VAR</span><div style="color:#8b949e;font-size:11px;margin-top:3px">Variables and parameters</div></div></div></div>';
-  LP.appendChild(lc);
+  lc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F3A8; Legend</div></div>'
+    +'<div class="cbody" style="padding:10px 12px;display:flex;flex-direction:column;gap:6px">'
+    +'<div style="display:flex;align-items:center;gap:8px"><span class="ps-badge" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">READ</span><span style="font-size:11px;color:var(--t3)">Safe — no system changes</span></div>'
+    +'<div style="display:flex;align-items:center;gap:8px"><span class="ps-badge" style="background:#f8514922;color:#f85149;border:1px solid #f8514944">WRITE</span><span style="font-size:11px;color:var(--t3)">Modifies system</span></div>'
+    +'<div style="display:flex;align-items:center;gap:8px"><span class="ps-badge" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">INFO</span><span style="font-size:11px;color:var(--t3)">Comments / headers</span></div>'
+    +'<div style="display:flex;align-items:center;gap:8px"><span class="ps-badge" style="background:#d2992222;color:#d29922;border:1px solid #d2992244">VAR</span><span style="font-size:11px;color:var(--t3)">Variables / params</span></div>'
+    +'</div>';
+  sb.appendChild(lc);
 
-  // Right panel - output
-  var RP=document.createElement("div");
-  layout.appendChild(RP);
-  var oc=document.createElement("div");
-  oc.className="cblock";
-  oc.style.cssText="position:sticky;top:16px";
-  oc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F4BB; Generated PowerShell Script</div><div style="display:flex;gap:6px"><button onclick="psCopyScript()" class="sbtn" style="font-size:10px;padding:3px 10px;background:var(--b3);border:1px solid var(--br);color:var(--t2)">&#x1F4CB; Copy</button><button onclick="psClearScript()" class="sbtn" style="font-size:10px;padding:3px 10px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">&#x1F5D1; Clear</button></div></div><div id="ps-out" style="min-height:400px;background:#0a0e14;font-family:var(--mono);font-size:12px;line-height:1.8;padding:16px;overflow-y:auto;max-height:70vh;border-radius:0 0 10px 10px"><div style="color:#484f58;font-style:italic">Script will appear here after generation...</div></div><div id="ps-plain" style="display:none"></div>';
-  RP.appendChild(oc);
+  // Quick start card
+  var qc=document.createElement("div");
+  qc.className="cblock";
+  qc.style.flex="1";
+  var qcBody='<div class="chdr"><div class="chdr-l">&#x26A1; Quick Start</div></div><div class="cbody" style="padding:10px 12px;display:flex;flex-direction:column;gap:6px">';
+  var tpls=[
+    ["&#x1F422;","Slow PC","My PC is running slow"],
+    ["&#x1F310;","Network Issue","I have a network connectivity problem"],
+    ["&#x1F4CB;","Event Log Errors","Check for Windows errors and warnings"],
+    ["&#x1F4BE;","Disk Space","Find what is using disk space"],
+    ["&#x1F510;","Security Audit","Check system security posture"],
+    ["&#x1F504;","Windows Update","Check Windows Update status"],
+    ["&#x1F680;","Performance","Analyze system performance"],
+    ["&#x1F9F9;","Cleanup","Clean temp files and optimize system"],
+  ];
+  tpls.forEach(function(t){
+    qcBody+='<button class="ps-opt-btn" onclick="psQuickStart('+"'"+''+"'"+t[2]+"'"+''+"'"+')" style="text-align:left;width:100%;padding:6px 10px;border-radius:6px;display:flex;align-items:center;gap:8px;font-size:11px">'+t[0]+' '+t[1]+'</button>';
+  });
+  qcBody+='</div>';
+  qc.innerHTML=qcBody;
+  sb.appendChild(qc);
 
-  // ── Functions ──
+  // New chat button
+  var nc=document.createElement("button");
+  nc.className="sbtn";
+  nc.style.cssText="width:100%;padding:10px;font-size:12px";
+  nc.innerHTML="&#x1F504; New Conversation";
+  nc.onclick=function(){psResetChat();};
+  sb.appendChild(nc);
+
+  // ── RIGHT: CHAT PANEL ──
+  var chatWrap=document.createElement("div");
+  chatWrap.style.cssText="display:flex;flex-direction:column;height:100%";
+  layout.appendChild(chatWrap);
+
+  // Chat history
+  var chatBox=document.createElement("div");
+  chatBox.id="ps-chatbox";
+  chatBox.style.cssText="flex:1;overflow-y:auto;padding:4px 2px 16px 2px;display:flex;flex-direction:column;gap:4px";
+  chatWrap.appendChild(chatBox);
+
+  // Input area
+  var inputWrap=document.createElement("div");
+  inputWrap.style.cssText="display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--br);margin-top:8px";
+  inputWrap.innerHTML='<textarea id="ps-input" placeholder="Describe your Windows issue or ask a follow-up question..." rows="2" style="flex:1;padding:10px 12px;background:var(--bg);border:1px solid var(--br);border-radius:8px;color:var(--t);font-size:12px;resize:none;font-family:inherit;line-height:1.5"></textarea>'
+    +'<button onclick="psSend()" id="ps-send-btn" class="sbtn" style="padding:10px 16px;align-self:flex-end;font-size:13px;font-weight:700;background:linear-gradient(135deg,var(--a),var(--ad))">&#x1F680;<br><span style="font-size:9px">Send</span></button>';
+  chatWrap.appendChild(inputWrap);
+
+  // ── State ──
+  var psHistory=[];
+  var psContext="";
+
+  // ── Restore key ──
+  var sk=localStorage.getItem("groq_key");
+  if(sk){
+    document.getElementById("ps-key").value=sk;
+    document.getElementById("ps-key-st").textContent="Key loaded";
+    document.getElementById("ps-key-st").style.color="var(--g)";
+  }
+
+  // Allow Enter to send
+  document.getElementById("ps-input").addEventListener("keydown",function(e){
+    if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();psSend();}
+  });
+
+  // ── Welcome message ──
+  function addMsg(role,html,opts){
+    var d=document.createElement("div");
+    d.className="ps-msg";
+    var bubble=document.createElement("div");
+    bubble.className=role==="user"?"ps-user-msg":"ps-ai-msg";
+    bubble.innerHTML=html;
+    d.appendChild(bubble);
+    if(opts&&opts.length){
+      var optWrap=document.createElement("div");
+      optWrap.style.cssText="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;margin-right:20%";
+      opts.forEach(function(o){
+        var b=document.createElement("button");
+        b.className="ps-opt-btn";
+        b.textContent=o;
+        b.onclick=function(){
+          optWrap.remove();
+          document.getElementById("ps-input").value=o;
+          psSend();
+        };
+        optWrap.appendChild(b);
+      });
+      d.appendChild(optWrap);
+    }
+    chatBox.appendChild(d);
+    chatBox.scrollTop=chatBox.scrollHeight;
+    return d;
+  }
+
+  function escH(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  function colorizeLine(line){
+    var t=line.trim();
+    if(!t) return "";
+    if(t.startsWith("#")){
+      var isSec=/^#\s*[=\-]{3,}/.test(t)||/^#\s*[A-Z][A-Z\s]{3,}$/.test(t);
+      return '<div class="ps-cmd-line"><span style="color:#58a6ff">'
+        +escH(line)+'</span>'+
+        (isSec?'<span class="ps-badge" style="background:#58a6ff22;color:#58a6ff;border:1px solid #58a6ff44">INFO</span>':"")+"</div>";
+    }
+    var writeRx=/\b(Set-|Stop-|Remove-|Delete-|Disable-|Enable-Service|Start-Service|New-|Add-|Clear-EventLog|Reset-|Restart-|Install-|Uninstall-|Move-|Rename-|Copy-Item|Out-File|Export-|Register-|Unregister-|Grant-|Update-|Invoke-Expression|Write-EventLog)\b/i;
+    var readRx=/\b(Get-|Select-|Where-|Format-|Measure-|Sort-|Group-|Compare-|Test-|Resolve-|ConvertTo-|ConvertFrom-|Find-|Search-|Out-GridView|Read-Host)\b/i;
+    if(writeRx.test(t)){
+      return '<div class="ps-cmd-line" style="background:rgba(248,81,73,.06);border-left:2px solid #f85149;padding-left:6px;border-radius:0 4px 4px 0">'
+        +'<span style="color:#f85149">'
+        +escH(line)+'</span>'
+        +'<span class="ps-badge" style="background:#f8514922;color:#f85149;border:1px solid #f8514944">WRITE</span></div>';
+    }
+    if(readRx.test(t)){
+      return '<div class="ps-cmd-line" style="background:rgba(63,185,80,.05);border-left:2px solid #3fb950;padding-left:6px;border-radius:0 4px 4px 0">'
+        +'<span style="color:#3fb950">'
+        +escH(line)+'</span>'
+        +'<span class="ps-badge" style="background:#3fb95022;color:#3fb950;border:1px solid #3fb95044">READ</span></div>';
+    }
+    if(t.startsWith("$")){
+      return '<div class="ps-cmd-line"><span style="color:#d29922">'
+        +escH(line)+'</span><span class="ps-badge" style="background:#d2992222;color:#d29922;border:1px solid #d2992244">VAR</span></div>';
+    }
+    return '<div class="ps-cmd-line"><span style="color:#c9d1d9">'+escH(line)+'</span></div>';
+  }
+
+  function renderScript(raw){
+    // Parse script into blocks: each command has explanation comment above it
+    var lines=raw.split("\n");
+    var html='<div class="ps-cmd-block">';
+    var pendingComment="";
+    var plainLines=[];
+    lines.forEach(function(line){
+      var t=line.trim();
+      if(!t){pendingComment="";html+='<div style="height:4px"></div>';return;}
+      if(t.startsWith("#")){
+        pendingComment=t.substring(1).trim();
+        html+=colorizeLine(line);
+        plainLines.push(line);
+        return;
+      }
+      if(pendingComment){
+        html+='<div class="ps-expl">&#x2192; '+escH(pendingComment)+'</div>';
+        pendingComment="";
+      }
+      html+=colorizeLine(line);
+      plainLines.push(line);
+    });
+    html+='</div>';
+    // Copy button
+    var plain=plainLines.join("\n");
+    var copyId="psc"+Date.now();
+    html+='<button class="ps-copy-btn" onclick="psCopyById('+"'"+copyId+"'"+')">&#x1F4CB; Copy Script</button>';
+    // Store for copy
+    window._psCopies=window._psCopies||{};
+    window._psCopies[copyId]=plain;
+    return html;
+  }
+
+  window.psCopyById=function(id){
+    var txt=(window._psCopies||{})[id];
+    if(txt)navigator.clipboard.writeText(txt).then(function(){showToast("Script copied!");});
+  };
+
+  // Welcome
+  addMsg("ai",'<strong>&#x1F44B; Welcome to Smart PowerShell Assistant</strong><br><br>'
+    +'I will help you solve your Windows issue step by step. I will:<br>'
+    +'&bull; Ask clarifying questions to understand your problem<br>'
+    +'&bull; Generate colorized PowerShell commands with explanations<br>'
+    +'&bull; Guide you through the diagnosis and fix interactively<br><br>'
+    +'<strong>What is your Windows issue or task?</strong>',
+    ["My PC is slow","Network not working","Check for errors","Disk space issue","Security audit"]);
+
+  window.psQuickStart=function(text){
+    document.getElementById("ps-input").value=text;
+    psSend();
+  };
+
+  window.psResetChat=function(){
+    psHistory=[];
+    psContext="";
+    chatBox.innerHTML="";
+    addMsg("ai","&#x1F504; <strong>New conversation started.</strong> What Windows issue can I help you with?",
+      ["My PC is slow","Network not working","Check for errors","Security audit"]);
+  };
+
+  window.psSend=async function(){
+    var key=localStorage.getItem("groq_key")||document.getElementById("ps-key").value.trim();
+    if(!key){showToast("Enter your Groq API key first");return;}
+    var inp=document.getElementById("ps-input");
+    var msg=inp.value.trim();
+    if(!msg) return;
+    inp.value="";
+    // Show user message
+    addMsg("user",escH(msg));
+    psHistory.push({role:"user",content:msg});
+    // Show typing
+    var typingEl=addMsg("ai","<span class='ps-typing'>&#x23F3; Thinking...</span>");
+    document.getElementById("ps-send-btn").disabled=true;
+    var sysPrompt='You are an expert Windows PowerShell assistant embedded in NetWolf, a network engineer tool.'
+      +'\n\nYour role is to INTERACTIVELY help the user solve their Windows issue step by step.'
+      +'\n\nRULES:\n'
+      +'1. First response: Ask 1-2 clarifying questions to understand the issue better.\n'
+      +'2. After clarification: Generate PowerShell script with EVERY command preceded by a # comment explaining exactly what it does.\n'
+      +'3. After the script: Explain what to look for in the output and ask "Did this help? What did you see in the output?"\n'
+      +'4. Follow-up: Based on their output/results, provide next steps or refined commands.\n'
+      +'5. Always suggest follow-up commands based on results.\n'
+      +'\nSCRIPT FORMAT (when providing PowerShell):\n'
+      +'- Each command MUST have a # comment above it explaining what it does\n'
+      +'- Use # === SECTION NAME === for section headers\n'
+      +'- No markdown code fences, return raw PowerShell\n'
+      +'- Wrap scripts in [SCRIPT_START] and [SCRIPT_END] markers\n'
+      +'\nOUTSIDE scripts: respond conversationally and concisely in plain text.';
+    try{
+      var resp=await fetch("https://api.groq.com/openai/v1/chat/completions",{
+        method:"POST",
+        headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json"},
+        body:JSON.stringify({
+          model:"llama-3.3-70b-versatile",
+          max_tokens:2500,
+          messages:[{role:"system",content:sysPrompt}].concat(psHistory)
+        })
+      });
+      if(!resp.ok) throw new Error("API error: "+resp.status);
+      var data=await resp.json();
+      if(data.error) throw new Error(data.error.message);
+      var reply=data.choices[0].message.content;
+      psHistory.push({role:"assistant",content:reply});
+      typingEl.remove();
+      // Parse reply - split on [SCRIPT_START]...[SCRIPT_END]
+      var parts=reply.split(/\[SCRIPT_START\]/);
+      parts.forEach(function(part,i){
+        if(i===0){
+          // Text before script
+          if(part.trim()){
+            var textHtml=part.trim().replace(/\n\n/g,"<br><br>").replace(/\n/g,"<br>")
+              .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>");
+            // Detect follow-up options from text
+            var opts=[];
+            if(/did this help|what did you see|next step/i.test(part)){
+              opts=["It worked! What else can I check?","I see errors, here is what I got:","It did not help, let me describe more","Show me the next diagnostic step"];
+            } else if(/clarif|can you tell|could you|what version|how long/i.test(part)){
+              opts=["Windows 10","Windows 11","Windows Server 2022","It just started happening","It has been slow for a while"];
+            }
+            addMsg("ai",textHtml,opts);
+          }
+        } else {
+          // Has a script
+          var scriptEnd=part.indexOf("[SCRIPT_END]");
+          var scriptRaw=scriptEnd!==-1?part.substring(0,scriptEnd).trim():part.trim();
+          var afterScript=scriptEnd!==-1?part.substring(scriptEnd+12).trim():"";
+          // Render script
+          var scriptHtml=renderScript(scriptRaw);
+          addMsg("ai",scriptHtml);
+          // Render text after script
+          if(afterScript){
+            var afterHtml=afterScript.replace(/\n\n/g,"<br><br>").replace(/\n/g,"<br>")
+              .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>");
+            var followOpts=["It worked, what next?","I see errors in the output","The commands did not run","Show me more commands"];
+            addMsg("ai",afterHtml,followOpts);
+          }
+        }
+      });
+    }catch(err){
+      typingEl.remove();
+      addMsg("ai","<span style='color:#f85149'>&#x274C; Error: "+escH(err.message)+"</span><br><span style='font-size:11px;color:var(--t3)'>Check your Groq API key and try again.</span>");
+    }
+    document.getElementById("ps-send-btn").disabled=false;
+  };
+
   window.psSaveKey=function(){
     var k=document.getElementById("ps-key").value.trim();
     if(!k){showToast("Enter a key first");return;}
@@ -750,73 +1016,6 @@ function renderPSMaker(el){
     localStorage.removeItem("groq_key");
     document.getElementById("ps-key").value="";
     document.getElementById("ps-key-st").textContent="Key cleared";
-  };
-  function escPS(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-  function colorizePS(script){
-    return script.split("\n").map(function(line){
-      var t=line.trim();
-      if(!t) return '<div style="height:6px"></div>';
-      if(t.charAt(0)==="#"){
-        var isSec=/^#\s*[=\-]{3,}/.test(t)||/^#\s*[A-Z][A-Z\s]{3,}$/.test(t);
-        return '<div style="color:#58a6ff;padding:1px 0'+(isSec?";margin-top:10px;font-weight:700":"")+'">'+escPS(line)+(isSec?'  <span style="background:#58a6ff22;color:#58a6ff;font-size:9px;padding:1px 6px;border-radius:3px">INFO</span>':"")+'</div>';
-      }
-      var writeRx=/\b(Set-|Stop-|Remove-|Delete-|Disable-|Enable-Service|Start-Service|New-|Add-|Clear-|Reset-|Restart-|Install-|Uninstall-|Move-|Rename-|Copy-Item|Out-File|Export-|Register-|Unregister-|Grant-|Update-|Invoke-Expression)\b/i;
-      var readRx=/\b(Get-|Select-|Where-|Format-|Measure-|Sort-|Group-|Compare-|Test-|Resolve-|ConvertTo-|ConvertFrom-|Find-|Search-|Out-GridView)\b/i;
-      if(writeRx.test(t)){
-        return '<div style="background:rgba(248,81,73,.07);border-left:2px solid #f85149;padding:2px 0 2px 8px;margin-left:-8px"><span style="color:#f85149">'+escPS(line)+'</span>  <span style="background:#f8514922;color:#f85149;font-size:9px;padding:1px 6px;border-radius:3px">WRITE</span></div>';
-      }
-      if(readRx.test(t)){
-        return '<div style="background:rgba(63,185,80,.05);border-left:2px solid #3fb950;padding:2px 0 2px 8px;margin-left:-8px"><span style="color:#3fb950">'+escPS(line)+'</span>  <span style="background:#3fb95022;color:#3fb950;font-size:9px;padding:1px 6px;border-radius:3px">READ</span></div>';
-      }
-      if(t.charAt(0)==="$"){
-        return '<div style="color:#d29922;padding:1px 0">'+escPS(line)+'  <span style="background:#d2992222;color:#d29922;font-size:9px;padding:1px 6px;border-radius:3px">VAR</span></div>';
-      }
-      return '<div style="color:#c9d1d9;padding:1px 0">'+escPS(line)+'</div>';
-    }).join("");
-  }
-  window.psGenerate=async function(){
-    var key=localStorage.getItem("groq_key")||document.getElementById("ps-key").value.trim();
-    if(!key){showToast("Enter your Groq API key first");return;}
-    var issue=document.getElementById("ps-issue").value.trim();
-    if(!issue){showToast("Describe your Windows issue first");return;}
-    var styleEl=document.getElementById("ps-style");
-    var style=styleEl?styleEl.value:"diagnostic";
-    var winver=document.getElementById("ps-winver").value;
-    var styleMap={diagnostic:"Generate ONLY read-only diagnostic commands. No system modifications.",fix:"Diagnose AND fix with both read and write commands.",report:"Gather info and export to desktop file.",both:"First a diagnostic section, then a fix/remediation section."};
-    document.getElementById("ps-gen-btn").style.display="none";
-    document.getElementById("ps-loading").style.display="block";
-    document.getElementById("ps-out").innerHTML='<div style="color:#484f58;font-style:italic">Generating...</div>';
-    try{
-      var resp=await fetch("https://api.groq.com/openai/v1/chat/completions",{
-        method:"POST",
-        headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json"},
-        body:JSON.stringify({
-          model:"llama-3.3-70b-versatile",
-          max_tokens:2000,
-          messages:[{role:"user",content:"You are a Windows PowerShell expert. Generate a PowerShell script for:\n\nTASK: "+issue+"\nWINDOWS: "+winver+"\nTYPE: "+styleMap[style]+"\n\nRequirements:\n- Well commented with # === SECTION HEADERS ===\n- Add a comment before EVERY command explaining what it does\n- Group related commands logically\n- Error handling where needed\n- Return ONLY the raw PowerShell script. No markdown code fences, no explanation before or after."}]
-        })
-      });
-      if(!resp.ok) throw new Error("API error: "+resp.status);
-      var data=await resp.json();
-      if(data.error) throw new Error(data.error.message);
-      var script=data.choices[0].message.content.replace(/```powershell\n?/gi,"").replace(/```\n?/g,"").trim();
-      document.getElementById("ps-plain").textContent=script;
-      document.getElementById("ps-out").innerHTML=colorizePS(script);
-    }catch(err){
-      document.getElementById("ps-out").innerHTML='<div style="color:#f85149">&#x274C; Error: '+err.message+'</div><div style="color:#8b949e;font-size:11px;margin-top:8px">Check your Groq API key and try again.</div>';
-    }
-    document.getElementById("ps-gen-btn").style.display="block";
-    document.getElementById("ps-loading").style.display="none";
-  };
-  window.psCopyScript=function(){
-    var plain=document.getElementById("ps-plain").textContent;
-    if(!plain){showToast("Generate a script first");return;}
-    navigator.clipboard.writeText(plain).then(function(){showToast("Script copied!");});
-  };
-  window.psClearScript=function(){
-    document.getElementById("ps-out").innerHTML='<div style="color:#484f58;font-style:italic">Script will appear here after generation...</div>';
-    document.getElementById("ps-plain").textContent="";
-    document.getElementById("ps-issue").value="";
   };
 }
 
