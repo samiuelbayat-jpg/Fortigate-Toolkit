@@ -2292,8 +2292,8 @@ function renderAI(el){
     if(loading) msgs+='<div class="msg"><div class="av ai">FG</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>';
   }
 
-  const privBanner='<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5"><span style="flex-shrink:0">⚠️</span><span>Messages are sent to <strong>Groq API</strong> (third party). Avoid sharing real IPs or credentials. Use the <span class="ai-mask-link" style="color:var(--a);cursor:pointer;text-decoration:underline">IP Masking tab</span> first.</span></div>';
-  const ipWarn='<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:#f87171;line-height:1.5"><span style="flex-shrink:0">🚨</span><span>Private IPs detected: <strong style="font-family:var(--mono);color:#fca5a5"></strong> — consider anonymizing first.</span></div>';
+  const privBanner='<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5"><span style="flex-shrink:0">⚠️</span><div><strong>Messages are sent to Groq API</strong> (third party). Avoid sharing real IPs or credentials.<br>Before sending CLI output: use <span class="ai-mask-link" style="color:var(--a);cursor:pointer;text-decoration:underline">🎭 IP Masking</span> to replace individual IPs, or <span class="ai-bulk-link" style="color:var(--a);cursor:pointer;text-decoration:underline">📋 Bulk Anonymizer</span> to anonymize a full CLI output at once (replaces all IPs, MACs, hostnames).</div></div>';
+  const ipWarn='<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:#f87171;line-height:1.5"><span style="flex-shrink:0">🚨</span><div>Private IPs detected: <strong style="font-family:var(--mono);color:#fca5a5"></strong><br>Use <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'masking\')">🎭 IP Masking</span> for individual IPs or <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'bulkAnon\')">📋 Bulk Anonymizer</span> for full CLI output before sending.</div></div>';
 
   el.innerHTML=privBanner+ipWarn+'<div class="messages" id="chatm">'+msgs+'</div><div class="irow"><input type="text" id="chi" placeholder="e.g. Phase 2 keeps flapping..." /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div>';
 
@@ -2306,6 +2306,8 @@ function renderAI(el){
   // Wire masking link
   const maskLink=el.querySelector('.ai-mask-link');
   if(maskLink) maskLink.addEventListener('click', function(){ stab('masking'); });
+  const bulkLink=el.querySelector('.ai-bulk-link');
+  if(bulkLink) bulkLink.addEventListener('click', function(){ stab('bulkAnon'); });
 
   const cm=document.getElementById('chatm');
   if(cm) cm.scrollTop=cm.scrollHeight;
@@ -2417,13 +2419,13 @@ function renderFreeAITab(el){
   <!-- FIX 1: Privacy warning banner -->
   <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11.5px;color:var(--y);line-height:1.6;">
     <span style="font-size:15px;flex-shrink:0;">⚠️</span>
-    <span>Text you paste here is sent to <strong>Groq's API</strong> (a third party). <strong>Do not paste real IPs, hostnames, credentials, or customer data.</strong> Use the <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">IP Masking tab</span> to anonymize output first.</span>
+    <span>Text you paste here is sent to <strong>Groq's API</strong> (a third party). <strong>Do not paste real IPs, hostnames, credentials, or customer data.</strong><br>Use <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">🎭 IP Masking</span> for individual IPs, or <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('bulkAnon')">📋 Bulk Anonymizer</span> to anonymize a full CLI output at once.</span>
   </div>
   <!-- FIX 2: IP detection warning -->
   <div id="groqIpWarning" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:11.5px;color:#f87171;line-height:1.6;">
     <span style="font-size:15px;flex-shrink:0;">🚨</span>
     <span>Private IP addresses detected: <strong id="groqIpList" style="font-family:var(--mono);color:#fca5a5"></strong><br>
-    Consider <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">anonymizing these first</span> — or click Analyze to send anyway.</span>
+    Use <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">🎭 IP Masking</span> or <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('bulkAnon')">📋 Bulk Anonymizer</span> to anonymize first — or click Analyze to send anyway.</span>
   </div>
   <!-- Input area -->
   <div style="margin-bottom:10px">
