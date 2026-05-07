@@ -792,7 +792,7 @@ function renderPSMaker(el){
   };
 
   /* ── Wire send ── */
-  document.getElementById('ps-send-btn').onclick=psSend;
+  document.getElementById('ps-send-btn').onclick=function(){window.psSend();};
   document.getElementById('ps-input').addEventListener('keydown',function(e){
     if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.psSend();}
   });
