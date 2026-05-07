@@ -368,7 +368,65 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 .cbadge.tcp{background:rgba(88,166,255,.15);color:#58a6ff;border:1px solid rgba(88,166,255,.3)}
 .cbadge.warning{background:rgba(210,153,34,.15);color:#d29922;border:1px solid rgba(210,153,34,.3)}
 .code-block{background:#0a0e14;border:1px solid var(--br);border-radius:8px;padding:14px;font-family:'Courier New',monospace;font-size:12px;color:#3fb950;white-space:pre-wrap;overflow-x:auto;margin-top:10px;max-height:350px;overflow-y:auto;line-height:1.7}
-@media(max-width:768px){.grid-2col{grid-template-columns:1fr}.button-group{flex-wrap:wrap}.button-group .sbtn{flex:1;text-align:center;min-width:80px}.pill-group{gap:4px}.pill{font-size:9px}}
+@media(max-width:768px){
+  /* Layout */
+  .grid-2col{grid-template-columns:1fr}
+  .button-group{flex-wrap:wrap}
+  .button-group .sbtn{flex:1;text-align:center;min-width:80px}
+  .pill-group{gap:4px}
+  .pill{font-size:9px}
+
+  /* Content area */
+  .content{padding:10px 8px}
+  .sh{flex-wrap:wrap;gap:6px}
+  .stitle{font-size:15px}
+  .sev{font-size:10px}
+
+  /* Tab bar — horizontal scroll */
+  .tabs{overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;gap:4px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{white-space:nowrap;flex-shrink:0;font-size:11px;padding:6px 10px}
+  .tab-icon{font-size:14px}
+  .tab-lbl{font-size:10px}
+
+  /* Cards */
+  .cblock{border-radius:8px}
+  .cbody{padding:10px 12px}
+  .chdr{padding:8px 12px}
+  .chdr-l{font-size:12px}
+
+  /* Buttons */
+  .sbtn{font-size:11px;padding:6px 10px}
+  .sbtn-sm{font-size:10px;padding:4px 8px}
+
+  /* Inputs full width */
+  .cbody input,.cbody select,.cbody textarea{width:100%!important;box-sizing:border-box}
+
+  /* Tables */
+  table{font-size:11px}
+  td,th{padding:4px 8px!important}
+
+  /* Subnet calc */
+  #calcSubnetBtn,#exampleSubnetBtn{flex:1;min-width:0}
+
+  /* PS Maker */
+  #ps-layout{grid-template-columns:1fr!important}
+
+  /* Topology canvas */
+  .topo-viewport{height:400px!important}
+
+  /* Lab setup */
+  .lab-two-col{grid-template-columns:1fr!important}
+
+  /* Email generator */
+  .email-grid{grid-template-columns:1fr!important}
+
+  /* Code blocks */
+  .code-block{font-size:11px;padding:10px}
+
+  /* Binary breakdown on mobile */
+  #subnetResult [style*="letter-spacing"]{font-size:11px!important;letter-spacing:0!important}
+}
 </style>
 </head>
 <body oncontextmenu="return false">
@@ -2965,185 +3023,181 @@ function renderBulkAnonTab(el){
 }
 
 function calculateSubnet(ipCidr){let[ip,prefix]=ipCidr.trim().split('/');let mb=parseInt(prefix);if(isNaN(mb)||mb<0||mb>32)return{error:"Prefix must be 0-32"};let p=ip.split('.').map(Number);if(p.length!==4||p.some(n=>isNaN(n)||n<0||n>255))return{error:"Invalid IP"};let ipI=((p[0]<<24)|(p[1]<<16)|(p[2]<<8)|p[3])>>>0;let mI=mb===0?0:(((1<<mb)-1)<<(32-mb))>>>0;let nI=(ipI&mI)>>>0,bI=(nI|(~mI>>>0))>>>0;const itp=i=>((i>>>24)&255)+'.'+((i>>>16)&255)+'.'+((i>>>8)&255)+'.'+(i&255);let h=mb>=31?Math.pow(2,32-mb):Math.pow(2,32-mb)-2;return{network:itp(nI),broadcast:itp(bI),firstUsable:mb<=30?itp(nI+1):'N/A',lastUsable:mb<=30?itp(bI-1):'N/A',mask:itp(mI),cidr:mb,wildcard:itp((~mI)>>>0),totalHosts:h,binaryIp:ipI.toString(2).padStart(32,'0'),binaryMask:mI.toString(2).padStart(32,'0'),binaryNetwork:nI.toString(2).padStart(32,'0'),error:null};}
-function renderSubnetCalc(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🧮 IPv4 Subnet Calculator</div></div><div class="cbody"><div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;"><input type="text" id="subnetInput" placeholder="e.g., 192.168.1.0/24" style="flex:2;padding:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);"><button class="sbtn" id="calcSubnetBtn">Calculate</button><button class="sbtn" id="exampleSubnetBtn" style="background:var(--b3);">📋 Example</button></div><div id="subnetResult"><div class="cnote">Enter an IPv4 address with CIDR prefix.</div></div></div></div>`;function update(){const info=calculateSubnet(document.getElementById('subnetInput').value);if(info.error){document.getElementById('subnetResult').innerHTML=`<div class="cdanger">⚠️ ${info.error}</div>`;return;}let h=`<div class="subnet-result-grid"><div class="subnet-card"><div class="subnet-label">Network</div><div class="subnet-value">${info.network}</div></div><div class="subnet-card"><div class="subnet-label">Broadcast</div><div class="subnet-value">${info.broadcast}</div></div><div class="subnet-card"><div class="subnet-label">First Usable</div><div class="subnet-value">${info.firstUsable}</div></div><div class="subnet-card"><div class="subnet-label">Last Usable</div><div class="subnet-value">${info.lastUsable}</div></div><div class="subnet-card"><div class="subnet-label">Netmask</div><div class="subnet-value">${info.mask} (/${info.cidr})</div></div><div class="subnet-card"><div class="subnet-label">Wildcard</div><div class="subnet-value">${info.wildcard}</div></div><div class="subnet-card"><div class="subnet-label">Usable Hosts</div><div class="subnet-value">${info.totalHosts.toLocaleString()}</div></div><div class="subnet-card"><div class="subnet-label">CIDR</div><div class="subnet-value">/${info.cidr}</div></div></div><div class="subnet-explanation"><strong>Binary view:</strong><br>IP:&nbsp;&nbsp; ${info.binaryIp.match(/.{8}/g).join('.')}<br>Mask: ${info.binaryMask.match(/.{8}/g).join('.')}<br>Net:&nbsp; ${info.binaryNetwork.match(/.{8}/g).join('.')}</div>`;document.getElementById('subnetResult').innerHTML=h;}document.getElementById('calcSubnetBtn').onclick=update;document.getElementById('exampleSubnetBtn').onclick=()=>{document.getElementById('subnetInput').value='192.168.1.0/24';update();};document.getElementById('subnetInput').addEventListener('keypress',e=>{if(e.key==='Enter')update();});}
+function renderSubnetCalc(el){
+  el.innerHTML=`
+<div class="cblock">
+  <div class="chdr"><div class="chdr-l">🧮 IPv4 Subnet Calculator</div></div>
+  <div class="cbody">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <input type="text" id="subnetInput" placeholder="e.g. 192.168.1.0/24" style="flex:2;min-width:160px;padding:8px 12px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:13px">
+      <button class="sbtn" id="calcSubnetBtn" style="padding:8px 18px">Calculate</button>
+      <button class="sbtn" id="exampleSubnetBtn" style="background:var(--b3);border:1px solid var(--br);color:var(--t2);padding:8px 18px">📋 Example</button>
+    </div>
+    <div id="subnetResult"><div class="cnote">Enter an IPv4 address with CIDR prefix (e.g. 192.168.1.100/24).</div></div>
+  </div>
+</div>`;
 
-function renderAdvDiag(el){
-  const sections=[
-    {
-      title:'🩺 System Health & Performance',
-      commands:[
-        {cmd:'get system status',exp:'Firmware version, serial number, uptime, license, HA mode.',safety:'ro'},
-        {cmd:'get system performance status',exp:'CPU, memory, network usage — overall system load.',safety:'ro'},
-        {cmd:'diagnose sys top',exp:'Real-time process monitor — CPU and memory per daemon.',safety:'ro'},
-        {cmd:'diagnose sys top 5',exp:'Top 5 CPU-consuming processes — ideal for high CPU investigation.',safety:'ro'},
-        {cmd:'get hardware status',exp:'Hardware model, sensors, serial number.',safety:'ro'},
-        {cmd:'diagnose hardware sysinfo memory',exp:'Detailed memory breakdown — total, free, cached, conserve threshold.',safety:'ro'},
-        {cmd:'diagnose hardware sysinfo conserve',exp:'Shows conserve mode status and thresholds.',safety:'ro'},
-        {cmd:'diagnose hardware sysinfo cpu',exp:'CPU model, clock speed, and core count.',safety:'ro'},
-        {cmd:'diagnose hardware sysinfo shm',exp:'Shared memory usage between daemons.',safety:'ro'},
-        {cmd:'diagnose debug crashlog read',exp:'Read crash log — identify recent daemon crashes.',safety:'ro'},
-        {cmd:'diagnose debug crashlog clear',exp:'Clear crash log after reviewing.',safety:'caution'},
-        {cmd:'execute time',exp:'Show current system time — verify NTP sync.',safety:'ro'},
-        {cmd:'get system ntp',exp:'NTP server configuration and sync status.',safety:'ro'},
-      ]
-    },
-    {
-      title:'🔧 fnsysctl — Kernel Level Commands',
-      commands:[
-        {cmd:'fnsysctl ifconfig',exp:'Native Linux interface list — shows all interfaces including hidden ones.',safety:'ro'},
-        {cmd:'fnsysctl ifconfig <INTF>',exp:'Native Linux interface details for specific interface.',safety:'ro'},
-        {cmd:'fnsysctl df -h',exp:'Filesystem disk usage in human-readable format.',safety:'ro'},
-        {cmd:'fnsysctl du -s /var/',exp:'Disk usage of /var directory — large log files.',safety:'ro'},
-        {cmd:'fnsysctl du -L 4 /var/',exp:'Recursive disk usage 4 levels deep in /var.',safety:'ro'},
-        {cmd:'fnsysctl top',exp:'Linux top — real-time process list.',safety:'caution'},
-        {cmd:'fnsysctl ps',exp:'All running processes — useful for daemon investigation.',safety:'ro'},
-        {cmd:'fnsysctl ls -la /tmp/',exp:'List /tmp directory — check for temporary files.',safety:'ro'},
-        {cmd:'fnsysctl ls -la /data/',exp:'List /data directory — quarantine and AV cache.',safety:'ro'},
-        {cmd:'fnsysctl cat /etc/hosts',exp:'Read /etc/hosts file — check for local DNS overrides.',safety:'ro'},
-        {cmd:'fnsysctl cat /proc/version',exp:'Linux kernel version running under FortiOS.',safety:'ro'},
-        {cmd:'fnsysctl cat /proc/cpuinfo',exp:'CPU detailed info at kernel level.',safety:'ro'},
-        {cmd:'fnsysctl cat /proc/net/tcp',exp:'Raw TCP socket table at kernel level.',safety:'ro'},
-        {cmd:'fnsysctl date',exp:'System date and time at kernel level.',safety:'ro'},
-      ]
-    },
-    {
-      title:'🐛 Daemon Debugging',
-      commands:[
-        {cmd:'diagnose debug reset',exp:'Reset all debug settings — always run before starting new debug.',safety:'ro'},
-        {cmd:'diagnose debug enable',exp:'Enable debug output to console.',safety:'caution'},
-        {cmd:'diagnose debug disable',exp:'Stop debug output — always run after debugging.',safety:'ro'},
-        {cmd:'diagnose debug application ike -1',exp:'IPsec IKE negotiation debug — Phase 1 and Phase 2.',safety:'caution'},
-        {cmd:'diagnose debug application sslvpn -1',exp:'SSL VPN daemon — authentication and tunnel events.',safety:'caution'},
-        {cmd:'diagnose debug application fnbamd -1',exp:'Authentication daemon — LDAP, RADIUS, local auth.',safety:'caution'},
-        {cmd:'diagnose debug application urlfilter -1',exp:'URL filter daemon — category lookups and blocks.',safety:'caution'},
-        {cmd:'diagnose debug application wad -1',exp:'Web Application Daemon — proxy, DPI and UTM.',safety:'caution'},
-        {cmd:'diagnose debug application dnsproxy -1',exp:'DNS proxy daemon — DNS filter and resolution.',safety:'caution'},
-        {cmd:'diagnose debug application forticlient -1',exp:'FortiClient EMS and ZTNA endpoint debug.',safety:'caution'},
-        {cmd:'diagnose debug application hatalk -1',exp:'HA cluster communication daemon.',safety:'caution'},
-        {cmd:'diagnose debug application hasync -1',exp:'HA config sync daemon.',safety:'caution'},
-        {cmd:'diagnose debug application fgfmd -1',exp:'FortiGate-FortiManager communication daemon.',safety:'caution'},
-        {cmd:'diagnose debug application update -1',exp:'FortiGuard update daemon.',safety:'caution'},
-        {cmd:'diagnose test application wad 3',exp:'WAD daemon diagnostic test level 3.',safety:'caution'},
-        {cmd:'diagnose test application fnbamd 3',exp:'Authentication daemon test level 3.',safety:'caution'},
-        {cmd:'diagnose test application dnsproxy 6',exp:'DNS proxy diagnostic test level 6.',safety:'caution'},
-      ]
-    },
-    {
-      title:'🌐 Network Socket & Connection Inspection',
-      commands:[
-        {cmd:'diagnose sys tcpsock',exp:'All open TCP sockets — shows connections to/from FortiGate.',safety:'ro'},
-        {cmd:'diagnose sys udpsock',exp:'All open UDP sockets.',safety:'ro'},
-        {cmd:'fnsysctl cat /proc/net/tcp',exp:'Raw kernel TCP socket table.',safety:'ro'},
-        {cmd:'diagnose netlink interface list',exp:'All interfaces with packet counters at kernel level.',safety:'ro'},
-        {cmd:'diag netlink interface list',exp:'Short form — interface kernel counters.',safety:'ro'},
-        {cmd:'diagnose ip arp list',exp:'ARP table with interface and VLAN info.',safety:'ro'},
-        {cmd:'diagnose ip arp flush',exp:'Flush ARP table — force re-resolution of all MACs.',safety:'caution'},
-        {cmd:'diagnose netlink brctl list',exp:'Bridge/VDOM link table — inter-VDOM connections.',safety:'ro'},
-      ]
-    },
-    {
-      title:'🛡️ Local-In Policy & DoS Protection',
-      commands:[
-        {cmd:'show firewall local-in-policy',exp:'Policies protecting the FortiGate itself — management access rules.',safety:'ro'},
-        {cmd:'show firewall local-in-policy6',exp:'IPv6 local-in policies.',safety:'ro'},
-        {cmd:'show firewall dos-policy',exp:'DoS policies against volumetric attacks.',safety:'ro'},
-        {cmd:'diagnose ips anomaly list',exp:'Active IPS anomaly detections — DoS/DDoS indicators.',safety:'ro'},
-        {cmd:'diagnose firewall packet-filter list',exp:'Active packet filter rules.',safety:'ro'},
-        {cmd:'diagnose firewall iprope list 100004',exp:'Firewall policy kernel table — all active policies.',safety:'ro'},
-        {cmd:'diagnose firewall iprope lookup <SRC> <DST> <PROTO> <SPORT> <DPORT> <INTF>',exp:'Kernel policy lookup for specific traffic.',safety:'ro'},
-      ]
-    },
-    {
-      title:'💾 Config Transactions & Safe Change',
-      commands:[
-        {cmd:'execute backup config tftp <IP> <FILE>',exp:'Backup config to TFTP — always do before changes.',safety:'caution'},
-        {cmd:'execute backup config ftp <IP> <FILE>',exp:'Backup config to FTP server.',safety:'caution'},
-        {cmd:'execute restore config tftp <FILE> <IP>',exp:'Restore config from TFTP.',safety:'danger'},
-        {cmd:'config global',exp:'Enter global config — for multi-VDOM systems.',safety:'caution'},
-        {cmd:'show full-configuration',exp:'Show complete config with all default values — very verbose.',safety:'ro'},
-        {cmd:'show',exp:'Show non-default config — shorter and cleaner than full-configuration.',safety:'ro'},
-        {cmd:'get system checksum status',exp:'Config file checksum — detect unauthorised changes.',safety:'ro'},
-        {cmd:'diagnose debug config-error-log read',exp:'Show config error log — detect syntax errors after edits.',safety:'ro'},
-        {cmd:'diagnose debug config-error-log clear',exp:'Clear config error log.',safety:'caution'},
-        {cmd:'execute factoryreset',exp:'Full factory reset — DESTROYS ALL CONFIG.',safety:'danger'},
-        {cmd:'execute factoryreset2',exp:'Factory reset keeping management IP and firmware.',safety:'danger'},
-      ]
-    },
-    {
-      title:'🔩 Hardware & NPU Diagnostics',
-      commands:[
-        {cmd:'diagnose npu np6 stats',exp:'NP6 NPU packet processing statistics.',safety:'ro'},
-        {cmd:'diagnose npu np6xlite stats',exp:'NP6XLite NPU stats (lower-end models).',safety:'ro'},
-        {cmd:'diagnose npu np6 session-stats',exp:'NPU session offload counters.',safety:'ro'},
-        {cmd:'diagnose hardware deviceinfo disk',exp:'Disk health and S.M.A.R.T. status.',safety:'ro'},
-        {cmd:'diagnose hardware deviceinfo nic <INTF>',exp:'NIC hardware info — driver, firmware, counters.',safety:'ro'},
-        {cmd:'get hardware nic <INTF>',exp:'Interface hardware details and error counters.',safety:'ro'},
-        {cmd:'diagnose hardware sysinfo raid',exp:'RAID status (applicable models).',safety:'ro'},
-        {cmd:'diagnose hardware flash test',exp:'Flash memory test — checks for bad blocks.',safety:'caution'},
-        {cmd:'get system status | grep branch',exp:'Check FortiOS branch and patch version.',safety:'ro'},
-      ]
-    },
-    {
-      title:'🔬 Packet Capture (Sniffer)',
-      commands:[
-        {cmd:'diagnose sniffer packet <INTF> none 1 0 l',exp:'Capture all packets on interface — brief format.',safety:'ro'},
-        {cmd:'diagnose sniffer packet <INTF> \'host <IP>\' 4 100 l',exp:'Capture packets for specific host — verbose format with timestamp.',safety:'ro'},
-        {cmd:'diagnose sniffer packet <INTF> \'port 443\' 4 50 l',exp:'Capture HTTPS packets — 50 packets verbose.',safety:'ro'},
-        {cmd:'diagnose sniffer packet any \'host <IP> and port 500\' 4 0 l',exp:'Capture IKE (IPsec) traffic on all interfaces.',safety:'ro'},
-        {cmd:'diagnose sniffer packet any \'host <IP>\' 6 100 l',exp:'Level 6 — includes interface name and full headers.',safety:'ro'},
-      ]
-    },
-    {
-      title:'🧵 Debug Flow Trace',
-      commands:[
-        {cmd:'diagnose debug reset',exp:'Reset all debug filters — always start here.',safety:'ro'},
-        {cmd:'diagnose debug flow filter addr <SRC_IP>',exp:'Filter flow trace by source or destination IP.',safety:'caution'},
-        {cmd:'diagnose debug flow filter dport <PORT>',exp:'Filter flow trace by destination port.',safety:'caution'},
-        {cmd:'diagnose debug flow filter proto <PROTO>',exp:'Filter by protocol — 6=TCP 17=UDP 1=ICMP.',safety:'caution'},
-        {cmd:'diagnose debug flow show function-name enable',exp:'Show function names in flow output — easier to read.',safety:'caution'},
-        {cmd:'diagnose debug flow show iprope-set-detail enable',exp:'Show iprope policy set detail in flow.',safety:'caution'},
-        {cmd:'diagnose debug flow trace start 100',exp:'Start flow trace — capture 100 packets.',safety:'caution'},
-        {cmd:'diagnose debug enable',exp:'Enable debug output to terminal.',safety:'caution'},
-        {cmd:'diagnose debug disable',exp:'Disable debug output — always run when done.',safety:'ro'},
-        {cmd:'diagnose debug flow trace stop',exp:'Stop flow trace.',safety:'ro'},
-      ]
-    },
-  ];
-
-  let h=`<div class="sh"><span class="stitle">🔬 Advanced Diagnostics</span><span class="sev info">Expert-level · Use with care</span></div>
-  <div style="background:rgba(210,153,34,.06);border-left:3px solid var(--y);padding:8px 14px;border-radius:0 6px 6px 0;font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6">
-    ⚠️ <strong style="color:var(--y)">Expert section.</strong> Many commands here can cause service interruption or expose sensitive data. 
-    Always run <span style="font-family:var(--mono);color:var(--g);font-size:11px">diagnose debug reset</span> after finishing any debug session.
-  </div>`;
-
-  for(let s of sections){
-    h+=`<div class="cblock" style="margin-bottom:10px">
-      <div class="chdr"><div class="chdr-l">${s.title} <span style="font-size:10px;color:var(--t3);font-family:var(--mono);margin-left:6px">${s.commands.length} commands</span></div></div>
-      <div class="cbody">`;
-    for(let item of s.commands){
-      const col=item.safety==='ro'?'var(--g)':item.safety==='caution'?'var(--y)':'var(--r)';
-      const badge=item.safety==='ro'
-        ?'<span style="font-size:9px;padding:1px 7px;border-radius:10px;background:rgba(63,185,80,.1);color:#3fb950;border:1px solid rgba(63,185,80,.2);font-family:var(--mono)">safe</span>'
-        :item.safety==='caution'
-        ?'<span style="font-size:9px;padding:1px 7px;border-radius:10px;background:rgba(210,153,34,.1);color:#d29922;border:1px solid rgba(210,153,34,.2);font-family:var(--mono)">caution</span>'
-        :'<span style="font-size:9px;padding:1px 7px;border-radius:10px;background:rgba(248,81,73,.1);color:#f85149;border:1px solid rgba(248,81,73,.2);font-family:var(--mono)">danger</span>';
-      h+=`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:7px;margin-bottom:3px;transition:background .12s" onmouseover="this.style.background='rgba(29,158,117,.04)'" onmouseout="this.style.background=''">
-        <div style="flex:1;min-width:0">
-          <div style="font-family:var(--mono);font-size:12px;font-weight:600;color:${col};margin-bottom:2px">${escapeHtml(item.cmd)}</div>
-          <div style="font-size:11px;color:var(--t2);line-height:1.5">${item.exp}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
-          ${badge}
-          <button style="font-size:9px;padding:2px 9px;border-radius:10px;border:1px solid var(--br);background:var(--b2);color:var(--t3);cursor:pointer;font-family:var(--mono)" onclick="navigator.clipboard.writeText('${item.cmd.replace(/'/g,"\\'")}').then(()=>{this.textContent='✓';this.style.color='var(--a)';setTimeout(()=>{this.textContent='Copy';this.style.color=''},1500)})">Copy</button>
-        </div>
-      </div>`;
+  function colorBin(bits, prefix){
+    var html='';
+    for(var i=0;i<32;i++){
+      if(i>0&&i%8===0) html+='<span style="color:#484f58;margin:0 2px">.</span>';
+      var bit=bits[i];
+      if(i<prefix){
+        html+='<span style="color:#3fb950;font-weight:700">'+bit+'</span>';
+      } else {
+        html+='<span style="color:#d29922;font-weight:700">'+bit+'</span>';
+      }
     }
-    h+=`</div></div>`;
+    return html;
   }
-  el.innerHTML=h;
+
+  function decToBin(n){ return n.toString(2).padStart(8,'0'); }
+
+  function update(){
+    var val=document.getElementById('subnetInput').value.trim();
+    var info=calculateSubnet(val);
+    if(info.error){
+      document.getElementById('subnetResult').innerHTML='<div class="cdanger">⚠️ '+info.error+'</div>';
+      return;
+    }
+
+    var prefix=info.cidr;
+    var binIP=info.binaryIp;
+    var binMask=info.binaryMask;
+    var binNet=info.binaryNetwork;
+    var binBcast=binNet.substring(0,prefix)+'1'.repeat(32-prefix);
+    var ipStr=val.split('/')[0].trim();
+
+    // Build result cards
+    var cards=[
+      {label:'NETWORK',value:info.network,color:'var(--a)'},
+      {label:'BROADCAST',value:info.broadcast,color:'#f85149'},
+      {label:'FIRST USABLE',value:info.firstUsable,color:'#3fb950'},
+      {label:'LAST USABLE',value:info.lastUsable,color:'#3fb950'},
+      {label:'SUBNET MASK',value:info.mask,color:'#e6edf3'},
+      {label:'WILDCARD',value:info.wildcard,color:'#e6edf3'},
+      {label:'USABLE HOSTS',value:info.totalHosts.toLocaleString(),color:'#58a6ff'},
+      {label:'CIDR',value:'/'+info.cidr,color:'var(--a)'},
+    ];
+
+    var cardsHtml=cards.map(function(c){
+      return '<div style="padding:10px 14px;background:var(--b2);border:1px solid var(--br);border-radius:8px">'
+        +'<div style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.06em;margin-bottom:4px">'+c.label+'</div>'
+        +'<div style="font-family:var(--mono);font-size:14px;color:'+c.color+';font-weight:700">'+c.value+'</div>'
+        +'</div>';
+    }).join('');
+
+    // Build binary rows
+    var rows=[
+      {label:'IP Addr', bin:binIP,  decimal:ipStr,       color:'#e6edf3'},
+      {label:'Mask',    bin:binMask, decimal:info.mask,   color:'#e6edf3'},
+      {label:'Network', bin:binNet,  decimal:info.network,color:'#e6edf3'},
+      {label:'Bcast',   bin:binBcast,decimal:info.broadcast,color:'#e6edf3'},
+    ];
+
+    var rowsHtml=rows.map(function(r){
+      return '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap">'
+        +'<span style="width:54px;font-size:11px;color:#e6edf3;font-weight:700;font-family:\'Courier New\',monospace;flex-shrink:0">'+r.label+'</span>'
+        +'<span style="font-family:\'Courier New\',monospace;font-size:13px;letter-spacing:1px;white-space:nowrap">'+colorBin(r.bin,prefix)+'</span>'
+        +'<span style="font-family:\'Courier New\',monospace;font-size:11px;color:#8b949e;white-space:nowrap">= '+r.decimal+'</span>'
+        +'</div>';
+    }).join('');
+
+    // Octet decimal breakdown table
+    var octetRows=['IP Addr','Mask','Network','Bcast'];
+    var octetBins=[binIP,binMask,binNet,binBcast];
+    var octetTableRows=octetRows.map(function(label,ri){
+      var octets=octetBins[ri].match(/.{8}/g);
+      var cells=octets.map(function(o,oi){
+        var isNet=oi*8<prefix;
+        var isPartial=oi*8<prefix&&(oi+1)*8>prefix;
+        var borderColor=isNet?'rgba(63,185,80,.3)':isPartial?'rgba(63,185,80,.3)':'rgba(210,153,34,.3)';
+        return '<td style="padding:6px 10px;font-family:\'Courier New\',monospace;font-size:12px;color:#e6edf3;border:1px solid '+borderColor+';text-align:center;background:rgba(0,0,0,.2)">'
+          +parseInt(o,2)
+          +'</td>';
+      }).join('');
+      return '<tr><td style="padding:6px 10px;font-size:11px;color:#8b949e;font-weight:600;white-space:nowrap;border:1px solid #30363d">'+label+'</td>'+cells+'</tr>';
+    }).join('');
+
+    var h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:16px">'+cardsHtml+'</div>'
+      +'<div style="background:#0a0e14;border:1px solid #30363d;border-radius:10px;padding:16px;overflow-x:auto">'
+
+      // Title
+      +'<div style="font-size:11px;font-weight:700;color:var(--a);letter-spacing:.08em;margin-bottom:14px;font-family:\'Courier New\',monospace">■ BINARY BREAKDOWN</div>'
+
+      // Legend
+      +'<div style="display:flex;gap:20px;margin-bottom:14px;flex-wrap:wrap">'
+      +'<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#8b949e"><span style="width:12px;height:12px;background:#3fb950;border-radius:2px;display:inline-block"></span>Network bits (fixed)</div>'
+      +'<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#8b949e"><span style="width:12px;height:12px;background:#d29922;border-radius:2px;display:inline-block"></span>Host bits (variable)</div>'
+      +'<div style="font-size:11px;color:#484f58">Prefix: /'+prefix+' &nbsp;|&nbsp; Network: '+prefix+' bits &nbsp;|&nbsp; Host: '+(32-prefix)+' bits</div>'
+      +'</div>'
+
+      // Bit position header
+      +'<div style="font-family:\'Courier New\',monospace;font-size:10px;color:#484f58;margin-bottom:4px;white-space:nowrap;overflow-x:auto">'
+      +'<span style="display:inline-block;width:66px"></span>'
+      +Array.from({length:32},function(_,i){
+        var isEdge=(i===prefix-1)||(i===prefix);
+        return '<span style="display:inline-block;width:14px;text-align:center;color:'+(isEdge?'#58a6ff':'#484f58')+';font-weight:'+(isEdge?'700':'400')+'">'+(31-i)+'</span>';
+      }).join('')
+      +'</div>'
+
+      // Octet labels
+      +'<div style="font-family:\'Courier New\',monospace;font-size:10px;color:#30363d;margin-bottom:6px;white-space:nowrap">'
+      +'<span style="display:inline-block;width:66px"></span>'
+      +'<span style="display:inline-block;width:118px;text-align:center;border-top:1px solid #30363d;color:#484f58">Octet 1</span>'
+      +'<span style="display:inline-block;width:4px"></span>'
+      +'<span style="display:inline-block;width:118px;text-align:center;border-top:1px solid #30363d;color:#484f58">Octet 2</span>'
+      +'<span style="display:inline-block;width:4px"></span>'
+      +'<span style="display:inline-block;width:118px;text-align:center;border-top:1px solid #30363d;color:#484f58">Octet 3</span>'
+      +'<span style="display:inline-block;width:4px"></span>'
+      +'<span style="display:inline-block;width:118px;text-align:center;border-top:1px solid #30363d;color:#484f58">Octet 4</span>'
+      +'</div>'
+
+      // Binary rows
+      +rowsHtml
+
+      // Divider
+      +'<div style="border-top:1px solid #30363d;margin:12px 0"></div>'
+
+      // Decimal octet table
+      +'<div style="font-size:11px;font-weight:700;color:#8b949e;margin-bottom:8px;letter-spacing:.06em">DECIMAL OCTETS</div>'
+      +'<div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12px">'
+      +'<thead><tr>'
+      +'<th style="padding:6px 10px;font-size:10px;color:#484f58;border:1px solid #30363d;text-align:left;font-weight:700">ROW</th>'
+      +'<th style="padding:6px 10px;font-size:10px;color:#3fb950;border:1px solid rgba(63,185,80,.3);text-align:center;background:rgba(63,185,80,.05)">Octet 1</th>'
+      +'<th style="padding:6px 10px;font-size:10px;color:#3fb950;border:1px solid rgba(63,185,80,.3);text-align:center;background:rgba(63,185,80,.05)">Octet 2</th>'
+      +'<th style="padding:6px 10px;font-size:10px;color:#3fb950;border:1px solid rgba(63,185,80,.3);text-align:center;background:rgba(63,185,80,.05)">Octet 3</th>'
+      +'<th style="padding:6px 10px;font-size:10px;color:#d29922;border:1px solid rgba(210,153,34,.3);text-align:center;background:rgba(210,153,34,.05)">Octet 4</th>'
+      +'</tr></thead>'
+      +'<tbody>'+octetTableRows+'</tbody>'
+      +'</table></div>'
+
+      // Summary
+      +'<div style="border-top:1px solid #30363d;margin:14px 0 0"></div>'
+      +'<div style="font-size:12px;color:#8b949e;line-height:1.9;margin-top:12px">'
+      +'<div><span style="color:#3fb950;font-weight:700">'+prefix+' network bits</span> are fixed — they identify the subnet and cannot change</div>'
+      +'<div><span style="color:#d29922;font-weight:700">'+(32-prefix)+' host bits</span> are variable — they identify individual devices in this subnet</div>'
+      +'<div style="margin-top:8px;padding:8px 12px;background:rgba(29,158,117,.06);border-radius:6px;border-left:3px solid var(--a)">'
+      +'<span style="color:#e6edf3">Usable range: </span>'
+      +'<span style="font-family:\'Courier New\',monospace;color:#3fb950">'+info.firstUsable+'</span>'
+      +'<span style="color:#484f58"> → </span>'
+      +'<span style="font-family:\'Courier New\',monospace;color:#3fb950">'+info.lastUsable+'</span>'
+      +'&nbsp;&nbsp;<span style="color:#58a6ff;font-weight:700">'+info.totalHosts.toLocaleString()+' usable hosts</span>'
+      +'</div>'
+      +'</div>'
+
+      +'</div>';
+
+    document.getElementById('subnetResult').innerHTML=h;
+  }
+
+  document.getElementById('calcSubnetBtn').onclick=update;
+  document.getElementById('exampleSubnetBtn').onclick=function(){
+    document.getElementById('subnetInput').value='192.168.1.0/24';update();
+  };
+  document.getElementById('subnetInput').addEventListener('keypress',function(e){if(e.key==='Enter')update();});
 }
 
-function renderSubnetCalc(el){el.innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">🧮 IPv4 Subnet Calculator</div></div><div class="cbody"><div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;"><input type="text" id="subnetInput" placeholder="e.g., 192.168.1.0/24" style="flex:2;padding:8px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);"><button class="sbtn" id="calcSubnetBtn">Calculate</button><button class="sbtn" id="exampleSubnetBtn" style="background:var(--b3);">📋 Example</button></div><div id="subnetResult"><div class="cnote">Enter an IPv4 address with CIDR prefix.</div></div></div></div>`;function update(){const info=calculateSubnet(document.getElementById('subnetInput').value);if(info.error){document.getElementById('subnetResult').innerHTML=`<div class="cdanger">⚠️ ${info.error}</div>`;return;}let h=`<div class="subnet-result-grid"><div class="subnet-card"><div class="subnet-label">Network</div><div class="subnet-value">${info.network}</div></div><div class="subnet-card"><div class="subnet-label">Broadcast</div><div class="subnet-value">${info.broadcast}</div></div><div class="subnet-card"><div class="subnet-label">First Usable</div><div class="subnet-value">${info.firstUsable}</div></div><div class="subnet-card"><div class="subnet-label">Last Usable</div><div class="subnet-value">${info.lastUsable}</div></div><div class="subnet-card"><div class="subnet-label">Netmask</div><div class="subnet-value">${info.mask} (/${info.cidr})</div></div><div class="subnet-card"><div class="subnet-label">Wildcard</div><div class="subnet-value">${info.wildcard}</div></div><div class="subnet-card"><div class="subnet-label">Usable Hosts</div><div class="subnet-value">${info.totalHosts.toLocaleString()}</div></div><div class="subnet-card"><div class="subnet-label">CIDR</div><div class="subnet-value">/${info.cidr}</div></div></div><div class="subnet-explanation"><strong>Binary view:</strong><br>IP:&nbsp;&nbsp; ${info.binaryIp.match(/.{8}/g).join('.')}<br>Mask: ${info.binaryMask.match(/.{8}/g).join('.')}<br>Net:&nbsp; ${info.binaryNetwork.match(/.{8}/g).join('.')}</div>`;document.getElementById('subnetResult').innerHTML=h;}document.getElementById('calcSubnetBtn').onclick=update;document.getElementById('exampleSubnetBtn').onclick=()=>{document.getElementById('subnetInput').value='192.168.1.0/24';update();};document.getElementById('subnetInput').addEventListener('keypress',e=>{if(e.key==='Enter')update();});}
 
 function renderAdvDiag(el){const sections=[{title:"🩺 System Health & Performance",icon:"📊",commands:[{cmd:"diagnose hardware sysinfo conserve",exp:"Shows conserve mode status and memory thresholds.",safety:"ro"},{cmd:"diagnose sys top",exp:"Real-time process CPU/memory usage.",safety:"ro"},{cmd:"get hardware status",exp:"Hardware model, serial number, sensors.",safety:"ro"},{cmd:"diagnose hardware sysinfo memory",exp:"Detailed memory breakdown.",safety:"ro"}]},{title:"🔧 Kernel (fnsysctl)",icon:"🐧",commands:[{cmd:"fnsysctl ifconfig",exp:"Native Linux interface config.",safety:"ro"},{cmd:"fnsysctl df -h",exp:"Filesystem disk usage.",safety:"ro"},{cmd:"fnsysctl top",exp:"Linux top (real-time). Use with caution.",safety:"caution"}]},{title:"🐛 Daemon Debugging",icon:"🔬",commands:[{cmd:"diagnose test application wad 3",exp:"Debug Web Application Daemon.",safety:"caution"},{cmd:"diagnose test application fnbamd 3",exp:"Debug authentication daemon.",safety:"caution"},{cmd:"diagnose test application dnsproxy 6",exp:"DNS proxy debug level 6.",safety:"caution"}]},{title:"🛡️ Local-In & DoS",icon:"🛑",commands:[{cmd:"show firewall local-in-policy",exp:"Local-in policies protecting the FortiGate itself.",safety:"ro"},{cmd:"show firewall dos-policy",exp:"DoS policies against volumetric attacks.",safety:"ro"}]}];let h=`<div class="sh"><span class="stitle">🔬 Advanced Diagnostics</span><span class="sev info">Expert-level</span></div>`;for(let s of sections){h+=`<div class="cblock"><div class="chdr"><div class="chdr-l"><span style="margin-right:4px">${s.icon}</span>${s.title}</div></div><div class="cbody">`;for(let item of s.commands){let badge=item.safety==='ro'?'<span class="cbadge ro">🟢 read-only</span>':item.safety==='caution'?'<span class="cbadge caution">🟡 caution</span>':'<span class="cbadge danger">🔴 dangerous</span>';h+=`<div class="clines" style="margin-bottom:4px;">${escapeHtml(item.cmd)}</div><div style="font-size:12px;color:var(--t2);margin-left:12px;margin-bottom:8px;">📝 ${item.exp} ${badge}</div>`;}h+=`</div></div>`;}el.innerHTML=h;}
 
