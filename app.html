@@ -493,6 +493,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('psmaker')" id="tab-psmaker" title="Smart PowerShell Script Maker">
               <span class="tab-icon">🪟</span><span class="tab-lbl">PS Maker</span>
             </button>
+            <button class="tab" onclick="stab('topology')" id="tab-topology" title="Network Topology Designer">
+              <span class="tab-icon">🗺️</span><span class="tab-lbl">Topology</span>
+            </button>
           </div>
         </div>
         <div class="tab-divider"></div>
@@ -1040,6 +1043,491 @@ function renderPSMaker(el){
 
 
 
+function renderTopology(el){
+  el.innerHTML='';
+
+  // ── CSS ──
+  var css=document.createElement('style');
+  css.textContent=
+    '#topo-canvas{cursor:crosshair;display:block;background:#0d1117;border-radius:10px;border:1px solid #30363d}'
+    +'#topo-canvas.drag-mode{cursor:grab}'
+    +'#topo-canvas.drag-mode.dragging{cursor:grabbing}'
+    +'.topo-tool-btn{background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:11px;color:var(--t2);display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s;min-width:64px}'
+    +'.topo-tool-btn:hover,.topo-tool-btn.active{background:rgba(29,158,117,.1);border-color:var(--a);color:var(--a)}'
+    +'.topo-icon-btn{background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:8px;cursor:pointer;font-size:22px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;min-width:72px;text-align:center}'
+    +'.topo-icon-btn:hover{background:rgba(29,158,117,.1);border-color:var(--a);transform:scale(1.05)}'
+    +'.topo-icon-btn span{font-size:10px;color:var(--t3)}'
+    +'.topo-sep{width:1px;background:var(--br);align-self:stretch;margin:0 4px}'
+    +'.topo-conn-btn{font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--br);background:var(--b3);color:var(--t2);cursor:pointer;transition:all .15s}'
+    +'.topo-conn-btn.active,.topo-conn-btn:hover{background:rgba(29,158,117,.1);border-color:var(--a);color:var(--a)}'
+    +'.topo-mode-btn{font-size:11px;padding:6px 14px;border-radius:6px;border:1px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;font-weight:600;transition:all .15s}'
+    +'.topo-mode-btn.active{background:var(--a);border-color:var(--a);color:#000}';
+  document.head.appendChild(css);
+
+  // ── Header ──
+  var hdr=document.createElement('div');
+  hdr.className='sh';
+  hdr.innerHTML='<span class="stitle">🗺️ Network Topology Designer</span><span class="sev info">Drag &amp; Drop Builder &middot; Draw.io Integration</span>';
+  el.appendChild(hdr);
+
+  // ── Mode switcher ──
+  var modeBar=document.createElement('div');
+  modeBar.style.cssText='display:flex;gap:10px;margin-bottom:16px;align-items:center';
+  modeBar.innerHTML=
+    '<span style="font-size:12px;color:var(--t2);font-weight:600">Choose your tool:</span>'
+    +'<button class="topo-mode-btn active" id="topo-mode-canvas">🎨 Canvas Builder</button>'
+    +'<button class="topo-mode-btn" id="topo-mode-drawio">📐 draw.io Designer</button>'
+    +'<span style="font-size:11px;color:var(--t3);margin-left:8px">Switch anytime — your canvas is preserved</span>';
+  el.appendChild(modeBar);
+
+  // ── Canvas panel ──
+  var canvasPanel=document.createElement('div');
+  canvasPanel.id='topo-canvas-panel';
+  el.appendChild(canvasPanel);
+
+  // ── Draw.io panel (hidden) ──
+  var drawioPanel=document.createElement('div');
+  drawioPanel.id='topo-drawio-panel';
+  drawioPanel.style.display='none';
+  el.appendChild(drawioPanel);
+
+  // ── Mode switch logic ──
+  document.getElementById('topo-mode-canvas').onclick=function(){
+    this.classList.add('active');
+    document.getElementById('topo-mode-drawio').classList.remove('active');
+    canvasPanel.style.display='block';
+    drawioPanel.style.display='none';
+  };
+  document.getElementById('topo-mode-drawio').onclick=function(){
+    this.classList.add('active');
+    document.getElementById('topo-mode-canvas').classList.remove('active');
+    canvasPanel.style.display='none';
+    drawioPanel.style.display='block';
+    buildDrawio();
+  };
+
+  // ═══════════════════════════════════════════
+  // OPTION A — CANVAS BUILDER
+  // ═══════════════════════════════════════════
+  function buildCanvas(){
+    canvasPanel.innerHTML='';
+
+    // Device palette
+    var palette=document.createElement('div');
+    palette.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:10px;align-items:center';
+    palette.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700;margin-right:4px;white-space:nowrap">ADD DEVICE:</span>';
+
+    var devices=[
+      {icon:'🛡️',label:'FortiGate',type:'fortigate',color:'#1D9E75'},
+      {icon:'🔥',label:'Firewall',type:'firewall',color:'#f85149'},
+      {icon:'🔀',label:'Switch',type:'switch',color:'#58a6ff'},
+      {icon:'🌐',label:'Router',type:'router',color:'#d29922'},
+      {icon:'☁️',label:'Cloud/ISP',type:'cloud',color:'#8b949e'},
+      {icon:'💻',label:'PC/Client',type:'pc',color:'#3fb950'},
+      {icon:'🖥️',label:'Server',type:'server',color:'#7c3aed'},
+      {icon:'📡',label:'Access Point',type:'ap',color:'#58a6ff'},
+      {icon:'🔒',label:'VPN GW',type:'vpn',color:'#1D9E75'},
+      {icon:'📦',label:'Device',type:'generic',color:'#8b949e'},
+    ];
+    devices.forEach(function(d){
+      var b=document.createElement('button');
+      b.className='topo-icon-btn';
+      b.title='Add '+d.label;
+      b.innerHTML=d.icon+'<span>'+d.label+'</span>';
+      b.onclick=(function(dev){return function(){addDevice(dev);};})(d);
+      palette.appendChild(b);
+    });
+
+    // Toolbar
+    var toolbar=document.createElement('div');
+    toolbar.style.cssText='display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center';
+
+    // Mode buttons
+    toolbar.innerHTML=
+      '<span style="font-size:11px;color:var(--t3);font-weight:700">MODE:</span>'
+      +'<button class="topo-mode-btn active" id="mode-select">↖️ Select</button>'
+      +'<button class="topo-mode-btn" id="mode-connect">🔗 Connect</button>'
+      +'<button class="topo-mode-btn" id="mode-delete">🗑️ Delete</button>'
+      +'<div class="topo-sep"></div>'
+      +'<span style="font-size:11px;color:var(--t3);font-weight:700">LINK TYPE:</span>';
+
+    var linkTypes=[
+      {id:'LAN',label:'LAN',color:'#3fb950'},
+      {id:'WAN',label:'WAN',color:'#d29922'},
+      {id:'VPN',label:'VPN',color:'#1D9E75'},
+      {id:'TRUNK',label:'Trunk',color:'#58a6ff'},
+      {id:'MGMT',label:'Mgmt',color:'#8b949e'},
+    ];
+    linkTypes.forEach(function(lt,i){
+      var b=document.createElement('button');
+      b.className='topo-conn-btn'+(i===0?' active':'');
+      b.id='link-'+lt.id;
+      b.textContent=lt.label;
+      b.style.borderColor=lt.color;
+      b.onclick=(function(l){return function(){
+        document.querySelectorAll('.topo-conn-btn').forEach(function(x){x.classList.remove('active');});
+        this.classList.add('active');
+        currentLink=l;
+      };})(lt);
+      toolbar.appendChild(b);
+    });
+
+    // Action buttons
+    var actions=document.createElement('div');
+    actions.style.cssText='display:flex;gap:8px;margin-left:auto;flex-wrap:wrap';
+    actions.innerHTML=
+      '<button class="sbtn" id="topo-clear" style="font-size:11px;padding:5px 12px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">🗑️ Clear All</button>'
+      +'<button class="sbtn" id="topo-export" style="font-size:11px;padding:5px 12px">📥 Export PNG</button>'
+      +'<button class="sbtn" id="topo-example" style="font-size:11px;padding:5px 12px;background:var(--b3);border:1px solid var(--br);color:var(--t2)">⚡ Load Example</button>';
+    toolbar.appendChild(actions);
+
+    canvasPanel.appendChild(palette);
+    canvasPanel.appendChild(toolbar);
+
+    // Canvas
+    var canvasWrap=document.createElement('div');
+    canvasWrap.style.cssText='position:relative;border-radius:10px;overflow:hidden;';
+    var canvas=document.createElement('canvas');
+    canvas.id='topo-canvas';
+    canvas.width=Math.min(window.innerWidth-80,1200);
+    canvas.height=600;
+    canvas.style.cssText='width:100%;height:600px;display:block;background:#0d1117;border-radius:10px;border:1px solid #30363d';
+    canvasWrap.appendChild(canvas);
+
+    // Hint overlay
+    var hint=document.createElement('div');
+    hint.id='topo-hint';
+    hint.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;';
+    hint.innerHTML='<div style="font-size:40px;opacity:.15">🗺️</div>'
+      +'<div style="font-size:13px;color:rgba(255,255,255,.15);margin-top:8px">Click a device above to add it<br>then use Connect mode to draw links</div>';
+    canvasWrap.appendChild(hint);
+    canvasPanel.appendChild(canvasWrap);
+
+    // Instructions
+    var inst=document.createElement('div');
+    inst.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:12px';
+    [
+      ['↖️ Select mode','Click to select, drag to move devices, double-click to rename'],
+      ['🔗 Connect mode','Click first device, then click second to draw a link'],
+      ['🗑️ Delete mode','Click any device or link to remove it'],
+      ['📥 Export PNG','Download your topology as a PNG image'],
+    ].forEach(function(i){
+      inst.innerHTML+='<div style="padding:8px 12px;background:var(--b2);border:1px solid var(--br);border-radius:6px;font-size:11px">'
+        +'<div style="color:var(--t);font-weight:600;margin-bottom:3px">'+i[0]+'</div>'
+        +'<div style="color:var(--t3);line-height:1.5">'+i[1]+'</div></div>';
+    });
+    canvasPanel.appendChild(inst);
+
+    // ── Canvas state ──
+    var nodes=[];
+    var links=[];
+    var mode='select';
+    var currentLink={id:'LAN',label:'LAN',color:'#3fb950'};
+    var connectFrom=null;
+    var dragging=null;
+    var dragOffX=0,dragOffY=0;
+    var editingNode=null;
+    var ctx=canvas.getContext('2d');
+    var dpr=window.devicePixelRatio||1;
+
+    // Mode buttons
+    document.getElementById('mode-select').onclick=function(){setMode('select');};
+    document.getElementById('mode-connect').onclick=function(){setMode('connect');};
+    document.getElementById('mode-delete').onclick=function(){setMode('delete');};
+    document.getElementById('topo-clear').onclick=function(){if(confirm('Clear all?')){nodes=[];links=[];connectFrom=null;draw();}};
+    document.getElementById('topo-export').onclick=exportPNG;
+    document.getElementById('topo-example').onclick=loadExample;
+
+    function setMode(m){
+      mode=m;
+      connectFrom=null;
+      ['select','connect','delete'].forEach(function(x){
+        document.getElementById('mode-'+x).classList.toggle('active',x===m);
+      });
+      canvas.style.cursor=m==='connect'?'crosshair':m==='delete'?'not-allowed':'default';
+      draw();
+    }
+
+    function addDevice(dev){
+      document.getElementById('topo-hint').style.display='none';
+      var x=100+Math.random()*(canvas.width-200);
+      var y=100+Math.random()*(canvas.height-200);
+      nodes.push({id:Date.now(),x:x,y:y,icon:dev.icon,label:dev.label,type:dev.type,color:dev.color,ip:''});
+      draw();
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // Grid
+      ctx.strokeStyle='rgba(255,255,255,.03)';
+      ctx.lineWidth=1;
+      for(var gx=0;gx<canvas.width;gx+=40){
+        ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,canvas.height);ctx.stroke();
+      }
+      for(var gy=0;gy<canvas.height;gy+=40){
+        ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(canvas.width,gy);ctx.stroke();
+      }
+
+      // Links
+      links.forEach(function(lk){
+        var a=nodes.find(function(n){return n.id===lk.from;});
+        var b=nodes.find(function(n){return n.id===lk.to;});
+        if(!a||!b) return;
+        ctx.save();
+        ctx.strokeStyle=lk.color;
+        ctx.lineWidth=lk.id==='VPN'?2:2;
+        if(lk.id==='VPN'){ctx.setLineDash([8,4]);}
+        else if(lk.id==='MGMT'){ctx.setLineDash([4,4]);}
+        else{ctx.setLineDash([]);}
+        ctx.beginPath();
+        ctx.moveTo(a.x,a.y);
+        ctx.lineTo(b.x,b.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // Label
+        var mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+        ctx.fillStyle='rgba(13,17,23,.8)';
+        var tw=ctx.measureText(lk.label).width;
+        ctx.fillRect(mx-tw/2-4,my-9,tw+8,18);
+        ctx.fillStyle=lk.color;
+        ctx.font='bold 10px "Courier New",monospace';
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.fillText(lk.label,mx,my);
+        ctx.restore();
+      });
+
+      // Connect from indicator
+      if(connectFrom){
+        var cf=nodes.find(function(n){return n.id===connectFrom;});
+        if(cf){
+          ctx.save();
+          ctx.strokeStyle=currentLink.color;
+          ctx.lineWidth=2;
+          ctx.setLineDash([6,3]);
+          ctx.beginPath();
+          ctx.arc(cf.x,cf.y,36,0,Math.PI*2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.restore();
+        }
+      }
+
+      // Nodes
+      nodes.forEach(function(n){
+        ctx.save();
+        // Shadow
+        ctx.shadowColor=n.color;
+        ctx.shadowBlur=n===dragging||n.id===connectFrom?16:8;
+        // Circle bg
+        var isSelected=(mode==='connect'&&n.id===connectFrom);
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,28,0,Math.PI*2);
+        ctx.fillStyle=isSelected?n.color+'44':'rgba(22,27,34,.95)';
+        ctx.fill();
+        ctx.strokeStyle=n.color;
+        ctx.lineWidth=isSelected?3:1.5;
+        ctx.stroke();
+        ctx.shadowBlur=0;
+        // Icon
+        ctx.font='24px serif';
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.fillText(n.icon,n.x,n.y-1);
+        // Label
+        ctx.font='bold 11px -apple-system,sans-serif';
+        ctx.fillStyle='#e6edf3';
+        ctx.textAlign='center';
+        ctx.textBaseline='top';
+        ctx.fillText(n.label,n.x,n.y+33);
+        // IP
+        if(n.ip){
+          ctx.font='10px "Courier New",monospace';
+          ctx.fillStyle=n.color;
+          ctx.fillText(n.ip,n.x,n.y+47);
+        }
+        ctx.restore();
+      });
+    }
+
+    function getNodeAt(x,y){
+      for(var i=nodes.length-1;i>=0;i--){
+        var n=nodes[i];
+        var dx=x-n.x,dy=y-n.y;
+        if(Math.sqrt(dx*dx+dy*dy)<32) return n;
+      }
+      return null;
+    }
+
+    function getLinkAt(x,y){
+      for(var i=links.length-1;i>=0;i--){
+        var lk=links[i];
+        var a=nodes.find(function(n){return n.id===lk.from;});
+        var b=nodes.find(function(n){return n.id===lk.to;});
+        if(!a||!b) continue;
+        var dx=b.x-a.x,dy=b.y-a.y,len=Math.sqrt(dx*dx+dy*dy);
+        if(len===0) continue;
+        var t=((x-a.x)*dx+(y-a.y)*dy)/(len*len);
+        t=Math.max(0,Math.min(1,t));
+        var px=a.x+t*dx,py=a.y+t*dy;
+        var dist=Math.sqrt((x-px)*(x-px)+(y-py)*(y-py));
+        if(dist<10) return lk;
+      }
+      return null;
+    }
+
+    function getPos(e){
+      var r=canvas.getBoundingClientRect();
+      var scaleX=canvas.width/r.width;
+      var scaleY=canvas.height/r.height;
+      if(e.touches){
+        return {x:(e.touches[0].clientX-r.left)*scaleX,y:(e.touches[0].clientY-r.top)*scaleY};
+      }
+      return {x:(e.clientX-r.left)*scaleX,y:(e.clientY-r.top)*scaleY};
+    }
+
+    canvas.addEventListener('mousedown',function(e){
+      var pos=getPos(e);
+      var node=getNodeAt(pos.x,pos.y);
+      if(mode==='select'){
+        if(node){dragging=node;dragOffX=pos.x-node.x;dragOffY=pos.y-node.y;}
+      } else if(mode==='connect'){
+        if(node){
+          if(!connectFrom){
+            connectFrom=node.id;
+          } else if(connectFrom===node.id){
+            connectFrom=null;
+          } else {
+            links.push({from:connectFrom,to:node.id,id:currentLink.id,label:currentLink.label,color:currentLink.color});
+            connectFrom=null;
+          }
+          draw();
+        }
+      } else if(mode==='delete'){
+        if(node){
+          nodes=nodes.filter(function(n){return n.id!==node.id;});
+          links=links.filter(function(lk){return lk.from!==node.id&&lk.to!==node.id;});
+          draw();
+        } else {
+          var lk=getLinkAt(pos.x,pos.y);
+          if(lk){links=links.filter(function(l){return l!==lk;});draw();}
+        }
+      }
+    });
+
+    canvas.addEventListener('mousemove',function(e){
+      if(dragging&&mode==='select'){
+        var pos=getPos(e);
+        dragging.x=Math.max(32,Math.min(canvas.width-32,pos.x-dragOffX));
+        dragging.y=Math.max(32,Math.min(canvas.height-60,pos.y-dragOffY));
+        draw();
+      }
+    });
+
+    canvas.addEventListener('mouseup',function(){dragging=null;});
+    canvas.addEventListener('mouseleave',function(){dragging=null;});
+
+    canvas.addEventListener('dblclick',function(e){
+      var pos=getPos(e);
+      var node=getNodeAt(pos.x,pos.y);
+      if(node){
+        var newLabel=prompt('Device name:',node.label);
+        if(newLabel!==null) node.label=newLabel.trim()||node.label;
+        var newIP=prompt('IP address (optional):',node.ip||'');
+        if(newIP!==null) node.ip=newIP.trim();
+        draw();
+      }
+    });
+
+    function exportPNG(){
+      var link=document.createElement('a');
+      link.download='netwolf-topology.png';
+      link.href=canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function loadExample(){
+      nodes=[];links=[];
+      document.getElementById('topo-hint').style.display='none';
+      var W=canvas.width,H=canvas.height;
+      var isp={id:1,x:W/2,y:60,icon:'☁️',label:'ISP / Internet',type:'cloud',color:'#8b949e',ip:'203.0.113.1'};
+      var fgtA={id:2,x:W/2-220,y:200,icon:'🛡️',label:'FGT-SITE-A',type:'fortigate',color:'#1D9E75',ip:'10.0.0.1'};
+      var fgtB={id:3,x:W/2+220,y:200,icon:'🛡️',label:'FGT-SITE-B',type:'fortigate',color:'#1D9E75',ip:'10.0.0.2'};
+      var swA={id:4,x:W/2-220,y:360,icon:'🔀',label:'SW-SITE-A',type:'switch',color:'#58a6ff',ip:'192.168.1.254'};
+      var swB={id:5,x:W/2+220,y:360,icon:'🔀',label:'SW-SITE-B',type:'switch',color:'#58a6ff',ip:'192.168.2.254'};
+      var pcA={id:6,x:W/2-320,y:500,icon:'💻',label:'PC-A',type:'pc',color:'#3fb950',ip:'192.168.1.100'};
+      var srvA={id:7,x:W/2-120,y:500,icon:'🖥️',label:'Server-A',type:'server',color:'#7c3aed',ip:'192.168.1.200'};
+      var pcB={id:8,x:W/2+120,y:500,icon:'💻',label:'PC-B',type:'pc',color:'#3fb950',ip:'192.168.2.100'};
+      var ap={id:9,x:W/2+320,y:500,icon:'📡',label:'AP-B',type:'ap',color:'#58a6ff',ip:'192.168.2.50'};
+      nodes=[isp,fgtA,fgtB,swA,swB,pcA,srvA,pcB,ap];
+      links=[
+        {from:1,to:2,id:'WAN',label:'WAN',color:'#d29922'},
+        {from:1,to:3,id:'WAN',label:'WAN',color:'#d29922'},
+        {from:2,to:3,id:'VPN',label:'IPsec VPN',color:'#1D9E75'},
+        {from:2,to:4,id:'LAN',label:'LAN',color:'#3fb950'},
+        {from:3,to:5,id:'LAN',label:'LAN',color:'#3fb950'},
+        {from:4,to:6,id:'LAN',label:'VLAN10',color:'#3fb950'},
+        {from:4,to:7,id:'LAN',label:'VLAN20',color:'#3fb950'},
+        {from:5,to:8,id:'LAN',label:'VLAN10',color:'#3fb950'},
+        {from:5,to:9,id:'LAN',label:'VLAN20',color:'#3fb950'},
+      ];
+      draw();
+    }
+
+    draw();
+  }
+
+  // ═══════════════════════════════════════════
+  // OPTION B — DRAW.IO
+  // ═══════════════════════════════════════════
+  function buildDrawio(){
+    if(drawioPanel.innerHTML!=='') return; // already built
+    drawioPanel.innerHTML='';
+
+    var info=document.createElement('div');
+    info.style.cssText='padding:12px 16px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:10px;margin-bottom:12px;display:flex;align-items:center;gap:12px';
+    info.innerHTML='<span style="font-size:24px">📐</span>'
+      +'<div><div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px">draw.io — Professional Network Diagram Tool</div>'
+      +'<div style="font-size:11px;color:var(--t2);line-height:1.6">Full drag &amp; drop with Cisco, Fortinet, AWS, Azure icons. Export to PNG, SVG, XML. Auto-save to your browser. No account needed.</div></div>'
+      +'<a href="https://app.diagrams.net/?splash=0&ui=dark&lang=en" target="_blank" rel="noopener noreferrer" class="sbtn" style="white-space:nowrap;font-size:12px;padding:8px 16px;flex-shrink:0">🚀 Open Full Screen</a>';
+    drawioPanel.appendChild(info);
+
+    // Tips
+    var tips=document.createElement('div');
+    tips.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:12px';
+    [
+      ['🔍 Search Icons','Type "FortiGate", "Cisco", "firewall" in the search box to find network icons'],
+      ['📁 Network Shapes','Left panel → Search shapes → type "network" for full Cisco/network library'],
+      ['💾 Auto-Save','Diagrams save to your browser automatically — or export XML to save to file'],
+      ['🎨 Dark Theme','Already configured in dark mode matching NetWolf'],
+    ].forEach(function(t){
+      tips.innerHTML+='<div style="padding:8px 12px;background:var(--b2);border:1px solid var(--br);border-radius:6px;font-size:11px">'
+        +'<div style="color:var(--t);font-weight:600;margin-bottom:3px">'+t[0]+'</div>'
+        +'<div style="color:var(--t3);line-height:1.5">'+t[1]+'</div></div>';
+    });
+    drawioPanel.appendChild(tips);
+
+    // Embed iframe
+    var iframeWrap=document.createElement('div');
+    iframeWrap.style.cssText='border-radius:10px;overflow:hidden;border:1px solid var(--br);background:#1e1e1e';
+    var iframe=document.createElement('iframe');
+    iframe.src='https://embed.diagrams.net/?embed=1&ui=dark&spin=1&modified=unsavedChanges&proto=json&configure=1&noSaveBtn=0&saveAndExit=0&noExitBtn=1&libraries=1&lang=en';
+    iframe.style.cssText='width:100%;height:650px;border:none;display:block';
+    iframe.allow='clipboard-read; clipboard-write';
+    iframeWrap.appendChild(iframe);
+    drawioPanel.appendChild(iframeWrap);
+
+    var note=document.createElement('div');
+    note.style.cssText='margin-top:8px;font-size:11px;color:var(--t3);text-align:center';
+    note.innerHTML='draw.io by <a href="https://diagrams.net" target="_blank" rel="noopener noreferrer" style="color:var(--a)">diagrams.net</a> — free, open source, no account required &middot; Your diagrams stay in your browser';
+    drawioPanel.appendChild(note);
+  }
+
+  // Build canvas by default
+  buildCanvas();
+}
+
+
 window.doLogin=function doLogin(){
   const email=document.getElementById('loginEmail').value.trim();
   const pass=document.getElementById('loginPassword').value;
@@ -1528,7 +2016,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
