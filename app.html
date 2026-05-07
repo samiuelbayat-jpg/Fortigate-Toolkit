@@ -389,9 +389,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   <div class="login-card">
     <div class="login-logo">🐺 Net<span>Wolf</span></div>
     <div class="login-sub">FortiGate Pro Toolkit — Sign in to continue</div>
-    <input class="login-input" type="email" id="loginEmail" placeholder="Your email address">
-    <input class="login-input" type="password" id="loginPassword" placeholder="Password">
-    <button class="login-btn" id="loginSubmitBtn">Login</button>
+    <input class="login-input" type="email" id="loginEmail" placeholder="Your email address" onkeydown="if(event.key==='Enter')document.getElementById('loginPassword').focus()">
+    <input class="login-input" type="password" id="loginPassword" placeholder="Password" onkeydown="if(event.key==='Enter')window.doLogin()">
+    <button class="login-btn" id="loginSubmitBtn" onclick="window.doLogin()">Login</button>
     <button class="login-forgot" id="loginForgotBtn">Forgot password?</button>
     <div id="loginError" class="login-error"></div>
     <div class="login-footer">Don't have an account? <a href="https://netwolffortigate.com">Subscribe here →</a></div>
