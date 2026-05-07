@@ -1187,6 +1187,53 @@ function renderTopology(el){
 
     var sep3=document.createElement('div');sep3.className='topo-sep';toolbar.appendChild(sep3);
 
+    var zoomLabel=document.createElement('span');
+    zoomLabel.style.cssText='font-size:11px;color:var(--t3);font-weight:700';
+    zoomLabel.textContent='ZOOM:';
+    toolbar.appendChild(zoomLabel);
+
+    var zoomOut=document.createElement('button');
+    zoomOut.className='topo-mode-btn';
+    zoomOut.innerHTML='🔍−';
+    zoomOut.title='Zoom out (or Ctrl+scroll)';
+    zoomOut.onclick=function(){
+      canvasScale=Math.max(0.3,canvasScale-0.15);
+      canvas.style.transform='scale('+canvasScale+')';
+      canvas.style.transformOrigin='0 0';
+      zoomPct.textContent=Math.round(canvasScale*100)+'%';
+    };
+    toolbar.appendChild(zoomOut);
+
+    var zoomPct=document.createElement('span');
+    zoomPct.style.cssText='font-size:11px;color:var(--t2);min-width:36px;text-align:center';
+    zoomPct.textContent='100%';
+    toolbar.appendChild(zoomPct);
+
+    var zoomIn=document.createElement('button');
+    zoomIn.className='topo-mode-btn';
+    zoomIn.innerHTML='🔍+';
+    zoomIn.title='Zoom in (or Ctrl+scroll)';
+    zoomIn.onclick=function(){
+      canvasScale=Math.min(3,canvasScale+0.15);
+      canvas.style.transform='scale('+canvasScale+')';
+      canvas.style.transformOrigin='0 0';
+      zoomPct.textContent=Math.round(canvasScale*100)+'%';
+    };
+    toolbar.appendChild(zoomIn);
+
+    var zoomReset=document.createElement('button');
+    zoomReset.className='topo-mode-btn';
+    zoomReset.textContent='100%';
+    zoomReset.title='Reset zoom';
+    zoomReset.onclick=function(){
+      canvasScale=1;
+      canvas.style.transform='scale(1)';
+      zoomPct.textContent='100%';
+    };
+    toolbar.appendChild(zoomReset);
+
+    var sep4=document.createElement('div');sep4.className='topo-sep';toolbar.appendChild(sep4);
+
     var actionDiv=document.createElement('div');
     actionDiv.style.cssText='display:flex;gap:8px;flex-wrap:wrap';
     actionDiv.innerHTML=
@@ -1200,7 +1247,8 @@ function renderTopology(el){
 
     // Canvas wrapper with scroll for large sizes
     var canvasWrap=document.createElement('div');
-    canvasWrap.style.cssText='position:relative;border-radius:10px;overflow:auto;border:1px solid #30363d;background:#0d1117;max-height:70vh';
+    canvasWrap.style.cssText='position:relative;border-radius:10px;overflow:auto;border:1px solid #30363d;background:#0d1117;max-height:70vh;cursor:default';
+    canvasWrap.tabIndex=0;
     var canvas=document.createElement('canvas');
     canvas.id='topo-canvas';
     canvas.style.cssText='display:block;background:#0d1117';
@@ -1246,6 +1294,8 @@ function renderTopology(el){
       CANVAS_W=w; CANVAS_H=h;
       canvas.width=w; canvas.height=h;
       canvas.style.width=w+'px';
+      canvas.style.height=h+'px';
+      canvas.style.minWidth=w+'px';
       canvas.style.minHeight=h+'px';
       // Update size buttons
       [sizeSmall,sizeMed,sizeLarge,sizeXL].forEach(function(b){b.classList.remove('active');});
@@ -1438,8 +1488,30 @@ function renderTopology(el){
       return null;
     }
 
+    // Pan state
+    var panning=false;
+    var panStartX=0,panStartY=0;
+    var scrollStartX=0,scrollStartY=0;
+    var spaceDown=false;
+
+    // Space key for pan mode
+    document.addEventListener('keydown',function(e){if(e.code==='Space'&&document.activeElement!==document.getElementById('ps-input')&&document.activeElement!==document.getElementById('ps-issue')){spaceDown=true;canvas.style.cursor='grab';e.preventDefault();}});
+    document.addEventListener('keyup',function(e){if(e.code==='Space'){spaceDown=false;canvas.style.cursor=mode==='connect'?'crosshair':mode==='delete'?'not-allowed':'default';}});
+
     canvas.addEventListener('mousedown',function(e){
       var pos=getPos(e);
+
+      // Middle mouse button or space+drag = pan
+      if(e.button===1||spaceDown){
+        panning=true;
+        panStartX=e.clientX;
+        panStartY=e.clientY;
+        scrollStartX=canvasWrap.scrollLeft;
+        scrollStartY=canvasWrap.scrollTop;
+        canvas.style.cursor='grabbing';
+        e.preventDefault();
+        return;
+      }
 
       if(mode==='select'){
         // Check resize handles first
@@ -1489,6 +1561,13 @@ function renderTopology(el){
     canvas.addEventListener('mousemove',function(e){
       var pos=getPos(e);
 
+      // Pan scroll
+      if(panning){
+        canvasWrap.scrollLeft=scrollStartX-(e.clientX-panStartX);
+        canvasWrap.scrollTop=scrollStartY-(e.clientY-panStartY);
+        return;
+      }
+
       if(resizing){
         var n=resizing.node;
         var cx=n.x,cy=n.y;
@@ -1512,8 +1591,14 @@ function renderTopology(el){
       }
     });
 
-    canvas.addEventListener('mouseup',function(){dragging=null;resizing=null;});
-    canvas.addEventListener('mouseleave',function(){dragging=null;resizing=null;});
+    canvas.addEventListener('mouseup',function(e){
+      dragging=null;resizing=null;
+      if(panning){
+        panning=false;
+        canvas.style.cursor=spaceDown?'grab':mode==='connect'?'crosshair':mode==='delete'?'not-allowed':'default';
+      }
+    });
+    canvas.addEventListener('mouseleave',function(){dragging=null;resizing=null;panning=false;});
 
     canvas.addEventListener('dblclick',function(e){
       var pos=getPos(e);
@@ -1528,11 +1613,23 @@ function renderTopology(el){
     });
 
     // Mouse wheel to resize selected node
+    var canvasScale=1;
     canvas.addEventListener('wheel',function(e){
+      // Ctrl+wheel = zoom canvas (scale)
+      if(e.ctrlKey||e.metaKey){
+        e.preventDefault();
+        var delta=e.deltaY>0?-0.1:0.1;
+        canvasScale=Math.max(0.3,Math.min(3,canvasScale+delta));
+        canvas.style.transform='scale('+canvasScale+')';
+        canvas.style.transformOrigin='0 0';
+        var _zp=document.querySelector('[title="Reset zoom"]');if(_zp&&_zp.previousSibling)_zp.previousSibling.textContent=Math.round(canvasScale*100)+'%';
+        return;
+      }
+      // Normal wheel = resize selected node
       if(!selectedNode||mode!=='select') return;
       e.preventDefault();
-      var delta=e.deltaY>0?-2:2;
-      selectedNode.r=Math.max(18,Math.min(80,(selectedNode.r||30)+delta));
+      var nodeDelta=e.deltaY>0?-2:2;
+      selectedNode.r=Math.max(18,Math.min(80,(selectedNode.r||30)+nodeDelta));
       draw();
     },{passive:false});
 
