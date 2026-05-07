@@ -1046,6 +1046,7 @@ function renderPSMaker(el){
 function renderTopology(el){
   el.innerHTML='';
 
+  // ── CSS ──
   var css=document.createElement('style');
   css.textContent=
     '.topo-icon-btn{background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:8px;cursor:pointer;font-size:22px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;min-width:68px;text-align:center}'
@@ -1055,18 +1056,21 @@ function renderTopology(el){
     +'.topo-mode-btn.active{background:var(--a);border-color:var(--a);color:#000}'
     +'.topo-conn-btn{font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--br);background:var(--b3);color:var(--t2);cursor:pointer;transition:all .15s}'
     +'.topo-conn-btn.active,.topo-conn-btn:hover{background:rgba(29,158,117,.1);border-color:var(--a);color:var(--a)}'
-    +'.topo-sep{width:1px;background:var(--br);align-self:stretch;margin:0 4px}';
+    +'.topo-viewport{overflow:hidden;position:relative;border-radius:10px;border:1px solid #30363d;background:#0d1117;width:100%;height:640px;cursor:default}'
+    +'.topo-world{position:absolute;top:0;left:0;transform-origin:0 0}'
+    +'.topo-minimap{position:absolute;bottom:12px;right:12px;background:rgba(13,17,23,.85);border:1px solid #30363d;border-radius:6px;z-index:10}';
   document.head.appendChild(css);
 
+  // ── Header ──
   var hdr=document.createElement('div');
   hdr.className='sh';
-  hdr.innerHTML='<span class="stitle">🗺️ Network Topology Designer</span><span class="sev info">Drag &amp; Drop Builder &middot; Resize &middot; draw.io Integration</span>';
+  hdr.innerHTML='<span class="stitle">🗺️ Network Topology Designer</span><span class="sev info">Infinite Canvas &middot; Pan &amp; Zoom &middot; draw.io Integration</span>';
   el.appendChild(hdr);
 
-  // Mode tabs
+  // ── Mode tabs ──
   var modeBar=document.createElement('div');
   modeBar.style.cssText='display:flex;gap:10px;margin-bottom:16px;align-items:center';
-  modeBar.innerHTML='<span style="font-size:12px;color:var(--t2);font-weight:600">Choose your tool:</span>'
+  modeBar.innerHTML='<span style="font-size:12px;color:var(--t2);font-weight:600">Choose tool:</span>'
     +'<button class="topo-mode-btn active" id="topo-mode-canvas">🎨 Canvas Builder</button>'
     +'<button class="topo-mode-btn" id="topo-mode-drawio">📐 draw.io Designer</button>';
   el.appendChild(modeBar);
@@ -1094,11 +1098,13 @@ function renderTopology(el){
     buildDrawio();
   };
 
-  // ═══════════ CANVAS BUILDER ═══════════
+  // ═══════════════════════════════════════════════════════
+  // CANVAS BUILDER — Infinite pan/zoom canvas
+  // ═══════════════════════════════════════════════════════
   function buildCanvas(){
     canvasPanel.innerHTML='';
 
-    // Device palette
+    // ── Device palette ──
     var palette=document.createElement('div');
     palette.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:10px;align-items:center';
     palette.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700;margin-right:4px;white-space:nowrap">ADD DEVICE:</span>';
@@ -1122,16 +1128,21 @@ function renderTopology(el){
       palette.appendChild(b);
     });
 
-    // Toolbar
+    // ── Toolbar ──
     var toolbar=document.createElement('div');
     toolbar.style.cssText='display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center';
+
+    // Edit modes
     toolbar.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700">MODE:</span>'
       +'<button class="topo-mode-btn active" id="mode-select">↖️ Select</button>'
       +'<button class="topo-mode-btn" id="mode-connect">🔗 Connect</button>'
-      +'<button class="topo-mode-btn" id="mode-delete">🗑️ Delete</button>'
-      +'<div class="topo-sep"></div>'
-      +'<span style="font-size:11px;color:var(--t3);font-weight:700">LINK:</span>';
+      +'<button class="topo-mode-btn" id="mode-delete">🗑️ Delete</button>';
 
+    // Separator
+    var s1=document.createElement('div');s1.className='topo-conn-btn';s1.style.cssText='border:none;background:var(--br);width:1px;padding:0;border-radius:0;cursor:default;align-self:stretch';toolbar.appendChild(s1);
+
+    // Link types
+    var ltLabel=document.createElement('span');ltLabel.style.cssText='font-size:11px;color:var(--t3);font-weight:700';ltLabel.textContent='LINK:';toolbar.appendChild(ltLabel);
     var linkTypes=[
       {id:'LAN',label:'LAN',color:'#3fb950'},
       {id:'WAN',label:'WAN',color:'#d29922'},
@@ -1153,198 +1164,229 @@ function renderTopology(el){
       toolbar.appendChild(b);
     });
 
-    var sep2=document.createElement('div');sep2.className='topo-sep';toolbar.appendChild(sep2);
+    // Zoom controls
+    var s2=document.createElement('div');s2.style.cssText='width:1px;background:var(--br);align-self:stretch;margin:0 4px';toolbar.appendChild(s2);
+    var zlbl=document.createElement('span');zlbl.style.cssText='font-size:11px;color:var(--t3);font-weight:700';zlbl.textContent='ZOOM:';toolbar.appendChild(zlbl);
 
-    // Canvas size controls
-    var sizeLabel=document.createElement('span');
-    sizeLabel.style.cssText='font-size:11px;color:var(--t3);font-weight:700';
-    sizeLabel.textContent='CANVAS:';
-    toolbar.appendChild(sizeLabel);
+    var zOut=document.createElement('button');zOut.className='topo-mode-btn';zOut.textContent='−';zOut.title='Zoom out';toolbar.appendChild(zOut);
+    var zPct=document.createElement('span');zPct.id='topo-zpct';zPct.style.cssText='font-size:11px;color:var(--t2);min-width:42px;text-align:center;font-family:var(--mono)';zPct.textContent='100%';toolbar.appendChild(zPct);
+    var zIn=document.createElement('button');zIn.className='topo-mode-btn';zIn.textContent='+';zIn.title='Zoom in';toolbar.appendChild(zIn);
+    var zRst=document.createElement('button');zRst.className='topo-mode-btn';zRst.textContent='⌖';zRst.title='Fit to screen / reset view';toolbar.appendChild(zRst);
 
-    var sizeSmall=document.createElement('button');
-    sizeSmall.className='topo-mode-btn';
-    sizeSmall.textContent='Small';
-    sizeSmall.onclick=function(){resizeCanvas(800,400);};
-    toolbar.appendChild(sizeSmall);
-
-    var sizeMed=document.createElement('button');
-    sizeMed.className='topo-mode-btn active';
-    sizeMed.textContent='Medium';
-    sizeMed.onclick=function(){resizeCanvas(1200,600);};
-    toolbar.appendChild(sizeMed);
-
-    var sizeLarge=document.createElement('button');
-    sizeLarge.className='topo-mode-btn';
-    sizeLarge.textContent='Large';
-    sizeLarge.onclick=function(){resizeCanvas(1800,900);};
-    toolbar.appendChild(sizeLarge);
-
-    var sizeXL=document.createElement('button');
-    sizeXL.className='topo-mode-btn';
-    sizeXL.textContent='XL';
-    sizeXL.onclick=function(){resizeCanvas(2400,1200);};
-    toolbar.appendChild(sizeXL);
-
-    var sep3=document.createElement('div');sep3.className='topo-sep';toolbar.appendChild(sep3);
-
-    var zoomLabel=document.createElement('span');
-    zoomLabel.style.cssText='font-size:11px;color:var(--t3);font-weight:700';
-    zoomLabel.textContent='ZOOM:';
-    toolbar.appendChild(zoomLabel);
-
-    var zoomOut=document.createElement('button');
-    zoomOut.className='topo-mode-btn';
-    zoomOut.innerHTML='🔍−';
-    zoomOut.title='Zoom out (or Ctrl+scroll)';
-    zoomOut.onclick=function(){
-      canvasScale=Math.max(0.3,canvasScale-0.15);
-      canvas.style.transform='scale('+canvasScale+')';
-      canvas.style.transformOrigin='0 0';
-      zoomPct.textContent=Math.round(canvasScale*100)+'%';
-    };
-    toolbar.appendChild(zoomOut);
-
-    var zoomPct=document.createElement('span');
-    zoomPct.style.cssText='font-size:11px;color:var(--t2);min-width:36px;text-align:center';
-    zoomPct.textContent='100%';
-    toolbar.appendChild(zoomPct);
-
-    var zoomIn=document.createElement('button');
-    zoomIn.className='topo-mode-btn';
-    zoomIn.innerHTML='🔍+';
-    zoomIn.title='Zoom in (or Ctrl+scroll)';
-    zoomIn.onclick=function(){
-      canvasScale=Math.min(3,canvasScale+0.15);
-      canvas.style.transform='scale('+canvasScale+')';
-      canvas.style.transformOrigin='0 0';
-      zoomPct.textContent=Math.round(canvasScale*100)+'%';
-    };
-    toolbar.appendChild(zoomIn);
-
-    var zoomReset=document.createElement('button');
-    zoomReset.className='topo-mode-btn';
-    zoomReset.textContent='100%';
-    zoomReset.title='Reset zoom';
-    zoomReset.onclick=function(){
-      canvasScale=1;
-      canvas.style.transform='scale(1)';
-      zoomPct.textContent='100%';
-    };
-    toolbar.appendChild(zoomReset);
-
-    var sep4=document.createElement('div');sep4.className='topo-sep';toolbar.appendChild(sep4);
-
-    var actionDiv=document.createElement('div');
-    actionDiv.style.cssText='display:flex;gap:8px;flex-wrap:wrap';
-    actionDiv.innerHTML=
-      '<button class="sbtn" id="topo-clear" style="font-size:11px;padding:5px 12px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">🗑️ Clear</button>'
-      +'<button class="sbtn" id="topo-export" style="font-size:11px;padding:5px 12px">📥 Export PNG</button>'
+    // Actions
+    var s3=document.createElement('div');s3.style.cssText='width:1px;background:var(--br);align-self:stretch;margin:0 4px';toolbar.appendChild(s3);
+    var actDiv=document.createElement('div');actDiv.style.cssText='display:flex;gap:6px';
+    actDiv.innerHTML='<button class="sbtn" id="topo-clear" style="font-size:11px;padding:5px 12px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">🗑️ Clear</button>'
+      +'<button class="sbtn" id="topo-export" style="font-size:11px;padding:5px 12px">📥 PNG</button>'
       +'<button class="sbtn" id="topo-example" style="font-size:11px;padding:5px 12px;background:var(--b3);border:1px solid var(--br);color:var(--t2)">⚡ Example</button>';
-    toolbar.appendChild(actionDiv);
+    toolbar.appendChild(actDiv);
 
     canvasPanel.appendChild(palette);
     canvasPanel.appendChild(toolbar);
 
-    // Canvas wrapper with scroll for large sizes
-    var canvasWrap=document.createElement('div');
-    canvasWrap.style.cssText='position:relative;border-radius:10px;overflow:auto;border:1px solid #30363d;background:#0d1117;max-height:70vh;cursor:default';
-    canvasWrap.tabIndex=0;
+    // ── Viewport (the clipping window) ──
+    var viewport=document.createElement('div');
+    viewport.className='topo-viewport';
+    viewport.id='topo-viewport';
+
+    // ── World (the infinite canvas inside viewport) ──
+    var world=document.createElement('div');
+    world.className='topo-world';
+    world.id='topo-world';
+
+    // ── The actual canvas for drawing ──
     var canvas=document.createElement('canvas');
     canvas.id='topo-canvas';
-    canvas.style.cssText='display:block;background:#0d1117';
-    canvasWrap.appendChild(canvas);
+    canvas.width=4000;
+    canvas.height=3000;
+    canvas.style.cssText='display:block;background:#0d1117;';
+    world.appendChild(canvas);
+    viewport.appendChild(world);
 
-    // Selection handles overlay
-    var overlay=document.createElement('div');
-    overlay.id='topo-overlay';
-    overlay.style.cssText='position:absolute;top:0;left:0;pointer-events:none';
-    canvasWrap.appendChild(overlay);
+    // ── Minimap ──
+    var minimap=document.createElement('canvas');
+    minimap.className='topo-minimap';
+    minimap.width=160;
+    minimap.height=120;
+    minimap.style.cssText='width:160px;height:120px;opacity:.85';
+    viewport.appendChild(minimap);
 
-    canvasPanel.appendChild(canvasWrap);
+    // ── Pan hint ──
+    var hint=document.createElement('div');
+    hint.id='topo-hint';
+    hint.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:5';
+    hint.innerHTML='<div style="font-size:48px;opacity:.1">🗺️</div>'
+      +'<div style="font-size:12px;color:rgba(255,255,255,.12);margin-top:8px;line-height:1.7">'
+      +'Click a device above to add it<br>'
+      +'<span style="font-size:10px">Scroll to zoom · Middle-click drag to pan · Space+drag to pan</span></div>';
+    viewport.appendChild(hint);
 
-    // Instructions
-    var inst=document.createElement('div');
-    inst.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:12px';
+    canvasPanel.appendChild(viewport);
+
+    // ── Tips ──
+    var tips=document.createElement('div');
+    tips.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px';
     [
-      ['↖️ Select','Click to select · Drag to move · Scroll corners to resize · Double-click to rename/set IP'],
-      ['🔗 Connect','Click device A → click device B to draw a link between them'],
-      ['🗑️ Delete','Click any device or link to remove it'],
-      ['📐 Resize','Use Small/Medium/Large/XL buttons to change canvas size'],
-    ].forEach(function(i){
-      inst.innerHTML+='<div style="padding:8px 12px;background:var(--b2);border:1px solid var(--br);border-radius:6px;font-size:11px">'
-        +'<div style="color:var(--t);font-weight:600;margin-bottom:3px">'+i[0]+'</div>'
-        +'<div style="color:var(--t3);line-height:1.5">'+i[1]+'</div></div>';
+      ['🖱️ Pan','Middle-click drag · Space+drag · Click empty area drag'],
+      ['🔍 Zoom','Ctrl+scroll wheel · or use the − / + buttons'],
+      ['✏️ Rename','Double-click any device to rename and set IP'],
+      ['↔️ Resize device','Select a device → scroll wheel to grow/shrink'],
+    ].forEach(function(t){
+      tips.innerHTML+='<div style="padding:8px 12px;background:var(--b2);border:1px solid var(--br);border-radius:6px;font-size:11px">'
+        +'<div style="color:var(--t);font-weight:600;margin-bottom:2px">'+t[0]+'</div>'
+        +'<div style="color:var(--t3);line-height:1.5">'+t[1]+'</div></div>';
     });
-    canvasPanel.appendChild(inst);
+    canvasPanel.appendChild(tips);
 
-    // ── State ──
+    // ══════════════════════════════════════
+    // STATE
+    // ══════════════════════════════════════
     var nodes=[];
     var links=[];
     var mode='select';
     var currentLink={id:'LAN',label:'LAN',color:'#3fb950'};
-    var connectFrom=null;
-    var dragging=null;
-    var dragOffX=0,dragOffY=0;
     var selectedNode=null;
-    var resizing=null; // {node, handle}
+    var connectFrom=null;
+
+    // View transform
+    var viewX=0, viewY=0, viewScale=1;
+    var CANVAS_W=4000, CANVAS_H=3000;
     var ctx=canvas.getContext('2d');
-    var CANVAS_W=1200, CANVAS_H=600;
+    var mctx=minimap.getContext('2d');
 
-    function resizeCanvas(w,h){
-      CANVAS_W=w; CANVAS_H=h;
-      canvas.width=w; canvas.height=h;
-      canvas.style.width=w+'px';
-      canvas.style.height=h+'px';
-      canvas.style.minWidth=w+'px';
-      canvas.style.minHeight=h+'px';
-      // Update size buttons
-      [sizeSmall,sizeMed,sizeLarge,sizeXL].forEach(function(b){b.classList.remove('active');});
-      if(w===800)sizeSmall.classList.add('active');
-      else if(w===1200)sizeMed.classList.add('active');
-      else if(w===1800)sizeLarge.classList.add('active');
-      else sizeXL.classList.add('active');
-      draw();
+    // Pan state
+    var isPanning=false;
+    var panLastX=0, panLastY=0;
+    var spaceDown=false;
+
+    // Drag state
+    var isDragging=false;
+    var dragOffX=0, dragOffY=0;
+
+    // Resize state
+    var isResizing=false;
+    var resizeNode=null;
+
+    // ── Apply view transform ──
+    function applyTransform(){
+      world.style.transform='translate('+viewX+'px,'+viewY+'px) scale('+viewScale+')';
+      world.style.transformOrigin='0 0';
+      zPct.textContent=Math.round(viewScale*100)+'%';
+      drawMinimap();
     }
-    resizeCanvas(CANVAS_W,CANVAS_H);
 
-    // Mode buttons
+    // ── Clamp view ──
+    function clampView(){
+      // Allow generous range so canvas feels infinite
+      var vw=viewport.offsetWidth;
+      var vh=viewport.offsetHeight;
+      var scaledW=CANVAS_W*viewScale;
+      var scaledH=CANVAS_H*viewScale;
+      viewX=Math.min(vw*0.5, Math.max(vw-scaledW-vw*0.5, viewX));
+      viewY=Math.min(vh*0.5, Math.max(vh-scaledH-vh*0.5, viewY));
+    }
+
+    // ── Convert screen → canvas coordinates ──
+    function screenToCanvas(sx,sy){
+      var vr=viewport.getBoundingClientRect();
+      return {
+        x: (sx - vr.left - viewX) / viewScale,
+        y: (sy - vr.top  - viewY) / viewScale
+      };
+    }
+
+    // ── Mode buttons ──
     document.getElementById('mode-select').onclick=function(){setMode('select');};
     document.getElementById('mode-connect').onclick=function(){setMode('connect');};
     document.getElementById('mode-delete').onclick=function(){setMode('delete');};
-    document.getElementById('topo-clear').onclick=function(){if(confirm('Clear all?')){nodes=[];links=[];selectedNode=null;connectFrom=null;draw();}};
-    document.getElementById('topo-export').onclick=exportPNG;
-    document.getElementById('topo-example').onclick=loadExample;
 
     function setMode(m){
-      mode=m;
-      connectFrom=null;
-      selectedNode=null;
+      mode=m; connectFrom=null; selectedNode=null;
       ['select','connect','delete'].forEach(function(x){
         document.getElementById('mode-'+x).classList.toggle('active',x===m);
       });
-      canvas.style.cursor=m==='connect'?'crosshair':m==='delete'?'not-allowed':'default';
+      viewport.style.cursor=m==='connect'?'crosshair':m==='delete'?'not-allowed':'default';
       draw();
     }
 
+    // ── Zoom ──
+    function zoomAt(factor, cx, cy){
+      // cx,cy in viewport coords
+      var newScale=Math.max(0.15, Math.min(4, viewScale*factor));
+      var ratio=newScale/viewScale;
+      viewX=cx-(cx-viewX)*ratio;
+      viewY=cy-(cy-viewY)*ratio;
+      viewScale=newScale;
+      clampView();
+      applyTransform();
+    }
+
+    zOut.onclick=function(){var vr=viewport.getBoundingClientRect();zoomAt(0.8,vr.width/2,vr.height/2);};
+    zIn.onclick=function(){var vr=viewport.getBoundingClientRect();zoomAt(1.25,vr.width/2,vr.height/2);};
+    zRst.onclick=function(){fitAll();};
+
+    function fitAll(){
+      if(!nodes.length){viewX=0;viewY=0;viewScale=1;applyTransform();return;}
+      var minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+      nodes.forEach(function(n){
+        minX=Math.min(minX,n.x-(n.r||30));
+        minY=Math.min(minY,n.y-(n.r||30));
+        maxX=Math.max(maxX,n.x+(n.r||30)+30);
+        maxY=Math.max(maxY,n.y+(n.r||30)+30);
+      });
+      var pad=80;
+      var vw=viewport.offsetWidth, vh=viewport.offsetHeight;
+      var fw=maxX-minX+pad*2, fh=maxY-minY+pad*2;
+      var sc=Math.min(vw/fw, vh/fh, 2);
+      viewScale=sc;
+      viewX=vw/2 - (minX+fw/2)*sc + pad*sc;
+      viewY=vh/2 - (minY+fh/2)*sc + pad*sc;
+      applyTransform();
+    }
+
+    // ── Space key for pan ──
+    document.addEventListener('keydown',function(e){
+      if(e.code==='Space'){
+        var active=document.activeElement;
+        if(active&&(active.tagName==='INPUT'||active.tagName==='TEXTAREA')) return;
+        spaceDown=true;
+        viewport.style.cursor='grab';
+        e.preventDefault();
+      }
+    });
+    document.addEventListener('keyup',function(e){
+      if(e.code==='Space'){
+        spaceDown=false;
+        viewport.style.cursor=mode==='connect'?'crosshair':mode==='delete'?'not-allowed':'default';
+      }
+    });
+
+    // ── Add device ──
     function addDevice(dev){
-      var x=120+Math.random()*(CANVAS_W-240);
-      var y=100+Math.random()*(CANVAS_H-200);
-      var newNode={id:Date.now(),x:x,y:y,icon:dev.icon,label:dev.label,color:dev.color,ip:'',r:30};
-      nodes.push(newNode);
-      selectedNode=newNode;
+      document.getElementById('topo-hint').style.display='none';
+      // Place near center of current view
+      var vr=viewport.getBoundingClientRect();
+      var cp=screenToCanvas(vr.left+vr.width/2,vr.top+vr.height/2);
+      var x=cp.x + (Math.random()-0.5)*200;
+      var y=cp.y + (Math.random()-0.5)*150;
+      nodes.push({id:Date.now(),x:Math.max(50,x),y:Math.max(50,y),icon:dev.icon,label:dev.label,color:dev.color,ip:'',r:30});
       draw();
     }
 
+    // ── Draw ──
     function draw(){
-      canvas.width=CANVAS_W;
-      canvas.height=CANVAS_H;
       ctx.clearRect(0,0,CANVAS_W,CANVAS_H);
 
       // Grid
-      ctx.strokeStyle='rgba(255,255,255,.03)';
+      ctx.strokeStyle='rgba(255,255,255,.025)';
       ctx.lineWidth=1;
-      for(var gx=0;gx<CANVAS_W;gx+=40){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,CANVAS_H);ctx.stroke();}
-      for(var gy=0;gy<CANVAS_H;gy+=40){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(CANVAS_W,gy);ctx.stroke();}
+      var gridSize=60;
+      for(var gx=0;gx<CANVAS_W;gx+=gridSize){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,CANVAS_H);ctx.stroke();}
+      for(var gy=0;gy<CANVAS_H;gy+=gridSize){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(CANVAS_W,gy);ctx.stroke();}
+      // Thicker every 5
+      ctx.strokeStyle='rgba(255,255,255,.05)';
+      for(var gx2=0;gx2<CANVAS_W;gx2+=gridSize*5){ctx.beginPath();ctx.moveTo(gx2,0);ctx.lineTo(gx2,CANVAS_H);ctx.stroke();}
+      for(var gy2=0;gy2<CANVAS_H;gy2+=gridSize*5){ctx.beginPath();ctx.moveTo(0,gy2);ctx.lineTo(CANVAS_W,gy2);ctx.stroke();}
 
       // Links
       links.forEach(function(lk){
@@ -1353,17 +1395,18 @@ function renderTopology(el){
         if(!a||!b) return;
         ctx.save();
         ctx.strokeStyle=lk.color;
-        ctx.lineWidth=2;
-        if(lk.id==='VPN')ctx.setLineDash([8,4]);
-        else if(lk.id==='MGMT')ctx.setLineDash([4,4]);
+        ctx.lineWidth=2.5;
+        if(lk.id==='VPN')ctx.setLineDash([10,5]);
+        else if(lk.id==='MGMT')ctx.setLineDash([5,5]);
         else ctx.setLineDash([]);
         ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
         ctx.setLineDash([]);
+        // Link label
         var mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
-        ctx.font='bold 10px "Courier New",monospace';
+        ctx.font='bold 11px "Courier New",monospace';
         var tw=ctx.measureText(lk.label).width;
-        ctx.fillStyle='rgba(13,17,23,.85)';
-        ctx.fillRect(mx-tw/2-4,my-9,tw+8,18);
+        ctx.fillStyle='rgba(13,17,23,.9)';
+        ctx.fillRect(mx-tw/2-5,my-10,tw+10,20);
         ctx.fillStyle=lk.color;
         ctx.textAlign='center';ctx.textBaseline='middle';
         ctx.fillText(lk.label,mx,my);
@@ -1376,8 +1419,8 @@ function renderTopology(el){
         if(cf){
           ctx.save();
           ctx.strokeStyle=currentLink.color;
-          ctx.lineWidth=2;ctx.setLineDash([6,3]);
-          ctx.beginPath();ctx.arc(cf.x,cf.y,cf.r+8,0,Math.PI*2);ctx.stroke();
+          ctx.lineWidth=2;ctx.setLineDash([8,4]);
+          ctx.beginPath();ctx.arc(cf.x,cf.y,(cf.r||30)+10,0,Math.PI*2);ctx.stroke();
           ctx.setLineDash([]);ctx.restore();
         }
       }
@@ -1387,92 +1430,93 @@ function renderTopology(el){
         var r=n.r||30;
         var isSel=selectedNode&&selectedNode.id===n.id;
         ctx.save();
-        ctx.shadowColor=n.color;
-        ctx.shadowBlur=isSel?20:8;
+        ctx.shadowColor=n.color;ctx.shadowBlur=isSel?24:10;
         ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
-        ctx.fillStyle=isSel?n.color+'33':'rgba(22,27,34,.95)';
+        ctx.fillStyle=isSel?n.color+'44':'rgba(22,27,34,.97)';
         ctx.fill();
-        ctx.strokeStyle=n.color;
-        ctx.lineWidth=isSel?3:1.5;
+        ctx.strokeStyle=n.color;ctx.lineWidth=isSel?3:2;
         ctx.stroke();
         ctx.shadowBlur=0;
-
-        // Icon - scale with radius
-        var fontSize=Math.round(r*0.9);
-        ctx.font=fontSize+'px serif';
+        // Icon
+        ctx.font=Math.round(r*0.9)+'px serif';
         ctx.textAlign='center';ctx.textBaseline='middle';
         ctx.fillText(n.icon,n.x,n.y-1);
-
         // Label
-        ctx.font='bold '+(Math.max(10,Math.round(r*0.38)))+'px -apple-system,sans-serif';
+        ctx.font='bold '+Math.max(11,Math.round(r*0.38))+'px -apple-system,sans-serif';
         ctx.fillStyle='#e6edf3';
         ctx.textAlign='center';ctx.textBaseline='top';
-        ctx.fillText(n.label,n.x,n.y+r+5);
-
+        ctx.fillText(n.label,n.x,n.y+r+6);
         // IP
         if(n.ip){
-          ctx.font=(Math.max(9,Math.round(r*0.33)))+'px "Courier New",monospace';
+          ctx.font=Math.max(10,Math.round(r*0.33))+'px "Courier New",monospace';
           ctx.fillStyle=n.color;
-          ctx.fillText(n.ip,n.x,n.y+r+20);
+          ctx.fillText(n.ip,n.x,n.y+r+22);
         }
-
-        // Selection handles (resize corners) when selected
+        // Resize handle ring when selected
         if(isSel&&mode==='select'){
-          var handles=getHandles(n);
-          handles.forEach(function(h){
-            ctx.save();
-            ctx.fillStyle=n.color;
-            ctx.strokeStyle='#0d1117';
-            ctx.lineWidth=1.5;
-            ctx.beginPath();ctx.arc(h.x,h.y,6,0,Math.PI*2);
-            ctx.fill();ctx.stroke();
-            ctx.restore();
+          ctx.strokeStyle=n.color+'99';
+          ctx.lineWidth=1;ctx.setLineDash([4,3]);
+          ctx.beginPath();ctx.arc(n.x,n.y,r+14,0,Math.PI*2);ctx.stroke();
+          ctx.setLineDash([]);
+          // 4 handle dots
+          [[0,-1],[1,0],[0,1],[-1,0]].forEach(function(d){
+            ctx.beginPath();ctx.arc(n.x+d[0]*(r+14),n.y+d[1]*(r+14),6,0,Math.PI*2);
+            ctx.fillStyle=n.color;ctx.fill();
+            ctx.strokeStyle='#0d1117';ctx.lineWidth=1.5;ctx.stroke();
           });
         }
         ctx.restore();
       });
+
+      drawMinimap();
     }
 
-    function getHandles(n){
-      var r=n.r||30;
-      var d=r+10;
-      return [
-        {x:n.x,y:n.y-d,dir:'n'},
-        {x:n.x+d,y:n.y,dir:'e'},
-        {x:n.x,y:n.y+d,dir:'s'},
-        {x:n.x-d,y:n.y,dir:'w'},
-      ];
+    function drawMinimap(){
+      var mw=minimap.width, mh=minimap.height;
+      var scx=mw/CANVAS_W, scy=mh/CANVAS_H;
+      mctx.clearRect(0,0,mw,mh);
+      mctx.fillStyle='rgba(13,17,23,.6)';
+      mctx.fillRect(0,0,mw,mh);
+      // Nodes on minimap
+      nodes.forEach(function(n){
+        mctx.beginPath();
+        mctx.arc(n.x*scx, n.y*scy, Math.max(2,(n.r||30)*scx), 0, Math.PI*2);
+        mctx.fillStyle=n.color+'88';
+        mctx.fill();
+      });
+      // Viewport indicator
+      var vr=viewport.getBoundingClientRect();
+      var vx=(-viewX/viewScale)*scx;
+      var vy=(-viewY/viewScale)*scy;
+      var vw=(vr.width/viewScale)*scx;
+      var vh2=(vr.height/viewScale)*scy;
+      mctx.strokeStyle='rgba(29,158,117,.8)';
+      mctx.lineWidth=1.5;
+      mctx.strokeRect(vx,vy,vw,vh2);
     }
 
-    function getPos(e){
-      var r=canvas.getBoundingClientRect();
-      var scaleX=CANVAS_W/r.width;
-      var scaleY=CANVAS_H/r.height;
-      var src=e.touches?e.touches[0]:e;
-      return {x:(src.clientX-r.left)*scaleX,y:(src.clientY-r.top)*scaleY};
-    }
-
-    function getNodeAt(x,y){
+    // ── Hit testing ──
+    function getNodeAt(cx,cy){
       for(var i=nodes.length-1;i>=0;i--){
         var n=nodes[i];
-        var dx=x-n.x,dy=y-n.y;
+        var dx=cx-n.x,dy=cy-n.y;
         if(Math.sqrt(dx*dx+dy*dy)<(n.r||30)) return n;
       }
       return null;
     }
 
-    function getHandleAt(x,y){
-      if(!selectedNode||mode!=='select') return null;
-      var handles=getHandles(selectedNode);
+    function getResizeHandleAt(cx,cy){
+      if(!selectedNode||mode!=='select') return false;
+      var n=selectedNode, r=(n.r||30)+14;
+      var handles=[[0,-1],[1,0],[0,1],[-1,0]].map(function(d){return {x:n.x+d[0]*r,y:n.y+d[1]*r};});
       for(var i=0;i<handles.length;i++){
         var h=handles[i];
-        var dx=x-h.x,dy=y-h.y;
-        if(Math.sqrt(dx*dx+dy*dy)<10) return {node:selectedNode,dir:h.dir};
+        if(Math.sqrt((cx-h.x)*(cx-h.x)+(cy-h.y)*(cy-h.y))<10) return true;
       }
-      return null;
+      return false;
     }
 
-    function getLinkAt(x,y){
+    function getLinkAt(cx,cy){
       for(var i=links.length-1;i>=0;i--){
         var lk=links[i];
         var a=nodes.find(function(n){return n.id===lk.from;});
@@ -1480,61 +1524,53 @@ function renderTopology(el){
         if(!a||!b) continue;
         var dx=b.x-a.x,dy=b.y-a.y,len=Math.sqrt(dx*dx+dy*dy);
         if(!len) continue;
-        var t=((x-a.x)*dx+(y-a.y)*dy)/(len*len);
+        var t=((cx-a.x)*dx+(cy-a.y)*dy)/(len*len);
         t=Math.max(0,Math.min(1,t));
         var px=a.x+t*dx,py=a.y+t*dy;
-        if(Math.sqrt((x-px)*(x-px)+(y-py)*(y-py))<10) return lk;
+        if(Math.sqrt((cx-px)*(cx-px)+(cy-py)*(cy-py))<12) return lk;
       }
       return null;
     }
 
-    // Pan state
-    var panning=false;
-    var panStartX=0,panStartY=0;
-    var scrollStartX=0,scrollStartY=0;
-    var spaceDown=false;
+    // ── Pointer events ──
+    viewport.addEventListener('mousedown',function(e){
+      e.preventDefault();
+      var cp=screenToCanvas(e.clientX,e.clientY);
 
-    // Space key for pan mode
-    document.addEventListener('keydown',function(e){if(e.code==='Space'&&document.activeElement!==document.getElementById('ps-input')&&document.activeElement!==document.getElementById('ps-issue')){spaceDown=true;canvas.style.cursor='grab';e.preventDefault();}});
-    document.addEventListener('keyup',function(e){if(e.code==='Space'){spaceDown=false;canvas.style.cursor=mode==='connect'?'crosshair':mode==='delete'?'not-allowed':'default';}});
-
-    canvas.addEventListener('mousedown',function(e){
-      var pos=getPos(e);
-
-      // Middle mouse button or space+drag = pan
+      // Pan: middle mouse or space
       if(e.button===1||spaceDown){
-        panning=true;
-        panStartX=e.clientX;
-        panStartY=e.clientY;
-        scrollStartX=canvasWrap.scrollLeft;
-        scrollStartY=canvasWrap.scrollTop;
-        canvas.style.cursor='grabbing';
-        e.preventDefault();
+        isPanning=true;
+        panLastX=e.clientX;panLastY=e.clientY;
+        viewport.style.cursor='grabbing';
         return;
       }
+      if(e.button!==0) return;
 
       if(mode==='select'){
-        // Check resize handles first
-        var handle=getHandleAt(pos.x,pos.y);
-        if(handle){resizing=handle;return;}
-        var node=getNodeAt(pos.x,pos.y);
+        if(getResizeHandleAt(cp.x,cp.y)){
+          isResizing=true;resizeNode=selectedNode;return;
+        }
+        var node=getNodeAt(cp.x,cp.y);
         if(node){
           selectedNode=node;
-          dragging=node;
-          dragOffX=pos.x-node.x;
-          dragOffY=pos.y-node.y;
+          isDragging=true;
+          dragOffX=cp.x-node.x;dragOffY=cp.y-node.y;
+          viewport.style.cursor='grabbing';
         } else {
           selectedNode=null;
+          // Pan with left click on empty area
+          isPanning=true;
+          panLastX=e.clientX;panLastY=e.clientY;
+          viewport.style.cursor='grabbing';
         }
         draw();
 
       } else if(mode==='connect'){
-        var node=getNodeAt(pos.x,pos.y);
+        var node=getNodeAt(cp.x,cp.y);
         if(node){
           if(!connectFrom){connectFrom=node.id;}
           else if(connectFrom===node.id){connectFrom=null;}
           else{
-            // Avoid duplicate links
             var exists=links.find(function(lk){
               return (lk.from===connectFrom&&lk.to===node.id)||(lk.from===node.id&&lk.to===connectFrom);
             });
@@ -1545,64 +1581,81 @@ function renderTopology(el){
         }
 
       } else if(mode==='delete'){
-        var node=getNodeAt(pos.x,pos.y);
+        var node=getNodeAt(cp.x,cp.y);
         if(node){
           nodes=nodes.filter(function(n){return n.id!==node.id;});
           links=links.filter(function(lk){return lk.from!==node.id&&lk.to!==node.id;});
           if(selectedNode&&selectedNode.id===node.id) selectedNode=null;
         } else {
-          var lk=getLinkAt(pos.x,pos.y);
+          var lk=getLinkAt(cp.x,cp.y);
           if(lk) links=links.filter(function(l){return l!==lk;});
         }
         draw();
       }
     });
 
-    canvas.addEventListener('mousemove',function(e){
-      var pos=getPos(e);
-
-      // Pan scroll
-      if(panning){
-        canvasWrap.scrollLeft=scrollStartX-(e.clientX-panStartX);
-        canvasWrap.scrollTop=scrollStartY-(e.clientY-panStartY);
-        return;
+    viewport.addEventListener('mousemove',function(e){
+      if(isPanning){
+        viewX+=(e.clientX-panLastX);
+        viewY+=(e.clientY-panLastY);
+        panLastX=e.clientX;panLastY=e.clientY;
+        clampView();applyTransform();return;
       }
-
-      if(resizing){
-        var n=resizing.node;
-        var cx=n.x,cy=n.y;
-        var dist=Math.sqrt((pos.x-cx)*(pos.x-cx)+(pos.y-cy)*(pos.y-cy));
-        n.r=Math.max(18,Math.min(80,Math.round(dist-10)));
-        draw();
-        return;
+      var cp=screenToCanvas(e.clientX,e.clientY);
+      if(isResizing&&resizeNode){
+        var dist=Math.sqrt((cp.x-resizeNode.x)*(cp.x-resizeNode.x)+(cp.y-resizeNode.y)*(cp.y-resizeNode.y));
+        resizeNode.r=Math.max(18,Math.min(100,Math.round(dist-14)));
+        draw();return;
       }
-
-      if(dragging&&mode==='select'){
-        dragging.x=Math.max(dragging.r,Math.min(CANVAS_W-dragging.r,pos.x-dragOffX));
-        dragging.y=Math.max(dragging.r,Math.min(CANVAS_H-dragging.r-30,pos.y-dragOffY));
-        draw();
-        return;
+      if(isDragging&&selectedNode){
+        selectedNode.x=cp.x-dragOffX;
+        selectedNode.y=cp.y-dragOffY;
+        draw();return;
       }
-
-      // Cursor feedback
+      // Cursor hint
       if(mode==='select'){
-        var h=getHandleAt(pos.x,pos.y);
-        canvas.style.cursor=h?'nesw-resize':getNodeAt(pos.x,pos.y)?'grab':'default';
+        if(getResizeHandleAt(cp.x,cp.y)) viewport.style.cursor='nesw-resize';
+        else if(getNodeAt(cp.x,cp.y)) viewport.style.cursor='grab';
+        else viewport.style.cursor='default';
       }
     });
 
-    canvas.addEventListener('mouseup',function(e){
-      dragging=null;resizing=null;
-      if(panning){
-        panning=false;
-        canvas.style.cursor=spaceDown?'grab':mode==='connect'?'crosshair':mode==='delete'?'not-allowed':'default';
-      }
+    viewport.addEventListener('mouseup',function(){
+      isDragging=false;isResizing=false;resizeNode=null;
+      if(isPanning){isPanning=false;viewport.style.cursor=spaceDown?'grab':mode==='connect'?'crosshair':mode==='delete'?'not-allowed':'default';}
     });
-    canvas.addEventListener('mouseleave',function(){dragging=null;resizing=null;panning=false;});
+    viewport.addEventListener('mouseleave',function(){
+      isDragging=false;isResizing=false;isPanning=false;resizeNode=null;
+    });
 
-    canvas.addEventListener('dblclick',function(e){
-      var pos=getPos(e);
-      var node=getNodeAt(pos.x,pos.y);
+    // Ctrl+wheel zoom
+    viewport.addEventListener('wheel',function(e){
+      e.preventDefault();
+      var vr=viewport.getBoundingClientRect();
+      var cx=e.clientX-vr.left, cy=e.clientY-vr.top;
+      if(e.ctrlKey||e.metaKey){
+        zoomAt(e.deltaY<0?1.12:0.9,cx,cy);
+      } else {
+        // Normal scroll = pan
+        viewX-=e.deltaX;
+        viewY-=e.deltaY;
+        clampView();applyTransform();
+      }
+    },{passive:false});
+
+    // Scroll wheel on selected node = resize it
+    canvas.addEventListener('wheel',function(e){
+      if(selectedNode&&mode==='select'&&!e.ctrlKey&&!e.metaKey){
+        e.preventDefault();
+        selectedNode.r=Math.max(18,Math.min(100,(selectedNode.r||30)+(e.deltaY<0?2:-2)));
+        draw();
+      }
+    },{passive:false});
+
+    // Double-click rename/IP
+    viewport.addEventListener('dblclick',function(e){
+      var cp=screenToCanvas(e.clientX,e.clientY);
+      var node=getNodeAt(cp.x,cp.y);
       if(node){
         var newLabel=prompt('Device name:',node.label);
         if(newLabel!==null&&newLabel.trim()) node.label=newLabel.trim();
@@ -1612,46 +1665,32 @@ function renderTopology(el){
       }
     });
 
-    // Mouse wheel to resize selected node
-    var canvasScale=1;
-    canvas.addEventListener('wheel',function(e){
-      // Ctrl+wheel = zoom canvas (scale)
-      if(e.ctrlKey||e.metaKey){
-        e.preventDefault();
-        var delta=e.deltaY>0?-0.1:0.1;
-        canvasScale=Math.max(0.3,Math.min(3,canvasScale+delta));
-        canvas.style.transform='scale('+canvasScale+')';
-        canvas.style.transformOrigin='0 0';
-        var _zp=document.querySelector('[title="Reset zoom"]');if(_zp&&_zp.previousSibling)_zp.previousSibling.textContent=Math.round(canvasScale*100)+'%';
-        return;
-      }
-      // Normal wheel = resize selected node
-      if(!selectedNode||mode!=='select') return;
-      e.preventDefault();
-      var nodeDelta=e.deltaY>0?-2:2;
-      selectedNode.r=Math.max(18,Math.min(80,(selectedNode.r||30)+nodeDelta));
-      draw();
-    },{passive:false});
-
-    function exportPNG(){
+    // Export
+    document.getElementById('topo-export').onclick=function(){
       var link=document.createElement('a');
       link.download='netwolf-topology.png';
       link.href=canvas.toDataURL('image/png');
       link.click();
-    }
+    };
 
-    function loadExample(){
+    // Clear
+    document.getElementById('topo-clear').onclick=function(){
+      if(confirm('Clear all?')){nodes=[];links=[];selectedNode=null;connectFrom=null;draw();}
+    };
+
+    // Example
+    document.getElementById('topo-example').onclick=function(){
       nodes=[];links=[];selectedNode=null;
-      var W=CANVAS_W,H=CANVAS_H;
-      var isp={id:1,x:W/2,y:60,icon:'☁️',label:'ISP/Internet',color:'#8b949e',ip:'203.0.113.1',r:30};
-      var fgtA={id:2,x:W/2-220,y:200,icon:'🛡️',label:'FGT-SITE-A',color:'#1D9E75',ip:'10.0.0.1',r:34};
-      var fgtB={id:3,x:W/2+220,y:200,icon:'🛡️',label:'FGT-SITE-B',color:'#1D9E75',ip:'10.0.0.2',r:34};
-      var swA={id:4,x:W/2-220,y:360,icon:'🔀',label:'SW-SITE-A',color:'#58a6ff',ip:'192.168.1.254',r:28};
-      var swB={id:5,x:W/2+220,y:360,icon:'🔀',label:'SW-SITE-B',color:'#58a6ff',ip:'192.168.2.254',r:28};
-      var pcA={id:6,x:W/2-320,y:500,icon:'💻',label:'PC-A',color:'#3fb950',ip:'192.168.1.100',r:24};
-      var srvA={id:7,x:W/2-120,y:500,icon:'🖥️',label:'Server-A',color:'#7c3aed',ip:'192.168.1.200',r:28};
-      var pcB={id:8,x:W/2+120,y:500,icon:'💻',label:'PC-B',color:'#3fb950',ip:'192.168.2.100',r:24};
-      var ap={id:9,x:W/2+320,y:500,icon:'📡',label:'AP-B',color:'#58a6ff',ip:'192.168.2.50',r:24};
+      var CX=CANVAS_W/2, CY=CANVAS_H/2;
+      var isp={id:1,x:CX,y:CY-400,icon:'☁️',label:'ISP/Internet',color:'#8b949e',ip:'203.0.113.1',r:30};
+      var fgtA={id:2,x:CX-280,y:CY-200,icon:'🛡️',label:'FGT-SITE-A',color:'#1D9E75',ip:'10.0.0.1',r:34};
+      var fgtB={id:3,x:CX+280,y:CY-200,icon:'🛡️',label:'FGT-SITE-B',color:'#1D9E75',ip:'10.0.0.2',r:34};
+      var swA={id:4,x:CX-280,y:CY,icon:'🔀',label:'SW-SITE-A',color:'#58a6ff',ip:'192.168.1.254',r:28};
+      var swB={id:5,x:CX+280,y:CY,icon:'🔀',label:'SW-SITE-B',color:'#58a6ff',ip:'192.168.2.254',r:28};
+      var pcA={id:6,x:CX-400,y:CY+200,icon:'💻',label:'PC-A',color:'#3fb950',ip:'192.168.1.100',r:24};
+      var srvA={id:7,x:CX-160,y:CY+200,icon:'🖥️',label:'Server-A',color:'#7c3aed',ip:'192.168.1.200',r:28};
+      var pcB={id:8,x:CX+160,y:CY+200,icon:'💻',label:'PC-B',color:'#3fb950',ip:'192.168.2.100',r:24};
+      var ap={id:9,x:CX+400,y:CY+200,icon:'📡',label:'AP-B',color:'#58a6ff',ip:'192.168.2.50',r:24};
       nodes=[isp,fgtA,fgtB,swA,swB,pcA,srvA,pcB,ap];
       links=[
         {from:1,to:2,id:'WAN',label:'WAN',color:'#d29922'},
@@ -1664,13 +1703,18 @@ function renderTopology(el){
         {from:5,to:8,id:'LAN',label:'VLAN10',color:'#3fb950'},
         {from:5,to:9,id:'LAN',label:'VLAN20',color:'#3fb950'},
       ];
+      document.getElementById('topo-hint').style.display='none';
       draw();
-    }
+      setTimeout(fitAll,50);
+    };
 
+    applyTransform();
     draw();
   }
 
-  // ═══════════ DRAW.IO ═══════════
+  // ═══════════════════════════════════
+  // DRAW.IO
+  // ═══════════════════════════════════
   function buildDrawio(){
     if(drawioPanel.innerHTML!=='') return;
     drawioPanel.innerHTML='';
@@ -1678,21 +1722,9 @@ function renderTopology(el){
     info.style.cssText='padding:12px 16px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:10px;margin-bottom:12px;display:flex;align-items:center;gap:12px';
     info.innerHTML='<span style="font-size:24px">📐</span>'
       +'<div><div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px">draw.io — Professional Network Diagram Tool</div>'
-      +'<div style="font-size:11px;color:var(--t2);line-height:1.6">Full drag &amp; drop with Cisco, Fortinet, AWS, Azure icons. Export to PNG, SVG, XML. No account needed.</div></div>'
-      +'<a href="https://app.diagrams.net/?splash=0&ui=dark" target="_blank" rel="noopener noreferrer" class="sbtn" style="white-space:nowrap;font-size:12px;padding:8px 16px;flex-shrink:0">🚀 Open Full Screen</a>';
+      +'<div style="font-size:11px;color:var(--t2);line-height:1.6">Full drag &amp; drop with Cisco, Fortinet, AWS, Azure icons. Export PNG/SVG/XML. No account needed.</div></div>'
+      +'<a href="https://app.diagrams.net/?splash=0&ui=dark" target="_blank" rel="noopener noreferrer" class="sbtn" style="white-space:nowrap;font-size:12px;padding:8px 16px;flex-shrink:0">🚀 Full Screen</a>';
     drawioPanel.appendChild(info);
-    var tips=document.createElement('div');
-    tips.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:12px';
-    [['🔍 Search Icons','Type "FortiGate", "Cisco", "firewall" to find network icons'],
-     ['📁 Network Shapes','Left panel → Search shapes → type "network" for full library'],
-     ['💾 Auto-Save','Saves to browser automatically or export XML to file'],
-     ['🎨 Dark Theme','Pre-configured in dark mode matching NetWolf']
-    ].forEach(function(t){
-      tips.innerHTML+='<div style="padding:8px 12px;background:var(--b2);border:1px solid var(--br);border-radius:6px;font-size:11px">'
-        +'<div style="color:var(--t);font-weight:600;margin-bottom:3px">'+t[0]+'</div>'
-        +'<div style="color:var(--t3);line-height:1.5">'+t[1]+'</div></div>';
-    });
-    drawioPanel.appendChild(tips);
     var iframeWrap=document.createElement('div');
     iframeWrap.style.cssText='border-radius:10px;overflow:hidden;border:1px solid var(--br)';
     var iframe=document.createElement('iframe');
@@ -1703,7 +1735,7 @@ function renderTopology(el){
     drawioPanel.appendChild(iframeWrap);
     var note=document.createElement('div');
     note.style.cssText='margin-top:8px;font-size:11px;color:var(--t3);text-align:center';
-    note.innerHTML='draw.io by <a href="https://diagrams.net" target="_blank" rel="noopener noreferrer" style="color:var(--a)">diagrams.net</a> — free, open source, no account required';
+    note.innerHTML='draw.io by <a href="https://diagrams.net" target="_blank" rel="noopener noreferrer" style="color:var(--a)">diagrams.net</a> — free, open source';
     drawioPanel.appendChild(note);
   }
 
