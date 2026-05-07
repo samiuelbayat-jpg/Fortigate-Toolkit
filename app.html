@@ -480,6 +480,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('mostused')" id="tab-mostused" title="Most Used Tools">
               <span class="tab-icon">⚡</span><span class="tab-lbl">Most Used</span>
             </button>
+            <button class="tab" onclick="stab('psmaker')" id="tab-psmaker" title="Smart PowerShell Script Maker">
+              <span class="tab-icon">🪟</span><span class="tab-lbl">PS Maker</span>
+            </button>
           </div>
         </div>
         <div class="tab-divider"></div>
@@ -667,6 +670,156 @@ fbAuth.onAuthStateChanged(function(user){
 });
 
 /* ══ LOGIN ══ */
+function renderPSMaker(el){
+  el.innerHTML="";
+  var h=document.createElement("div");
+  h.className="sh";
+  h.innerHTML='<span class="stitle">&#x1FA9F; Smart PowerShell Script Maker</span><span class="sev info">AI-powered &middot; Colorized &middot; Read/Write annotated</span>';
+  el.appendChild(h);
+  var intro=document.createElement("p");
+  intro.style.cssText="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7";
+  intro.innerHTML='Describe your Windows issue or task. The AI generates a PowerShell script with <span style="color:#3fb950;font-weight:700">&#x25BA; READ</span> and <span style="color:#f85149;font-weight:700">&#x270F; WRITE</span> annotations on every command.';
+  el.appendChild(intro);
+  var isMobile=window.innerWidth<=768;
+  var layout=document.createElement("div");
+  layout.style.cssText=isMobile?"display:grid;grid-template-columns:1fr;gap:16px":"display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start";
+  el.appendChild(layout);
+  var LP=document.createElement("div");
+  layout.appendChild(LP);
+
+  // Key card
+  var kc=document.createElement("div");
+  kc.className="cblock";kc.style.marginBottom="14px";
+  kc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F511; Groq API Key</div></div><div class="cbody"><div style="display:flex;gap:8px"><input type="password" id="ps-key" placeholder="Enter Groq API key..." style="flex:1;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><button class="sbtn" onclick="psSaveKey()" style="white-space:nowrap">Save</button><button class="sbtn" style="background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2);white-space:nowrap" onclick="psClearKey()">Clear</button></div><div id="ps-key-st" style="font-size:11px;color:var(--t3);margin-top:6px"></div></div>';
+  LP.appendChild(kc);
+  var sk=localStorage.getItem("groq_key");
+  if(sk){document.getElementById("ps-key").value=sk;document.getElementById("ps-key-st").textContent="Key loaded";document.getElementById("ps-key-st").style.color="var(--g)";}
+
+  // Issue card
+  var ic=document.createElement("div");
+  ic.className="cblock";ic.style.marginBottom="14px";
+  ic.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F4DD; Describe Your Windows Issue or Task</div></div><div class="cbody"><textarea id="ps-issue" rows="5" placeholder="e.g. My PC is slow, check CPU, memory, running services..." style="width:100%;padding:10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px;resize:vertical;font-family:inherit;line-height:1.6;margin-bottom:10px"></textarea><div style="font-size:11px;color:var(--t3);margin-bottom:6px">Quick templates:</div><div id="ps-tpl" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Script style</label><select id="ps-style" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="diagnostic">Diagnostic (read-only, safe)</option><option value="fix">Fix &amp; Repair (makes changes)</option><option value="report">Export Report to file</option><option value="both">Diagnose then Fix</option></select></div><div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Windows version</label><select id="ps-winver" style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option>Windows 10/11</option><option>Windows Server 2019/2022</option><option>Windows Server 2016</option><option>Any Windows</option></select></div></div><button onclick="psGenerate()" id="ps-gen-btn" class="sbtn" style="width:100%;padding:12px;font-size:13px;font-weight:700;background:linear-gradient(90deg,var(--a),var(--ad))">&#x1F680; Generate PowerShell Script</button><div id="ps-loading" style="display:none;text-align:center;padding:16px;color:var(--t2);font-size:12px">&#x23F3; Generating script with AI...</div></div>';
+  LP.appendChild(ic);
+
+  // Quick templates
+  var tpls=[
+    ["&#x1F422; Slow PC","Check CPU, memory, disk usage, top processes and running services"],
+    ["&#x1F310; Network Issue","Check network adapters, IP config, DNS, ping gateway and firewall rules"],
+    ["&#x1F4CB; Event Log","Get all critical and error events from last 24 hours from system and application log"],
+    ["&#x1F4BE; Disk Space","Find large files over 500MB, check disk usage per drive and temp files"],
+    ["&#x1F510; Users","List local users, groups, admin accounts and last login times"],
+    ["&#x1F504; Windows Update","Check pending updates, update history and Windows Update service status"],
+    ["&#x1F6E1; Security","Check firewall status, antivirus, open ports and suspicious scheduled tasks"],
+    ["&#x1F680; Startup","List all startup programs and scheduled tasks"],
+  ];
+  var tplDiv=document.getElementById("ps-tpl");
+  tpls.forEach(function(t){
+    var b=document.createElement("button");
+    b.className="sbtn";
+    b.style.cssText="font-size:10px;padding:3px 10px;background:var(--b3);border:1px solid var(--br);color:var(--t2)";
+    b.innerHTML=t[0];
+    b.onclick=(function(txt){return function(){document.getElementById("ps-issue").value=txt;};})(t[1]);
+    tplDiv.appendChild(b);
+  });
+
+  // Legend card
+  var lc=document.createElement("div");
+  lc.className="cblock";
+  lc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F3A8; Color Legend</div></div><div class="cbody"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px"><div style="padding:8px 12px;background:#0a0e14;border-radius:6px;border-left:3px solid #3fb950"><span style="color:#3fb950;font-weight:700;font-family:var(--mono)">&#x25BA; READ</span><div style="color:#8b949e;font-size:11px;margin-top:3px">Get-*, Select-*, Test-* — Safe, no changes</div></div><div style="padding:8px 12px;background:#0a0e14;border-radius:6px;border-left:3px solid #f85149"><span style="color:#f85149;font-weight:700;font-family:var(--mono)">&#x270F; WRITE</span><div style="color:#8b949e;font-size:11px;margin-top:3px">Set-*, Stop-*, Remove-* — Modifies system</div></div><div style="padding:8px 12px;background:#0a0e14;border-radius:6px;border-left:3px solid #58a6ff"><span style="color:#58a6ff;font-weight:700;font-family:var(--mono)"># INFO</span><div style="color:#8b949e;font-size:11px;margin-top:3px">Comments and section headers</div></div><div style="padding:8px 12px;background:#0a0e14;border-radius:6px;border-left:3px solid #d29922"><span style="color:#d29922;font-weight:700;font-family:var(--mono)">$ VAR</span><div style="color:#8b949e;font-size:11px;margin-top:3px">Variables and parameters</div></div></div></div>';
+  LP.appendChild(lc);
+
+  // Right panel - output
+  var RP=document.createElement("div");
+  layout.appendChild(RP);
+  var oc=document.createElement("div");
+  oc.className="cblock";
+  oc.style.cssText="position:sticky;top:16px";
+  oc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F4BB; Generated PowerShell Script</div><div style="display:flex;gap:6px"><button onclick="psCopyScript()" class="sbtn" style="font-size:10px;padding:3px 10px;background:var(--b3);border:1px solid var(--br);color:var(--t2)">&#x1F4CB; Copy</button><button onclick="psClearScript()" class="sbtn" style="font-size:10px;padding:3px 10px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">&#x1F5D1; Clear</button></div></div><div id="ps-out" style="min-height:400px;background:#0a0e14;font-family:var(--mono);font-size:12px;line-height:1.8;padding:16px;overflow-y:auto;max-height:70vh;border-radius:0 0 10px 10px"><div style="color:#484f58;font-style:italic">Script will appear here after generation...</div></div><div id="ps-plain" style="display:none"></div>';
+  RP.appendChild(oc);
+
+  // ── Functions ──
+  window.psSaveKey=function(){
+    var k=document.getElementById("ps-key").value.trim();
+    if(!k){showToast("Enter a key first");return;}
+    localStorage.setItem("groq_key",k);
+    document.getElementById("ps-key-st").textContent="Key saved";
+    document.getElementById("ps-key-st").style.color="var(--g)";
+    showToast("Key saved!");
+  };
+  window.psClearKey=function(){
+    localStorage.removeItem("groq_key");
+    document.getElementById("ps-key").value="";
+    document.getElementById("ps-key-st").textContent="Key cleared";
+  };
+  function escPS(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function colorizePS(script){
+    return script.split("\n").map(function(line){
+      var t=line.trim();
+      if(!t) return '<div style="height:6px"></div>';
+      if(t.charAt(0)==="#"){
+        var isSec=/^#\s*[=\-]{3,}/.test(t)||/^#\s*[A-Z][A-Z\s]{3,}$/.test(t);
+        return '<div style="color:#58a6ff;padding:1px 0'+(isSec?";margin-top:10px;font-weight:700":"")+'">'+escPS(line)+(isSec?'  <span style="background:#58a6ff22;color:#58a6ff;font-size:9px;padding:1px 6px;border-radius:3px">INFO</span>':"")+'</div>';
+      }
+      var writeRx=/\b(Set-|Stop-|Remove-|Delete-|Disable-|Enable-Service|Start-Service|New-|Add-|Clear-|Reset-|Restart-|Install-|Uninstall-|Move-|Rename-|Copy-Item|Out-File|Export-|Register-|Unregister-|Grant-|Update-|Invoke-Expression)\b/i;
+      var readRx=/\b(Get-|Select-|Where-|Format-|Measure-|Sort-|Group-|Compare-|Test-|Resolve-|ConvertTo-|ConvertFrom-|Find-|Search-|Out-GridView)\b/i;
+      if(writeRx.test(t)){
+        return '<div style="background:rgba(248,81,73,.07);border-left:2px solid #f85149;padding:2px 0 2px 8px;margin-left:-8px"><span style="color:#f85149">'+escPS(line)+'</span>  <span style="background:#f8514922;color:#f85149;font-size:9px;padding:1px 6px;border-radius:3px">WRITE</span></div>';
+      }
+      if(readRx.test(t)){
+        return '<div style="background:rgba(63,185,80,.05);border-left:2px solid #3fb950;padding:2px 0 2px 8px;margin-left:-8px"><span style="color:#3fb950">'+escPS(line)+'</span>  <span style="background:#3fb95022;color:#3fb950;font-size:9px;padding:1px 6px;border-radius:3px">READ</span></div>';
+      }
+      if(t.charAt(0)==="$"){
+        return '<div style="color:#d29922;padding:1px 0">'+escPS(line)+'  <span style="background:#d2992222;color:#d29922;font-size:9px;padding:1px 6px;border-radius:3px">VAR</span></div>';
+      }
+      return '<div style="color:#c9d1d9;padding:1px 0">'+escPS(line)+'</div>';
+    }).join("");
+  }
+  window.psGenerate=async function(){
+    var key=localStorage.getItem("groq_key")||document.getElementById("ps-key").value.trim();
+    if(!key){showToast("Enter your Groq API key first");return;}
+    var issue=document.getElementById("ps-issue").value.trim();
+    if(!issue){showToast("Describe your Windows issue first");return;}
+    var styleEl=document.getElementById("ps-style");
+    var style=styleEl?styleEl.value:"diagnostic";
+    var winver=document.getElementById("ps-winver").value;
+    var styleMap={diagnostic:"Generate ONLY read-only diagnostic commands. No system modifications.",fix:"Diagnose AND fix with both read and write commands.",report:"Gather info and export to desktop file.",both:"First a diagnostic section, then a fix/remediation section."};
+    document.getElementById("ps-gen-btn").style.display="none";
+    document.getElementById("ps-loading").style.display="block";
+    document.getElementById("ps-out").innerHTML='<div style="color:#484f58;font-style:italic">Generating...</div>';
+    try{
+      var resp=await fetch("https://api.groq.com/openai/v1/chat/completions",{
+        method:"POST",
+        headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json"},
+        body:JSON.stringify({
+          model:"llama-3.3-70b-versatile",
+          max_tokens:2000,
+          messages:[{role:"user",content:"You are a Windows PowerShell expert. Generate a PowerShell script for:\n\nTASK: "+issue+"\nWINDOWS: "+winver+"\nTYPE: "+styleMap[style]+"\n\nRequirements:\n- Well commented with # === SECTION HEADERS ===\n- Add a comment before EVERY command explaining what it does\n- Group related commands logically\n- Error handling where needed\n- Return ONLY the raw PowerShell script. No markdown code fences, no explanation before or after."}]
+        })
+      });
+      if(!resp.ok) throw new Error("API error: "+resp.status);
+      var data=await resp.json();
+      if(data.error) throw new Error(data.error.message);
+      var script=data.choices[0].message.content.replace(/```powershell\n?/gi,"").replace(/```\n?/g,"").trim();
+      document.getElementById("ps-plain").textContent=script;
+      document.getElementById("ps-out").innerHTML=colorizePS(script);
+    }catch(err){
+      document.getElementById("ps-out").innerHTML='<div style="color:#f85149">&#x274C; Error: '+err.message+'</div><div style="color:#8b949e;font-size:11px;margin-top:8px">Check your Groq API key and try again.</div>';
+    }
+    document.getElementById("ps-gen-btn").style.display="block";
+    document.getElementById("ps-loading").style.display="none";
+  };
+  window.psCopyScript=function(){
+    var plain=document.getElementById("ps-plain").textContent;
+    if(!plain){showToast("Generate a script first");return;}
+    navigator.clipboard.writeText(plain).then(function(){showToast("Script copied!");});
+  };
+  window.psClearScript=function(){
+    document.getElementById("ps-out").innerHTML='<div style="color:#484f58;font-style:italic">Script will appear here after generation...</div>';
+    document.getElementById("ps-plain").textContent="";
+    document.getElementById("ps-issue").value="";
+  };
+}
+
 window.doLogin=function doLogin(){
   const email=document.getElementById('loginEmail').value.trim();
   const pass=document.getElementById('loginPassword').value;
@@ -1155,7 +1308,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
