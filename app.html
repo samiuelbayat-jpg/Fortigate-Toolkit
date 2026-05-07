@@ -1046,52 +1046,40 @@ function renderPSMaker(el){
 function renderTopology(el){
   el.innerHTML='';
 
-  // ── CSS ──
   var css=document.createElement('style');
   css.textContent=
-    '#topo-canvas{cursor:crosshair;display:block;background:#0d1117;border-radius:10px;border:1px solid #30363d}'
-    +'#topo-canvas.drag-mode{cursor:grab}'
-    +'#topo-canvas.drag-mode.dragging{cursor:grabbing}'
-    +'.topo-tool-btn{background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:11px;color:var(--t2);display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s;min-width:64px}'
-    +'.topo-tool-btn:hover,.topo-tool-btn.active{background:rgba(29,158,117,.1);border-color:var(--a);color:var(--a)}'
-    +'.topo-icon-btn{background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:8px;cursor:pointer;font-size:22px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;min-width:72px;text-align:center}'
+    '.topo-icon-btn{background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:8px;cursor:pointer;font-size:22px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s;min-width:68px;text-align:center}'
     +'.topo-icon-btn:hover{background:rgba(29,158,117,.1);border-color:var(--a);transform:scale(1.05)}'
     +'.topo-icon-btn span{font-size:10px;color:var(--t3)}'
-    +'.topo-sep{width:1px;background:var(--br);align-self:stretch;margin:0 4px}'
+    +'.topo-mode-btn{font-size:11px;padding:6px 14px;border-radius:6px;border:1px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;font-weight:600;transition:all .15s}'
+    +'.topo-mode-btn.active{background:var(--a);border-color:var(--a);color:#000}'
     +'.topo-conn-btn{font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--br);background:var(--b3);color:var(--t2);cursor:pointer;transition:all .15s}'
     +'.topo-conn-btn.active,.topo-conn-btn:hover{background:rgba(29,158,117,.1);border-color:var(--a);color:var(--a)}'
-    +'.topo-mode-btn{font-size:11px;padding:6px 14px;border-radius:6px;border:1px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;font-weight:600;transition:all .15s}'
-    +'.topo-mode-btn.active{background:var(--a);border-color:var(--a);color:#000}';
+    +'.topo-sep{width:1px;background:var(--br);align-self:stretch;margin:0 4px}';
   document.head.appendChild(css);
 
-  // ── Header ──
   var hdr=document.createElement('div');
   hdr.className='sh';
-  hdr.innerHTML='<span class="stitle">🗺️ Network Topology Designer</span><span class="sev info">Drag &amp; Drop Builder &middot; Draw.io Integration</span>';
+  hdr.innerHTML='<span class="stitle">🗺️ Network Topology Designer</span><span class="sev info">Drag &amp; Drop Builder &middot; Resize &middot; draw.io Integration</span>';
   el.appendChild(hdr);
 
-  // ── Mode switcher ──
+  // Mode tabs
   var modeBar=document.createElement('div');
   modeBar.style.cssText='display:flex;gap:10px;margin-bottom:16px;align-items:center';
-  modeBar.innerHTML=
-    '<span style="font-size:12px;color:var(--t2);font-weight:600">Choose your tool:</span>'
+  modeBar.innerHTML='<span style="font-size:12px;color:var(--t2);font-weight:600">Choose your tool:</span>'
     +'<button class="topo-mode-btn active" id="topo-mode-canvas">🎨 Canvas Builder</button>'
-    +'<button class="topo-mode-btn" id="topo-mode-drawio">📐 draw.io Designer</button>'
-    +'<span style="font-size:11px;color:var(--t3);margin-left:8px">Switch anytime — your canvas is preserved</span>';
+    +'<button class="topo-mode-btn" id="topo-mode-drawio">📐 draw.io Designer</button>';
   el.appendChild(modeBar);
 
-  // ── Canvas panel ──
   var canvasPanel=document.createElement('div');
   canvasPanel.id='topo-canvas-panel';
   el.appendChild(canvasPanel);
 
-  // ── Draw.io panel (hidden) ──
   var drawioPanel=document.createElement('div');
   drawioPanel.id='topo-drawio-panel';
   drawioPanel.style.display='none';
   el.appendChild(drawioPanel);
 
-  // ── Mode switch logic ──
   document.getElementById('topo-mode-canvas').onclick=function(){
     this.classList.add('active');
     document.getElementById('topo-mode-drawio').classList.remove('active');
@@ -1106,9 +1094,7 @@ function renderTopology(el){
     buildDrawio();
   };
 
-  // ═══════════════════════════════════════════
-  // OPTION A — CANVAS BUILDER
-  // ═══════════════════════════════════════════
+  // ═══════════ CANVAS BUILDER ═══════════
   function buildCanvas(){
     canvasPanel.innerHTML='';
 
@@ -1116,23 +1102,21 @@ function renderTopology(el){
     var palette=document.createElement('div');
     palette.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:10px;align-items:center';
     palette.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700;margin-right:4px;white-space:nowrap">ADD DEVICE:</span>';
-
     var devices=[
-      {icon:'🛡️',label:'FortiGate',type:'fortigate',color:'#1D9E75'},
-      {icon:'🔥',label:'Firewall',type:'firewall',color:'#f85149'},
-      {icon:'🔀',label:'Switch',type:'switch',color:'#58a6ff'},
-      {icon:'🌐',label:'Router',type:'router',color:'#d29922'},
-      {icon:'☁️',label:'Cloud/ISP',type:'cloud',color:'#8b949e'},
-      {icon:'💻',label:'PC/Client',type:'pc',color:'#3fb950'},
-      {icon:'🖥️',label:'Server',type:'server',color:'#7c3aed'},
-      {icon:'📡',label:'Access Point',type:'ap',color:'#58a6ff'},
-      {icon:'🔒',label:'VPN GW',type:'vpn',color:'#1D9E75'},
-      {icon:'📦',label:'Device',type:'generic',color:'#8b949e'},
+      {icon:'🛡️',label:'FortiGate',color:'#1D9E75'},
+      {icon:'🔥',label:'Firewall',color:'#f85149'},
+      {icon:'🔀',label:'Switch',color:'#58a6ff'},
+      {icon:'🌐',label:'Router',color:'#d29922'},
+      {icon:'☁️',label:'Cloud/ISP',color:'#8b949e'},
+      {icon:'💻',label:'PC/Client',color:'#3fb950'},
+      {icon:'🖥️',label:'Server',color:'#7c3aed'},
+      {icon:'📡',label:'Access Point',color:'#58a6ff'},
+      {icon:'🔒',label:'VPN GW',color:'#1D9E75'},
+      {icon:'📦',label:'Device',color:'#8b949e'},
     ];
     devices.forEach(function(d){
       var b=document.createElement('button');
       b.className='topo-icon-btn';
-      b.title='Add '+d.label;
       b.innerHTML=d.icon+'<span>'+d.label+'</span>';
       b.onclick=(function(dev){return function(){addDevice(dev);};})(d);
       palette.appendChild(b);
@@ -1141,15 +1125,12 @@ function renderTopology(el){
     // Toolbar
     var toolbar=document.createElement('div');
     toolbar.style.cssText='display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center';
-
-    // Mode buttons
-    toolbar.innerHTML=
-      '<span style="font-size:11px;color:var(--t3);font-weight:700">MODE:</span>'
+    toolbar.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700">MODE:</span>'
       +'<button class="topo-mode-btn active" id="mode-select">↖️ Select</button>'
       +'<button class="topo-mode-btn" id="mode-connect">🔗 Connect</button>'
       +'<button class="topo-mode-btn" id="mode-delete">🗑️ Delete</button>'
       +'<div class="topo-sep"></div>'
-      +'<span style="font-size:11px;color:var(--t3);font-weight:700">LINK TYPE:</span>';
+      +'<span style="font-size:11px;color:var(--t3);font-weight:700">LINK:</span>';
 
     var linkTypes=[
       {id:'LAN',label:'LAN',color:'#3fb950'},
@@ -1172,45 +1153,75 @@ function renderTopology(el){
       toolbar.appendChild(b);
     });
 
-    // Action buttons
-    var actions=document.createElement('div');
-    actions.style.cssText='display:flex;gap:8px;margin-left:auto;flex-wrap:wrap';
-    actions.innerHTML=
-      '<button class="sbtn" id="topo-clear" style="font-size:11px;padding:5px 12px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">🗑️ Clear All</button>'
+    var sep2=document.createElement('div');sep2.className='topo-sep';toolbar.appendChild(sep2);
+
+    // Canvas size controls
+    var sizeLabel=document.createElement('span');
+    sizeLabel.style.cssText='font-size:11px;color:var(--t3);font-weight:700';
+    sizeLabel.textContent='CANVAS:';
+    toolbar.appendChild(sizeLabel);
+
+    var sizeSmall=document.createElement('button');
+    sizeSmall.className='topo-mode-btn';
+    sizeSmall.textContent='Small';
+    sizeSmall.onclick=function(){resizeCanvas(800,400);};
+    toolbar.appendChild(sizeSmall);
+
+    var sizeMed=document.createElement('button');
+    sizeMed.className='topo-mode-btn active';
+    sizeMed.textContent='Medium';
+    sizeMed.onclick=function(){resizeCanvas(1200,600);};
+    toolbar.appendChild(sizeMed);
+
+    var sizeLarge=document.createElement('button');
+    sizeLarge.className='topo-mode-btn';
+    sizeLarge.textContent='Large';
+    sizeLarge.onclick=function(){resizeCanvas(1800,900);};
+    toolbar.appendChild(sizeLarge);
+
+    var sizeXL=document.createElement('button');
+    sizeXL.className='topo-mode-btn';
+    sizeXL.textContent='XL';
+    sizeXL.onclick=function(){resizeCanvas(2400,1200);};
+    toolbar.appendChild(sizeXL);
+
+    var sep3=document.createElement('div');sep3.className='topo-sep';toolbar.appendChild(sep3);
+
+    var actionDiv=document.createElement('div');
+    actionDiv.style.cssText='display:flex;gap:8px;flex-wrap:wrap';
+    actionDiv.innerHTML=
+      '<button class="sbtn" id="topo-clear" style="font-size:11px;padding:5px 12px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">🗑️ Clear</button>'
       +'<button class="sbtn" id="topo-export" style="font-size:11px;padding:5px 12px">📥 Export PNG</button>'
-      +'<button class="sbtn" id="topo-example" style="font-size:11px;padding:5px 12px;background:var(--b3);border:1px solid var(--br);color:var(--t2)">⚡ Load Example</button>';
-    toolbar.appendChild(actions);
+      +'<button class="sbtn" id="topo-example" style="font-size:11px;padding:5px 12px;background:var(--b3);border:1px solid var(--br);color:var(--t2)">⚡ Example</button>';
+    toolbar.appendChild(actionDiv);
 
     canvasPanel.appendChild(palette);
     canvasPanel.appendChild(toolbar);
 
-    // Canvas
+    // Canvas wrapper with scroll for large sizes
     var canvasWrap=document.createElement('div');
-    canvasWrap.style.cssText='position:relative;border-radius:10px;overflow:hidden;';
+    canvasWrap.style.cssText='position:relative;border-radius:10px;overflow:auto;border:1px solid #30363d;background:#0d1117;max-height:70vh';
     var canvas=document.createElement('canvas');
     canvas.id='topo-canvas';
-    canvas.width=Math.min(window.innerWidth-80,1200);
-    canvas.height=600;
-    canvas.style.cssText='width:100%;height:600px;display:block;background:#0d1117;border-radius:10px;border:1px solid #30363d';
+    canvas.style.cssText='display:block;background:#0d1117';
     canvasWrap.appendChild(canvas);
 
-    // Hint overlay
-    var hint=document.createElement('div');
-    hint.id='topo-hint';
-    hint.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;';
-    hint.innerHTML='<div style="font-size:40px;opacity:.15">🗺️</div>'
-      +'<div style="font-size:13px;color:rgba(255,255,255,.15);margin-top:8px">Click a device above to add it<br>then use Connect mode to draw links</div>';
-    canvasWrap.appendChild(hint);
+    // Selection handles overlay
+    var overlay=document.createElement('div');
+    overlay.id='topo-overlay';
+    overlay.style.cssText='position:absolute;top:0;left:0;pointer-events:none';
+    canvasWrap.appendChild(overlay);
+
     canvasPanel.appendChild(canvasWrap);
 
     // Instructions
     var inst=document.createElement('div');
     inst.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:12px';
     [
-      ['↖️ Select mode','Click to select, drag to move devices, double-click to rename'],
-      ['🔗 Connect mode','Click first device, then click second to draw a link'],
-      ['🗑️ Delete mode','Click any device or link to remove it'],
-      ['📥 Export PNG','Download your topology as a PNG image'],
+      ['↖️ Select','Click to select · Drag to move · Scroll corners to resize · Double-click to rename/set IP'],
+      ['🔗 Connect','Click device A → click device B to draw a link between them'],
+      ['🗑️ Delete','Click any device or link to remove it'],
+      ['📐 Resize','Use Small/Medium/Large/XL buttons to change canvas size'],
     ].forEach(function(i){
       inst.innerHTML+='<div style="padding:8px 12px;background:var(--b2);border:1px solid var(--br);border-radius:6px;font-size:11px">'
         +'<div style="color:var(--t);font-weight:600;margin-bottom:3px">'+i[0]+'</div>'
@@ -1218,7 +1229,7 @@ function renderTopology(el){
     });
     canvasPanel.appendChild(inst);
 
-    // ── Canvas state ──
+    // ── State ──
     var nodes=[];
     var links=[];
     var mode='select';
@@ -1226,21 +1237,38 @@ function renderTopology(el){
     var connectFrom=null;
     var dragging=null;
     var dragOffX=0,dragOffY=0;
-    var editingNode=null;
+    var selectedNode=null;
+    var resizing=null; // {node, handle}
     var ctx=canvas.getContext('2d');
-    var dpr=window.devicePixelRatio||1;
+    var CANVAS_W=1200, CANVAS_H=600;
+
+    function resizeCanvas(w,h){
+      CANVAS_W=w; CANVAS_H=h;
+      canvas.width=w; canvas.height=h;
+      canvas.style.width=w+'px';
+      canvas.style.minHeight=h+'px';
+      // Update size buttons
+      [sizeSmall,sizeMed,sizeLarge,sizeXL].forEach(function(b){b.classList.remove('active');});
+      if(w===800)sizeSmall.classList.add('active');
+      else if(w===1200)sizeMed.classList.add('active');
+      else if(w===1800)sizeLarge.classList.add('active');
+      else sizeXL.classList.add('active');
+      draw();
+    }
+    resizeCanvas(CANVAS_W,CANVAS_H);
 
     // Mode buttons
     document.getElementById('mode-select').onclick=function(){setMode('select');};
     document.getElementById('mode-connect').onclick=function(){setMode('connect');};
     document.getElementById('mode-delete').onclick=function(){setMode('delete');};
-    document.getElementById('topo-clear').onclick=function(){if(confirm('Clear all?')){nodes=[];links=[];connectFrom=null;draw();}};
+    document.getElementById('topo-clear').onclick=function(){if(confirm('Clear all?')){nodes=[];links=[];selectedNode=null;connectFrom=null;draw();}};
     document.getElementById('topo-export').onclick=exportPNG;
     document.getElementById('topo-example').onclick=loadExample;
 
     function setMode(m){
       mode=m;
       connectFrom=null;
+      selectedNode=null;
       ['select','connect','delete'].forEach(function(x){
         document.getElementById('mode-'+x).classList.toggle('active',x===m);
       });
@@ -1249,24 +1277,24 @@ function renderTopology(el){
     }
 
     function addDevice(dev){
-      document.getElementById('topo-hint').style.display='none';
-      var x=100+Math.random()*(canvas.width-200);
-      var y=100+Math.random()*(canvas.height-200);
-      nodes.push({id:Date.now(),x:x,y:y,icon:dev.icon,label:dev.label,type:dev.type,color:dev.color,ip:''});
+      var x=120+Math.random()*(CANVAS_W-240);
+      var y=100+Math.random()*(CANVAS_H-200);
+      var newNode={id:Date.now(),x:x,y:y,icon:dev.icon,label:dev.label,color:dev.color,ip:'',r:30};
+      nodes.push(newNode);
+      selectedNode=newNode;
       draw();
     }
 
     function draw(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+      canvas.width=CANVAS_W;
+      canvas.height=CANVAS_H;
+      ctx.clearRect(0,0,CANVAS_W,CANVAS_H);
+
       // Grid
       ctx.strokeStyle='rgba(255,255,255,.03)';
       ctx.lineWidth=1;
-      for(var gx=0;gx<canvas.width;gx+=40){
-        ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,canvas.height);ctx.stroke();
-      }
-      for(var gy=0;gy<canvas.height;gy+=40){
-        ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(canvas.width,gy);ctx.stroke();
-      }
+      for(var gx=0;gx<CANVAS_W;gx+=40){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,CANVAS_H);ctx.stroke();}
+      for(var gy=0;gy<CANVAS_H;gy+=40){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(CANVAS_W,gy);ctx.stroke();}
 
       // Links
       links.forEach(function(lk){
@@ -1275,86 +1303,121 @@ function renderTopology(el){
         if(!a||!b) return;
         ctx.save();
         ctx.strokeStyle=lk.color;
-        ctx.lineWidth=lk.id==='VPN'?2:2;
-        if(lk.id==='VPN'){ctx.setLineDash([8,4]);}
-        else if(lk.id==='MGMT'){ctx.setLineDash([4,4]);}
-        else{ctx.setLineDash([]);}
-        ctx.beginPath();
-        ctx.moveTo(a.x,a.y);
-        ctx.lineTo(b.x,b.y);
-        ctx.stroke();
+        ctx.lineWidth=2;
+        if(lk.id==='VPN')ctx.setLineDash([8,4]);
+        else if(lk.id==='MGMT')ctx.setLineDash([4,4]);
+        else ctx.setLineDash([]);
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
         ctx.setLineDash([]);
-        // Label
         var mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
-        ctx.fillStyle='rgba(13,17,23,.8)';
+        ctx.font='bold 10px "Courier New",monospace';
         var tw=ctx.measureText(lk.label).width;
+        ctx.fillStyle='rgba(13,17,23,.85)';
         ctx.fillRect(mx-tw/2-4,my-9,tw+8,18);
         ctx.fillStyle=lk.color;
-        ctx.font='bold 10px "Courier New",monospace';
-        ctx.textAlign='center';
-        ctx.textBaseline='middle';
+        ctx.textAlign='center';ctx.textBaseline='middle';
         ctx.fillText(lk.label,mx,my);
         ctx.restore();
       });
 
-      // Connect from indicator
+      // Connect indicator
       if(connectFrom){
         var cf=nodes.find(function(n){return n.id===connectFrom;});
         if(cf){
           ctx.save();
           ctx.strokeStyle=currentLink.color;
-          ctx.lineWidth=2;
-          ctx.setLineDash([6,3]);
-          ctx.beginPath();
-          ctx.arc(cf.x,cf.y,36,0,Math.PI*2);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          ctx.restore();
+          ctx.lineWidth=2;ctx.setLineDash([6,3]);
+          ctx.beginPath();ctx.arc(cf.x,cf.y,cf.r+8,0,Math.PI*2);ctx.stroke();
+          ctx.setLineDash([]);ctx.restore();
         }
       }
 
       // Nodes
       nodes.forEach(function(n){
+        var r=n.r||30;
+        var isSel=selectedNode&&selectedNode.id===n.id;
         ctx.save();
-        // Shadow
         ctx.shadowColor=n.color;
-        ctx.shadowBlur=n===dragging||n.id===connectFrom?16:8;
-        // Circle bg
-        var isSelected=(mode==='connect'&&n.id===connectFrom);
-        ctx.beginPath();
-        ctx.arc(n.x,n.y,28,0,Math.PI*2);
-        ctx.fillStyle=isSelected?n.color+'44':'rgba(22,27,34,.95)';
+        ctx.shadowBlur=isSel?20:8;
+        ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
+        ctx.fillStyle=isSel?n.color+'33':'rgba(22,27,34,.95)';
         ctx.fill();
         ctx.strokeStyle=n.color;
-        ctx.lineWidth=isSelected?3:1.5;
+        ctx.lineWidth=isSel?3:1.5;
         ctx.stroke();
         ctx.shadowBlur=0;
-        // Icon
-        ctx.font='24px serif';
-        ctx.textAlign='center';
-        ctx.textBaseline='middle';
+
+        // Icon - scale with radius
+        var fontSize=Math.round(r*0.9);
+        ctx.font=fontSize+'px serif';
+        ctx.textAlign='center';ctx.textBaseline='middle';
         ctx.fillText(n.icon,n.x,n.y-1);
+
         // Label
-        ctx.font='bold 11px -apple-system,sans-serif';
+        ctx.font='bold '+(Math.max(10,Math.round(r*0.38)))+'px -apple-system,sans-serif';
         ctx.fillStyle='#e6edf3';
-        ctx.textAlign='center';
-        ctx.textBaseline='top';
-        ctx.fillText(n.label,n.x,n.y+33);
+        ctx.textAlign='center';ctx.textBaseline='top';
+        ctx.fillText(n.label,n.x,n.y+r+5);
+
         // IP
         if(n.ip){
-          ctx.font='10px "Courier New",monospace';
+          ctx.font=(Math.max(9,Math.round(r*0.33)))+'px "Courier New",monospace';
           ctx.fillStyle=n.color;
-          ctx.fillText(n.ip,n.x,n.y+47);
+          ctx.fillText(n.ip,n.x,n.y+r+20);
+        }
+
+        // Selection handles (resize corners) when selected
+        if(isSel&&mode==='select'){
+          var handles=getHandles(n);
+          handles.forEach(function(h){
+            ctx.save();
+            ctx.fillStyle=n.color;
+            ctx.strokeStyle='#0d1117';
+            ctx.lineWidth=1.5;
+            ctx.beginPath();ctx.arc(h.x,h.y,6,0,Math.PI*2);
+            ctx.fill();ctx.stroke();
+            ctx.restore();
+          });
         }
         ctx.restore();
       });
+    }
+
+    function getHandles(n){
+      var r=n.r||30;
+      var d=r+10;
+      return [
+        {x:n.x,y:n.y-d,dir:'n'},
+        {x:n.x+d,y:n.y,dir:'e'},
+        {x:n.x,y:n.y+d,dir:'s'},
+        {x:n.x-d,y:n.y,dir:'w'},
+      ];
+    }
+
+    function getPos(e){
+      var r=canvas.getBoundingClientRect();
+      var scaleX=CANVAS_W/r.width;
+      var scaleY=CANVAS_H/r.height;
+      var src=e.touches?e.touches[0]:e;
+      return {x:(src.clientX-r.left)*scaleX,y:(src.clientY-r.top)*scaleY};
     }
 
     function getNodeAt(x,y){
       for(var i=nodes.length-1;i>=0;i--){
         var n=nodes[i];
         var dx=x-n.x,dy=y-n.y;
-        if(Math.sqrt(dx*dx+dy*dy)<32) return n;
+        if(Math.sqrt(dx*dx+dy*dy)<(n.r||30)) return n;
+      }
+      return null;
+    }
+
+    function getHandleAt(x,y){
+      if(!selectedNode||mode!=='select') return null;
+      var handles=getHandles(selectedNode);
+      for(var i=0;i<handles.length;i++){
+        var h=handles[i];
+        var dx=x-h.x,dy=y-h.y;
+        if(Math.sqrt(dx*dx+dy*dy)<10) return {node:selectedNode,dir:h.dir};
       }
       return null;
     }
@@ -1366,78 +1429,112 @@ function renderTopology(el){
         var b=nodes.find(function(n){return n.id===lk.to;});
         if(!a||!b) continue;
         var dx=b.x-a.x,dy=b.y-a.y,len=Math.sqrt(dx*dx+dy*dy);
-        if(len===0) continue;
+        if(!len) continue;
         var t=((x-a.x)*dx+(y-a.y)*dy)/(len*len);
         t=Math.max(0,Math.min(1,t));
         var px=a.x+t*dx,py=a.y+t*dy;
-        var dist=Math.sqrt((x-px)*(x-px)+(y-py)*(y-py));
-        if(dist<10) return lk;
+        if(Math.sqrt((x-px)*(x-px)+(y-py)*(y-py))<10) return lk;
       }
       return null;
     }
 
-    function getPos(e){
-      var r=canvas.getBoundingClientRect();
-      var scaleX=canvas.width/r.width;
-      var scaleY=canvas.height/r.height;
-      if(e.touches){
-        return {x:(e.touches[0].clientX-r.left)*scaleX,y:(e.touches[0].clientY-r.top)*scaleY};
-      }
-      return {x:(e.clientX-r.left)*scaleX,y:(e.clientY-r.top)*scaleY};
-    }
-
     canvas.addEventListener('mousedown',function(e){
       var pos=getPos(e);
-      var node=getNodeAt(pos.x,pos.y);
+
       if(mode==='select'){
-        if(node){dragging=node;dragOffX=pos.x-node.x;dragOffY=pos.y-node.y;}
-      } else if(mode==='connect'){
+        // Check resize handles first
+        var handle=getHandleAt(pos.x,pos.y);
+        if(handle){resizing=handle;return;}
+        var node=getNodeAt(pos.x,pos.y);
         if(node){
-          if(!connectFrom){
-            connectFrom=node.id;
-          } else if(connectFrom===node.id){
-            connectFrom=null;
-          } else {
-            links.push({from:connectFrom,to:node.id,id:currentLink.id,label:currentLink.label,color:currentLink.color});
+          selectedNode=node;
+          dragging=node;
+          dragOffX=pos.x-node.x;
+          dragOffY=pos.y-node.y;
+        } else {
+          selectedNode=null;
+        }
+        draw();
+
+      } else if(mode==='connect'){
+        var node=getNodeAt(pos.x,pos.y);
+        if(node){
+          if(!connectFrom){connectFrom=node.id;}
+          else if(connectFrom===node.id){connectFrom=null;}
+          else{
+            // Avoid duplicate links
+            var exists=links.find(function(lk){
+              return (lk.from===connectFrom&&lk.to===node.id)||(lk.from===node.id&&lk.to===connectFrom);
+            });
+            if(!exists) links.push({from:connectFrom,to:node.id,id:currentLink.id,label:currentLink.label,color:currentLink.color});
             connectFrom=null;
           }
           draw();
         }
+
       } else if(mode==='delete'){
+        var node=getNodeAt(pos.x,pos.y);
         if(node){
           nodes=nodes.filter(function(n){return n.id!==node.id;});
           links=links.filter(function(lk){return lk.from!==node.id&&lk.to!==node.id;});
-          draw();
+          if(selectedNode&&selectedNode.id===node.id) selectedNode=null;
         } else {
           var lk=getLinkAt(pos.x,pos.y);
-          if(lk){links=links.filter(function(l){return l!==lk;});draw();}
+          if(lk) links=links.filter(function(l){return l!==lk;});
         }
-      }
-    });
-
-    canvas.addEventListener('mousemove',function(e){
-      if(dragging&&mode==='select'){
-        var pos=getPos(e);
-        dragging.x=Math.max(32,Math.min(canvas.width-32,pos.x-dragOffX));
-        dragging.y=Math.max(32,Math.min(canvas.height-60,pos.y-dragOffY));
         draw();
       }
     });
 
-    canvas.addEventListener('mouseup',function(){dragging=null;});
-    canvas.addEventListener('mouseleave',function(){dragging=null;});
+    canvas.addEventListener('mousemove',function(e){
+      var pos=getPos(e);
+
+      if(resizing){
+        var n=resizing.node;
+        var cx=n.x,cy=n.y;
+        var dist=Math.sqrt((pos.x-cx)*(pos.x-cx)+(pos.y-cy)*(pos.y-cy));
+        n.r=Math.max(18,Math.min(80,Math.round(dist-10)));
+        draw();
+        return;
+      }
+
+      if(dragging&&mode==='select'){
+        dragging.x=Math.max(dragging.r,Math.min(CANVAS_W-dragging.r,pos.x-dragOffX));
+        dragging.y=Math.max(dragging.r,Math.min(CANVAS_H-dragging.r-30,pos.y-dragOffY));
+        draw();
+        return;
+      }
+
+      // Cursor feedback
+      if(mode==='select'){
+        var h=getHandleAt(pos.x,pos.y);
+        canvas.style.cursor=h?'nesw-resize':getNodeAt(pos.x,pos.y)?'grab':'default';
+      }
+    });
+
+    canvas.addEventListener('mouseup',function(){dragging=null;resizing=null;});
+    canvas.addEventListener('mouseleave',function(){dragging=null;resizing=null;});
 
     canvas.addEventListener('dblclick',function(e){
       var pos=getPos(e);
       var node=getNodeAt(pos.x,pos.y);
       if(node){
         var newLabel=prompt('Device name:',node.label);
-        if(newLabel!==null) node.label=newLabel.trim()||node.label;
+        if(newLabel!==null&&newLabel.trim()) node.label=newLabel.trim();
         var newIP=prompt('IP address (optional):',node.ip||'');
         if(newIP!==null) node.ip=newIP.trim();
         draw();
       }
     });
+
+    // Mouse wheel to resize selected node
+    canvas.addEventListener('wheel',function(e){
+      if(!selectedNode||mode!=='select') return;
+      e.preventDefault();
+      var delta=e.deltaY>0?-2:2;
+      selectedNode.r=Math.max(18,Math.min(80,(selectedNode.r||30)+delta));
+      draw();
+    },{passive:false});
 
     function exportPNG(){
       var link=document.createElement('a');
@@ -1447,18 +1544,17 @@ function renderTopology(el){
     }
 
     function loadExample(){
-      nodes=[];links=[];
-      document.getElementById('topo-hint').style.display='none';
-      var W=canvas.width,H=canvas.height;
-      var isp={id:1,x:W/2,y:60,icon:'☁️',label:'ISP / Internet',type:'cloud',color:'#8b949e',ip:'203.0.113.1'};
-      var fgtA={id:2,x:W/2-220,y:200,icon:'🛡️',label:'FGT-SITE-A',type:'fortigate',color:'#1D9E75',ip:'10.0.0.1'};
-      var fgtB={id:3,x:W/2+220,y:200,icon:'🛡️',label:'FGT-SITE-B',type:'fortigate',color:'#1D9E75',ip:'10.0.0.2'};
-      var swA={id:4,x:W/2-220,y:360,icon:'🔀',label:'SW-SITE-A',type:'switch',color:'#58a6ff',ip:'192.168.1.254'};
-      var swB={id:5,x:W/2+220,y:360,icon:'🔀',label:'SW-SITE-B',type:'switch',color:'#58a6ff',ip:'192.168.2.254'};
-      var pcA={id:6,x:W/2-320,y:500,icon:'💻',label:'PC-A',type:'pc',color:'#3fb950',ip:'192.168.1.100'};
-      var srvA={id:7,x:W/2-120,y:500,icon:'🖥️',label:'Server-A',type:'server',color:'#7c3aed',ip:'192.168.1.200'};
-      var pcB={id:8,x:W/2+120,y:500,icon:'💻',label:'PC-B',type:'pc',color:'#3fb950',ip:'192.168.2.100'};
-      var ap={id:9,x:W/2+320,y:500,icon:'📡',label:'AP-B',type:'ap',color:'#58a6ff',ip:'192.168.2.50'};
+      nodes=[];links=[];selectedNode=null;
+      var W=CANVAS_W,H=CANVAS_H;
+      var isp={id:1,x:W/2,y:60,icon:'☁️',label:'ISP/Internet',color:'#8b949e',ip:'203.0.113.1',r:30};
+      var fgtA={id:2,x:W/2-220,y:200,icon:'🛡️',label:'FGT-SITE-A',color:'#1D9E75',ip:'10.0.0.1',r:34};
+      var fgtB={id:3,x:W/2+220,y:200,icon:'🛡️',label:'FGT-SITE-B',color:'#1D9E75',ip:'10.0.0.2',r:34};
+      var swA={id:4,x:W/2-220,y:360,icon:'🔀',label:'SW-SITE-A',color:'#58a6ff',ip:'192.168.1.254',r:28};
+      var swB={id:5,x:W/2+220,y:360,icon:'🔀',label:'SW-SITE-B',color:'#58a6ff',ip:'192.168.2.254',r:28};
+      var pcA={id:6,x:W/2-320,y:500,icon:'💻',label:'PC-A',color:'#3fb950',ip:'192.168.1.100',r:24};
+      var srvA={id:7,x:W/2-120,y:500,icon:'🖥️',label:'Server-A',color:'#7c3aed',ip:'192.168.1.200',r:28};
+      var pcB={id:8,x:W/2+120,y:500,icon:'💻',label:'PC-B',color:'#3fb950',ip:'192.168.2.100',r:24};
+      var ap={id:9,x:W/2+320,y:500,icon:'📡',label:'AP-B',color:'#58a6ff',ip:'192.168.2.50',r:24};
       nodes=[isp,fgtA,fgtB,swA,swB,pcA,srvA,pcB,ap];
       links=[
         {from:1,to:2,id:'WAN',label:'WAN',color:'#d29922'},
@@ -1477,55 +1573,46 @@ function renderTopology(el){
     draw();
   }
 
-  // ═══════════════════════════════════════════
-  // OPTION B — DRAW.IO
-  // ═══════════════════════════════════════════
+  // ═══════════ DRAW.IO ═══════════
   function buildDrawio(){
-    if(drawioPanel.innerHTML!=='') return; // already built
+    if(drawioPanel.innerHTML!=='') return;
     drawioPanel.innerHTML='';
-
     var info=document.createElement('div');
     info.style.cssText='padding:12px 16px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.2);border-radius:10px;margin-bottom:12px;display:flex;align-items:center;gap:12px';
     info.innerHTML='<span style="font-size:24px">📐</span>'
       +'<div><div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px">draw.io — Professional Network Diagram Tool</div>'
-      +'<div style="font-size:11px;color:var(--t2);line-height:1.6">Full drag &amp; drop with Cisco, Fortinet, AWS, Azure icons. Export to PNG, SVG, XML. Auto-save to your browser. No account needed.</div></div>'
-      +'<a href="https://app.diagrams.net/?splash=0&ui=dark&lang=en" target="_blank" rel="noopener noreferrer" class="sbtn" style="white-space:nowrap;font-size:12px;padding:8px 16px;flex-shrink:0">🚀 Open Full Screen</a>';
+      +'<div style="font-size:11px;color:var(--t2);line-height:1.6">Full drag &amp; drop with Cisco, Fortinet, AWS, Azure icons. Export to PNG, SVG, XML. No account needed.</div></div>'
+      +'<a href="https://app.diagrams.net/?splash=0&ui=dark" target="_blank" rel="noopener noreferrer" class="sbtn" style="white-space:nowrap;font-size:12px;padding:8px 16px;flex-shrink:0">🚀 Open Full Screen</a>';
     drawioPanel.appendChild(info);
-
-    // Tips
     var tips=document.createElement('div');
     tips.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:12px';
-    [
-      ['🔍 Search Icons','Type "FortiGate", "Cisco", "firewall" in the search box to find network icons'],
-      ['📁 Network Shapes','Left panel → Search shapes → type "network" for full Cisco/network library'],
-      ['💾 Auto-Save','Diagrams save to your browser automatically — or export XML to save to file'],
-      ['🎨 Dark Theme','Already configured in dark mode matching NetWolf'],
+    [['🔍 Search Icons','Type "FortiGate", "Cisco", "firewall" to find network icons'],
+     ['📁 Network Shapes','Left panel → Search shapes → type "network" for full library'],
+     ['💾 Auto-Save','Saves to browser automatically or export XML to file'],
+     ['🎨 Dark Theme','Pre-configured in dark mode matching NetWolf']
     ].forEach(function(t){
       tips.innerHTML+='<div style="padding:8px 12px;background:var(--b2);border:1px solid var(--br);border-radius:6px;font-size:11px">'
         +'<div style="color:var(--t);font-weight:600;margin-bottom:3px">'+t[0]+'</div>'
         +'<div style="color:var(--t3);line-height:1.5">'+t[1]+'</div></div>';
     });
     drawioPanel.appendChild(tips);
-
-    // Embed iframe
     var iframeWrap=document.createElement('div');
-    iframeWrap.style.cssText='border-radius:10px;overflow:hidden;border:1px solid var(--br);background:#1e1e1e';
+    iframeWrap.style.cssText='border-radius:10px;overflow:hidden;border:1px solid var(--br)';
     var iframe=document.createElement('iframe');
-    iframe.src='https://embed.diagrams.net/?embed=1&ui=dark&spin=1&modified=unsavedChanges&proto=json&configure=1&noSaveBtn=0&saveAndExit=0&noExitBtn=1&libraries=1&lang=en';
+    iframe.src='https://embed.diagrams.net/?embed=1&ui=dark&spin=1&modified=unsavedChanges&proto=json&noSaveBtn=0&saveAndExit=0&noExitBtn=1&libraries=1';
     iframe.style.cssText='width:100%;height:650px;border:none;display:block';
     iframe.allow='clipboard-read; clipboard-write';
     iframeWrap.appendChild(iframe);
     drawioPanel.appendChild(iframeWrap);
-
     var note=document.createElement('div');
     note.style.cssText='margin-top:8px;font-size:11px;color:var(--t3);text-align:center';
-    note.innerHTML='draw.io by <a href="https://diagrams.net" target="_blank" rel="noopener noreferrer" style="color:var(--a)">diagrams.net</a> — free, open source, no account required &middot; Your diagrams stay in your browser';
+    note.innerHTML='draw.io by <a href="https://diagrams.net" target="_blank" rel="noopener noreferrer" style="color:var(--a)">diagrams.net</a> — free, open source, no account required';
     drawioPanel.appendChild(note);
   }
 
-  // Build canvas by default
   buildCanvas();
 }
+
 
 
 window.doLogin=function doLogin(){
