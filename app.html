@@ -772,7 +772,7 @@ function renderPSMaker(el){
   // Chat history
   var chatBox=document.createElement("div");
   chatBox.id="ps-chatbox";
-  chatBox.style.cssText="flex:1;overflow-y:auto;padding:4px 2px 16px 2px;display:flex;flex-direction:column;gap:4px";
+  chatBox.style.cssText="flex:1;overflow-y:auto;padding:4px 2px 16px 2px;display:flex;flex-direction:column;gap:4px;scroll-behavior:smooth";
   chatWrap.appendChild(chatBox);
 
   // Input area
@@ -825,6 +825,7 @@ function renderPSMaker(el){
     }
     chatBox.appendChild(d);
     chatBox.scrollTop=chatBox.scrollHeight;
+    setTimeout(function(){chatBox.scrollTop=chatBox.scrollHeight;},50);
     return d;
   }
 
@@ -935,18 +936,24 @@ function renderPSMaker(el){
     document.getElementById("ps-send-btn").disabled=true;
     var sysPrompt='You are an expert Windows PowerShell assistant embedded in NetWolf, a network engineer tool.'
       +'\n\nYour role is to INTERACTIVELY help the user solve their Windows issue step by step.'
-      +'\n\nRULES:\n'
-      +'1. First response: Ask 1-2 clarifying questions to understand the issue better.\n'
-      +'2. After clarification: Generate PowerShell script with EVERY command preceded by a # comment explaining exactly what it does.\n'
-      +'3. After the script: Explain what to look for in the output and ask "Did this help? What did you see in the output?"\n'
-      +'4. Follow-up: Based on their output/results, provide next steps or refined commands.\n'
-      +'5. Always suggest follow-up commands based on results.\n'
-      +'\nSCRIPT FORMAT (when providing PowerShell):\n'
-      +'- Each command MUST have a # comment above it explaining what it does\n'
-      +'- Use # === SECTION NAME === for section headers\n'
-      +'- No markdown code fences, return raw PowerShell\n'
-      +'- Wrap scripts in [SCRIPT_START] and [SCRIPT_END] markers\n'
-      +'\nOUTSIDE scripts: respond conversationally and concisely in plain text.';
+      +'\n\nRULES:'
+      +'\n1. First response: Ask 1-2 clarifying questions SPECIFIC to the user topic. Never ask generic questions unrelated to the topic.'
+      +'\n2. After clarification: Generate PowerShell script with EVERY command preceded by a # comment explaining exactly what it does.'
+      +'\n3. After the script: Explain what to look for and ask a SPECIFIC follow-up question about the results.'
+      +'\n4. Follow-up: Based on their output, refine commands or give next steps.'
+      +'\n\nSCRIPT FORMAT (when providing PowerShell):'
+      +'\n- Each command MUST have a # comment above it explaining what it does'
+      +'\n- Use # === SECTION NAME === for section headers'
+      +'\n- No markdown code fences, return raw PowerShell'
+      +'\n- Wrap scripts in [SCRIPT_START] and [SCRIPT_END] markers'
+      +'\n\nOPTION BUTTONS (MANDATORY):'
+      +'\n- At the end of EVERY response add exactly ONE [OPTIONS: a | b | c | d] tag'
+      +'\n- Options must be SHORT (max 5 words) and DIRECTLY answer what you just asked'
+      +'\n- Options must be SPECIFIC to the topic - never generic like Windows version when asking about DNS'
+      +'\n- For DNS topic example: [OPTIONS: Active Directory Integrated | Standalone DNS | Primary DC | Secondary DC]'
+      +'\n- After script example: [OPTIONS: All ran successfully | Got an error | DNS still not working | Need more info]'
+      +'\n- Never use: Windows 10, Windows 11, It just started - unless you literally asked about OS version or timing'
+      +'\n\nOUTSIDE scripts: respond conversationally and concisely.';
     try{
       var resp=await fetch("https://api.groq.com/openai/v1/chat/completions",{
         method:"POST",
@@ -971,12 +978,14 @@ function renderPSMaker(el){
           if(part.trim()){
             var textHtml=part.trim().replace(/\n\n/g,"<br><br>").replace(/\n/g,"<br>")
               .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>");
-            // Detect follow-up options from text
+            // Extract contextual options from AI response
+            // Look for [OPTIONS: a | b | c] marker in the reply
             var opts=[];
-            if(/did this help|what did you see|next step/i.test(part)){
-              opts=["It worked! What else can I check?","I see errors, here is what I got:","It did not help, let me describe more","Show me the next diagnostic step"];
-            } else if(/clarif|can you tell|could you|what version|how long/i.test(part)){
-              opts=["Windows 10","Windows 11","Windows Server 2022","It just started happening","It has been slow for a while"];
+            var optMatch=reply.match(/\[OPTIONS:([^\]]+)\]/);
+            if(optMatch){
+              opts=optMatch[1].split("|").map(function(o){return o.trim();}).filter(Boolean);
+              // Remove the marker from displayed text
+              textHtml=textHtml.replace(/\[OPTIONS:[^\]]+\]/g,"");
             }
             addMsg("ai",textHtml,opts);
           }
@@ -992,7 +1001,15 @@ function renderPSMaker(el){
           if(afterScript){
             var afterHtml=afterScript.replace(/\n\n/g,"<br><br>").replace(/\n/g,"<br>")
               .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>");
-            var followOpts=["It worked, what next?","I see errors in the output","The commands did not run","Show me more commands"];
+            // Extract options from after-script text too
+            var followOpts=[];
+            var followOptMatch=reply.match(/\[OPTIONS:([^\]]+)\]/g);
+            if(followOptMatch&&followOptMatch.length>0){
+              var lastOptMatch=followOptMatch[followOptMatch.length-1];
+              followOpts=lastOptMatch.replace(/\[OPTIONS:/,"").replace(/\]/,"").split("|").map(function(o){return o.trim();}).filter(Boolean);
+              afterHtml=afterHtml.replace(/\[OPTIONS:[^\]]+\]/g,"");
+            }
+            if(!followOpts.length) followOpts=["Commands ran successfully","Got an error","Need clarification","Show next steps"];
             addMsg("ai",afterHtml,followOpts);
           }
         }
@@ -6813,7 +6830,7 @@ function renderDHCPDiag(el){el.innerHTML=`
         </div>
         <div id="dhcp-lease-out" style="display:none;">
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px;">Run on FortiGate CLI:</div>
-          <pre class="code-block" id="dhcp-lease-cmd" style="white-space:pre-wrap;"></pre>
+          <pre class="code-block" id="dhcp-lease-cmd" style="background:#0a0e14;color:#3fb950;font-family:Courier New,monospace;font-size:12px;padding:12px;border-radius:6px;white-space:pre-wrap;overflow-x:auto;border:1px solid #30363d"></pre>
           <div class="cnote" style="margin-top:8px;"><strong>Reading the output:</strong><br>&bull; <code>ip</code> — IP assigned to client<br>&bull; <code>mac</code> — Client MAC (cross-check with ARP table)<br>&bull; <code>expire</code> — Lease expiry. Expired but still in use = stale lease / IP conflict<br>&bull; <code>interface</code> — Which FortiGate interface served this. Unexpected = wrong VLAN or rogue server<br>&bull; <strong>No output?</strong> Client IP likely came from a rogue DHCP server — use Tool 3.</div>
         </div>
       </div>
@@ -6829,7 +6846,7 @@ function renderDHCPDiag(el){el.innerHTML=`
         </div>
         <div id="arp-out" style="display:none;">
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px;">Run on FortiGate CLI:</div>
-          <pre class="code-block" id="arp-cmd" style="white-space:pre-wrap;"></pre>
+          <pre class="code-block" id="arp-cmd" style="background:#0a0e14;color:#3fb950;font-family:Courier New,monospace;font-size:12px;padding:12px;border-radius:6px;white-space:pre-wrap;overflow-x:auto;border:1px solid #30363d"></pre>
           <div class="cnote" style="margin-top:8px;"><strong>Reading the output:</strong><br>&bull; Same IP with two different MACs in consecutive checks = IP conflict<br>&bull; ARP entry age resets rapidly = another device reclaiming the IP<br>&bull; Ping succeeds intermittently = both devices answering<br>&bull; IP outside interface subnet = FortiGate may drop return traffic silently (RPF)</div>
         </div>
       </div>
@@ -6845,7 +6862,7 @@ function renderDHCPDiag(el){el.innerHTML=`
         </div>
         <div id="rogue-out" style="display:none;">
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px;">Start this then trigger ipconfig /release + /renew on the client:</div>
-          <pre class="code-block" id="rogue-cmd" style="white-space:pre-wrap;"></pre>
+          <pre class="code-block" id="rogue-cmd" style="background:#0a0e14;color:#3fb950;font-family:Courier New,monospace;font-size:12px;padding:12px;border-radius:6px;white-space:pre-wrap;overflow-x:auto;border:1px solid #30363d"></pre>
           <div class="cnote" style="margin-top:8px;"><strong>How to trigger DHCP renewal:</strong><br>&bull; Windows: <code>ipconfig /release</code> then <code>ipconfig /renew</code><br>&bull; Linux: <code>dhclient -r &amp;&amp; dhclient &lt;interface&gt;</code><br>&bull; FortiGate client: <code>exec dhcp lease-clear &lt;interface&gt;</code><br><br><strong>Reading output:</strong> Look for DHCP Offer packets (port 67&rarr;68). Source IP = DHCP server. Any unexpected source IP = rogue.</div>
         </div>
       </div>
@@ -6871,7 +6888,7 @@ function renderDHCPDiag(el){el.innerHTML=`
         </div>
         <div id="vlan-out" style="display:none;">
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px;">Run on FortiGate CLI:</div>
-          <pre class="code-block" id="vlan-cmd" style="white-space:pre-wrap;"></pre>
+          <pre class="code-block" id="vlan-cmd" style="background:#0a0e14;color:#3fb950;font-family:Courier New,monospace;font-size:12px;padding:12px;border-radius:6px;white-space:pre-wrap;overflow-x:auto;border:1px solid #30363d"></pre>
           <div class="cnote" style="margin-top:8px;">
             <strong>What to look for:</strong><br>
             &bull; <code>get system interface</code> — shows the VLAN ID (<code>vlanid</code>) and IP assigned to the interface. If the VLAN ID doesn't match what the switch port is configured for, the client lands on the wrong segment<br>
@@ -6906,7 +6923,7 @@ function renderDHCPDiag(el){el.innerHTML=`
         </div>
         <div id="rpf-out" style="display:none;">
           <div style="font-size:11px;color:var(--t3);margin-bottom:4px;">Run on FortiGate CLI:</div>
-          <pre class="code-block" id="rpf-cmd" style="white-space:pre-wrap;"></pre>
+          <pre class="code-block" id="rpf-cmd" style="background:#0a0e14;color:#3fb950;font-family:Courier New,monospace;font-size:12px;padding:12px;border-radius:6px;white-space:pre-wrap;overflow-x:auto;border:1px solid #30363d"></pre>
           <div class="cnote" style="margin-top:8px;">
             <strong>Reading the output:</strong><br>
             &bull; <code>diagnose ip address list</code> — lists all interface IPs and subnets. If the client IP falls outside all listed subnets, RPF will drop its return traffic<br>
