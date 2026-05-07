@@ -738,7 +738,10 @@ function renderPSMaker(el){
   var qc=document.createElement('div');
   qc.className='cblock';
   qc.style.flex='1';
-  qc.innerHTML='<div class="chdr"><div class="chdr-l">&#x26A1; Quick Start</div></div><div class="cbody" style="padding:10px 12px;display:flex;flex-direction:column;gap:5px" id="ps-quicklist"></div>';
+  qc.style.overflow='hidden';
+  qc.style.display='flex';
+  qc.style.flexDirection='column';
+  qc.innerHTML='<div class="chdr"><div class="chdr-l">&#x26A1; Quick Start</div></div><div class="cbody" style="padding:10px 12px;display:flex;flex-direction:column;gap:5px;overflow-y:auto;flex:1" id="ps-quicklist"></div>';
   sb.appendChild(qc);
 
   var ncBtn=document.createElement('button');
