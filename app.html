@@ -1847,7 +1847,7 @@ function renderCLISim(el){
     b.id='vsim-'+v.id;
     b.onclick=(function(vv){return function(){
       currentVendor=vv;
-      configMode=false;configContext='';
+      accessMode='user';configContext='';updatePrompt();
       vendors.forEach(function(x){
         var xb=document.getElementById('vsim-'+x.id);
         if(xb) xb.style.cssText='font-size:11px;padding:5px 14px;background:var(--b3);border:1px solid var(--br);color:var(--t2)';
@@ -2375,11 +2375,11 @@ function renderCLISim(el){
     var db=cmdDB[v.id];
     document.getElementById('sim-title').textContent='🟢 '+db.title;
     document.getElementById('sim-title').style.color=v.color;
-    document.getElementById('sim-prompt').textContent=db.prompt;
+    setTimeout(function(){updatePrompt();},10);
     document.getElementById('sim-prompt').style.color=v.color;
     termBody.innerHTML='';
     cmdHistory=[];histIdx=-1;
-    configMode=false;configContext='';
+    accessMode='user';configContext='';updatePrompt();
     printLine('<span style="color:'+v.color+'">'+('─').repeat(50)+'</span>');
     printLine('<span style="color:'+v.color+';font-weight:700">  NetWolf CLI Simulator — '+db.title+'</span>');
     printLine('<span style="color:'+v.color+'">'+('─').repeat(50)+'</span>');
@@ -2416,23 +2416,291 @@ function renderCLISim(el){
   function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
   // ── Command processor ──
+  // ── Mode state ──
+  // modes: 'user' | 'enable' | 'config' | 'config-if' | 'config-vlan' | 'config-router'
+  var accessMode = 'user';
+  var configContext = '';  // e.g. 'GigabitEthernet0/0', 'vlan 10', 'router ospf 1'
+
+  function getPromptStr(){
+    var db = cmdDB[currentVendor.id];
+    var v = currentVendor.id;
+    if(v === 'fortigate'){
+      if(accessMode === 'config') return db.promptConfig || 'FGT (config) # ';
+      return db.prompt;
+    }
+    if(v === 'juniper'){
+      if(accessMode === 'config') return 'admin@Router# ';
+      return 'admin@Router> ';
+    }
+    if(v === 'mikrotik'){
+      return db.prompt;
+    }
+    // Cisco/Aruba/HP/Huawei style
+    var base = db.prompt.replace('# ','').replace('> ','').trim();
+    if(accessMode === 'user')   return base + '> ';
+    if(accessMode === 'enable') return base + '# ';
+    if(accessMode === 'config') return base + '(config)# ';
+    if(accessMode === 'config-if') return base + '(config-if)# ';
+    if(accessMode === 'config-vlan') return base + '(config-vlan)# ';
+    if(accessMode === 'config-router') return base + '(config-router)# ';
+    if(accessMode === 'config-line') return base + '(config-line)# ';
+    return base + '# ';
+  }
+
+  function updatePrompt(){
+    var el = document.getElementById('sim-prompt');
+    if(el){ el.textContent = getPromptStr(); el.style.color = currentVendor.color; }
+  }
+
+  function setMode(m, ctx){
+    accessMode = m;
+    configContext = ctx || '';
+    updatePrompt();
+  }
+
   function runCommand(raw){
-    var cmd=raw.trim();
+    var cmd = raw.trim();
     if(!cmd) return;
     cmdHistory.unshift(cmd);
-    histIdx=-1;
+    histIdx = -1;
     printPrompt(cmd);
 
-    var db=cmdDB[currentVendor.id];
-    var cmdLow=cmd.toLowerCase();
+    var db = cmdDB[currentVendor.id];
+    var cmdLow = cmd.toLowerCase();
+    var v = currentVendor.id;
 
-    // Help / ?
+    // ── Universal: clear ──
+    if(cmdLow === 'clear' || cmdLow === 'cls'){
+      termBody.innerHTML = '';
+      return;
+    }
+
+    // ── FortiGate / JunOS / MikroTik: simpler mode handling ──
+    if(v === 'fortigate' || v === 'mikrotik'){
+      if(cmdLow === 'end' || cmdLow === 'exit' || cmdLow === 'abort'){
+        if(accessMode === 'config'){ setMode('user'); printLine('<span style="color:#8b949e">Exited config mode.</span>'); }
+        else { printLine('<span style="color:#8b949e">Already at top level.</span>'); }
+        return;
+      }
+    }
+
+    if(v === 'juniper'){
+      if(cmdLow === 'exit'||cmdLow === 'quit'||cmdLow === 'exit configuration-mode'){
+        if(accessMode === 'config'){ setMode('user'); printLine('<span style="color:#8b949e">Exiting configuration mode.</span>'); }
+        else { printLine('<span style="color:#8b949e">Already in operational mode.</span>'); }
+        return;
+      }
+    }
+
+    // ── Cisco / Aruba CX / Huawei / HP ── privilege levels ──
+    var isCiscoStyle = (v==='cisco_ios'||v==='cisco_sw'||v==='cisco_nxos'||v==='aruba'||v==='huawei'||v==='hp_procurve');
+
+    if(isCiscoStyle){
+      // User mode commands
+      if(accessMode === 'user'){
+        if(cmdLow === 'enable' || cmdLow === 'en'){
+          // Simulate enable password prompt (always accept)
+          printLine('<span style="color:#8b949e">Password: </span>');
+          setMode('enable');
+          printLine('<span style="color:#3fb950">Enable mode. You now have full privilege access.</span>');
+          return;
+        }
+        if(cmdLow === 'exit' || cmdLow === 'quit' || cmdLow === 'logout'){
+          printLine('<span style="color:#8b949e">Goodbye. Session ended.</span>');
+          return;
+        }
+        // Limit user mode — only show commands
+        if(cmdLow === '?' || cmdLow === 'help'){
+          printLine('<span style="color:#58a6ff;font-weight:700">User EXEC commands (limited):</span>');
+          printLine('  <span style="color:'+currentVendor.color+'">enable</span>         — Enter privileged EXEC mode');
+          printLine('  <span style="color:'+currentVendor.color+'">show version</span>   — Show system version');
+          printLine('  <span style="color:'+currentVendor.color+'">ping</span>           — Send ICMP ping');
+          printLine('  <span style="color:'+currentVendor.color+'">traceroute</span>     — Trace route to destination');
+          printLine('  <span style="color:'+currentVendor.color+'">exit</span>           — Exit session');
+          return;
+        }
+        // Allow basic show/ping in user mode
+        if(!cmdLow.startsWith('show')&&!cmdLow.startsWith('ping')&&!cmdLow.startsWith('trace')){
+          printLine('<span style="color:#f85149">% Command not available in user EXEC mode.</span>');
+          printLine('<span style="color:#484f58">Type <span style="color:#e6edf3">enable</span> to enter privileged mode first.</span>');
+          return;
+        }
+      }
+
+      // Privileged EXEC mode
+      if(accessMode === 'enable'){
+        if(cmdLow === 'configure terminal' || cmdLow === 'configure' || cmdLow === 'conf t' || cmdLow === 'conf term'){
+          setMode('config');
+          printLine('<span style="color:#8b949e">Enter configuration commands, one per line.  End with CNTL/Z.</span>');
+          var cname = v==='cisco_nxos'?'NXOS-SW1':v==='cisco_sw'?'Switch':v==='huawei'?'[Huawei]':v==='hp_procurve'?'ProCurve':'Router';
+          printLine('<span style="color:'+currentVendor.color+'">'+cname+'(config)#</span>');
+          return;
+        }
+        if(cmdLow === 'disable'){
+          setMode('user');
+          printLine('<span style="color:#8b949e">Returned to user EXEC mode.</span>');
+          return;
+        }
+        if(cmdLow === 'exit' || cmdLow === 'logout'){
+          printLine('<span style="color:#8b949e">Goodbye.</span>');
+          return;
+        }
+        if(cmdLow === 'write memory' || cmdLow === 'write mem' || cmdLow === 'wr'){
+          printLine('<span style="color:#8b949e">Building configuration...</span>');
+          printLine('<span style="color:#3fb950">[OK]</span>');
+          return;
+        }
+        if(cmdLow === 'copy running-config startup-config' || cmdLow === 'copy run start'){
+          printLine('<span style="color:#8b949e">Destination filename [startup-config]? </span>');
+          printLine('<span style="color:#8b949e">Building configuration...</span>');
+          printLine('<span style="color:#3fb950">[OK]</span>');
+          return;
+        }
+        if(cmdLow === 'reload'){
+          printLine('<span style="color:#d29922">⚠️  WARNING: This will reload the device.</span>');
+          printLine('<span style="color:#8b949e">Proceed with reload? [confirm]</span>');
+          printLine('<span style="color:#484f58">(Simulated — no actual reload occurs)</span>');
+          return;
+        }
+        if(cmdLow === 'erase startup-config'){
+          printLine('<span style="color:#f85149">⚠️  Erasing the nvram filesystem will remove all configuration files!</span>');
+          printLine('<span style="color:#8b949e">Continue? [confirm]</span>');
+          printLine('<span style="color:#484f58">(Simulated — no actual erase occurs)</span>');
+          return;
+        }
+      }
+
+      // Global config mode
+      if(accessMode === 'config'){
+        // Interface entry
+        var ifMatch = cmdLow.match(/^(interface|int)\s+(.+)$/);
+        if(ifMatch){
+          var ifName = cmd.substring(ifMatch[1].length).trim();
+          setMode('config-if', ifName);
+          printLine('<span style="color:#8b949e">Entering interface configuration mode for: '+escH(ifName)+'</span>');
+          return;
+        }
+        // VLAN entry
+        var vlanMatch = cmdLow.match(/^vlan\s+(\d+)$/);
+        if(vlanMatch){
+          setMode('config-vlan', 'vlan '+vlanMatch[1]);
+          printLine('<span style="color:#8b949e">Entering VLAN configuration mode for VLAN '+vlanMatch[1]+'</span>');
+          return;
+        }
+        // Router protocol entry
+        var routerMatch = cmdLow.match(/^router\s+(.+)$/);
+        if(routerMatch){
+          setMode('config-router', 'router '+routerMatch[1]);
+          printLine('<span style="color:#8b949e">Entering router configuration mode for: '+escH(routerMatch[1])+'</span>');
+          return;
+        }
+        // Line config
+        var lineMatch = cmdLow.match(/^line\s+(.+)$/);
+        if(lineMatch){
+          setMode('config-line', 'line '+lineMatch[1]);
+          printLine('<span style="color:#8b949e">Entering line configuration mode for: '+escH(lineMatch[1])+'</span>');
+          return;
+        }
+        // Exit/end
+        if(cmdLow === 'exit'){
+          setMode('enable');
+          printLine('<span style="color:#8b949e">Returned to privileged EXEC mode.</span>');
+          return;
+        }
+        if(cmdLow === 'end' || cmd === String.fromCharCode(26)){
+          setMode('enable');
+          printLine('<span style="color:#8b949e">Returned to privileged EXEC mode.</span>');
+          return;
+        }
+        // Common config commands with feedback
+        if(cmdLow.startsWith('hostname ')){
+          var newName=cmd.substring(9).trim();
+          printLine('<span style="color:#3fb950">Hostname set to: '+escH(newName)+'</span>');
+          return;
+        }
+        if(cmdLow.startsWith('no shutdown')||cmdLow.startsWith('no shut')){
+          printLine('<span style="color:#8b949e">Command accepted — applies when in interface context.</span>');
+          return;
+        }
+        if(cmdLow === '?' || cmdLow === 'help'){
+          printLine('<span style="color:#58a6ff;font-weight:700">Global config commands (sample):</span>');
+          [['hostname NAME','Set device hostname'],['interface TYPE NUMBER','Enter interface config'],
+           ['vlan ID','Enter VLAN config'],['router ospf ID','Enter OSPF config'],
+           ['router bgp AS','Enter BGP config'],['line vty 0 4','Enter VTY line config'],
+           ['ip route DST MASK GW','Add static route'],['no shutdown','Enable interface'],
+           ['end','Return to privileged EXEC'],['exit','Return to previous mode'],
+          ].forEach(function(c){
+            printLine('  <span style="color:'+currentVendor.color+';font-family:monospace">'+c[0]+'</span><span style="color:#484f58"> — '+c[1]+'</span>');
+          });
+          return;
+        }
+        // Accept config commands silently (config applied)
+        printLine('<span style="color:#8b949e">Configuration accepted.</span>');
+        return;
+      }
+
+      // Sub-config modes (config-if, config-vlan, config-router, config-line)
+      if(accessMode==='config-if'||accessMode==='config-vlan'||accessMode==='config-router'||accessMode==='config-line'){
+        if(cmdLow==='exit'){
+          setMode('config');
+          printLine('<span style="color:#8b949e">Returned to global config mode.</span>');
+          return;
+        }
+        if(cmdLow==='end'){
+          setMode('enable');
+          printLine('<span style="color:#8b949e">Returned to privileged EXEC mode.</span>');
+          return;
+        }
+        if(cmdLow==='?'||cmdLow==='help'){
+          var contextCmds = {
+            'config-if':[['ip address IP MASK','Assign IP address'],['no shutdown','Enable interface'],
+              ['shutdown','Disable interface'],['description TEXT','Set description'],
+              ['switchport mode access','Set access port'],['switchport access vlan ID','Assign VLAN'],
+              ['switchport mode trunk','Set trunk port'],['channel-group ID mode active','Add to port-channel (LACP)'],
+              ['spanning-tree portfast','Enable PortFast'],['exit','Return to global config']],
+            'config-vlan':[['name NAME','Set VLAN name'],['state active','Activate VLAN'],
+              ['state suspend','Suspend VLAN'],['exit','Return to global config']],
+            'config-router':[['network IP MASK area ID','Advertise OSPF network'],
+              ['neighbor IP remote-as AS','Add BGP neighbor'],['router-id IP','Set router ID'],
+              ['passive-interface IF','Suppress routing updates'],['exit','Return to global config']],
+            'config-line':[['password PASS','Set line password'],['login','Enable login auth'],
+              ['exec-timeout MIN SEC','Set session timeout'],['transport input ssh','Allow SSH only'],
+              ['exit','Return to global config']],
+          };
+          var cmdsForMode = contextCmds[accessMode]||[];
+          printLine('<span style="color:#58a6ff;font-weight:700">'+accessMode+' commands ('+escH(configContext)+'):</span>');
+          cmdsForMode.forEach(function(c){
+            printLine('  <span style="color:'+currentVendor.color+';font-family:monospace">'+c[0]+'</span><span style="color:#484f58"> — '+c[1]+'</span>');
+          });
+          return;
+        }
+        // ip address command — show result
+        var ipMatch=cmdLow.match(/^ip address\s+(\S+)\s+(\S+)$/);
+        if(ipMatch){
+          printLine('<span style="color:#3fb950">IP address '+escH(ipMatch[1])+' '+escH(ipMatch[2])+' configured on '+escH(configContext)+'</span>');
+          return;
+        }
+        if(cmdLow==='no shutdown'||cmdLow==='no shut'){
+          printLine('<span style="color:#3fb950">Interface '+escH(configContext)+' enabled.</span>');
+          return;
+        }
+        if(cmdLow==='shutdown'||cmdLow==='shut'){
+          printLine('<span style="color:#d29922">Interface '+escH(configContext)+' administratively disabled.</span>');
+          return;
+        }
+        // Accept all other sub-config commands
+        printLine('<span style="color:#8b949e">Configuration accepted.</span>');
+        return;
+      }
+    }
+
+    // ── Help ──
     if(cmd==='?'||cmdLow==='help'){
       printLine('<span style="color:#58a6ff;font-weight:700">Available commands:</span>');
       db.categories.forEach(function(cat){
         printLine('<span style="color:#d29922;font-weight:700">  — '+cat.name+' —</span>');
         cat.cmds.forEach(function(c){
-          printLine('  <span style="color:'+currentVendor.color+';font-family:\'Courier New\',monospace">'+escH(c.cmd)+'</span>'
+          printLine('  <span style="color:'+currentVendor.color+';font-family:monospace">'+escH(c.cmd)+'</span>'
             +'<span style="color:#484f58"> — </span>'
             +'<span style="color:#8b949e">'+c.desc+'</span>');
         });
@@ -2440,71 +2708,58 @@ function renderCLISim(el){
       return;
     }
 
-    // Clear terminal
-    if(cmdLow==='clear'||cmdLow==='cls'){termBody.innerHTML='';return;}
-
-    // Exit config mode
-    if(cmdLow==='end'||cmdLow==='exit'){
-      if(configMode){configMode=false;configContext='';
-        document.getElementById('sim-prompt').textContent=db.prompt;
-        printLine('<span style="color:#8b949e">Exited configuration mode.</span>');
-      } else {
-        printLine('<span style="color:#8b949e">Already in exec mode.</span>');
-      }
-      return;
-    }
-
-    // Config mode entry
-    if(cmdLow==='configure terminal'||cmdLow==='configure'||cmdLow==='conf t'){
-      configMode=true;
-      document.getElementById('sim-prompt').textContent=db.promptConfig||db.prompt;
-      document.getElementById('sim-prompt').style.color=currentVendor.color;
+    // ── Config mode entry (FortiGate/Juniper) ──
+    if(cmdLow==='configure terminal'||cmdLow==='configure'||cmdLow==='conf t'||cmdLow==='conf term'){
+      setMode('config');
       var configResp=db.responses['configure terminal']||db.responses['configure']||'Enter configuration commands, one per line. End with CNTL/Z.';
       printOutput(configResp,'#8b949e');
       return;
     }
 
-    // Check responses
+    // ── Exit ──
+    if(cmdLow==='end'||cmdLow==='exit'){
+      if(accessMode!=='user'){ setMode('user'); printLine('<span style="color:#8b949e">Exited configuration mode.</span>'); }
+      else { printLine('<span style="color:#8b949e">Already at top level.</span>'); }
+      return;
+    }
+
+    // ── Check responses ──
     var resp=null;
-    // Exact match first
-    if(db.responses[cmd]!==undefined){resp=db.responses[cmd];}
-    // Case-insensitive match
-    else{
+    if(db.responses[cmd]!==undefined){ resp=db.responses[cmd]; }
+    else {
       Object.keys(db.responses).forEach(function(k){
         if(k.toLowerCase()===cmdLow) resp=db.responses[k];
       });
     }
-    // Prefix match (e.g. 'show ip route 192.168.1.0' matches 'show ip route')
     if(resp===null){
       var bestLen=0;
       Object.keys(db.responses).forEach(function(k){
-        if(cmdLow.startsWith(k.toLowerCase())&&k.length>bestLen){
-          bestLen=k.length;resp=db.responses[k];
-        }
+        if(cmdLow.startsWith(k.toLowerCase())&&k.length>bestLen){ bestLen=k.length; resp=db.responses[k]; }
       });
     }
 
     if(resp!==null){
-      if(resp===''){
-        printLine('<span style="color:#8b949e"></span>');
-      } else {
-        printOutput(resp,'#c9d1d9');
-      }
+      if(resp==='') printLine('<span style="color:#8b949e"></span>');
+      else printOutput(resp,'#c9d1d9');
     } else {
-      // Generic error
       var errMsgs={
         fortigate:'Unknown action 0',
-        cisco_ios:'% Invalid input detected at \'^\' marker.',
-        cisco_sw:'% Invalid input detected at \'^\' marker.',
-        cisco_nxos:'% Invalid command at \'^\' marker.',
+        cisco_ios:'% Invalid input detected at '^' marker.',
+        cisco_sw:'% Invalid input detected at '^' marker.',
+        cisco_nxos:'% Invalid command at '^' marker.',
         juniper:'unknown command.',
-        aruba:'Invalid input: '+cmd
+        aruba:'Invalid input: '+cmd,
+        huawei:'Error: Unrecognized command found at '^' position.',
+        paloalto:'Unknown command: '+cmd,
+        mikrotik:'bad command name '+cmd+' (line 1 column 1)',
+        hp_procurve:'Invalid input: '+cmd
       };
-      printLine('<span style="color:#f85149">'+escH(errMsgs[currentVendor.id]||'% Unknown command')+'</span>');
+      printLine('<span style="color:#f85149">'+escH(errMsgs[v]||'% Unknown command')+'</span>');
       printLine('<span style="color:#484f58">Tip: type <span style="color:#e6edf3">?</span> or <span style="color:#e6edf3">help</span> to see available commands</span>');
     }
     printLine('');
   }
+
 
   // ── Wire input ──
   var input=document.getElementById('sim-input');
