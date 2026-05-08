@@ -554,6 +554,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('topology')" id="tab-topology" title="Network Topology Designer">
               <span class="tab-icon">🗺️</span><span class="tab-lbl">Topology</span>
             </button>
+            <button class="tab" onclick="stab('pkttools')" id="tab-pkttools" title="Packet Tools">
+              <span class="tab-icon">📦</span><span class="tab-lbl">Packet Tools</span>
+            </button>
           </div>
         </div>
         <div class="tab-divider"></div>
@@ -2540,6 +2543,503 @@ function renderCLISim(el){
 }
 
 
+function renderPacketTools(el){
+  el.innerHTML='';
+
+  /* ── CSS ── */
+  var css=document.createElement('style');
+  css.textContent=
+    '.pt-tab{padding:8px 20px;border-radius:8px 8px 0 0;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;border-bottom:none;transition:all .15s;font-family:var(--mono);white-space:nowrap;color:var(--t2);background:transparent}'
+    +'.pt-tab.active{background:var(--b2);border-color:var(--br);color:var(--a)}'
+    +'.pt-tab:hover:not(.active){color:var(--t)}'
+    +'.pt-panel{display:none}.pt-panel.active{display:block}'
+    +'.pkt-stage{display:flex;flex-direction:column;align-items:center;gap:0;position:relative}'
+    +'.pkt-node{background:var(--b2);border:2px solid var(--br);border-radius:10px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--t);text-align:center;position:relative;z-index:2;transition:all .3s;min-width:160px}'
+    +'.pkt-node.hit{border-color:var(--a);background:rgba(29,158,117,.08);color:var(--a)}'
+    +'.pkt-node.drop{border-color:#f85149;background:rgba(248,81,73,.08);color:#f85149}'
+    +'.pkt-node.pass{border-color:#3fb950;background:rgba(63,185,80,.08);color:#3fb950}'
+    +'.pkt-arrow{width:2px;height:30px;background:var(--br);margin:0 auto;position:relative;transition:background .3s}'
+    +'.pkt-arrow.active{background:var(--a)}'
+    +'.pkt-arrow::after{content:"▼";position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:10px;color:inherit}'
+    +'.pkt-badge{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;margin-top:4px;display:inline-block}'
+    +'.pkt-result{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.7}'
+    +'.tr-hop{display:grid;grid-template-columns:30px 180px 1fr;gap:8px;align-items:center;padding:6px 10px;border-radius:6px;margin-bottom:4px;font-family:var(--mono);font-size:11px}'
+    +'.tr-hop.normal{background:rgba(63,185,80,.05)}'
+    +'.tr-hop.slow{background:rgba(210,153,34,.07)}'
+    +'.tr-hop.drop{background:rgba(248,81,73,.07)}'
+    +'.tr-hop.star{background:rgba(139,148,158,.05)}'
+    +'.tr-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;white-space:nowrap}';
+  document.head.appendChild(css);
+
+  /* ── Header ── */
+  var hdr=document.createElement('div');
+  hdr.className='sh';
+  hdr.innerHTML='<span class="stitle">📦 Packet Tools</span><span class="sev info">Debug Generator &middot; Packet Walk Simulator &middot; Traceroute Analyzer</span>';
+  el.appendChild(hdr);
+
+  /* ── Sub-tabs ── */
+  var tabBar=document.createElement('div');
+  tabBar.style.cssText='display:flex;gap:4px;border-bottom:1px solid var(--br);margin-bottom:16px;flex-wrap:wrap';
+  var tabs=[
+    {id:'t-debug', label:'⚙️ 1. FortiGate Debug Generator'},
+    {id:'t-walk',  label:'🚶 2. Packet Walk Simulator'},
+    {id:'t-trace', label:'📡 3. Traceroute Analyzer (AI)'},
+  ];
+  tabs.forEach(function(t,i){
+    var b=document.createElement('button');
+    b.className='pt-tab'+(i===0?' active':'');
+    b.id=t.id;
+    b.textContent=t.label;
+    b.onclick=(function(idx){return function(){
+      document.querySelectorAll('.pt-tab').forEach(function(x){x.classList.remove('active');});
+      document.querySelectorAll('.pt-panel').forEach(function(x){x.classList.remove('active');});
+      this.classList.add('active');
+      document.getElementById('panel-'+idx).classList.add('active');
+    };})(i);
+    tabBar.appendChild(b);
+  });
+  el.appendChild(tabBar);
+
+  /* ══════════════════════════════════════════════════════════
+     PANEL 1 — FortiGate Debug Generator
+  ══════════════════════════════════════════════════════════ */
+  var p0=document.createElement('div');
+  p0.id='panel-0';
+  p0.className='pt-panel active';
+
+  p0.innerHTML=
+    '<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">'
+    +'Generate the exact FortiGate debug commands for tracing a packet flow. Fill in the fields below — no AI, nothing sent anywhere. '
+    +'<strong style="color:var(--t)">100% local.</strong></p>'
+
+    +'<div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🎯 Packet Parameters</div></div><div class="cbody">'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:14px">'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Source IP</label>'
+    +'<input type="text" id="dbg-src" placeholder="192.168.1.100" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Destination IP</label>'
+    +'<input type="text" id="dbg-dst" placeholder="8.8.8.8" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Destination Port</label>'
+    +'<input type="text" id="dbg-port" placeholder="443" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Protocol</label>'
+    +'<select id="dbg-proto" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">'
+    +'<option value="tcp">TCP</option><option value="udp">UDP</option><option value="icmp">ICMP</option></select></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Ingress Interface</label>'
+    +'<input type="text" id="dbg-intf" placeholder="port1 or wan1" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Packet Count</label>'
+    +'<select id="dbg-count" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">'
+    +'<option value="10">10 packets</option><option value="20" selected>20 packets</option><option value="50">50 packets</option><option value="100">100 packets</option></select></div>'
+    +'</div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">'
+    +'<label style="font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="dbg-sniffer" style="accent-color:var(--a)"> Include packet sniffer</label>'
+    +'<label style="font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="dbg-policy" checked style="accent-color:var(--a)"> Include policy lookup</label>'
+    +'<label style="font-size:11px;color:var(--t3);display:flex;align-items:center;gap=6px;cursor:pointer"><input type="checkbox" id="dbg-session" checked style="accent-color:var(--a)"> Include session filter</label>'
+    +'<label style="font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="dbg-ike" style="accent-color:var(--a)"> Include IKE debug (VPN)</label>'
+    +'</div>'
+    +'<div style="display:flex;gap:8px"><button class="sbtn" id="dbg-gen-btn" style="padding:10px 20px;font-size:13px;font-weight:700">⚙️ Generate Debug Commands</button>'
+    +'<button class="sbtn" id="dbg-copy-btn" style="background:var(--b3);border:1px solid var(--br);color:var(--t2);padding:10px 20px;font-size:12px">📋 Copy All</button>'
+    +'<button class="sbtn" id="dbg-clear-btn" style="background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2);padding:10px 20px;font-size:12px">🗑️ Clear</button>'
+    +'</div>'
+    +'</div></div>'
+
+    +'<div id="dbg-output" style="display:none">'
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l" style="color:#3fb950">💻 Generated Commands</div><span style="font-size:10px;color:var(--t3);font-family:var(--mono)">Run in order on FortiGate</span></div>'
+    +'<pre id="dbg-out-pre" style="background:#0a0e14;color:#3fb950;font-family:\'Courier New\',monospace;font-size:12px;padding:16px;border-radius:0 0 10px 10px;white-space:pre-wrap;overflow-x:auto;line-height:1.9;margin:0"></pre></div>'
+    +'<div class="cblock" style="margin-top:14px"><div class="chdr"><div class="chdr-l">📖 How to Interpret Results</div></div><div class="cbody" id="dbg-hints" style="font-size:12px;line-height:1.8;color:var(--t2)"></div></div>'
+    +'</div>';
+
+  el.appendChild(p0);
+
+  /* Wire debug generator */
+  document.getElementById('dbg-gen-btn').onclick=function(){
+    var src=document.getElementById('dbg-src').value.trim()||'<SRC-IP>';
+    var dst=document.getElementById('dbg-dst').value.trim()||'<DST-IP>';
+    var port=document.getElementById('dbg-port').value.trim()||'443';
+    var proto=document.getElementById('dbg-proto').value;
+    var intf=document.getElementById('dbg-intf').value.trim();
+    var count=document.getElementById('dbg-count').value;
+    var doSniffer=document.getElementById('dbg-sniffer').checked;
+    var doPolicy=document.getElementById('dbg-policy').checked;
+    var doSession=document.getElementById('dbg-session').checked;
+    var doIKE=document.getElementById('dbg-ike').checked;
+
+    var lines=[];
+
+    lines.push('# ═══════════════════════════════════════');
+    lines.push('# FortiGate Packet Debug — Generated by NetWolf');
+    lines.push('# Source: '+src+'  →  Dest: '+dst+':'+port+' ('+proto.toUpperCase()+')');
+    lines.push('# ═══════════════════════════════════════');
+    lines.push('');
+
+    if(doPolicy){
+      lines.push('# STEP 1: Policy lookup — which policy matches this traffic?');
+      lines.push('diagnose firewall iprope lookup '+src+' '+dst+' '+port+' '+proto);
+      lines.push('');
+      lines.push('# STEP 2: Routing lookup — which interface/gateway will be used?');
+      lines.push('get router info routing-table details '+dst);
+      lines.push('');
+    }
+
+    if(doSniffer){
+      var snifferFilter='"host '+src+' and host '+dst+(proto!=='icmp'?' and port '+port:'')+'"';
+      if(intf){
+        lines.push('# STEP '+(doPolicy?3:1)+': Packet sniffer on '+intf+' — confirm traffic is arriving');
+        lines.push('diagnose sniffer packet '+intf+' '+snifferFilter+' 4 '+count+' l');
+      } else {
+        lines.push('# STEP '+(doPolicy?3:1)+': Packet sniffer on all interfaces — confirm traffic is arriving');
+        lines.push('diagnose sniffer packet any '+snifferFilter+' 4 '+count+' l');
+      }
+      lines.push('');
+    }
+
+    var step=(doPolicy?2:0)+(doSniffer?1:0)+1;
+    lines.push('# STEP '+step+': Reset any previous debug filters');
+    lines.push('diagnose debug reset');
+    lines.push('');
+    lines.push('# STEP '+(step+1)+': Set flow debug filter');
+    lines.push('diagnose debug flow filter addr '+src);
+    lines.push('diagnose debug flow filter daddr '+dst);
+    if(proto!=='icmp') lines.push('diagnose debug flow filter dport '+port);
+    lines.push('');
+    lines.push('# STEP '+(step+2)+': Start flow trace — trigger traffic AFTER this');
+    lines.push('diagnose debug flow trace start '+count);
+    lines.push('diagnose debug enable');
+    lines.push('');
+    lines.push('# >>> TRIGGER TRAFFIC NOW (ping/connect from source host) <<<');
+    lines.push('');
+    lines.push('# STEP '+(step+3)+': Stop debug after capturing');
+    lines.push('diagnose debug flow trace stop');
+    lines.push('diagnose debug disable');
+    lines.push('diagnose debug reset');
+    lines.push('');
+
+    if(doSession){
+      lines.push('# STEP '+(step+4)+': Check session table for this flow');
+      lines.push('diagnose sys session filter src '+src);
+      lines.push('diagnose sys session filter dst '+dst);
+      if(proto!=='icmp') lines.push('diagnose sys session filter dport '+port);
+      lines.push('diagnose sys session list');
+      lines.push('');
+    }
+
+    if(doIKE){
+      lines.push('# STEP '+(step+5)+': IKE debug (for VPN-related issues)');
+      lines.push('diagnose debug application ike -1');
+      lines.push('diagnose debug enable');
+      lines.push('# Trigger VPN traffic, then stop:');
+      lines.push('diagnose debug disable');
+      lines.push('diagnose debug reset');
+      lines.push('');
+    }
+
+    document.getElementById('dbg-out-pre').textContent=lines.join('\n');
+    document.getElementById('dbg-output').style.display='block';
+
+    document.getElementById('dbg-hints').innerHTML=
+      '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">'
+      +'<div style="padding:10px 12px;background:rgba(63,185,80,.05);border-radius:6px;border-left:3px solid #3fb950">'
+      +'<div style="color:#3fb950;font-weight:700;margin-bottom:4px">✅ Traffic allowed</div>'
+      +'Flow log shows: <span style="font-family:var(--mono);color:#3fb950">action=accept</span><br>'
+      +'Session list shows entry with policy-id</div>'
+      +'<div style="padding:10px 12px;background:rgba(248,81,73,.05);border-radius:6px;border-left:3px solid #f85149">'
+      +'<div style="color:#f85149;font-weight:700;margin-bottom:4px">❌ Traffic denied</div>'
+      +'Flow log shows: <span style="font-family:var(--mono);color:#f85149">action=deny</span> or <span style="font-family:var(--mono);color:#f85149">no policy matched</span></div>'
+      +'<div style="padding:10px 12px;background:rgba(210,153,34,.05);border-radius:6px;border-left:3px solid #d29922">'
+      +'<div style="color:#d29922;font-weight:700;margin-bottom:4px">⚠️ Traffic not arriving</div>'
+      +'Sniffer shows nothing on ingress interface<br>→ Check upstream routing or firewall</div>'
+      +'<div style="padding:10px 12px;background:rgba(88,166,255,.05);border-radius:6px;border-left:3px solid #58a6ff">'
+      +'<div style="color:#58a6ff;font-weight:700;margin-bottom:4px">🔄 NAT in use</div>'
+      +'Session shows SNAT/DNAT translation<br>→ Check NAT policy and IP pool</div>'
+      +'<div style="padding:10px 12px;background:rgba(29,158,117,.05);border-radius:6px;border-left:3px solid var(--a)">'
+      +'<div style="color:var(--a);font-weight:700;margin-bottom:4px">🔍 Key flow log keywords</div>'
+      +'<span style="font-family:var(--mono);font-size:11px">'
+      +'msg="iprope_in_check() check failed" = Policy denied<br>'
+      +'msg="find a route" failed = No route to dest<br>'
+      +'msg="Allowed by policy" = Correct policy hit<br>'
+      +'msg="reverse path check fail" = RPF/anti-spoof'
+      +'</span></div>'
+      +'</div>';
+  };
+
+  document.getElementById('dbg-copy-btn').onclick=function(){
+    var txt=document.getElementById('dbg-out-pre').textContent;
+    if(!txt){showToast('Generate commands first');return;}
+    navigator.clipboard.writeText(txt).then(function(){showToast('Copied!');});
+  };
+  document.getElementById('dbg-clear-btn').onclick=function(){
+    document.getElementById('dbg-output').style.display='none';
+    document.getElementById('dbg-out-pre').textContent='';
+  };
+
+  /* ══════════════════════════════════════════════════════════
+     PANEL 2 — Packet Walk Simulator
+  ══════════════════════════════════════════════════════════ */
+  var p1=document.createElement('div');
+  p1.id='panel-1';
+  p1.className='pt-panel';
+
+  p1.innerHTML=
+    '<p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">'
+    +'Simulate how a packet travels through a FortiGate — step by step. Shows exactly where it gets allowed or dropped and why. '
+    +'<strong style="color:var(--t)">100% local, no AI, nothing sent anywhere.</strong></p>'
+
+    +'<div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🎯 Packet Parameters</div></div><div class="cbody">'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:14px">'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Source IP</label>'
+    +'<input type="text" id="pw-src" placeholder="192.168.1.100" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Destination IP</label>'
+    +'<input type="text" id="pw-dst" placeholder="8.8.8.8" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Destination Port</label>'
+    +'<input type="text" id="pw-port" placeholder="443" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Protocol</label>'
+    +'<select id="pw-proto" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">'
+    +'<option value="tcp">TCP</option><option value="udp">UDP</option><option value="icmp">ICMP</option></select></div>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:14px">'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Policy match?</label>'
+    +'<select id="pw-policy" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">'
+    +'<option value="allow">✅ Policy allows traffic</option>'
+    +'<option value="deny">❌ Policy denies traffic</option>'
+    +'<option value="none">🚫 No matching policy</option>'
+    +'</select></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Route exists?</label>'
+    +'<select id="pw-route" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">'
+    +'<option value="yes">✅ Route exists</option>'
+    +'<option value="no">❌ No route to destination</option>'
+    +'</select></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">NAT configured?</label>'
+    +'<select id="pw-nat" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">'
+    +'<option value="none">No NAT</option>'
+    +'<option value="snat">SNAT (source NAT)</option>'
+    +'<option value="dnat">DNAT (destination NAT)</option>'
+    +'<option value="both">Both SNAT + DNAT</option>'
+    +'</select></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Security profile?</label>'
+    +'<select id="pw-secprof" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">'
+    +'<option value="none">None</option>'
+    +'<option value="av">Antivirus</option>'
+    +'<option value="ips">IPS / IDS</option>'
+    +'<option value="both">AV + IPS</option>'
+    +'<option value="block">Security profile BLOCKS</option>'
+    +'</select></div>'
+    +'</div>'
+    +'<button class="sbtn" id="pw-run-btn" style="padding:10px 24px;font-size:13px;font-weight:700">🚶 Simulate Packet Walk</button>'
+    +'</div></div>'
+    +'<div id="pw-output" style="display:none"></div>';
+
+  el.appendChild(p1);
+
+  document.getElementById('pw-run-btn').onclick=function(){
+    var src=document.getElementById('pw-src').value.trim()||'192.168.1.100';
+    var dst=document.getElementById('pw-dst').value.trim()||'8.8.8.8';
+    var port=document.getElementById('pw-port').value.trim()||'443';
+    var proto=document.getElementById('pw-proto').value.toUpperCase();
+    var policy=document.getElementById('pw-policy').value;
+    var route=document.getElementById('pw-route').value;
+    var nat=document.getElementById('pw-nat').value;
+    var secprof=document.getElementById('pw-secprof').value;
+
+    var stages=[
+      {icon:'📥',label:'Ingress Interface',sub:'Packet arrives on interface',status:'pass',note:'Packet received. RPF (reverse path) check passed.'},
+      {icon:'🔍',label:'Policy Lookup',sub:src+' → '+dst+':'+port+' ('+proto+')',
+       status: policy==='allow'?'pass': policy==='deny'?'drop':'drop',
+       note: policy==='allow'?'✅ Matched policy ID — traffic allowed to proceed.'
+           : policy==='deny' ?'❌ Matched DENY policy — packet dropped here. Check policy order and source/destination zones.'
+           :                   '❌ No policy matched — implicit deny. Create a policy for this traffic.'},
+    ];
+
+    if(policy==='allow'){
+      stages.push({icon:'🌐',label:'Route Lookup',sub:'Next-hop for '+dst,
+        status: route==='yes'?'pass':'drop',
+        note: route==='yes'?'✅ Route found — packet forwarded via gateway.'
+            :'❌ No route to '+dst+'. Add a static route or check BGP/OSPF.'});
+
+      if(route==='yes'){
+        if(nat!=='none'){
+          var natNote=nat==='snat'?'Source IP '+src+' translated to egress interface IP (SNAT).'
+                     :nat==='dnat'?'Destination IP '+dst+' translated to internal server (DNAT).'
+                     :'Both SNAT and DNAT applied to this packet.';
+          stages.push({icon:'🔄',label:'NAT Translation',sub:nat.toUpperCase()+' applied',status:'hit',note:'ℹ️ '+natNote});
+        }
+
+        if(secprof!=='none'){
+          var spStatus=secprof==='block'?'drop':'pass';
+          var spNote=secprof==='av'?'✅ Antivirus scan passed — no threats detected.'
+                    :secprof==='ips'?'✅ IPS inspection passed — no signatures matched.'
+                    :secprof==='both'?'✅ AV + IPS inspection passed.'
+                    :'❌ Security profile blocked this traffic — threat detected or policy violation.';
+          stages.push({icon:'🛡️',label:'Security Profile',sub:secprof==='block'?'Traffic blocked':'Inspection passed',status:spStatus,note:spNote});
+        }
+
+        if(secprof!=='block'){
+          stages.push({icon:'📤',label:'Egress Interface',sub:'Packet forwarded to next-hop',status:'pass',note:'✅ Packet sent out egress interface toward '+dst+'.'});
+          stages.push({icon:'✅',label:'DELIVERED',sub:'Packet reached destination',status:'pass',note:'🎉 Packet successfully forwarded to '+dst+':'+port+'.'});
+        }
+      }
+    }
+
+    // Build visual
+    var out=document.getElementById('pw-output');
+    out.innerHTML='';
+    out.style.display='block';
+
+    var wrapCard=document.createElement('div');
+    wrapCard.className='cblock';
+    var wrapHdr=document.createElement('div');
+    wrapHdr.className='chdr';
+    wrapHdr.innerHTML='<div class="chdr-l">📊 Packet Walk: <span style="font-family:var(--mono);color:var(--a)">'+src+'</span> → <span style="font-family:var(--mono);color:var(--a)">'+dst+':'+port+'</span> ('+proto+')</div>';
+    wrapCard.appendChild(wrapHdr);
+
+    var body=document.createElement('div');
+    body.style.cssText='padding:20px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start';
+
+    // Left: visual flow
+    var flow=document.createElement('div');
+    flow.style.cssText='display:flex;flex-direction:column;align-items:center;gap:0;min-width:200px';
+
+    stages.forEach(function(s,i){
+      var node=document.createElement('div');
+      node.className='pkt-node '+s.status;
+      node.innerHTML='<div style="font-size:20px;margin-bottom:4px">'+s.icon+'</div>'
+        +'<div style="font-size:12px;font-weight:700">'+s.label+'</div>'
+        +'<div style="font-size:10px;opacity:.7;margin-top:2px">'+s.sub+'</div>';
+      flow.appendChild(node);
+      if(i<stages.length-1){
+        var arrow=document.createElement('div');
+        arrow.className='pkt-arrow'+(s.status==='pass'?' active':'');
+        arrow.style.cssText='width:2px;height:28px;margin:0 auto;position:relative;'
+          +(s.status==='pass'?'background:var(--a)':'background:#f85149');
+        flow.appendChild(arrow);
+      }
+    });
+    body.appendChild(flow);
+
+    // Right: stage explanations
+    var notes=document.createElement('div');
+    notes.style.cssText='flex:1;min-width:220px';
+    var finalDrop=stages[stages.length-1].status==='drop';
+
+    stages.forEach(function(s){
+      var n=document.createElement('div');
+      n.style.cssText='padding:10px 12px;border-radius:8px;margin-bottom:8px;font-size:12px;line-height:1.6;'
+        +(s.status==='pass'?'background:rgba(63,185,80,.05);border-left:3px solid #3fb950'
+         :s.status==='drop'?'background:rgba(248,81,73,.05);border-left:3px solid #f85149'
+         :'background:rgba(88,166,255,.05);border-left:3px solid #58a6ff');
+      n.innerHTML='<div style="font-weight:700;color:var(--t);margin-bottom:3px">'+s.icon+' '+s.label+'</div>'
+        +'<div style="color:var(--t2)">'+s.note+'</div>';
+      notes.appendChild(n);
+    });
+
+    // Final verdict
+    var verdict=document.createElement('div');
+    verdict.style.cssText='padding:12px 16px;border-radius:8px;margin-top:4px;font-size:13px;font-weight:700;'
+      +(finalDrop?'background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.3);color:#f85149'
+                 :'background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:#3fb950');
+    verdict.innerHTML=finalDrop
+      ?'❌ PACKET DROPPED at: '+stages[stages.length-1].label
+      :'✅ PACKET DELIVERED SUCCESSFULLY';
+    notes.appendChild(verdict);
+
+    body.appendChild(notes);
+    wrapCard.appendChild(body);
+    out.appendChild(wrapCard);
+  };
+
+  /* ══════════════════════════════════════════════════════════
+     PANEL 3 — Traceroute Analyzer (AI)
+  ══════════════════════════════════════════════════════════ */
+  var p2=document.createElement('div');
+  p2.id='panel-2';
+  p2.className='pt-panel';
+
+  p2.innerHTML=
+    '<div style="padding:10px 14px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;margin-bottom:14px;font-size:12px;color:var(--y);line-height:1.7">'
+    +'<strong>⚠️ Privacy — read before using:</strong><br>'
+    +'Traceroute output is sent to <strong>Groq API</strong> (third party). Before pasting:<br>'
+    +'1. Use the <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'bulkAnon\')">📋 Bulk Anonymizer</span> to replace all real IPs and hostnames<br>'
+    +'2. Remove or rename any hostnames that reveal your company, ISP or location<br>'
+    +'3. Only then paste the anonymized output below</div>'
+
+    +'<div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">📡 Traceroute / Tracert Output</div><span style="font-size:10px;color:var(--t3)">Paste output from any OS or vendor</span></div><div class="cbody">'
+    +'<textarea id="tr-input" rows="10" placeholder="Paste your traceroute or tracert output here...\n\nExample:\n 1  192.0.2.1  1 ms  1 ms  1 ms\n 2  192.0.2.10  8 ms  9 ms  8 ms\n 3  * * *\n 4  198.51.100.1  45 ms  43 ms  44 ms\n 5  203.0.113.1  120 ms  119 ms  121 ms" '
+    +'style="width:100%;padding:10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:\'Courier New\',monospace;font-size:12px;resize:vertical;line-height:1.7"></textarea>'
+    +'<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Source tool</label>'
+    +'<select id="tr-tool" style="padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px">'
+    +'<option>traceroute (Linux/Mac)</option><option>tracert (Windows)</option><option>FortiGate execute traceroute</option>'
+    +'<option>Cisco traceroute</option><option>Juniper traceroute</option><option>Other/Auto-detect</option>'
+    +'</select></div>'
+    +'<div style="display:flex;flex-direction:column;justify-content:flex-end">'
+    +'<button class="sbtn" id="tr-analyze-btn" style="padding:9px 20px;font-size:13px;font-weight:700;background:linear-gradient(90deg,var(--a),var(--ad))">🤖 Analyze with AI</button>'
+    +'</div></div>'
+    +'</div></div>'
+
+    +'<div id="tr-loading" style="display:none;text-align:center;padding:20px;color:var(--t2);font-size:12px">⏳ Analyzing traceroute...</div>'
+    +'<div id="tr-output" style="display:none"></div>';
+
+  el.appendChild(p2);
+
+  /* Wire traceroute analyzer */
+  document.getElementById('tr-analyze-btn').onclick=async function(){
+    var key=localStorage.getItem('groq_key');
+    if(!key){showToast('⚠️ Enter your Groq API key in the PS Maker tab first');return;}
+    var input=document.getElementById('tr-input').value.trim();
+    if(!input){showToast('Paste traceroute output first');return;}
+    var tool=document.getElementById('tr-tool').value;
+
+    document.getElementById('tr-loading').style.display='block';
+    document.getElementById('tr-output').style.display='none';
+    document.getElementById('tr-analyze-btn').disabled=true;
+
+    var prompt='You are a network engineer expert. Analyze this traceroute output and provide a detailed diagnosis.\n\n'
+      +'Tool used: '+tool+'\n\n'
+      +'TRACEROUTE OUTPUT:\n'+input+'\n\n'
+      +'Provide:\n'
+      +'1. SUMMARY: What does this traceroute show overall? (1-2 sentences)\n'
+      +'2. HOP-BY-HOP ANALYSIS: For each hop, note the latency, whether it responds, and any issues. Format as:\n'
+      +'   Hop N: [IP] — [latency] — [status: OK/HIGH LATENCY/PACKET LOSS/NO RESPONSE] — [brief note]\n'
+      +'3. ISSUES FOUND: List any problems (packet loss, high latency spikes, asymmetric routing, unreachable hops)\n'
+      +'4. ROOT CAUSE: What is most likely causing any issues?\n'
+      +'5. RECOMMENDED ACTIONS: What should the engineer check or do next?\n'
+      +'6. VERDICT: GOOD PATH / DEGRADED PATH / BROKEN PATH\n\n'
+      +'Keep it concise and practical for a network engineer.';
+
+    try{
+      var resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+        method:'POST',
+        headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
+        body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1500,
+          messages:[{role:'user',content:prompt}]})
+      });
+      if(!resp.ok) throw new Error('API error '+resp.status);
+      var data=await resp.json();
+      var analysis=data.choices[0].message.content;
+
+      var out=document.getElementById('tr-output');
+      out.style.display='block';
+      out.innerHTML='';
+
+      // Parse and display visually
+      var outCard=document.createElement('div');
+      outCard.className='cblock';
+      outCard.innerHTML='<div class="chdr"><div class="chdr-l" style="color:var(--a)">🤖 AI Traceroute Analysis</div><span style="font-size:10px;color:var(--t3);font-family:var(--mono)">Groq LLaMA 3.3 70B</span></div>'
+        +'<div class="cbody">'
+        +'<div style="background:#0a0e14;border:1px solid #30363d;border-radius:8px;padding:14px 16px;font-size:12px;color:#c9d1d9;line-height:1.9;white-space:pre-wrap;font-family:\'Courier New\',monospace;overflow-x:auto">'
+        +escH(analysis)
+        +'</div></div>';
+      out.appendChild(outCard);
+
+    }catch(err){
+      document.getElementById('tr-output').style.display='block';
+      document.getElementById('tr-output').innerHTML='<div class="cblock"><div class="cbody" style="color:#f85149">❌ Error: '+err.message+'<br><span style="color:var(--t3)">Make sure your Groq API key is saved in the PS Maker tab.</span></div></div>';
+    }
+    document.getElementById('tr-loading').style.display='none';
+    document.getElementById('tr-analyze-btn').disabled=false;
+  };
+
+  function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+}
+
+
 window.doLogin=function doLogin(){
   const email=document.getElementById('loginEmail').value.trim();
   const pass=document.getElementById('loginPassword').value;
@@ -3028,7 +3528,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
