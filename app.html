@@ -3461,7 +3461,90 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 ['execute ping-options source 192.168.1.1','Set ping source IP','ro'],
 ['execute traceroute 8.8.8.8','Traceroute from FortiGate','ro'],
 ],
-}}
+
+'VDOM & Multi-Tenant':[
+['config global','Enter global config (multi-VDOM)','caution'],
+['config vdom','Enter VDOM config','caution'],
+['edit root','Edit root VDOM','caution'],
+['show full-configuration system vdom','Show VDOM configuration','ro'],
+['diagnose sys vd list','List all VDOMs','ro'],
+['diagnose sys vd name root','Show root VDOM stats','ro'],
+['get system vdom-property','VDOM resource allocation','ro'],
+],
+'Policy & Objects':[
+['show firewall policy','All firewall policies','ro'],
+['show firewall address','All address objects','ro'],
+['show firewall addrgrp','Address groups','ro'],
+['show firewall service custom','Custom service objects','ro'],
+['show firewall service group','Service groups','ro'],
+['show firewall schedule recurring','Recurring schedules','ro'],
+['show firewall profile-list','Security profiles','ro'],
+['diagnose firewall auth list','Authenticated firewall users','ro'],
+['diagnose firewall shaper traffic-shaper list','Traffic shapers','ro'],
+],
+'SD-WAN':[
+['get system sdwan','SD-WAN configuration','ro'],
+['diagnose sys sdwan health-check','SD-WAN health check status','ro'],
+['diagnose sys sdwan member','SD-WAN member interfaces','ro'],
+['diagnose sys sdwan route','SD-WAN route table','ro'],
+['diagnose sys sdwan service','SD-WAN services/rules','ro'],
+['get router info sdwan service','SD-WAN service info','ro'],
+]
+,'SSL Inspection':[
+['show firewall ssl-server','SSL server inspection config','ro'],
+['diagnose debug application wad -1','WAD debug (web proxy)','caution'],
+['diagnose wad stats','WAD statistics','ro'],
+['diagnose sys tcp-proxy info','TCP proxy connections','ro'],
+]
+,'HA Detail':[
+['get system ha status','HA status and role','ro'],
+['diagnose sys ha showcsum','HA config checksum','ro'],
+['diagnose sys ha dump-by vcluster','HA cluster dump','ro'],
+['execute ha manage 1 admin','Access secondary unit','caution'],
+['diagnose sys ha reset-uptime','Force failover','danger'],
+['execute ha failover','Manual HA failover','danger'],
+]
+,'Certificates':[
+['diagnose certificate local list','Local certificates','ro'],
+['get certificate local','Local cert brief','ro'],
+['get certificate ca','CA certificates','ro'],
+['get certificate remote','Remote certificates','ro'],
+['diagnose debug application certd -1','Certificate daemon debug','caution'],
+]
+,'DNS & DHCP':[
+['get system dns','DNS server configuration','ro'],
+['diagnose test application dnsproxy','DNS proxy diagnostics','ro'],
+['get system dhcp server','DHCP server configuration','ro'],
+['diagnose sys dhcp status','DHCP server status','ro'],
+['execute clear system dhcp lease','Clear DHCP leases','danger'],
+]
+,'Logging & SIEM':[
+['get log setting','Log settings','ro'],
+['get log fortianalyzer setting','FortiAnalyzer log settings','ro'],
+['get log fortianalyzer filter','FAZ log filter','ro'],
+['diagnose test application miglogd 4','Test log connection','ro'],
+['diagnose test application miglogd 6','Log daemon statistics','ro'],
+['get log memory setting','Memory log settings','ro'],
+['execute log filter device memory','Filter memory logs','ro'],
+['execute log display','Display filtered logs','ro'],
+]
+,'FortiGuard & Licensing':[
+['diagnose autoupdate status','FortiGuard update status','ro'],
+['diagnose autoupdate versions','FortiGuard version info','ro'],
+['execute update-now','Force FortiGuard update','caution'],
+['get system fortiguard','FortiGuard configuration','ro'],
+['diagnose fortigate-connectivity test','FortiGuard connectivity test','ro'],
+['get system license status','License status','ro'],
+]
+,'Network Diagnostics':[
+['diagnose netlink interface list','Interface statistics','ro'],
+['diagnose ip arp list','ARP table detail','ro'],
+['diagnose firewall iprope list 100004','Policy routing table','ro'],
+['diagnose npu np6 port-list','NPU port mapping','ro'],
+['diagnose sys session expectation list','Expected sessions','ro'],
+['diagnose hardware deviceinfo nic port1','NIC hardware info','ro'],
+['diagnose hardware test suite all','Hardware test suite','caution'],
+]}}
 ,'cisco_sw':{label:'🔵 Cisco IOS Switch',cats:{
 'System':[
 ['show version','IOS version, uptime, model, serial','ro'],
@@ -3591,7 +3674,134 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 ['copy running-config startup-config','Save configuration','caution'],
 ['checkpoint','Create config checkpoint','caution'],
 ],
-}}
+
+'OSPF':[
+['show ip ospf','OSPF process summary','ro'],
+['show ip ospf neighbors','OSPF neighbor adjacencies','ro'],
+['show ip ospf neighbors detail','Full OSPF neighbor detail','ro'],
+['show ip ospf database','OSPF LSDB summary','ro'],
+['show ip ospf database router','Router LSAs','ro'],
+['show ip ospf database network','Network LSAs','ro'],
+['show ip ospf interface brief','OSPF interface summary','ro'],
+['show ip ospf interface ethernet 1/1','OSPF detail for interface','ro'],
+['show ip ospf statistics','OSPF packet statistics','ro'],
+['show ip ospf route','OSPF-computed route table','ro'],
+],
+'BGP':[
+['show bgp sessions','BGP session summary all peers','ro'],
+['show bgp ipv4 unicast summary','BGP IPv4 unicast summary','ro'],
+['show bgp ipv4 unicast neighbors 10.0.0.1','BGP neighbor detail','ro'],
+['show bgp ipv4 unicast neighbors 10.0.0.1 received-routes','Received prefixes','ro'],
+['show bgp ipv4 unicast neighbors 10.0.0.1 advertised-routes','Advertised prefixes','ro'],
+['show bgp ipv4 unicast 10.0.0.0/8','BGP path info for prefix','ro'],
+['show bgp l2vpn evpn summary','BGP EVPN summary','ro'],
+['show bgp l2vpn evpn','BGP EVPN routes','ro'],
+['show bgp process','BGP process information','ro'],
+['show bgp policy statistics neighbor 10.0.0.1 input','BGP inbound policy stats','ro'],
+['clear bgp ipv4 unicast 10.0.0.1 soft in','Soft reset BGP inbound','caution'],
+]
+,'EIGRP':[
+['show ip eigrp neighbors','EIGRP neighbor table','ro'],
+['show ip eigrp interfaces','EIGRP enabled interfaces','ro'],
+['show ip eigrp topology','EIGRP topology table','ro'],
+['show ip eigrp topology all-links','All EIGRP routes including non-successor','ro'],
+['show ip eigrp traffic','EIGRP packet statistics','ro'],
+]
+,'HSRP / VRRP / GLBP':[
+['show hsrp brief','HSRP group summary','ro'],
+['show hsrp','HSRP full detail','ro'],
+['show vrrp','VRRP group status','ro'],
+['show vrrp brief','VRRP brief summary','ro'],
+['show glbp brief','GLBP group summary','ro'],
+]
+,'ACL & Policy':[
+['show ip access-lists','All IP ACLs with counters','ro'],
+['show access-lists','All access lists','ro'],
+['show ip prefix-list','All prefix lists','ro'],
+['show route-map','Route map configurations','ro'],
+['show bgp community-list','BGP community lists','ro'],
+['show policy-map interface ethernet 1/1','QoS policy on interface','ro'],
+['show class-map','Class maps defined','ro'],
+]
+,'EVPN & VxLAN':[
+['show nve peers','NVE/VxLAN EVPN remote peers','ro'],
+['show nve vni','VxLAN VNI to VLAN mapping','ro'],
+['show nve peers detail','Detailed NVE peer info','ro'],
+['show l2route evpn mac all','EVPN MAC routes','ro'],
+['show l2route evpn mac-ip all','EVPN MAC+IP bindings','ro'],
+['show bgp l2vpn evpn evi 10','EVPN instance 10 BGP routes','ro'],
+['show vxlan interface','VxLAN interface mapping','ro'],
+]
+,'Multicast':[
+['show ip mroute','Multicast routing table','ro'],
+['show ip pim neighbor','PIM neighbor table','ro'],
+['show ip pim interface','PIM interface status','ro'],
+['show ip igmp groups','IGMP group membership','ro'],
+['show ip igmp snooping','IGMP snooping status','ro'],
+['show ip pim rp-hash 239.0.0.1','PIM RP for multicast group','ro'],
+]
+,'MPLS':[
+['show mpls forwarding-table','MPLS FIB/LFIB','ro'],
+['show mpls interfaces','MPLS-enabled interfaces','ro'],
+['show mpls ldp neighbor','LDP neighbor sessions','ro'],
+['show mpls ldp bindings','LDP label bindings','ro'],
+]
+,'Hardware & Platform':[
+['show hardware capacity','Hardware table utilization','ro'],
+['show system internal kernel memory info','Kernel memory detail','ro'],
+['show platform internal counters port ethernet 1/1','Per-port hardware counters','ro'],
+['show platform fwd-asic resource tcam usage module 1','TCAM usage','ro'],
+['show interface ethernet 1/1 hardware','Hardware stats for interface','ro'],
+['show hardware internal cpu-mac hi-util-pkt-info','CPU packet info','ro'],
+]
+,'NTP & Management':[
+['show ntp peer-status','NTP peer synchronization status','ro'],
+['show ntp peers','Configured NTP peers','ro'],
+['show snmp','SNMP configuration','ro'],
+['show snmp engineID','SNMP engine ID','ro'],
+['show users','Active user sessions','ro'],
+['show accounting log','AAA accounting log','ro'],
+['show ssh server','SSH server status','ro'],
+]
+,'Config — Routing Protocols':[
+['configure terminal','Enter config mode','caution'],
+['router ospf 1','Enter OSPF config','caution'],
+['router-id 10.0.0.1','Set OSPF router ID','caution'],
+['network 192.168.1.0/24 area 0','Advertise network in OSPF area 0','caution'],
+['passive-interface default','Suppress OSPF on all interfaces by default','caution'],
+['no passive-interface ethernet 1/1','Enable OSPF on specific interface','caution'],
+['area 1 stub','Configure stub area','caution'],
+['router bgp 65001','Enter BGP config','caution'],
+['router-id 10.0.0.1','Set BGP router ID','caution'],
+['neighbor 10.0.0.2 remote-as 65002','Define eBGP neighbor','caution'],
+['neighbor 10.0.0.2 update-source loopback0','BGP source loopback','caution'],
+['address-family ipv4 unicast','Enter IPv4 address family','caution'],
+['neighbor 10.0.0.2 activate','Activate BGP neighbor','caution'],
+['maximum-paths 4','Enable ECMP for 4 paths','caution'],
+]
+,'Config — VPC & LAG':[
+['vpc domain 10','Create vPC domain','caution'],
+['role priority 100','Set vPC role priority (lower=primary)','caution'],
+['peer-keepalive destination 10.0.0.2','Configure vPC keepalive','caution'],
+['peer-link','Configure peer-link','caution'],
+['interface port-channel 10','Create port-channel','caution'],
+['vpc 10','Associate port-channel to vPC 10','caution'],
+['interface ethernet 1/1','Enter interface','caution'],
+['channel-group 10 mode active','Add to LACP port-channel','caution'],
+['spanning-tree port type network','Set port type for vPC peer-link','caution'],
+['spanning-tree port type edge','Set edge port (PortFast)','caution'],
+]
+,'Config — VxLAN/EVPN':[
+['feature nv overlay','Enable NV overlay (VxLAN)','caution'],
+['feature vn-segment-vlan-based','Enable VLAN-based VNI','caution'],
+['fabric forwarding anycast-gateway-mac 0001.0001.0001','Configure anycast gateway MAC','caution'],
+['vlan 10','Enter VLAN config','caution'],
+['vn-segment 10010','Map VLAN to VxLAN VNI','caution'],
+['interface nve 1','Create NVE interface','caution'],
+['source-interface loopback0','Set VxLAN source interface','caution'],
+['member vni 10010','Associate VNI to NVE','caution'],
+['member vni 10010 associate-vrf','Associate VNI to L3 VRF','caution'],
+]}}
 ,'juniper':{label:'🟣 Juniper JunOS',cats:{
 'System':[
 ['show version','JunOS version and hardware model','ro'],
@@ -3652,7 +3862,125 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 ['show security flow session','Active flow sessions','ro'],
 ['clear ospf neighbor all','Clear all OSPF adjacencies','danger'],
 ],
-}}
+
+'OSPF Detail':[
+['show ospf neighbor','OSPF neighbor adjacencies','ro'],
+['show ospf neighbor detail','Full OSPF neighbor info','ro'],
+['show ospf interface','OSPF interface parameters','ro'],
+['show ospf interface detail','OSPF interface detail','ro'],
+['show ospf database','OSPF LSDB summary','ro'],
+['show ospf database router detail','Router LSA detail','ro'],
+['show ospf database network detail','Network LSA detail','ro'],
+['show ospf route','OSPF computed routes','ro'],
+['show ospf statistics','OSPF packet counters','ro'],
+['clear ospf neighbor all','Clear all OSPF adjacencies','danger'],
+['clear ospf statistics','Reset OSPF statistics','caution'],
+],
+'BGP Detail':[
+['show bgp summary','BGP peer summary','ro'],
+['show bgp neighbor 10.0.0.1','BGP neighbor full detail','ro'],
+['show bgp neighbor 10.0.0.1 received-routes','Received prefixes from peer','ro'],
+['show bgp neighbor 10.0.0.1 advertised-routes','Advertised prefixes to peer','ro'],
+['show bgp neighbor 10.0.0.1 routes','Active routes from peer','ro'],
+['show route protocol bgp','BGP routes in routing table','ro'],
+['show bgp group','BGP group configuration','ro'],
+['clear bgp neighbor 10.0.0.1','Reset BGP session','danger'],
+['clear bgp neighbor 10.0.0.1 soft','Soft reset BGP session','caution'],
+]
+,'IS-IS':[
+['show isis adjacency','IS-IS adjacency table','ro'],
+['show isis adjacency detail','Full IS-IS adjacency info','ro'],
+['show isis database','IS-IS LSDB','ro'],
+['show isis database detail','IS-IS LSDB detail','ro'],
+['show isis interface','IS-IS interface status','ro'],
+['show isis route','IS-IS computed routes','ro'],
+['show isis statistics','IS-IS packet counters','ro'],
+]
+,'MPLS & LDP':[
+['show mpls lsp','MPLS LSP summary','ro'],
+['show mpls lsp detail','MPLS LSP path detail','ro'],
+['show mpls lsp ingress','Ingress LSPs (originating here)','ro'],
+['show mpls lsp egress','Egress LSPs (terminating here)','ro'],
+['show ldp neighbor','LDP neighbor sessions','ro'],
+['show ldp database','LDP label database','ro'],
+['show ldp interface','LDP interfaces','ro'],
+['show rsvp neighbor','RSVP neighbor sessions','ro'],
+['show rsvp session','RSVP LSP sessions','ro'],
+]
+,'EVPN & VxLAN':[
+['show evpn instance','EVPN instance summary','ro'],
+['show evpn mac-ip-table','EVPN MAC+IP table','ro'],
+['show evpn database','EVPN MAC database','ro'],
+['show route table bgp.evpn.0','BGP EVPN route table','ro'],
+['show interfaces vtep-x','VxLAN VTEP interface','ro'],
+]
+,'Firewall / Filters':[
+['show firewall','All firewall filter counters','ro'],
+['show firewall filter FILTER-NAME','Specific filter hit counts','ro'],
+['show firewall log','Firewall syslog','ro'],
+['show policer','Policer statistics','ro'],
+]
+,'Class of Service':[
+['show class-of-service interface ge-0/0/0','CoS config on interface','ro'],
+['show class-of-service forwarding-class','Forwarding classes','ro'],
+['show class-of-service dscp-code-point-aliases','DSCP alias mapping','ro'],
+['show class-of-service classifier','CoS classifiers','ro'],
+['show class-of-service scheduler-map','Scheduler map detail','ro'],
+]
+,'High Availability':[
+['show chassis cluster status','Chassis cluster HA status','ro'],
+['show chassis cluster interfaces','Cluster interface status','ro'],
+['show chassis cluster statistics','Cluster packet statistics','ro'],
+['show chassis cluster data-plane statistics','Data plane stats','ro'],
+['request chassis cluster failover redundancy-group 1 node 1','Manual failover','danger'],
+]
+,'Security (SRX)':[
+['show security flow session','Active flow sessions','ro'],
+['show security flow session destination-prefix 8.8.8.8','Sessions to destination','ro'],
+['show security policy','Security policies','ro'],
+['show security nat source summary','Source NAT summary','ro'],
+['show security nat destination summary','Destination NAT summary','ro'],
+['show security ike security-associations','IKE SAs','ro'],
+['show security ipsec security-associations','IPsec SAs','ro'],
+['show security ipsec statistics','IPsec packet statistics','ro'],
+['show security alg status','ALG (helper) status','ro'],
+['show security idp status','IDP status','ro'],
+]
+,'Interface Configuration':[
+['set interfaces ge-0/0/0 description "WAN Link"','Set interface description','caution'],
+['set interfaces ge-0/0/0 unit 0 family inet address 192.168.1.1/24','Set IP address','caution'],
+['set interfaces ge-0/0/0 unit 0 family inet6 address 2001:db8::1/64','Set IPv6 address','caution'],
+['set interfaces ge-0/0/0 speed 1g','Force interface speed','caution'],
+['set interfaces ge-0/0/0 link-mode full-duplex','Force full duplex','caution'],
+['set interfaces ge-0/0/0 mtu 9000','Set MTU (jumbo frames)','caution'],
+['set interfaces ge-0/0/0 disable','Administratively disable interface','caution'],
+['delete interfaces ge-0/0/0 disable','Re-enable interface','caution'],
+['set interfaces ae0 aggregated-ether-options lacp active','Configure LACP on LAG','caution'],
+['set interfaces ge-0/0/0 ether-options 802.3ad ae0','Add to LAG ae0','caution'],
+]
+,'Routing Config':[
+['set routing-options static route 0.0.0.0/0 next-hop 203.0.113.1','Add default route','caution'],
+['set routing-options router-id 10.0.0.1','Set router ID','caution'],
+['set routing-options autonomous-system 65001','Set AS number','caution'],
+['set protocols ospf area 0 interface ge-0/0/1.0','Enable OSPF on interface','caution'],
+['set protocols ospf area 0 interface ge-0/0/1.0 interface-type p2p','Set OSPF interface type','caution'],
+['set protocols bgp group EBGP type external','Create eBGP group','caution'],
+['set protocols bgp group EBGP peer-as 65002','Set peer AS','caution'],
+['set protocols bgp group EBGP neighbor 10.0.0.2','Add BGP neighbor','caution'],
+['set protocols bgp group IBGP type internal','Create iBGP group','caution'],
+['set protocols bgp group IBGP local-address 10.0.0.1','iBGP source loopback','caution'],
+]
+,'NTP & System Config':[
+['set system host-name ROUTER-1','Set hostname','caution'],
+['set system ntp server 216.239.35.0','Configure NTP server','caution'],
+['set system syslog host 192.168.1.100 any any','Configure remote syslog','caution'],
+['set system login user admin class super-user','Create admin user','caution'],
+['set system services ssh','Enable SSH service','caution'],
+['set system services netconf ssh','Enable NETCONF over SSH','caution'],
+['set system time-zone Europe/Amsterdam','Set timezone','caution'],
+['request system snapshot','Create system snapshot','caution'],
+['request system software add /var/tmp/image.tgz','Install software package','caution'],
+]}}
 ,'paloalto':{label:'🟧 Palo Alto PAN-OS',cats:{
 'System':[
 ['show system info','PAN-OS version, serial, uptime, HA','ro'],
@@ -3701,7 +4029,114 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 ['show log traffic','Traffic log','ro'],
 ['show log threat','Threat log','ro'],
 ],
-}}
+
+'OSPF & BGP':[
+['show routing ospf neighbor','OSPF neighbors','ro'],
+['show routing ospf interface','OSPF interface status','ro'],
+['show routing ospf lsdb','OSPF link state database','ro'],
+['show routing ospf statistics','OSPF packet statistics','ro'],
+['show routing bgp peer','BGP peer summary','ro'],
+['show routing bgp peer-name ISP detail','BGP peer full detail','ro'],
+['show routing bgp rib-in peer-name ISP','BGP received routes from peer','ro'],
+['show routing bgp rib-out peer-name ISP','BGP advertised routes to peer','ro'],
+['show routing bgp loc-rib','BGP local RIB','ro'],
+],
+'NAT Detail':[
+['show running nat-policy','All active NAT rules','ro'],
+['show nat rule-lookup from trust to untrust source 192.168.1.1','NAT rule lookup','ro'],
+['show session all filter nat-rule RULE-NAME','Sessions matching NAT rule','ro'],
+['show counter global filter severity drop','Global drop counters','ro'],
+['show counter interface ethernet1/1','Interface packet counters','ro'],
+]
+,'Security Policy':[
+['show running security-policy','All active security policies','ro'],
+['test security-policy-match from trust to untrust source 192.168.1.1 destination 8.8.8.8 destination-port 443 protocol 6','Security policy lookup','ro'],
+['show security-policy-statistics','Security policy hit statistics','ro'],
+['show address','Address objects','ro'],
+['show address-group','Address groups','ro'],
+['show service','Service objects','ro'],
+['show service-group','Service groups','ro'],
+['show application','Application objects','ro'],
+]
+,'IPsec & VPN':[
+['show vpn ike-sa','IKE phase 1 SAs','ro'],
+['show vpn ike-sa gateway GW-NAME detail','IKE SA detail','ro'],
+['show vpn ipsec-sa','IPsec phase 2 SAs','ro'],
+['show vpn ipsec-sa tunnel TUNNEL-NAME','IPsec SA tunnel detail','ro'],
+['show vpn flow','VPN traffic statistics','ro'],
+['show vpn tunnel','VPN tunnel status','ro'],
+['test vpn ike-sa gateway GW-NAME','Initiate IKE SA','caution'],
+['test vpn ipsec-sa tunnel TUNNEL-NAME','Initiate IPsec SA','caution'],
+['clear vpn ike-sa gateway GW-NAME','Clear IKE SA','danger'],
+['clear vpn ipsec-sa tunnel TUNNEL-NAME','Clear IPsec SA','danger'],
+]
+,'GlobalProtect':[
+['show global-protect-gateway current-user','Active GP users on gateway','ro'],
+['show global-protect-gateway previous-user','Recent GP user history','ro'],
+['show global-protect-gateway statistics','GP gateway statistics','ro'],
+['show global-protect-portal current-user','Active GP portal users','ro'],
+['debug global-protect gateway disable','Disable GP gateway (caution)','danger'],
+]
+,'Logs & Monitoring':[
+['show log traffic','Traffic log (recent)','ro'],
+['show log threat','Threat/IPS log','ro'],
+['show log url','URL filtering log','ro'],
+['show log wildfire','WildFire submission log','ro'],
+['show log system','System event log','ro'],
+['show log authentication','Authentication log','ro'],
+['monitor log traffic destination-address eq 8.8.8.8','Filter traffic log by dest','ro'],
+['show traffic monitor','Live traffic statistics','ro'],
+['show system statistics session','Session statistics','ro'],
+]
+,'Certificates & Authentication':[
+['show certificate-info','All certificates','ro'],
+['show certificate-profile','Certificate profiles','ro'],
+['show authentication-profile','Authentication profiles','ro'],
+['show admin-locks','Locked admin accounts','ro'],
+['request certificate generate name CERT ca-certificate-profile PROFILE','Generate certificate','caution'],
+['show high-availability all','HA status overview','ro'],
+['show high-availability state','HA role and state','ro'],
+['show high-availability link-monitoring','HA link monitoring','ro'],
+['show high-availability path-monitoring','HA path monitoring','ro'],
+['request high-availability state suspend','Suspend HA (caution)','danger'],
+]
+,'Packet Capture & Debug':[
+['debug dataplane packet-diag set filter match ingress-interface ethernet1/1','Set packet capture filter','caution'],
+['debug dataplane packet-diag set capture stage receive file /tmp/cap.pcap','Capture received packets','caution'],
+['debug dataplane packet-diag set capture stage transmit file /tmp/cap.pcap','Capture transmitted packets','caution'],
+['debug dataplane packet-diag start','Start packet capture','caution'],
+['debug dataplane packet-diag stop','Stop packet capture','caution'],
+['tftp export file /tmp/cap.pcap to 192.168.1.100','Export capture to TFTP','caution'],
+['test routing fib-lookup virtual-router default ip 8.8.8.8','FIB route lookup','ro'],
+['test security-policy-match from ZONE to ZONE source IP destination IP protocol 6 destination-port 443','Policy match test','ro'],
+]
+,'Configuration Management':[
+['configure','Enter configuration mode','caution'],
+['show','Show pending configuration changes','ro'],
+['commit','Commit configuration','caution'],
+['commit validate','Validate config without committing','ro'],
+['commit force','Force commit (use carefully)','danger'],
+['revert','Revert to last committed config','caution'],
+['load config partial from running-config xpath /config/devices/entry/vsys/entry/rulebase/security','Load partial config','caution'],
+['show config running','Show running configuration','ro'],
+['save named-config BACKUP-NAME','Save named config snapshot','caution'],
+['load named-config BACKUP-NAME','Load named config','caution'],
+['show config saved BACKUP-NAME','Show saved config snapshot','ro'],
+]
+,'Operations':[
+['request system restart','Restart PAN-OS','danger'],
+['request system shutdown','Shutdown device','danger'],
+['request system software check','Check for software updates','ro'],
+['request system software download version 10.2.4','Download software version','caution'],
+['request system software install version 10.2.4','Install software version','danger'],
+['show system info','System version and status','ro'],
+['show system resources','CPU and memory usage','ro'],
+['show system disk-space','Disk utilization','ro'],
+['show jobs all','All pending and completed jobs','ro'],
+['show jobs id 123','Specific job detail','ro'],
+['request license fetch','Fetch license from Palo Alto portal','caution'],
+['show license','Show installed licenses','ro'],
+]}}
 ,'mikrotik':{label:'🔴 MikroTik RouterOS',cats:{
 'System':[
 ['/system resource print','CPU, memory, uptime, version','ro'],
@@ -3755,7 +4190,117 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 ['/system package update install','Update RouterOS','danger'],
 ['/export','Export full configuration','ro'],
 ],
-}}
+
+'OSPF Detail':[
+['/routing ospf instance print','OSPF instances','ro'],
+['/routing ospf neighbor print','OSPF neighbors','ro'],
+['/routing ospf interface print','OSPF interfaces','ro'],
+['/routing ospf lsa print','OSPF LSDB','ro'],
+],
+'BGP Detail':[
+['/routing bgp peer print','BGP peer summary','ro'],
+['/routing bgp peer print where state=established','Active BGP peers only','ro'],
+['/routing bgp advertisements print peer=ISP','Advertised BGP routes','ro'],
+['/ip route print where bgp','BGP routes in routing table','ro'],
+['/routing bgp peer set ISP disabled=yes','Disable BGP peer','caution'],
+]
+,'Queues & QoS':[
+['/queue simple print','Simple queues','ro'],
+['/queue tree print','Queue tree (HTB)','ro'],
+['/queue type print','Queue types','ro'],
+['/ip firewall mangle print','Mangle rules (for marking)','ro'],
+['/ip firewall mangle print stats','Mangle rule hit counters','ro'],
+],
+'DHCP Detail':[
+['/ip dhcp-server print','DHCP servers','ro'],
+['/ip dhcp-server lease print','All DHCP leases','ro'],
+['/ip dhcp-server lease print where active','Active leases only','ro'],
+['/ip dhcp-server lease print where host-name~"PC"','Leases matching hostname','ro'],
+['/ip dhcp-client print','DHCP client config','ro'],
+['/ip pool print','IP address pools','ro'],
+]
+,'Wireless':[
+['/interface wireless print','Wireless interfaces','ro'],
+['/interface wireless registration-table print','Connected wireless clients','ro'],
+['/interface wireless scan 0','Scan for nearby APs','ro'],
+['/caps-man remote-cap print','CAPsMAN remote APs','ro'],
+['/caps-man registration-table print','CAPsMAN connected clients','ro'],
+]
+,'VPN Detail':[
+['/ip ipsec active-peers print','Active IPsec peers','ro'],
+['/ip ipsec installed-sa print','Installed IPsec SAs','ro'],
+['/ip ipsec policy print','IPsec policies','ro'],
+['/interface sstp-client print','SSTP VPN clients','ro'],
+['/interface pppoe-client print','PPPoE clients','ro'],
+['/ppp secret print','PPP user database','ro'],
+['/interface wireguard peers print','WireGuard peers status','ro'],
+]
+,'Firewall Detail':[
+['/ip firewall filter print','Firewall filter rules','ro'],
+['/ip firewall filter print stats','Filter rule hit counters','ro'],
+['/ip firewall nat print','NAT rules','ro'],
+['/ip firewall nat print stats','NAT rule counters','ro'],
+['/ip firewall connection print','Active connections','ro'],
+['/ip firewall connection print where dst-address~"8.8"','Connections to specific IP','ro'],
+['/ip firewall address-list print','Address lists','ro'],
+['/ip firewall filter add chain=input src-address=192.168.1.0/24 action=accept','Add firewall rule','caution'],
+]
+,'Routing Detail':[
+['/ip route print','Full routing table','ro'],
+['/ip route print where active','Active routes only','ro'],
+['/ip route print where gateway=192.168.1.1','Routes via specific gateway','ro'],
+['/ip route check 8.8.8.8','Route lookup for IP','ro'],
+['/ip address print','All IP address assignments','ro'],
+['/ip address print where interface=ether1','IPs on specific interface','ro'],
+]
+,'Bridge & VLANs':[
+['/interface bridge print','Configured bridges','ro'],
+['/interface bridge port print','Bridge port membership','ro'],
+['/interface bridge vlan print','Bridge VLAN filtering table','ro'],
+['/interface vlan print','VLAN interfaces','ro'],
+['/interface bridge host print','Bridge MAC table','ro'],
+]
+,'Monitoring & Tools':[
+['/tool ping 8.8.8.8 count=5','Ping 5 packets','ro'],
+['/tool traceroute 8.8.8.8','Traceroute','ro'],
+['/tool bandwidth-test 192.168.1.1 direction=both','Bandwidth test to host','ro'],
+['/tool netwatch print','Network watch entries','ro'],
+['/interface monitor-traffic ether1 once','Single sample of traffic stats','ro'],
+['/ip neighbor print','LLDP/CDP/MNDP neighbors','ro'],
+['/log print','System log','ro'],
+['/log print where topics~"ospf"','Filter log by topic','ro'],
+['/system clock print','Current time','ro'],
+['/system ntp client print','NTP client status','ro'],
+]
+,'User & Management':[
+['/user print','Local user accounts','ro'],
+['/user active print','Active admin sessions','ro'],
+['/ip ssh print','SSH configuration','ro'],
+['/ip service print','Enabled management services','ro'],
+['/tool mac-server print','MAC-based server status','ro'],
+['/certificate print','Installed certificates','ro'],
+['/system health print','Fan/temperature health','ro'],
+['/system resource print','CPU/memory/uptime','ro'],
+]
+,'Config — Interfaces':[
+['/interface ethernet set ether1 comment="WAN"','Set interface comment','caution'],
+['/interface set ether1 disabled=yes','Disable interface','caution'],
+['/interface set ether1 disabled=no','Enable interface','caution'],
+['/ip address add address=192.168.1.1/24 interface=ether2','Add IP to interface','caution'],
+['/interface bridge add name=bridge1','Create bridge','caution'],
+['/interface bridge port add bridge=bridge1 interface=ether2','Add port to bridge','caution'],
+['/interface vlan add name=vlan10 vlan-id=10 interface=ether1','Create VLAN interface','caution'],
+['/interface bonding add name=bond0 slaves=ether3,ether4 mode=802.3ad','Create LACP bond','caution'],
+]
+,'Config — Routing & Firewall':[
+['/ip route add dst-address=0.0.0.0/0 gateway=203.0.113.1','Add default route','caution'],
+['/ip route add dst-address=10.0.0.0/8 gateway=192.168.1.254','Add static route','caution'],
+['/ip firewall filter add chain=forward action=drop connection-state=invalid','Drop invalid connections','caution'],
+['/ip firewall nat add chain=srcnat action=masquerade out-interface=ether1','Add masquerade','caution'],
+['/ip firewall address-list add list=BLOCKED address=1.2.3.4','Add IP to blacklist','caution'],
+['/ip dhcp-server add interface=bridge1 address-pool=pool1 lease-time=1d','Create DHCP server','caution'],
+['/ip pool add name=pool1 ranges=192.168.10.100-192.168.10.200','Create IP pool','caution'],
+]}}
 ,'hp_procurve':{label:'⬛ Aruba/HP ProCurve',cats:{
 'System':[
 ['show system-information','System info, uptime, firmware version','ro'],
@@ -3815,7 +4360,101 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 ['show event-log','Event log entries','ro'],
 ['test cable-diagnostics port 1','Cable TDR test on port 1','ro'],
 ],
-}}
+
+'Routing & ARP':[
+['show ip route','IP routing table (L3 switches)','ro'],
+['show ip route static','Static routes only','ro'],
+['show ip route ospf','OSPF routes','ro'],
+['show ip ospf neighbor','OSPF neighbor adjacencies','ro'],
+['show ip ospf interface','OSPF interface status','ro'],
+['show ip ospf database','OSPF LSDB','ro'],
+['show arp','Full ARP table','ro'],
+['show ip','IP configuration and status','ro'],
+['ping 8.8.8.8 repetitions 5','Ping with 5 packets','ro'],
+['traceroute 8.8.8.8','Traceroute','ro'],
+],
+'Port Authentication':[
+['show port-access authenticator','802.1X authenticator status','ro'],
+['show port-access authenticator clients','802.1X clients detail','ro'],
+['show port-access mac-based','MAC-based authentication','ro'],
+['show port-access clients','All port access clients','ro'],
+['show port-access web-based clients','Web auth clients','ro'],
+['show radius authentication','RADIUS server status','ro'],
+['show radius','RADIUS configuration','ro'],
+]
+,'Quality of Service':[
+['show qos','QoS configuration summary','ro'],
+['show qos queue-config','QoS queue configuration','ro'],
+['show qos interface 1','QoS stats for port 1','ro'],
+['show class ipv4 CLASSMAP','Class map definition','ro'],
+['show policy','QoS policies','ro'],
+['show policy interface 1','QoS policy applied to port 1','ro'],
+]
+,'IGMP Snooping':[
+['show ip igmp','IGMP snooping status','ro'],
+['show ip igmp vlan 10','IGMP for VLAN 10','ro'],
+['show ip igmp group','IGMP group memberships','ro'],
+['show ip igmp statistics vlan 10','IGMP statistics for VLAN 10','ro'],
+]
+,'DHCP Snooping & ARP Protection':[
+['show dhcp-snooping','DHCP snooping configuration','ro'],
+['show dhcp-snooping stats','DHCP snooping statistics','ro'],
+['show dhcp-snooping binding','DHCP snooping binding table','ro'],
+['show arp protection','Dynamic ARP protection status','ro'],
+['show arp protection statistics vlan 10','ARP protection stats for VLAN 10','ro'],
+]
+,'Stack & Resilient Links':[
+['show stacking','Stack member status','ro'],
+['show stacking detail','Stack detail including topology','ro'],
+['show stacking statistics','Stack link statistics','ro'],
+['show stack detail','Redundant stack detail','ro'],
+['show link-keepalive statistics','Link keepalive stats','ro'],
+['show split-link','Split link configuration','ro'],
+]
+,'Config — Routing & IP':[
+['configure','Enter config mode','caution'],
+['ip route 0.0.0.0 0.0.0.0 192.168.1.1','Add default route','caution'],
+['ip route 10.0.0.0 255.0.0.0 192.168.1.254','Add static route','caution'],
+['ip routing','Enable IP routing (L3)','caution'],
+['router ospf','Enter OSPF config','caution'],
+['area 0','Define OSPF backbone area','caution'],
+['network 192.168.1.0/24 area 0','Advertise network','caution'],
+['ip address 192.168.10.1/24','Assign IP to VLAN interface','caution'],
+['vlan 10 ip address 192.168.10.1/24','Set VLAN SVI IP','caution'],
+]
+,'Config — Security':[
+['aaa authentication login privilege-mode','Enable privilege login auth','caution'],
+['aaa authentication login console local','Local auth for console','caution'],
+['aaa authentication login ssh local','Local auth for SSH','caution'],
+['password manager','Set manager password','caution'],
+['password operator','Set operator password','caution'],
+['no web-management','Disable web management','caution'],
+['no telnet-server','Disable Telnet','caution'],
+['crypto key generate ssh rsa bits 2048','Generate SSH keys','caution'],
+['ip ssh','Enable SSH server','caution'],
+['ip access-list extended ACL-NAME','Create extended ACL','caution'],
+['deny ip 10.0.0.0 0.255.255.255 any','Deny ACL entry','caution'],
+['permit ip any any','Permit all (at end of ACL)','caution'],
+]
+,'Config — Port Mirroring & Monitoring':[
+['mirror 1 port 24 output port 10','Mirror port 24 traffic to port 10','caution'],
+['mirror endpoint port 10','Define mirror endpoint','caution'],
+['monitor','Enable port monitoring','caution'],
+['no monitor','Disable port monitoring','caution'],
+['debug spanning-tree','STP debugging','caution'],
+['debug lldp','LLDP debugging','caution'],
+['no debug all','Disable all debugging','caution'],
+]
+,'Maintenance':[
+['show flash','Flash memory contents','ro'],
+['copy flash tftp 192.168.1.100 backup.cfg','Backup config to TFTP','caution'],
+['copy tftp flash 192.168.1.100 config.cfg startup-config','Restore config from TFTP','caution'],
+['reload','Reboot switch','danger'],
+['erase startup-config','Erase startup config','danger'],
+['factory-default','Reset to factory defaults','danger'],
+['show boot','Boot image and config files','ro'],
+['boot system flash primary','Set primary boot image','caution'],
+]}}
 };
 
   let curV='cisco', curC=null;
