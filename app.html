@@ -1802,6 +1802,744 @@ function renderTopology(el){
 
 
 
+function renderCLISim(el){
+  el.innerHTML='';
+
+  // ── Header ──
+  var hdr=document.createElement('div');
+  hdr.className='sh';
+  hdr.innerHTML='<span class="stitle">🖥️ CLI Simulator — Practice Lab</span><span class="sev info">FortiGate &middot; Cisco IOS &middot; Cisco NX-OS &middot; Juniper &middot; Aruba</span>';
+  el.appendChild(hdr);
+
+  var intro=document.createElement('p');
+  intro.style.cssText='font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7';
+  intro.innerHTML='Practice routing &amp; switching commands in a safe simulated environment. Type <span style="color:var(--a);font-family:var(--mono)">?</span> or <span style="color:var(--a);font-family:var(--mono)">help</span> to list all available commands. Use <span style="color:var(--a);font-family:var(--mono)">↑↓</span> arrows for command history.';
+  el.appendChild(intro);
+
+  // ── Vendor selector ──
+  var vendorBar=document.createElement('div');
+  vendorBar.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center';
+  vendorBar.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700">SELECT DEVICE:</span>';
+
+  var vendors=[
+    {id:'fortigate', label:'🛡️ FortiGate',   color:'#1D9E75', prompt:'FGT-HQ-01 # '},
+    {id:'cisco_ios', label:'🔵 Cisco IOS',    color:'#0070d1', prompt:'Router# '},
+    {id:'cisco_sw',  label:'🔵 Cisco Switch', color:'#0070d1', prompt:'Switch# '},
+    {id:'cisco_nxos',label:'🟠 Cisco NX-OS',  color:'#d45f00', prompt:'NXOS-SW1# '},
+    {id:'juniper',   label:'🟣 Juniper JunOS',color:'#84358a', prompt:'admin@Router> '},
+    {id:'aruba',     label:'⬛ Aruba/HP',      color:'#ff8300', prompt:'ProCurve# '},
+  ];
+
+  var currentVendor=vendors[0];
+  var cmdHistory=[];
+  var histIdx=-1;
+  var configMode=false;
+  var configContext='';
+
+  vendors.forEach(function(v){
+    var b=document.createElement('button');
+    b.className='sbtn';
+    b.style.cssText='font-size:11px;padding:5px 14px;'+(v.id===currentVendor.id?'background:'+v.color+';color:#000':'background:var(--b3);border:1px solid var(--br);color:var(--t2)');
+    b.innerHTML=v.label;
+    b.id='vsim-'+v.id;
+    b.onclick=(function(vv){return function(){
+      currentVendor=vv;
+      configMode=false;configContext='';
+      vendors.forEach(function(x){
+        var xb=document.getElementById('vsim-'+x.id);
+        if(xb) xb.style.cssText='font-size:11px;padding:5px 14px;background:var(--b3);border:1px solid var(--br);color:var(--t2)';
+      });
+      this.style.cssText='font-size:11px;padding:5px 14px;background:'+vv.color+';color:#000';
+      bootDevice(vv);
+    };})(v);
+    vendorBar.appendChild(b);
+  });
+
+  el.appendChild(vendorBar);
+
+  // ── Layout: left=command ref, right=terminal ──
+  var layout=document.createElement('div');
+  var isMobile=window.innerWidth<=768;
+  layout.style.cssText=isMobile?'display:flex;flex-direction:column;gap:14px':'display:grid;grid-template-columns:300px 1fr;gap:14px;align-items:start';
+  el.appendChild(layout);
+
+  // ── LEFT: Command Reference ──
+  var refPanel=document.createElement('div');
+  refPanel.id='sim-ref-panel';
+  refPanel.style.cssText='position:sticky;top:16px';
+  layout.appendChild(refPanel);
+
+  // ── RIGHT: Terminal ──
+  var termPanel=document.createElement('div');
+  layout.appendChild(termPanel);
+
+  var termCard=document.createElement('div');
+  termCard.className='cblock';
+  termCard.style.cssText='background:#0a0e14;border-color:#30363d';
+
+  var termHdr=document.createElement('div');
+  termHdr.className='chdr';
+  termHdr.style.cssText='background:#0d1117;border-color:#30363d;display:flex;justify-content:space-between;align-items:center';
+  termHdr.innerHTML='<div class="chdr-l" id="sim-title" style="color:#3fb950;font-family:var(--mono)">🟢 FGT-HQ-01 — FortiGate</div>'
+    +'<div style="display:flex;gap:8px">'
+    +'<button id="sim-clear-btn" class="sbtn" style="font-size:10px;padding:3px 10px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">🗑️ Clear</button>'
+    +'</div>';
+
+  var termBody=document.createElement('div');
+  termBody.id='sim-output';
+  termBody.style.cssText='min-height:400px;max-height:500px;overflow-y:auto;padding:14px 16px;font-family:"Courier New",monospace;font-size:13px;line-height:1.8;background:#0a0e14;scroll-behavior:smooth';
+
+  var inputRow=document.createElement('div');
+  inputRow.style.cssText='display:flex;align-items:center;padding:10px 16px;border-top:1px solid #30363d;background:#0d1117';
+  inputRow.innerHTML='<span id="sim-prompt" style="color:#3fb950;font-family:\'Courier New\',monospace;font-size:13px;white-space:nowrap;margin-right:6px">FGT-HQ-01 # </span>'
+    +'<input id="sim-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" '
+    +'style="flex:1;background:transparent;border:none;outline:none;color:#e6edf3;font-family:\'Courier New\',monospace;font-size:13px;caret-color:#3fb950">'
+    +'<button id="sim-run-btn" class="sbtn" style="font-size:11px;padding:5px 14px;margin-left:8px">Run</button>';
+
+  termCard.appendChild(termHdr);
+  termCard.appendChild(termBody);
+  termCard.appendChild(inputRow);
+  termPanel.appendChild(termCard);
+
+  // ── Command Database ──
+  var cmdDB={
+    fortigate:{
+      title:'🛡️ FGT-HQ-01 — FortiGate',
+      prompt:'FGT-HQ-01 # ',
+      promptConfig:'FGT-HQ-01 (config) # ',
+      color:'#1D9E75',
+      categories:[
+        {name:'System Status',cmds:[
+          {cmd:'get system status',desc:'Show firmware version, serial, uptime'},
+          {cmd:'get system performance status',desc:'CPU, memory, session usage'},
+          {cmd:'diagnose sys top',desc:'Top processes by CPU'},
+          {cmd:'get system interface physical',desc:'Physical interface status'},
+          {cmd:'get system ha status',desc:'HA cluster status'},
+          {cmd:'diagnose sys df',desc:'Disk space usage'},
+        ]},
+        {name:'Routing',cmds:[
+          {cmd:'get router info routing-table all',desc:'Full routing table'},
+          {cmd:'get router info routing-table details 0.0.0.0',desc:'Default route details'},
+          {cmd:'get router info ospf neighbor',desc:'OSPF neighbors'},
+          {cmd:'get router info bgp summary',desc:'BGP peer summary'},
+          {cmd:'get router info bgp neighbors 10.0.0.1',desc:'BGP neighbor detail'},
+          {cmd:'diagnose ip rtcache list',desc:'Route cache entries'},
+        ]},
+        {name:'Firewall Policy',cmds:[
+          {cmd:'show firewall policy',desc:'All firewall policies'},
+          {cmd:'diagnose firewall iprope lookup 192.168.1.1 8.8.8.8 80 tcp',desc:'Policy lookup for traffic'},
+          {cmd:'diagnose sys session list',desc:'Active sessions'},
+          {cmd:'diagnose sys session filter src 192.168.1.1',desc:'Filter sessions by source'},
+          {cmd:'diagnose sys session stat',desc:'Session statistics'},
+        ]},
+        {name:'VPN',cmds:[
+          {cmd:'get vpn ipsec tunnel summary',desc:'IPsec tunnel summary'},
+          {cmd:'diagnose vpn tunnel list',desc:'Detailed tunnel list'},
+          {cmd:'diagnose vpn ike gateway list',desc:'IKE gateway status'},
+          {cmd:'get vpn ssl monitor',desc:'SSL VPN active users'},
+          {cmd:'diagnose vpn ssl list',desc:'SSL VPN session details'},
+        ]},
+        {name:'Debugging',cmds:[
+          {cmd:'diagnose debug reset',desc:'Reset all debug flags'},
+          {cmd:'diagnose debug flow filter addr 192.168.1.1',desc:'Flow debug filter by IP'},
+          {cmd:'diagnose debug flow trace start 10',desc:'Start flow trace (10 packets)'},
+          {cmd:'diagnose debug enable',desc:'Enable debug output'},
+          {cmd:'diagnose debug disable',desc:'Disable debug output'},
+          {cmd:'diagnose sniffer packet any "host 8.8.8.8" 4',desc:'Packet sniffer'},
+        ]},
+        {name:'Interface & ARP',cmds:[
+          {cmd:'get system arp',desc:'ARP table'},
+          {cmd:'get system interface',desc:'Interface configuration'},
+          {cmd:'diagnose netlink interface list port1',desc:'Interface counters'},
+          {cmd:'execute ping 8.8.8.8',desc:'Ping from FortiGate'},
+          {cmd:'execute traceroute 8.8.8.8',desc:'Traceroute from FortiGate'},
+        ]},
+      ],
+      responses:{
+        'get system status':'FortiGate-100F v7.4.3,build2573,231017 (GA.F)\nSerial-Number: FGT1HVTM22000001\nBIOS version: 07000000\nSystem time: Mon Aug 19 10:24:33 2024\nLast reboot: power-on\nInternal Switch mode: interface\nCurrent HA mode: standalone\nDistribution: International\nFirmware Signature: certified\nLicense Status: Valid',
+        'get system performance status':'CPU states: 3% user 1% system 0% nice 96% idle\nCPU0 states: 3% user 1% system 0% nice 96% idle\nMemory: 16301252k total, 7234816k used (44.4%), 9066436k free (55.6%)\nAverage network usage: 124 kbps in 1 minute, 118 kbps in 10 minutes\nAverage network usage: 124 kbps in 30 minutes\nAverage sessions: 1842 sessions in 1 minute\nAverage sessions: 1764 sessions in 10 minutes\nAverage sessions: 1698 sessions in 30 minutes\nViruses detected last minute: 0\nIntrusions detected last minute: 0\nConserve mode: disabled',
+        'get system ha status':'HA information\nModel: FortiGate-100F\nMode: Active-Passive\nGroup-ID: 0\nDebug: 0\n\nSlave information\nName: FGT-HQ-02\nSerial number: FGT1HVTM22000002\nSoftware version: v7.4.3\nSynchronization state: synchronized',
+        'get router info routing-table all':'Codes: K - kernel, C - connected, S - static, R - RIP, B - BGP\n       O - OSPF, IA - OSPF inter area\n       N1 - OSPF NSSA external type 1\n\nK*      0.0.0.0/0 [10/0] via 203.0.113.1, port1\nC       192.168.1.0/24 is directly connected, port2\nC       192.168.2.0/24 is directly connected, port3\nS       10.10.0.0/16 [10/0] via 192.168.1.1, port2\nO       172.16.0.0/24 [110/20] via 192.168.2.1, port3, 00:14:23\nB       8.8.0.0/24 [20/0] via 203.0.113.1, port1',
+        'get router info ospf neighbor':'OSPF process 0:\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.168.2.1       1   Full/DR           00:00:30   192.168.2.1     port3\n172.16.0.1        1   Full/BDR          00:00:37   172.16.0.1      port4',
+        'get router info bgp summary':'BGP router identifier 10.0.0.1, local AS number 65001\nBGP table version is 14\n\nNeighbor        V         AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n10.0.0.2        4      65002    1423    1419       14    0    0 9d12h34m       12\n10.0.0.3        4      65003     987     991       14    0    0 3d08h11m        8',
+        'get vpn ipsec tunnel summary':'\'SITE-B-VPN\' 10.0.0.2:0 selectors(total,up): 2/2 rx(pkt,err): 14523/0 tx(pkt,err): 13891/0\n\'SITE-C-VPN\' 10.0.0.3:0 selectors(total,up): 1/1 rx(pkt,err): 8234/0 tx(pkt,err): 7891/0',
+        'get vpn ssl monitor':'SSL VPN Login Users:\n Index   User   Group   Auth Type   Timeout   From\n 0       jdoe   VPN-USERS   1(1)        28800     203.0.113.50\n 1       asmith VPN-USERS   1(1)        28800     198.51.100.12',
+        'get system arp':'Address          Age(min)  Hardware Addr      Interface\n192.168.1.1      0         00:1a:2b:3c:4d:5e  port2\n192.168.1.100    2         00:1a:2b:3c:4d:6f  port2\n192.168.2.1      0         00:1a:2b:3c:4e:5e  port3\n203.0.113.1      0         00:1a:2b:3c:4f:5e  port1',
+        'diagnose sys session stat':'session table: total 1842 tcp 1243 udp 534 icmp 18 other 47\nnudge session table total 0\nexpected session table: total 0\nnp session table total 0',
+        'diagnose sys df':'Filesystem            Size  Used Avail Use% Mounted on\n/dev/mmcblk0p3        1.9G  876M  924M  49% /\ntmpfs                 7.8G     0  7.8G   0% /dev/shm',
+        'diagnose debug reset':'',
+        'diagnose debug enable':'',
+        'diagnose debug disable':'',
+        'execute ping 8.8.8.8':'PING 8.8.8.8 (8.8.8.8): 56 data bytes\n64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=12.4 ms\n64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=11.8 ms\n64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=12.1 ms\n64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=12.6 ms\n64 bytes from 8.8.8.8: icmp_seq=5 ttl=116 time=11.9 ms\n\n--- 8.8.8.8 ping statistics ---\n5 packets transmitted, 5 packets received, 0% packet loss\nround-trip min/avg/max = 11.8/12.2/12.6 ms',
+        'execute traceroute 8.8.8.8':'traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 38 byte packets\n 1  203.0.113.1 (203.0.113.1)  0.812 ms  0.754 ms  0.821 ms\n 2  10.254.0.1 (10.254.0.1)  2.341 ms  2.218 ms  2.156 ms\n 3  72.14.215.1 (72.14.215.1)  8.234 ms  8.101 ms  8.298 ms\n 4  8.8.8.8 (8.8.8.8)  12.4 ms  11.9 ms  12.1 ms',
+      }
+    },
+    cisco_ios:{
+      title:'🔵 Router — Cisco IOS',
+      prompt:'Router# ',
+      promptConfig:'Router(config)# ',
+      promptIface:'Router(config-if)# ',
+      color:'#0070d1',
+      categories:[
+        {name:'System',cmds:[
+          {cmd:'show version',desc:'IOS version, uptime, hardware'},
+          {cmd:'show running-config',desc:'Current running configuration'},
+          {cmd:'show startup-config',desc:'Startup configuration'},
+          {cmd:'show processes cpu',desc:'CPU utilization'},
+          {cmd:'show memory statistics',desc:'Memory usage'},
+          {cmd:'show environment all',desc:'Hardware environment'},
+          {cmd:'reload',desc:'Reload the router'},
+        ]},
+        {name:'Interfaces',cmds:[
+          {cmd:'show interfaces',desc:'All interface details'},
+          {cmd:'show ip interface brief',desc:'Interface summary with IP/status'},
+          {cmd:'show interfaces GigabitEthernet0/0',desc:'Single interface detail'},
+          {cmd:'show controllers',desc:'Interface controller stats'},
+          {cmd:'show ip arp',desc:'ARP table'},
+          {cmd:'show cdp neighbors',desc:'CDP neighbor discovery'},
+        ]},
+        {name:'Routing',cmds:[
+          {cmd:'show ip route',desc:'Routing table'},
+          {cmd:'show ip route ospf',desc:'OSPF routes only'},
+          {cmd:'show ip route bgp',desc:'BGP routes only'},
+          {cmd:'show ip route 8.8.8.8',desc:'Best route to specific destination'},
+          {cmd:'show ip protocols',desc:'Routing protocols configured'},
+          {cmd:'show ip ospf neighbor',desc:'OSPF neighbor adjacencies'},
+          {cmd:'show ip ospf database',desc:'OSPF link state database'},
+          {cmd:'show ip bgp summary',desc:'BGP peer summary'},
+          {cmd:'show ip bgp neighbors',desc:'BGP neighbor detail'},
+        ]},
+        {name:'Configuration',cmds:[
+          {cmd:'configure terminal',desc:'Enter global config mode'},
+          {cmd:'interface GigabitEthernet0/0',desc:'Enter interface config mode'},
+          {cmd:'ip address 192.168.1.1 255.255.255.0',desc:'Set IP on interface'},
+          {cmd:'no shutdown',desc:'Bring interface up'},
+          {cmd:'ip route 0.0.0.0 0.0.0.0 203.0.113.1',desc:'Add default route'},
+          {cmd:'router ospf 1',desc:'Configure OSPF process 1'},
+          {cmd:'network 192.168.1.0 0.0.0.255 area 0',desc:'Advertise network in OSPF'},
+          {cmd:'write memory',desc:'Save config to NVRAM'},
+          {cmd:'copy running-config startup-config',desc:'Save config'},
+        ]},
+        {name:'Troubleshoot',cmds:[
+          {cmd:'ping 8.8.8.8',desc:'ICMP ping'},
+          {cmd:'traceroute 8.8.8.8',desc:'Traceroute'},
+          {cmd:'debug ip ospf events',desc:'OSPF event debugging'},
+          {cmd:'debug ip bgp',desc:'BGP debugging'},
+          {cmd:'undebug all',desc:'Turn off all debugging'},
+          {cmd:'show logging',desc:'System log messages'},
+          {cmd:'show ip traffic',desc:'IP traffic statistics'},
+        ]},
+        {name:'ACL & Security',cmds:[
+          {cmd:'show ip access-lists',desc:'All ACLs'},
+          {cmd:'show access-lists',desc:'All access lists'},
+          {cmd:'show crypto isakmp sa',desc:'IKE/ISAKMP SAs'},
+          {cmd:'show crypto ipsec sa',desc:'IPsec SAs'},
+          {cmd:'show users',desc:'Connected users'},
+        ]},
+      ],
+      responses:{
+        'show version':'Cisco IOS Software, Version 15.7(3)M4, RELEASE SOFTWARE\nCopyright (c) 1986-2019 by Cisco Systems\nCompiled Mon 19-Mar-18 16:10\n\nROUTER uptime is 9 days, 12 hours, 34 minutes\nSystem returned to ROM by power-on\nSystem image file is "flash:c2900-universalk9-mz.SPA.157-3.M4.bin"\n\nCisco CISCO2901/K9 (revision 1.0) with 1021952K/32768K bytes of memory.\nProcessor board ID FTX152400GS\n2 Gigabit Ethernet interfaces\n1 Serial interface\nDRAM configuration is 64 bits wide with parity disabled.\n255K bytes of non-volatile configuration memory.\n250880K bytes of ATA System CompactFlash 0 (Read/Write)\n\nConfiguration register is 0x2102',
+        'show ip interface brief':'Interface                  IP-Address      OK? Method Status                Protocol\nGigabitEthernet0/0        203.0.113.2     YES manual up                    up\nGigabitEthernet0/1        192.168.1.1     YES manual up                    up\nGigabitEthernet0/2        unassigned      YES unset  administratively down down\nLoopback0                 10.0.0.1        YES manual up                    up',
+        'show ip route':'Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n\nGateway of last resort is 203.0.113.1 to network 0.0.0.0\n\nS*    0.0.0.0/0 [1/0] via 203.0.113.1\n      10.0.0.0/32 is subnetted, 1 subnets\nC        10.0.0.1/32 is directly connected, Loopback0\n      192.168.1.0/24 is variably subnetted, 2 subnets, 2 masks\nC        192.168.1.0/24 is directly connected, GigabitEthernet0/1\nL        192.168.1.1/32 is directly connected, GigabitEthernet0/1\nO     172.16.0.0/24 [110/2] via 192.168.1.2, 00:14:23, GigabitEthernet0/1\nB     10.10.0.0/16 [20/0] via 203.0.113.1, 3d08h',
+        'show ip ospf neighbor':'Neighbor ID     Pri   State           Dead Time   Address         Interface\n192.168.1.2       1   FULL/DR         00:00:37    192.168.1.2     GigabitEthernet0/1\n172.16.0.2        1   FULL/BDR        00:00:33    172.16.0.2      GigabitEthernet0/2',
+        'show ip bgp summary':'BGP router identifier 10.0.0.1, local AS number 65001\nBGP table version is 47, main routing table version 47\n24 network entries using 3456 bytes of memory\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n203.0.113.1     4        65000    8234    8229       47    0    0 3d08h11m       16\n10.0.0.2        4        65002    1423    1419       47    0    0 9d12h34m       12',
+        'show ip arp':'Protocol  Address          Age (min)  Hardware Addr   Type   Interface\nInternet  192.168.1.1             -   c890.5f12.a801  ARPA   GigabitEthernet0/1\nInternet  192.168.1.2             4   0013.1986.0a80  ARPA   GigabitEthernet0/1\nInternet  203.0.113.1             8   0014.22cd.0f80  ARPA   GigabitEthernet0/0',
+        'configure terminal':'Enter configuration commands, one per line.  End with CNTL/Z.\nRouter(config)#',
+        'show processes cpu':'CPU utilization for five seconds: 4%/0%; one minute: 3%; five minutes: 3%\n PID Runtime(ms)     Invoked      uSecs   5Sec   1Min   5Min TTY Process\n   1        5200      242174         21  0.00%  0.00%  0.00%   0 Chunk Manager\n   2       14412       24217        595  0.00%  0.00%  0.00%   0 Load Meter\n   8      140200      242174        579  0.47%  0.22%  0.18%   0 OSPF Hello\n  13      840000      242174       3468  0.63%  0.58%  0.62%   0 BGP Router',
+        'ping 8.8.8.8':'Type escape sequence to abort.\nSending 5, 100-byte ICMP Echos to 8.8.8.8, timeout is 2 seconds:\n!!!!!\nSuccess rate is 100 percent (5/5), round-trip min/avg/max = 12/13/14 ms',
+        'traceroute 8.8.8.8':'Type escape sequence to abort.\nTracing the route to 8.8.8.8\nVRF info: (vrf in name/id, vrf out name/id)\n  1 203.0.113.1 4 msec 4 msec 4 msec\n  2 72.14.215.1 8 msec 8 msec 8 msec\n  3 8.8.8.8 12 msec 12 msec 12 msec',
+        'write memory':'Building configuration...\n[OK]\nRouter#',
+        'copy running-config startup-config':'Destination filename [startup-config]? \nBuilding configuration...\n[OK]',
+        'show crypto isakmp sa':'IPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n203.0.113.50    203.0.113.2     QM_IDLE           1001 ACTIVE\n198.51.100.12   203.0.113.2     QM_IDLE           1002 ACTIVE',
+        'show crypto ipsec sa':'interface: GigabitEthernet0/0\n    Crypto map tag: VPN-MAP, local addr 203.0.113.2\n   protected vrf: (none)\n   local  ident (addr/mask/prot/port): (192.168.1.0/255.255.255.0/0/0)\n   remote ident (addr/mask/prot/port): (10.10.0.0/255.255.0.0/0/0)\n   current_peer 203.0.113.50 port 500\n    #pkts encaps: 14523, #pkts encrypt: 14523, #pkts digest: 14523\n    #pkts decaps: 13891, #pkts decrypt: 13891, #pkts verify: 13891',
+        'undebug all':'All possible debugging has been turned off',
+        'show logging':'Syslog logging: enabled (0 messages dropped, 0 flushes, 0 overruns)\n    Console logging: level debugging, 347 messages logged\n    Monitor logging: level debugging, 0 messages logged\n    Buffer logging: level debugging, 347 messages logged\n\n*Aug 19 10:24:33.445: %OSPF-5-ADJCHG: Process 1, Nbr 192.168.1.2 on GigabitEthernet0/1 from LOADING to FULL, Loading Done\n*Aug 19 10:18:12.221: %BGP-5-ADJCHANGE: neighbor 203.0.113.1 Up',
+      }
+    },
+    cisco_sw:{
+      title:'🔵 Switch — Cisco IOS',
+      prompt:'Switch# ',
+      promptConfig:'Switch(config)# ',
+      color:'#0070d1',
+      categories:[
+        {name:'System',cmds:[
+          {cmd:'show version',desc:'IOS version and hardware info'},
+          {cmd:'show running-config',desc:'Current configuration'},
+          {cmd:'show processes cpu',desc:'CPU utilization'},
+          {cmd:'show environment all',desc:'Power, fans, temperature'},
+          {cmd:'show logging',desc:'System log messages'},
+        ]},
+        {name:'VLANs',cmds:[
+          {cmd:'show vlan brief',desc:'VLAN ID, name, and assigned ports'},
+          {cmd:'show vlan id 10',desc:'Specific VLAN detail'},
+          {cmd:'show interfaces trunk',desc:'Trunk ports and allowed VLANs'},
+          {cmd:'show interfaces GigabitEthernet1/0/1 trunk',desc:'Single trunk port detail'},
+          {cmd:'show vlan',desc:'Full VLAN database'},
+        ]},
+        {name:'Interfaces',cmds:[
+          {cmd:'show ip interface brief',desc:'Interface IP and status summary'},
+          {cmd:'show interfaces status',desc:'Port status, speed, duplex, VLAN'},
+          {cmd:'show interfaces GigabitEthernet1/0/1',desc:'Single interface counters'},
+          {cmd:'show interfaces counters errors',desc:'Error counters all ports'},
+          {cmd:'show mac address-table',desc:'MAC address table'},
+          {cmd:'show mac address-table count',desc:'MAC table entry count'},
+          {cmd:'show arp',desc:'ARP table'},
+          {cmd:'show cdp neighbors',desc:'CDP neighbor discovery'},
+          {cmd:'show lldp neighbors',desc:'LLDP neighbor discovery'},
+        ]},
+        {name:'Spanning Tree',cmds:[
+          {cmd:'show spanning-tree',desc:'STP status all VLANs'},
+          {cmd:'show spanning-tree vlan 10',desc:'STP for VLAN 10'},
+          {cmd:'show spanning-tree summary',desc:'STP summary'},
+          {cmd:'show spanning-tree blockedports',desc:'Ports in blocking state'},
+        ]},
+        {name:'Configuration',cmds:[
+          {cmd:'configure terminal',desc:'Enter global config mode'},
+          {cmd:'vlan 10',desc:'Create/enter VLAN 10 config'},
+          {cmd:'name SERVERS',desc:'Set VLAN name'},
+          {cmd:'interface GigabitEthernet1/0/1',desc:'Enter interface config'},
+          {cmd:'switchport mode access',desc:'Set port to access mode'},
+          {cmd:'switchport access vlan 10',desc:'Assign port to VLAN 10'},
+          {cmd:'switchport mode trunk',desc:'Set port to trunk mode'},
+          {cmd:'switchport trunk allowed vlan 10,20,30',desc:'Allow specific VLANs on trunk'},
+          {cmd:'spanning-tree portfast',desc:'Enable PortFast on access port'},
+          {cmd:'write memory',desc:'Save configuration'},
+        ]},
+        {name:'Layer 3 / Routing',cmds:[
+          {cmd:'show ip route',desc:'Layer 3 routing table (L3 switch)'},
+          {cmd:'show ip ospf neighbor',desc:'OSPF adjacencies'},
+          {cmd:'show ip protocols',desc:'Routing protocols active'},
+          {cmd:'ip routing',desc:'Enable IP routing (L3 switch)'},
+        ]},
+      ],
+      responses:{
+        'show vlan brief':'VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi1/0/23, Gi1/0/24\n10   SERVERS                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3\n20   WORKSTATIONS                     active    Gi1/0/4, Gi1/0/5, Gi1/0/6, Gi1/0/7\n30   MANAGEMENT                       active    Gi1/0/20, Gi1/0/21\n40   VOICE                            active    Gi1/0/8, Gi1/0/9\n100  DMZ                              active    \n1002 fddi-default                     act/unsup \n1003 token-ring-default               act/unsup \n1004 fddinet-default                  act/unsup \n1005 trnet-default                    act/unsup',
+        'show interfaces trunk':'Port        Mode             Encapsulation  Status        Native vlan\nGi1/0/23    on               802.1q         trunking      1\nGi1/0/24    on               802.1q         trunking      1\n\nPort        Vlans allowed on trunk\nGi1/0/23    10,20,30,40,100\nGi1/0/24    10,20,30,40,100\n\nPort        Vlans allowed and active in management domain\nGi1/0/23    10,20,30,40,100\nGi1/0/24    10,20,30,40,100',
+        'show interfaces status':'Port      Name               Status       Vlan       Duplex  Speed Type\nGi1/0/1   Server-1           connected    10         a-full  a-1000 10/100/1000BaseTX\nGi1/0/2   Server-2           connected    10         a-full  a-1000 10/100/1000BaseTX\nGi1/0/4   PC-1               connected    20         a-full  a-100  10/100/1000BaseTX\nGi1/0/5   PC-2               notconnect   20           auto    auto 10/100/1000BaseTX\nGi1/0/20  MGMT-AP            connected    30         a-full  a-1000 10/100/1000BaseTX\nGi1/0/23  Uplink-Core        connected    trunk      a-full  a-1000 10/100/1000BaseTX',
+        'show spanning-tree vlan 10':'VLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    8202\n             Address     0013.1986.0a80\n             Cost        4\n             Port        23 (GigabitEthernet1/0/23)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     c890.5f12.a801\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nGi1/0/1             Desg FWD 4         128.1    P2p\nGi1/0/2             Desg FWD 4         128.2    P2p\nGi1/0/23            Root FWD 4         128.23   P2p',
+        'show mac address-table':'Mac Address Table\n-------------------------------------------\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n  10    0013.1986.0a00    DYNAMIC     Gi1/0/1\n  10    0013.1986.0a01    DYNAMIC     Gi1/0/2\n  20    0013.1986.0a10    DYNAMIC     Gi1/0/4\n  30    0013.1986.0a20    DYNAMIC     Gi1/0/20\nTotal Mac Addresses for this criterion: 4',
+        'show ip interface brief':'Interface              IP-Address      OK? Method Status                Protocol\nVlan1                  unassigned      YES unset  up                    up\nVlan30                 192.168.30.1    YES manual up                    up\nGigabitEthernet1/0/1   unassigned      YES unset  up                    up\nGigabitEthernet1/0/23  unassigned      YES unset  up                    up',
+        'show cdp neighbors':'Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge\n                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone\n\nDevice ID        Local Intrfce     Holdtme    Capability  Platform  Port ID\nCore-SW-01       Gig 1/0/23        132           R S I    WS-C4506  Gig 1/3\nCore-SW-01       Gig 1/0/24        132           R S I    WS-C4506  Gig 1/4',
+        'configure terminal':'Enter configuration commands, one per line.  End with CNTL/Z.\nSwitch(config)#',
+        'write memory':'Building configuration...\n[OK]',
+      }
+    },
+    cisco_nxos:{
+      title:'🟠 NXOS-SW1 — Cisco NX-OS',
+      prompt:'NXOS-SW1# ',
+      promptConfig:'NXOS-SW1(config)# ',
+      color:'#d45f00',
+      categories:[
+        {name:'System',cmds:[
+          {cmd:'show version',desc:'NX-OS version, uptime, hardware'},
+          {cmd:'show system resources',desc:'CPU and memory usage'},
+          {cmd:'show environment',desc:'Power, fans, temperature'},
+          {cmd:'show module',desc:'Module status'},
+          {cmd:'show logging last 20',desc:'Last 20 log messages'},
+        ]},
+        {name:'VLANs & VxLAN',cmds:[
+          {cmd:'show vlan brief',desc:'VLAN summary'},
+          {cmd:'show vlan',desc:'Full VLAN database'},
+          {cmd:'show interface trunk',desc:'Trunk port summary'},
+          {cmd:'show vxlan',desc:'VxLAN configuration'},
+          {cmd:'show nve peers',desc:'NVE/VxLAN peers (EVPN)'},
+        ]},
+        {name:'Routing',cmds:[
+          {cmd:'show ip route',desc:'IPv4 routing table'},
+          {cmd:'show ip ospf neighbors',desc:'OSPF neighbor table'},
+          {cmd:'show bgp sessions',desc:'BGP session summary'},
+          {cmd:'show bgp ipv4 unicast summary',desc:'BGP IPv4 unicast summary'},
+          {cmd:'show ip eigrp neighbors',desc:'EIGRP neighbor table'},
+        ]},
+        {name:'Interfaces',cmds:[
+          {cmd:'show interface brief',desc:'All interfaces brief'},
+          {cmd:'show interface ethernet 1/1',desc:'Single interface detail'},
+          {cmd:'show interface counters errors',desc:'Error counters'},
+          {cmd:'show mac address-table',desc:'MAC address table'},
+          {cmd:'show ip arp',desc:'ARP table'},
+          {cmd:'show cdp neighbors',desc:'CDP neighbor discovery'},
+        ]},
+        {name:'Port-Channel & vPC',cmds:[
+          {cmd:'show port-channel summary',desc:'Port-channel summary'},
+          {cmd:'show vpc',desc:'vPC status and role'},
+          {cmd:'show vpc peer-keepalive',desc:'vPC keepalive status'},
+          {cmd:'show vpc consistency-parameters',desc:'vPC config consistency'},
+        ]},
+        {name:'Configuration',cmds:[
+          {cmd:'configure terminal',desc:'Enter config mode'},
+          {cmd:'feature ospf',desc:'Enable OSPF feature'},
+          {cmd:'feature bgp',desc:'Enable BGP feature'},
+          {cmd:'feature vpc',desc:'Enable vPC feature'},
+          {cmd:'vlan 10',desc:'Create VLAN 10'},
+          {cmd:'interface ethernet 1/1',desc:'Enter interface config'},
+          {cmd:'copy running-config startup-config',desc:'Save configuration'},
+          {cmd:'checkpoint',desc:'Save config checkpoint'},
+        ]},
+      ],
+      responses:{
+        'show version':'Cisco Nexus Operating System (NX-OS) Software\nCisco Nexus 9396PX Chassis\n  BIOS:      version 08.35\n  NXOS:      version 10.2(4) [Feature Release]\n  BIOS compile time: 01/29/2020\n  NXOS image file is: bootflash:///nxos.10.2.4.F.bin\n\nNXOS-SW1 uptime is 23 days 4 hours 12 minutes 34 seconds\nKernel uptime is 23 days(s), 4 hour(s), 14 minute(s), 8 second(s)\n\ncisco Nexus9000 C9396PX Chassis ("96x10/25G + 8x100G Supervisor")\nIntel(R) Xeon(R) CPU E5-2403 v2 @ 1.80GHz with 16401948 kB of memory.\nProcessor Board ID SAL2014J6XU',
+        'show system resources':'Load average:   1 minute: 1.14   5 minutes: 1.08   15 minutes: 1.01\nProcesses   :  total 660  running 1\nCPU states  :  4.12% user,   1.48% kernel,   94.38% idle\nMemory usage:   16384000K total,   5234100K used,   11149900K free',
+        'show vlan brief':'VLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Eth1/21, Eth1/22\n10   SERVERS                          active    Eth1/1, Eth1/2, Eth1/3\n20   WORKSTATIONS                     active    Eth1/4, Eth1/5, Eth1/6\n30   MANAGEMENT                       active    Eth1/20\n100  DMZ                              active    Eth1/10',
+        'show bgp sessions':'Total peers 2, established peers 2\nASN 65001\nVRF default, local ASN 65001\npeers 2, established peers 2, local-as 65001\nPort   State  Since        Flaps  LastUpd Resets  Pfx Peer AS\n203.0.113.1  Estab  3d08h11m     0    00:05  0      18  65000\n10.0.0.2     Estab  9d12h34m     1    00:01  1      14  65002',
+        'show vpc':'vPC domain id                     : 10\nPeer status                       : peer adjacency formed ok\nvPC keep-alive status             : peer is alive\nConfiguration consistency status  : success\nPer-vlan consistency status       : success\nType-2 consistency status         : success\nvPC role                          : primary\nNumber of vPCs configured         : 4\nPeer Gateway                      : Disabled\n\nvPC Peer-link status\n---------------------------------------------------------------------\nid    Port   Status Active vlans\n--    ----   ------ --------------------------------------------------\n1     Po1    up     1,10,20,30,100',
+        'show port-channel summary':'Flags:  D - Down        P - Up in port-channel (members)\n        I - Individual  H - Hot-standby (LACP only)\n        s - Suspended   r - Module-removed\n        S - Switched    R - Routed\n        U - Up (port-channel)\n        M - Not in use. Min-links not met\n------------------------------------------------------------------------\nGroup Port-       Type     Protocol  Member Ports\n      Channel\n------------------------------------------------------------------------\n1     Po1(SU)     Eth      LACP      Eth1/47(P)   Eth1/48(P)',
+        'configure terminal':'Enter configuration commands, one per line. End with CNTL/Z.\nNXOS-SW1(config)#',
+        'copy running-config startup-config':'[########################################] 100%\nCopy complete.',
+      }
+    },
+    juniper:{
+      title:'🟣 Router — Juniper JunOS',
+      prompt:'admin@Router> ',
+      promptConfig:'admin@Router# ',
+      color:'#84358a',
+      categories:[
+        {name:'System',cmds:[
+          {cmd:'show version',desc:'JunOS version and hardware'},
+          {cmd:'show system uptime',desc:'System uptime and load'},
+          {cmd:'show chassis hardware',desc:'Hardware components'},
+          {cmd:'show chassis environment',desc:'Temperature, fans, PSU'},
+          {cmd:'show system alarms',desc:'Active system alarms'},
+          {cmd:'show system storage',desc:'Disk usage'},
+        ]},
+        {name:'Interfaces',cmds:[
+          {cmd:'show interfaces terse',desc:'All interfaces brief'},
+          {cmd:'show interfaces ge-0/0/0',desc:'Interface detail'},
+          {cmd:'show interfaces ge-0/0/0 detail',desc:'Interface with counters'},
+          {cmd:'show arp',desc:'ARP table'},
+          {cmd:'show lldp neighbors',desc:'LLDP neighbors'},
+        ]},
+        {name:'Routing',cmds:[
+          {cmd:'show route',desc:'Full routing table'},
+          {cmd:'show route summary',desc:'Route table summary'},
+          {cmd:'show route 0.0.0.0/0',desc:'Default route'},
+          {cmd:'show ospf neighbor',desc:'OSPF neighbor table'},
+          {cmd:'show ospf database',desc:'OSPF LSDB'},
+          {cmd:'show bgp summary',desc:'BGP peer summary'},
+          {cmd:'show bgp neighbor 10.0.0.1',desc:'BGP neighbor detail'},
+        ]},
+        {name:'VPN / MPLS',cmds:[
+          {cmd:'show vpls connections',desc:'VPLS connection status'},
+          {cmd:'show l2vpn connections',desc:'L2VPN connections'},
+          {cmd:'show mpls lsp',desc:'MPLS LSP status'},
+          {cmd:'show route table mpls.0',desc:'MPLS routing table'},
+        ]},
+        {name:'Configuration',cmds:[
+          {cmd:'configure',desc:'Enter configuration mode'},
+          {cmd:'show | compare',desc:'Show uncommitted changes'},
+          {cmd:'commit',desc:'Commit configuration changes'},
+          {cmd:'commit confirmed 5',desc:'Commit with 5-min rollback'},
+          {cmd:'rollback 0',desc:'Rollback to last committed'},
+          {cmd:'rollback 1',desc:'Rollback to previous config'},
+          {cmd:'show configuration',desc:'Show full configuration'},
+          {cmd:'show configuration interfaces',desc:'Show interface configuration'},
+        ]},
+        {name:'Troubleshoot',cmds:[
+          {cmd:'ping 8.8.8.8 count 5',desc:'ICMP ping 5 packets'},
+          {cmd:'traceroute 8.8.8.8',desc:'Traceroute'},
+          {cmd:'monitor traffic interface ge-0/0/0',desc:'Live packet capture'},
+          {cmd:'show log messages',desc:'System log messages'},
+          {cmd:'show security flow session',desc:'Active flow sessions'},
+        ]},
+      ],
+      responses:{
+        'show version':'Junos: 21.4R3-S4.9\nJUNOS Base OS boot [21.4R3-S4.9]\nHostname: Router\nModel: mx480\nJuniper Networks Version 21.4R3-S4.9\nKernel #0 SMP PREEMPT\nFPC 0 EX PFE Microkernel\nMX MPC Type 2 3D EQ\nCPU: Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz\nCPU cores: 8\nMemory: 32768 MB\nSystem booted: 2024-07-21 08:34:00 UTC (23 days, 04:12 ago)',
+        'show interfaces terse':'Interface               Admin Link Proto    Local                 Remote\nge-0/0/0                up    up   inet     203.0.113.2/30\n                                   iso\nge-0/0/1                up    up   inet     192.168.1.1/24\nge-0/0/2                up    up   inet     192.168.2.1/24\nge-0/0/3                up    down\nlo0                     up    up   inet     10.0.0.1/32\n                                   inet6    ::1/128',
+        'show route':'inet.0: 24 destinations, 26 routes (24 active, 0 holddown, 0 hidden)\n+ = Active Route, - = Last Active, * = Both\n\n0.0.0.0/0          *[Static/5] 23d 04:12:34\n                    > to 203.0.113.1 via ge-0/0/0\n10.0.0.1/32        *[Direct/0] 23d 04:12:34\n                    > via lo0\n192.168.1.0/24     *[Direct/0] 23d 04:12:34\n                    > via ge-0/0/1\n172.16.0.0/24      *[OSPF/10] 00:14:23, metric 2\n                    > to 192.168.1.2 via ge-0/0/1\n10.10.0.0/16       *[BGP/170] 3d 08:11:22, localpref 100\n                    > to 203.0.113.1 via ge-0/0/0',
+        'show ospf neighbor':'Address          Interface              State     ID               Pri  Dead\n192.168.1.2      ge-0/0/1.0             Full      192.168.1.2        1    32\n192.168.2.2      ge-0/0/2.0             Full      192.168.2.2        1    38',
+        'show bgp summary':'Groups: 2 Peers: 2 Down peers: 0\nTable          Tot Paths  Act Paths Suppressed    History Damp State    Pending\nbgp.l3vpn.0           0          0          0          0          0          0\ninet.0                30         28          0          0          0          0\nPeer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...\n203.0.113.1           65000      12432      12429       0       0    3d 8:11 18/18/18/0         0/0/0/0\n10.0.0.2              65002       1429       1425       0       1  9d 12:34 14/14/14/0         0/0/0/0',
+        'show arp':'MAC Address       Address         Name                      Interface               Flags\n00:1a:2b:3c:4d:5e 203.0.113.1     --                        ge-0/0/0.0              none\n00:1a:2b:3c:4e:5e 192.168.1.2     --                        ge-0/0/1.0              none\n00:1a:2b:3c:4f:5e 192.168.2.2     --                        ge-0/0/2.0              none',
+        'configure':'Entering configuration mode\n\n[edit]\nadmin@Router#',
+        'commit':'commit complete\n\n[edit]\nadmin@Router#',
+        'ping 8.8.8.8 count 5':'PING 8.8.8.8 (8.8.8.8): 56 data bytes\n64 bytes from 8.8.8.8: icmp_seq=0 ttl=116 time=12.356 ms\n64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=11.823 ms\n64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=12.104 ms\n64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=12.634 ms\n64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=11.912 ms\n\n--- 8.8.8.8 ping statistics ---\n5 packets transmitted, 5 packets received, 0% packet loss\nround-trip min/avg/max/stddev = 11.823/12.166/12.634/0.292 ms',
+        'traceroute 8.8.8.8':'traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 40 byte packets\n 1  203.0.113.1 (203.0.113.1)  0.834 ms  0.791 ms  0.812 ms\n 2  72.14.215.1 (72.14.215.1)  8.234 ms  8.101 ms  8.298 ms\n 3  8.8.8.8 (8.8.8.8)  12.4 ms  11.9 ms  12.1 ms',
+      }
+    },
+    aruba:{
+      title:'⬛ ProCurve — Aruba/HP Switch',
+      prompt:'ProCurve# ',
+      promptConfig:'ProCurve(config)# ',
+      color:'#ff8300',
+      categories:[
+        {name:'System',cmds:[
+          {cmd:'show system-information',desc:'System info, uptime, firmware'},
+          {cmd:'show version',desc:'Firmware version'},
+          {cmd:'show running-config',desc:'Current configuration'},
+          {cmd:'show environment',desc:'Temperature and fans'},
+          {cmd:'show log',desc:'System event log'},
+          {cmd:'show cpu',desc:'CPU utilization'},
+          {cmd:'show memory',desc:'Memory utilization'},
+        ]},
+        {name:'VLANs',cmds:[
+          {cmd:'show vlans',desc:'All VLANs summary'},
+          {cmd:'show vlan 10',desc:'VLAN 10 detail and ports'},
+          {cmd:'show interfaces trunk',desc:'Trunk links summary'},
+          {cmd:'show tagged-ports vlan 10',desc:'Tagged ports for VLAN 10'},
+          {cmd:'show untagged-ports vlan 10',desc:'Untagged ports for VLAN 10'},
+        ]},
+        {name:'Interfaces',cmds:[
+          {cmd:'show interfaces brief',desc:'All ports status summary'},
+          {cmd:'show interfaces 1',desc:'Port 1 detail and counters'},
+          {cmd:'show interfaces 1-8',desc:'Ports 1 to 8 detail'},
+          {cmd:'show mac-address',desc:'MAC address table'},
+          {cmd:'show arp',desc:'ARP table'},
+          {cmd:'show lldp info remote-device',desc:'LLDP neighbors'},
+          {cmd:'show cdp neighbors',desc:'CDP neighbors'},
+          {cmd:'show port-utilization',desc:'Traffic utilization per port'},
+        ]},
+        {name:'Spanning Tree',cmds:[
+          {cmd:'show spanning-tree',desc:'STP status'},
+          {cmd:'show spanning-tree vlan 10',desc:'STP per VLAN'},
+          {cmd:'show spanning-tree detail',desc:'STP detailed status'},
+        ]},
+        {name:'Configuration',cmds:[
+          {cmd:'configure',desc:'Enter config mode'},
+          {cmd:'vlan 10',desc:'Create/enter VLAN 10'},
+          {cmd:'name SERVERS',desc:'Name the VLAN'},
+          {cmd:'untagged 1-3',desc:'Add untagged ports 1-3'},
+          {cmd:'tagged 24',desc:'Add tagged uplink port'},
+          {cmd:'interface 1',desc:'Enter port 1 config'},
+          {cmd:'speed-duplex auto',desc:'Set auto speed/duplex'},
+          {cmd:'write memory',desc:'Save configuration'},
+        ]},
+        {name:'Troubleshoot',cmds:[
+          {cmd:'ping 8.8.8.8',desc:'ICMP ping'},
+          {cmd:'traceroute 8.8.8.8',desc:'Traceroute'},
+          {cmd:'show tech all',desc:'Full diagnostic output'},
+          {cmd:'show event-log',desc:'Event log entries'},
+          {cmd:'debug all',desc:'Enable all debug (careful!)'},
+        ]},
+      ],
+      responses:{
+        'show system-information':'Status and Counters - General System Information\n\n  System Name        : ProCurve\n  System Contact     :\n  System Location    : Server Room A\n  MAC Age Time (sec) : 300\n  Time Zone          : 0\n  Daylight Time Rule : None\n  Software revision  : WB.16.10.0019\n  ROM Version        : WB.16.01\n  Serial Number      : SG83FLZE2P\n  Base MAC Addr      : 98f2:b3aa:1100\n  RAM (MB)           : 512\n  Total Flash (MB)   : 1024\n  CPU Utilization (%) : 3\n  IP Mgmt            : 192.168.30.2\n  Boot ROM           : Primary\n  Up Time            : 23 days\n  CPU Load (1 min)   : 3%\n  CPU Load (5 min)   : 4%',
+        'show vlans':'Status and Counters - VLAN Information\n\n  Maximum VLANs to support : 256\n  Primary VLAN : DEFAULT_VLAN\n  Management VLAN :\n\n  VLAN ID Name             Status  Voice Jumbo\n  ------- ---------------- ------- ----- -----\n  1       DEFAULT_VLAN     Port-based         No    No\n  10      SERVERS          Port-based         No    No\n  20      WORKSTATIONS     Port-based         No    No\n  30      MANAGEMENT       Port-based         No    No',
+        'show interfaces brief':'Status and Counters - Port Status\n\n  Port  Type        | Intrusion MDI  Flow   Bcast  Port\n               |           Mode  Ctrl   Limit  Security\n  ----- ----------- + --------- ----- ------ ------ --------\n  1     100/1000T   | No        Auto  off    0      No\n  2     100/1000T   | No        Auto  off    0      No\n  3     100/1000T   | No        Auto  off    0      No\n  24    1000T       | No        Auto  off    0      No',
+        'show mac-address':'Status and Counters - Address Table\n\n  Port   VLAN  MAC Address\n  ------ ----- -----------------\n  1      10    98-f2-b3-aa-11-01\n  2      10    98-f2-b3-aa-11-02\n  4      20    98-f2-b3-aa-11-10\n  24     1     98-f2-b3-aa-11-30',
+        'configure':'ProCurve(config)#',
+        'write memory':'Configuration Saved.',
+        'ping 8.8.8.8':'8.8.8.8 is alive, time = 14 ms',
+        'traceroute 8.8.8.8':' 1 192.168.30.1 <1 ms <1 ms <1 ms\n 2 203.0.113.1 4 ms 4 ms 4 ms\n 3 8.8.8.8 14 ms 14 ms 14 ms',
+      }
+    }
+  };
+
+  // ── Build reference panel ──
+  function buildRef(v){
+    var db=cmdDB[v.id];
+    if(!db) return;
+    refPanel.innerHTML='';
+    var rc=document.createElement('div');
+    rc.className='cblock';
+    rc.innerHTML='<div class="chdr" style="background:'+v.color+'22;border-color:'+v.color+'44"><div class="chdr-l" style="color:'+v.color+'">📖 Command Reference</div></div>';
+    var rb=document.createElement('div');
+    rb.style.cssText='overflow-y:auto;max-height:520px';
+    db.categories.forEach(function(cat){
+      var catDiv=document.createElement('div');
+      catDiv.style.cssText='border-bottom:1px solid var(--br)';
+      var catHdr=document.createElement('div');
+      catHdr.style.cssText='padding:8px 12px;font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;background:rgba(0,0,0,.2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none';
+      catHdr.innerHTML=cat.name+'<span style="color:var(--t3);font-size:10px">▼</span>';
+      var catBody=document.createElement('div');
+      catBody.style.display='block';
+      cat.cmds.forEach(function(c){
+        var cmdRow=document.createElement('div');
+        cmdRow.style.cssText='padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .1s';
+        cmdRow.innerHTML='<div style="font-family:\'Courier New\',monospace;font-size:11px;color:'+v.color+';margin-bottom:2px">'+c.cmd+'</div>'
+          +'<div style="font-size:10px;color:var(--t3);line-height:1.4">'+c.desc+'</div>';
+        cmdRow.onmouseenter=function(){this.style.background='rgba(255,255,255,.04)';};
+        cmdRow.onmouseleave=function(){this.style.background='transparent';};
+        cmdRow.onclick=(function(cmd){return function(){
+          document.getElementById('sim-input').value=cmd;
+          document.getElementById('sim-input').focus();
+        };})(c.cmd);
+        catBody.appendChild(cmdRow);
+      });
+      // Toggle collapse
+      catHdr.onclick=function(){
+        var isOpen=catBody.style.display!=='none';
+        catBody.style.display=isOpen?'none':'block';
+        this.querySelector('span').textContent=isOpen?'▶':'▼';
+      };
+      catDiv.appendChild(catHdr);
+      catDiv.appendChild(catBody);
+      rb.appendChild(catDiv);
+    });
+    rc.appendChild(rb);
+    refPanel.appendChild(rc);
+  }
+
+  // ── Boot device ──
+  function bootDevice(v){
+    var db=cmdDB[v.id];
+    document.getElementById('sim-title').textContent='🟢 '+db.title;
+    document.getElementById('sim-title').style.color=v.color;
+    document.getElementById('sim-prompt').textContent=db.prompt;
+    document.getElementById('sim-prompt').style.color=v.color;
+    termBody.innerHTML='';
+    cmdHistory=[];histIdx=-1;
+    configMode=false;configContext='';
+    printLine('<span style="color:'+v.color+'">'+('─').repeat(50)+'</span>');
+    printLine('<span style="color:'+v.color+';font-weight:700">  NetWolf CLI Simulator — '+db.title+'</span>');
+    printLine('<span style="color:'+v.color+'">'+('─').repeat(50)+'</span>');
+    printLine('<span style="color:#8b949e">  Type <span style="color:#e6edf3">?</span> or <span style="color:#e6edf3">help</span> to list all commands</span>');
+    printLine('<span style="color:#8b949e">  Click any command in the reference panel →</span>');
+    printLine('<span style="color:#8b949e">  Use ↑↓ arrows for command history</span>');
+    printLine('');
+    buildRef(v);
+  }
+
+  // ── Terminal output helpers ──
+  function printLine(html){
+    var d=document.createElement('div');
+    d.style.cssText='line-height:1.7;word-break:break-all';
+    d.innerHTML=html;
+    termBody.appendChild(d);
+    termBody.scrollTop=termBody.scrollHeight;
+  }
+
+  function printPrompt(cmd){
+    var db=cmdDB[currentVendor.id];
+    var promptStr=configMode?(db.promptConfig||db.prompt):db.prompt;
+    printLine('<span style="color:'+currentVendor.color+';font-weight:700">'+escH(promptStr)+'</span>'
+      +'<span style="color:#e6edf3">'+escH(cmd)+'</span>');
+  }
+
+  function printOutput(text,color){
+    if(!text) return;
+    text.split('\n').forEach(function(line){
+      printLine('<span style="color:'+(color||'#c9d1d9')+'">'+escH(line)+'</span>');
+    });
+  }
+
+  function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  // ── Command processor ──
+  function runCommand(raw){
+    var cmd=raw.trim();
+    if(!cmd) return;
+    cmdHistory.unshift(cmd);
+    histIdx=-1;
+    printPrompt(cmd);
+
+    var db=cmdDB[currentVendor.id];
+    var cmdLow=cmd.toLowerCase();
+
+    // Help / ?
+    if(cmd==='?'||cmdLow==='help'){
+      printLine('<span style="color:#58a6ff;font-weight:700">Available commands:</span>');
+      db.categories.forEach(function(cat){
+        printLine('<span style="color:#d29922;font-weight:700">  — '+cat.name+' —</span>');
+        cat.cmds.forEach(function(c){
+          printLine('  <span style="color:'+currentVendor.color+';font-family:\'Courier New\',monospace">'+escH(c.cmd)+'</span>'
+            +'<span style="color:#484f58"> — </span>'
+            +'<span style="color:#8b949e">'+c.desc+'</span>');
+        });
+      });
+      return;
+    }
+
+    // Clear terminal
+    if(cmdLow==='clear'||cmdLow==='cls'){termBody.innerHTML='';return;}
+
+    // Exit config mode
+    if(cmdLow==='end'||cmdLow==='exit'){
+      if(configMode){configMode=false;configContext='';
+        document.getElementById('sim-prompt').textContent=db.prompt;
+        printLine('<span style="color:#8b949e">Exited configuration mode.</span>');
+      } else {
+        printLine('<span style="color:#8b949e">Already in exec mode.</span>');
+      }
+      return;
+    }
+
+    // Config mode entry
+    if(cmdLow==='configure terminal'||cmdLow==='configure'||cmdLow==='conf t'){
+      configMode=true;
+      document.getElementById('sim-prompt').textContent=db.promptConfig||db.prompt;
+      document.getElementById('sim-prompt').style.color=currentVendor.color;
+      var configResp=db.responses['configure terminal']||db.responses['configure']||'Enter configuration commands, one per line. End with CNTL/Z.';
+      printOutput(configResp,'#8b949e');
+      return;
+    }
+
+    // Check responses
+    var resp=null;
+    // Exact match first
+    if(db.responses[cmd]!==undefined){resp=db.responses[cmd];}
+    // Case-insensitive match
+    else{
+      Object.keys(db.responses).forEach(function(k){
+        if(k.toLowerCase()===cmdLow) resp=db.responses[k];
+      });
+    }
+    // Prefix match (e.g. 'show ip route 192.168.1.0' matches 'show ip route')
+    if(resp===null){
+      var bestLen=0;
+      Object.keys(db.responses).forEach(function(k){
+        if(cmdLow.startsWith(k.toLowerCase())&&k.length>bestLen){
+          bestLen=k.length;resp=db.responses[k];
+        }
+      });
+    }
+
+    if(resp!==null){
+      if(resp===''){
+        printLine('<span style="color:#8b949e"></span>');
+      } else {
+        printOutput(resp,'#c9d1d9');
+      }
+    } else {
+      // Generic error
+      var errMsgs={
+        fortigate:'Unknown action 0',
+        cisco_ios:'% Invalid input detected at \'^\' marker.',
+        cisco_sw:'% Invalid input detected at \'^\' marker.',
+        cisco_nxos:'% Invalid command at \'^\' marker.',
+        juniper:'unknown command.',
+        aruba:'Invalid input: '+cmd
+      };
+      printLine('<span style="color:#f85149">'+escH(errMsgs[currentVendor.id]||'% Unknown command')+'</span>');
+      printLine('<span style="color:#484f58">Tip: type <span style="color:#e6edf3">?</span> or <span style="color:#e6edf3">help</span> to see available commands</span>');
+    }
+    printLine('');
+  }
+
+  // ── Wire input ──
+  var input=document.getElementById('sim-input');
+  input.onkeydown=function(e){
+    if(e.key==='Enter'){
+      var cmd=this.value;
+      this.value='';
+      runCommand(cmd);
+    } else if(e.key==='ArrowUp'){
+      e.preventDefault();
+      if(histIdx<cmdHistory.length-1){histIdx++;this.value=cmdHistory[histIdx]||'';}
+    } else if(e.key==='ArrowDown'){
+      e.preventDefault();
+      if(histIdx>0){histIdx--;this.value=cmdHistory[histIdx]||'';}
+      else{histIdx=-1;this.value='';}
+    }
+  };
+
+  document.getElementById('sim-run-btn').onclick=function(){
+    var cmd=input.value;
+    input.value='';
+    runCommand(cmd);
+    input.focus();
+  };
+
+  document.getElementById('sim-clear-btn').onclick=function(){
+    termBody.innerHTML='';
+    input.focus();
+  };
+
+  // Focus input on click anywhere in terminal
+  termBody.onclick=function(){input.focus();};
+
+  // ── Boot default device ──
+  bootDevice(currentVendor);
+}
+
+
 window.doLogin=function doLogin(){
   const email=document.getElementById('loginEmail').value.trim();
   const pass=document.getElementById('loginPassword').value;
@@ -2784,6 +3522,16 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
   };
 
   render();
+
+  // ── CLI Simulator section ──
+  var simDiv=document.createElement('div');
+  simDiv.style.marginTop='32px';
+  simDiv.innerHTML='<div style="border-top:2px solid var(--a);margin-bottom:24px;padding-top:24px">'
+    +'<div style="font-size:16px;font-weight:700;color:var(--t);margin-bottom:6px">🖥️ CLI Practice Simulator</div>'
+    +'<div style="font-size:12px;color:var(--t2);line-height:1.7">Practice real routing &amp; switching commands on simulated devices. Choose a vendor, use the command reference panel to click commands, or type them directly in the terminal.</div>'
+    +'</div>';
+  el.appendChild(simDiv);
+  renderCLISim(simDiv);
 }
 
 function extractUniqueIPs(text){const re=/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g;return[...new Set((text.match(re)||[]))].sort();}
