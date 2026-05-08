@@ -427,7 +427,52 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   /* Binary breakdown on mobile */
   #subnetResult [style*="letter-spacing"]{font-size:11px!important;letter-spacing:0!important}
 }
-.landing-card{background:var(--b2);border:2px solid rgba(29,158,117,.2);border-radius:12px;padding:18px 16px;cursor:pointer;text-align:left;transition:all .2s;width:100%}.landing-card:hover{border-color:var(--a);background:rgba(29,158,117,.04);transform:translateY(-2px)}
+@keyframes landingGlow{
+  0%{box-shadow:0 0 6px rgba(29,158,117,.2),0 0 0 0 rgba(29,158,117,.15);border-color:rgba(29,158,117,.3)}
+  50%{box-shadow:0 0 18px rgba(29,158,117,.4),0 0 32px rgba(29,158,117,.1);border-color:rgba(29,158,117,.7)}
+  100%{box-shadow:0 0 6px rgba(29,158,117,.2),0 0 0 0 rgba(29,158,117,.15);border-color:rgba(29,158,117,.3)}
+}
+@keyframes landingFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
+}
+@keyframes landingFadeIn{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.landing-card{
+  background:var(--b2);
+  border:2px solid rgba(29,158,117,.3);
+  border-radius:12px;
+  padding:18px 16px;
+  cursor:pointer;
+  text-align:left;
+  width:100%;
+  animation:landingGlow 3s ease-in-out infinite, landingFadeIn .5s ease both;
+  position:relative;
+  overflow:hidden;
+  transition:transform .2s,background .2s;
+}
+.landing-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(29,158,117,.06) 0%,transparent 60%);
+  pointer-events:none;
+}
+.landing-card:nth-child(1){animation-delay:0s,0s}
+.landing-card:nth-child(2){animation-delay:.4s,.1s}
+.landing-card:nth-child(3){animation-delay:.8s,.2s}
+.landing-card:nth-child(4){animation-delay:1.2s,.3s}
+.landing-card:nth-child(5){animation-delay:1.6s,.4s}
+.landing-card:nth-child(6){animation-delay:2s,.5s}
+.landing-card:hover{
+  transform:translateY(-4px) scale(1.02);
+  background:rgba(29,158,117,.06);
+  border-color:var(--a);
+  box-shadow:0 0 28px rgba(29,158,117,.35),0 8px 24px rgba(0,0,0,.3);
+  animation:none;
+}
 @media(max-width:480px){#landingOverlay .grid-2col,#landingOverlay>div>div:nth-child(2){grid-template-columns:1fr!important}}
 </style>
 </head>
@@ -438,8 +483,8 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 <div id="landingOverlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:800;overflow-y:auto">
   <div style="max-width:680px;margin:0 auto;padding:40px 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
     <div style="text-align:center;margin-bottom:36px">
-      <div style="font-size:48px;margin-bottom:12px">&#x1F43A;</div>
-      <h1 style="font-size:26px;font-weight:800;color:var(--t);margin-bottom:8px">Welcome to <span style="color:var(--a)">NetWolf</span></h1>
+      <div style="font-size:48px;margin-bottom:12px;animation:landingFloat 3s ease-in-out infinite,landingFadeIn .3s ease both;filter:drop-shadow(0 0 12px rgba(29,158,117,.6))">&#x1F43A;</div>
+      <h1 style="font-size:26px;font-weight:800;color:var(--t);margin-bottom:8px;animation:landingFadeIn .4s ease both">Welcome to <span style="color:var(--a);text-shadow:0 0 20px rgba(29,158,117,.5)">NetWolf</span></h1>
       <p id="landing-greeting" style="font-size:14px;color:var(--t2)">FortiGate Pro Toolkit &mdash; ready when you are.</p>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
@@ -474,7 +519,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
         <div style="font-size:11px;color:var(--t3);line-height:1.5">Debug generator &middot; Packet walk &middot; Traceroute analyzer</div>
       </button>
     </div>
-    <button onclick="window.landingEnter()" style="width:100%;padding:14px;background:linear-gradient(90deg,var(--a),var(--ad));color:#000;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px">&#x1F680; Open Full Toolkit &rarr;</button>
+    <button onclick="window.landingEnter()" style="width:100%;padding:14px;background:linear-gradient(90deg,var(--a),var(--ad));color:#000;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;box-shadow:0 0 20px rgba(29,158,117,.35);animation:landingFadeIn .6s .6s ease both;opacity:0;animation-fill-mode:both;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 0 32px rgba(29,158,117,.6)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 20px rgba(29,158,117,.35)'">&#x1F680; Open Full Toolkit &rarr;</button>
     <p style="text-align:center;font-size:11px;color:var(--t3)">Or click any tool above to jump straight in</p>
   </div>
 </div>
