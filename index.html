@@ -222,14 +222,10 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   </div>
 </section>
 
-
-
 <section class="features" id="features">
   <div class="section-label">What's inside</div>
   <h2 class="section-title">Every tool a FortiGate engineer needs</h2>
   <p class="section-sub">Built from real production experience — not theory. Every feature solves a real problem network engineers face daily.</p>
-
-  <!-- Big number stats row -->
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;max-width:900px;margin:0 auto 48px">
     <div style="background:var(--b2);border:1px solid var(--br);border-radius:12px;padding:20px 16px;text-align:center">
       <div style="font-size:36px;font-weight:700;color:var(--a);font-family:var(--mono);line-height:1">50+</div>
@@ -260,97 +256,80 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
       <div style="font-size:11px;color:var(--t2);margin-top:6px;text-transform:uppercase;letter-spacing:.07em">Groq<br>LLaMA 3.3</div>
     </div>
   </div>
-
-  <!-- Feature cards -->
   <div class="feat-grid">
-
     <div class="feat-card">
       <div class="feat-icon">🔒</div>
       <div class="feat-title">Guided Troubleshoot Playbooks</div>
       <div class="feat-desc">Stop guessing. Every category has a proven step-by-step CLI sequence — from tunnel failures to HA sync issues. Each command is tagged read-only, caution, or service-impact so you always know what's safe.</div>
       <div class="feat-tags"><span class="feat-tag">IPsec VPN</span><span class="feat-tag">SSL VPN</span><span class="feat-tag">SD-WAN</span><span class="feat-tag">HA Cluster</span><span class="feat-tag">Routing</span><span class="feat-tag">+21 more</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">🤖</div>
       <div class="feat-title">AI CLI Analyzer</div>
       <div class="feat-desc">Paste raw FortiGate output — get an instant AI diagnosis with root cause, fix commands and explanation. No more staring at debug output wondering what went wrong. Works with any FortiOS version.</div>
       <div class="feat-tags"><span class="feat-tag">LLaMA 3.3 70B</span><span class="feat-tag">root cause</span><span class="feat-tag">fix commands</span><span class="feat-tag">any output</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">⚙️</div>
       <div class="feat-title">Config Generator</div>
       <div class="feat-desc">Fill in a simple form — get a complete, ready-to-paste FortiGate CLI config. No more writing configs from scratch or copying from old devices. Covers the most common deployment scenarios.</div>
       <div class="feat-tags"><span class="feat-tag">Initial Setup</span><span class="feat-tag">IPsec VPN</span><span class="feat-tag">SSL VPN</span><span class="feat-tag">HA Cluster</span><span class="feat-tag">SD-WAN</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">🔄</div>
       <div class="feat-title">Smart Config Migrator</div>
       <div class="feat-desc">Upload an existing FortiGate backup config. The tool automatically detects every IP, hostname, PSK, gateway and server address. Update what needs changing — download the migrated config ready to apply.</div>
       <div class="feat-tags"><span class="feat-tag">auto-detect</span><span class="feat-tag">IP replace</span><span class="feat-tag">add sections</span><span class="feat-tag">download .conf</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">🌍</div>
       <div class="feat-title">Multi-Vendor CLI Reference</div>
       <div class="feat-desc">Working with mixed environments? Full CLI reference for Cisco IOS-XE, ArubaOS-CX and Huawei VRP — troubleshoot and config commands, with explanations and safety badges on every single command.</div>
       <div class="feat-tags"><span class="feat-tag">Cisco IOS-XE</span><span class="feat-tag">ArubaOS-CX</span><span class="feat-tag">Huawei VRP</span><span class="feat-tag">70+ cmds each</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">🎭</div>
       <div class="feat-title">IP Masking & Anonymizer</div>
       <div class="feat-desc">Share CLI output safely with vendors and colleagues. Replace all real IPs with RFC 5737 documentation addresses in one click — with a full real→fake mapping table so you can reverse it anytime.</div>
       <div class="feat-tags"><span class="feat-tag">RFC 5737</span><span class="feat-tag">bulk auto-detect</span><span class="feat-tag">mapping table</span><span class="feat-tag">export</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">🧮</div>
       <div class="feat-title">Subnet Calculator</div>
       <div class="feat-desc">Enter any CIDR — instantly get network address, broadcast, first and last usable host, subnet mask, wildcard mask, usable host count and full binary breakdown. Essential for VIP ranges and DHCP scopes.</div>
       <div class="feat-tags"><span class="feat-tag">CIDR</span><span class="feat-tag">wildcard mask</span><span class="feat-tag">binary view</span><span class="feat-tag">usable hosts</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">📋</div>
       <div class="feat-title">Config Guides — 12 Templates</div>
       <div class="feat-desc">Full step-by-step configuration walkthroughs for the most common FortiGate deployments — from initial setup and VDOM architecture to ZTNA, FortiSwitch and inter-VDOM routing. Every command copy-ready.</div>
       <div class="feat-tags"><span class="feat-tag">Initial Setup</span><span class="feat-tag">VDOM</span><span class="feat-tag">ZTNA</span><span class="feat-tag">FortiSwitch</span><span class="feat-tag">+8 more</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">🔬</div>
       <div class="feat-title">Advanced Diagnostics</div>
       <div class="feat-desc">Go deeper than the standard CLI. Kernel-level fnsysctl commands, daemon debugging, local-in policy inspection, DoS policy monitoring, config transaction workflows, and hardware NPU diagnostics.</div>
       <div class="feat-tags"><span class="feat-tag">fnsysctl</span><span class="feat-tag">daemon debug</span><span class="feat-tag">config tx</span><span class="feat-tag">NPU / hardware</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">🛡️</div>
       <div class="feat-title">Full FortiOS Coverage</div>
       <div class="feat-desc">Not just VPN and routing. Complete playbooks for ZTNA, FortiSwitch, FortiAP, IPv6, SIP/VoIP, Traffic Shaping, Security Fabric, FortiManager, FortiAnalyzer, SNMP, Certificates and more.</div>
       <div class="feat-tags"><span class="feat-tag">ZTNA</span><span class="feat-tag">FortiSwitch</span><span class="feat-tag">FortiAP</span><span class="feat-tag">Security Fabric</span><span class="feat-tag">FortiManager</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">🧪</div>
       <div class="feat-title">Lab Setup Guide</div>
       <div class="feat-desc">Build a full FortiGate lab on your local PC using EVE-NG Community and FortiGate VM — completely free. Includes a step-by-step PDF guide covering everything from installation to running IPsec between two sites.</div>
       <div class="feat-tags"><span class="feat-tag">EVE-NG</span><span class="feat-tag">VirtualBox</span><span class="feat-tag">FortiGate VM</span><span class="feat-tag">PDF guide</span></div>
     </div>
-
     <div class="feat-card">
       <div class="feat-icon">🎨</div>
       <div class="feat-title">Built for Daily Use</div>
       <div class="feat-desc">Works in any browser — no install needed. 5 colour themes so it fits your setup. One-click copy on every command. Version changelog so you always know what's new. Built to be open all day alongside your terminal.</div>
       <div class="feat-tags"><span class="feat-tag">5 themes</span><span class="feat-tag">one-click copy</span><span class="feat-tag">any browser</span><span class="feat-tag">changelog</span></div>
     </div>
-
   </div>
-
-  <!-- Social proof / trust strip -->
   <div style="max-width:900px;margin:48px auto 0;background:var(--b2);border:1px solid var(--br);border-radius:14px;padding:28px 32px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;text-align:center">
     <div>
       <div style="font-size:28px;margin-bottom:8px">⚡</div>
@@ -368,10 +347,8 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
       <div style="font-size:12px;color:var(--t2);line-height:1.6">New playbooks, commands and features added regularly. Your subscription includes all updates.</div>
     </div>
   </div>
-
 </section>
 
-<!-- INTERACTIVE DEMO -->
 <section class="demo-section" id="demo">
   <div class="demo-inner">
     <div style="text-align:center;margin-bottom:48px">
@@ -487,8 +464,6 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
               <div class="qref-card"><div class="qref-title">CPU &amp; Memory</div><div class="qref-cmd"><span style="color:#3fb950">get system performance status</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#3fb950">diagnose sys top</span><button class="qref-copy">Copy</button></div><div class="qref-cmd"><span style="color:#3fb950">diagnose hardware sysinfo conserve</span><button class="qref-copy">Copy</button></div></div>
             </div>
           </div>
-
-          <!-- Scene 6: Most Used -->
           <div class="anim-scene" id="ascene6" style="padding:18px 20px;display:none">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
               <span style="font-size:16px">⚡</span>
@@ -519,8 +494,6 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
             </div>
             <div style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">+ 9 more: 🩺 Health · 🌐 BGP/OSPF · 🕵️ SSL VPN · 📄 Certs · ⚙️ HA · 💾 VLAN · 📊 Bandwidth · 🏢 FAZ/FMG</div>
           </div>
-
-          <!-- Scene 7: PS Maker -->
           <div class="anim-scene" id="ascene7" style="padding:18px 20px;display:none">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
               <span style="font-size:13px;font-weight:700;color:#e6edf3">🪟 Smart PowerShell Script Maker</span>
@@ -550,8 +523,6 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
             </div>
             <div style="margin-top:8px;font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">✓ READ/WRITE annotated · Per-command explanations · Interactive chat · Copy to clipboard</div>
           </div>
-
-          <!-- Scene 8: Topology -->
           <div class="anim-scene" id="ascene8" style="padding:18px 20px;display:none">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
               <span style="font-size:13px;font-weight:700;color:#e6edf3">🗺️ Network Topology Designer</span>
@@ -604,8 +575,6 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
               <span style="color:rgba(255,255,255,.25)">Drag · Connect · Resize · Export PNG</span>
             </div>
           </div>
-
-          <!-- Scene 9: CLI Simulator -->
           <div class="anim-scene" id="ascene9" style="padding:18px 20px;display:none">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
               <span style="font-size:13px;font-weight:700;color:#e6edf3">🖥️ CLI Practice Simulator</span>
@@ -633,7 +602,6 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
             </div>
             <div style="margin-top:8px;font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)">✓ Type ? for all commands · Click reference panel · ↑↓ command history · Realistic output</div>
           </div>
-
         </div>
       </div>
       <div style="height:2px;background:rgba(255,255,255,.05)"><div id="animProgress" style="height:100%;background:linear-gradient(90deg,#1D9E75,#52d6b0);width:0;transition:width .1s linear"></div></div>
@@ -653,7 +621,6 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   </div>
 </section>
 
-<!-- PRICING -->
 <section class="pricing-section" id="pricing">
   <div class="section-label">Pricing</div>
   <h2 class="section-title" style="text-align:center">Simple, honest pricing</h2>
@@ -703,7 +670,6 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
   </div>
 </section>
 
-<!-- ORDER FORM -->
 <section class="order-section" id="order">
   <div class="order-inner">
     <div class="section-label" style="text-align:left">Subscribe</div>
@@ -817,7 +783,6 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
 </footer>
 <div class="toast" id="toast"></div>
 
-<!-- TERMS OF USE MODAL -->
 <div class="tos-overlay" id="tosOverlay" onclick="if(event.target===this)closeTos()">
   <div class="tos-card">
     <div class="tos-hdr"><h3>📜 Terms of Service — NetWolf Pro</h3><button class="tos-close" onclick="closeTos()">✕ Close</button></div>
@@ -888,11 +853,6 @@ function setPlan(plan){
   selectedPlan = plan;
   const nameEl = document.getElementById('selectedPlanName');
   const priceEl = document.getElementById('selectedPlanPrice');
-  // Also update banner if present
-  const bannerName = document.getElementById('planBannerName');
-  const bannerPrice = document.getElementById('planBannerPrice');
-  if(bannerName) bannerName.textContent = plan==='monthly' ? '🐺 NetWolf Pro — Monthly' : '🐺 NetWolf Pro — Yearly';
-  if(bannerPrice) bannerPrice.textContent = plan==='monthly' ? '€10 / month' : '€100 / year';
   if(nameEl) nameEl.textContent = plan==='monthly' ? '🐺 NetWolf Pro — Monthly' : '🐺 NetWolf Pro — Yearly';
   if(priceEl) priceEl.textContent = plan==='monthly' ? '€10 / month · billed monthly' : '€100 / year · save €20';
   const formCard = document.getElementById('formCard');
@@ -931,7 +891,6 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
   const username=g('username'),password=g('password'),confirm=g('confirmPassword');
   const firstName=g('firstName'),lastName=g('lastName'),email=g('email'),country=g('country');
 
-  // ── STEP 1: Validate all fields ──
   if(!username||username.length<4)return showErr('Username must be at least 4 characters.');
   if(!/^[a-zA-Z0-9_]+$/.test(username))return showErr('Username: letters, numbers and underscores only.');
   if(!password||password.length<8)return showErr('Password must be at least 8 characters.');
@@ -941,7 +900,6 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
   if(!country)return showErr('Please select your country.');
   if(!document.getElementById('terms').checked)return showErr('Please accept the Terms of Service.');
 
-  // ── STEP 2: Create Firebase account ──
   const btn=document.getElementById('submitBtn');
   btn.disabled=true;
   btn.textContent='Creating account…';
@@ -955,22 +913,18 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
     return;
   }
 
-  // ── STEP 3: Send Formspree notification ──
   try{
     await fetch('https://formspree.io/f/xykoyrda',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:`🐺 New NetWolf subscriber: ${username}`,_replyto:email,username,firstName,lastName,email,company:g('company')||'—',country,plan:selectedPlan,message:g('message')||'—'})});
   }catch(ex){}
 
-  // ── STEP 4: Redirect to Stripe payment ──
   btn.textContent='Redirecting to payment…';
   showToast('✅ Account created! Redirecting to Stripe...');
 
-  // Show success info first then redirect
   document.getElementById('orderForm').style.display='none';
   document.getElementById('successMsg').style.display='block';
   document.getElementById('showUsername').textContent=username;
   document.getElementById('showPassword').textContent='•'.repeat(password.length);
 
-  // Auto-redirect to Stripe after 2 seconds
   setTimeout(()=>{
     window.open(STRIPE_LINKS[selectedPlan],'_blank');
   }, 2000);
@@ -1035,9 +989,151 @@ async function runLoop(){while(true){await runGuideScene();await runHAScene();aw
 function startProgress(){const fill=document.getElementById('animProgress');if(!fill)return;const cycle=42000;const start=Date.now();function tick(){fill.style.width=((Date.now()-start)%cycle)/cycle*100+'%';requestAnimationFrame(tick);}requestAnimationFrame(tick);}
 if(document.getElementById('animatedDemo')){runLoop();startProgress();}
 
-/* ── INIT ── */
 function initDemo(){}
 initDemo();
+
+/* ── APPROVAL GATE FIX: BLOCK UNAPPROVED USERS FROM TOOLKIT ── */
+(function() {
+    // Check if user is approved (manual verification completed)
+    function isApproved() {
+        const approved = localStorage.getItem('netwolf_approved') === 'true';
+        const hasPending = localStorage.getItem('netwolf_pending_email') !== null;
+        const sessionApproved = sessionStorage.getItem('netwolf_approved_session') === 'true';
+        
+        // User is only approved if explicit approval flag is set to true
+        // AND there's no pending email (or pending email is cleared after approval)
+        if ((approved || sessionApproved) && !hasPending) return true;
+        
+        // Also check if this is a returning approved user without pending flag
+        if (approved && localStorage.getItem('netwolf_approved_date')) return true;
+        
+        return false;
+    }
+    
+    // Block toolkit access and show pending message
+    function blockAccess(message) {
+        const msg = message || '🔒 Access pending manual approval. Your subscription is being verified. You will receive an email once approved (within 24 hours).';
+        alert(msg);
+        showToast(msg);
+        return false;
+    }
+    
+    // Override or intercept all toolkit navigation attempts
+    function setupApprovalGate() {
+        // Fix the main "Open Toolkit" button in nav
+        const toolkitBtn = document.querySelector('a.btn-nav[href*="app.html"]');
+        if (toolkitBtn) {
+            const originalHref = toolkitBtn.getAttribute('href');
+            toolkitBtn.addEventListener('click', function(e) {
+                if (!isApproved()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    blockAccess();
+                    return false;
+                }
+                // If approved, allow navigation
+                window.location.href = originalHref;
+                return true;
+            });
+            toolkitBtn.style.cursor = isApproved() ? 'pointer' : 'not-allowed';
+            toolkitBtn.style.opacity = isApproved() ? '1' : '0.6';
+        }
+        
+        // Fix any "Open Toolkit" buttons in hero section
+        const heroBtn = document.querySelector('.hero-cta .btn-primary');
+        if (heroBtn && heroBtn.getAttribute('href') && heroBtn.getAttribute('href').includes('app.html')) {
+            heroBtn.addEventListener('click', function(e) {
+                if (!isApproved()) {
+                    e.preventDefault();
+                    blockAccess();
+                    return false;
+                }
+            });
+        }
+        
+        // Fix the demo section subscribe button that links to toolkit
+        const demoBtn = document.querySelector('.demo-section .btn-primary');
+        if (demoBtn && demoBtn.getAttribute('href') && demoBtn.getAttribute('href').includes('app.html')) {
+            demoBtn.addEventListener('click', function(e) {
+                if (!isApproved()) {
+                    e.preventDefault();
+                    blockAccess();
+                    return false;
+                }
+            });
+        }
+        
+        // Fix success message "Open Toolkit" button
+        const successBtn = document.querySelector('#successMsg .btn-primary');
+        if (successBtn && successBtn.getAttribute('href') && successBtn.getAttribute('href').includes('app.html')) {
+            successBtn.addEventListener('click', function(e) {
+                if (!isApproved()) {
+                    e.preventDefault();
+                    blockAccess();
+                    return false;
+                }
+            });
+        }
+        
+        // Intercept any link that points to app.html
+        document.querySelectorAll('a[href*="app.html"]').forEach(link => {
+            // Skip if already processed to avoid duplicate listeners
+            if (link.hasAttribute('data-approval-gate')) return;
+            link.setAttribute('data-approval-gate', 'true');
+            link.addEventListener('click', function(e) {
+                if (!isApproved()) {
+                    e.preventDefault();
+                    blockAccess();
+                    return false;
+                }
+            });
+        });
+    }
+    
+    // Mark user as approved after manual verification
+    // This function would be called after receiving approval email and clicking verification link
+    window.approveNetWolfUser = function(email, token) {
+        if (token === 'netwolf_verify_2025') {
+            localStorage.setItem('netwolf_approved', 'true');
+            localStorage.setItem('netwolf_approved_date', Date.now());
+            localStorage.removeItem('netwolf_pending_email');
+            sessionStorage.setItem('netwolf_approved_session', 'true');
+            alert('✅ Account approved! You can now access the NetWolf toolkit.');
+            showToast('✅ Account approved! Toolkit access granted.');
+            // Update UI
+            setupApprovalGate();
+            return true;
+        }
+        return false;
+    };
+    
+    // When user subscribes, store pending state and clear any existing approval
+    const originalForm = document.getElementById('orderForm');
+    if (originalForm) {
+        originalForm.addEventListener('submit', function(e) {
+            const emailInput = document.querySelector('#orderForm input[type="email"]');
+            const email = emailInput ? emailInput.value : null;
+            if (email) {
+                localStorage.setItem('netwolf_pending_email', email);
+                localStorage.setItem('netwolf_pending_date', Date.now());
+                // Remove any previous approval when new subscription is made
+                localStorage.removeItem('netwolf_approved');
+                localStorage.removeItem('netwolf_approved_date');
+                sessionStorage.removeItem('netwolf_approved_session');
+            }
+        });
+    }
+    
+    // Run on page load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupApprovalGate);
+    } else {
+        setupApprovalGate();
+    }
+    
+    // For demo purposes: console helper to simulate approval
+    console.log('NetWolf approval system active. To simulate approval (admin only), run: approveNetWolfUser("user@example.com", "netwolf_verify_2025")');
+})();
 </script>
 </body>
 </html>
