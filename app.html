@@ -1165,10 +1165,15 @@ function renderTopology(el){
   function buildCanvas(){
     canvasPanel.innerHTML='';
 
-    // ── Device palette ──
+    // ── Device palette — desktop: horizontal bar, mobile: floating + button + drawer ──
+    var isMobileTopo=window.innerWidth<=768;
     var palette=document.createElement('div');
-    palette.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:10px;align-items:center';
-    palette.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700;margin-right:4px;white-space:nowrap">ADD DEVICE:</span>';
+    if(!isMobileTopo){
+      palette.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:10px;align-items:center';
+      palette.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700;margin-right:4px;white-space:nowrap">ADD DEVICE:</span>';
+    } else {
+      palette.style.display='none'; // hidden on mobile, we use drawer instead
+    }
     var devices=[
       {icon:'🛡️',label:'FortiGate',color:'#1D9E75'},
       {icon:'🔥',label:'Firewall',color:'#f85149'},
@@ -1186,7 +1191,26 @@ function renderTopology(el){
       b.className='topo-icon-btn';
       b.innerHTML=d.icon+'<span>'+d.label+'</span>';
       b.onclick=(function(dev){return function(){addDevice(dev);};})(d);
-      palette.appendChild(b);
+      if(!isMobileTopo){
+        palette.appendChild(b);
+      } else {
+        // Mobile: add compact tile to drawer grid
+        var tile=document.createElement('button');
+        tile.style.cssText='background:var(--b3);border:1px solid var(--br);border-radius:10px;padding:12px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s;-webkit-tap-highlight-color:transparent';
+        tile.innerHTML='<span style="font-size:26px">'+d.icon+'</span><span style="font-size:10px;color:var(--t2)">'+d.label+'</span>';
+        tile.onclick=(function(dev){return function(){
+          addDevice(dev);
+          // Close drawer after adding
+          var dr=document.getElementById('topo-drawer');
+          var ov=document.getElementById('topo-drawer-overlay');
+          var fb=document.getElementById('topo-fab');
+          if(dr)dr.style.display='none';
+          if(ov)ov.style.display='none';
+          if(fb)fb.style.transform='rotate(0deg)';
+        };})(d);
+        var grid=document.getElementById('topo-drawer-grid');
+        if(grid) grid.appendChild(tile);
+      }
     });
 
     // ── Toolbar ──
@@ -1243,6 +1267,50 @@ function renderTopology(el){
     toolbar.appendChild(actDiv);
 
     canvasPanel.appendChild(palette);
+
+    // ── Mobile: floating Add button + bottom drawer ──
+    if(isMobileTopo){
+      // Floating + button
+      var fabBtn=document.createElement('button');
+      fabBtn.id='topo-fab';
+      fabBtn.innerHTML='+ Add Device';
+      fabBtn.style.cssText='position:fixed;bottom:80px;right:16px;z-index:9999;background:var(--a);color:#000;border:none;border-radius:24px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(29,158,117,.4);transition:all .2s';
+      canvasPanel.appendChild(fabBtn);
+
+      // Overlay
+      var drawerOverlay=document.createElement('div');
+      drawerOverlay.id='topo-drawer-overlay';
+      drawerOverlay.style.cssText='display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998';
+      document.body.appendChild(drawerOverlay);
+
+      // Bottom drawer
+      var drawer=document.createElement('div');
+      drawer.id='topo-drawer';
+      drawer.style.cssText='display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--b2);border-top:2px solid var(--a);border-radius:16px 16px 0 0;padding:16px;max-height:60vh;overflow-y:auto';
+      drawer.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">'
+        +'<span style="font-size:14px;font-weight:700;color:var(--t)">Add Device</span>'
+        +'<button id="topo-drawer-close" style="background:none;border:none;color:var(--t2);font-size:22px;cursor:pointer;line-height:1">&times;</button>'
+        +'</div>'
+        +'<div id="topo-drawer-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>';
+      document.body.appendChild(drawer);
+
+      function openDrawer(){
+        drawer.style.display='block';
+        drawerOverlay.style.display='block';
+        fabBtn.style.transform='rotate(45deg)';
+      }
+      function closeDrawer(){
+        drawer.style.display='none';
+        drawerOverlay.style.display='none';
+        fabBtn.style.transform='rotate(0deg)';
+      }
+      fabBtn.onclick=function(){
+        if(drawer.style.display==='block') closeDrawer(); else openDrawer();
+      };
+      document.getElementById('topo-drawer-close').onclick=closeDrawer;
+      drawerOverlay.onclick=closeDrawer;
+    }
+
     canvasPanel.appendChild(toolbar);
 
     // ── Viewport (the clipping window) ──
