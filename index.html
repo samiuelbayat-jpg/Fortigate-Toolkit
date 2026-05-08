@@ -34,7 +34,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,17,23,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--br);padding:13px 32px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--t)}.logo span{color:var(--a)}
 .nav-links{display:flex;align-items:center;gap:22px}
-.nav-links a{font-size:13px;color:var(--t2);text-decoration:none;transition:color .15s}.nav-links a:hover{color:var(--t)}
+.nav-links a{font-size:13px;color:var(--t2);text-decoration:none;transition:color .15s}.nav-links a:hover{color:var(--t)}@media(max-width:680px){.nav-links a:not(.btn-nav){display:none}.nav-links{gap:0}.btn-nav{font-size:12px;padding:6px 14px}}
 .btn-nav{background:var(--a);color:#fff!important;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:700;transition:all .2s}.btn-nav:hover{background:var(--ad)!important;transform:translateY(-1px)}
 section{position:relative;z-index:1}
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px}
@@ -97,8 +97,8 @@ h1 .accent{background:linear-gradient(90deg,var(--a),#52d6b0);-webkit-background
 .demo-ref-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
 .demo-ref-title{font-size:10px;font-weight:700;color:var(--a);font-family:var(--mono);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);letter-spacing:.06em;background:rgba(29,158,117,.05)}
 .demo-ref-cmd{font-family:var(--mono);font-size:10.5px;color:#3fb950;padding:5px 12px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;justify-content:space-between;align-items:center}.demo-ref-cmd:last-child{border-bottom:none}
-.demo-feature-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px;justify-content:center}
-.demo-pill{font-size:11px;padding:5px 14px;border-radius:20px;background:rgba(29,158,117,.08);color:rgba(29,158,117,.9);border:1px solid rgba(29,158,117,.2);font-weight:500;transition:all .2s;cursor:default}
+.demo-feature-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;justify-content:center}
+.demo-pill{font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(29,158,117,.08);color:rgba(255,255,255,.5);border:1px solid rgba(29,158,117,.15);font-family:var(--mono)}
 .anim-scene{animation:fadeIn .4s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .anim-step-card{background:rgba(22,27,34,.7);border:1px solid rgba(255,255,255,.06);border-radius:9px;margin-bottom:10px;overflow:hidden;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
@@ -215,7 +215,8 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
     <h1>The Engineer's<br><span class="accent">FortiGate Command Centre</span></h1>
     <p class="hero-sub">The professional browser-based toolkit for FortiGate network engineers. Troubleshoot faster, configure smarter, and document safely — all in one place.</p>
     <div class="hero-cta">
-      <a href="#demo" class="btn-primary">▶ Interactive Demo</a>
+      <a href="https://netwolffortigate.com/app.html" class="btn-primary" style="background:linear-gradient(90deg,#1D9E75,#0F6E56);font-size:16px;padding:14px 32px">🚀 Open Toolkit →</a>
+      <a href="#demo" class="btn-ghost">▶ See Demo</a>
       <a href="#pricing" class="btn-ghost">View Pricing</a>
     </div>
   </div>
@@ -372,7 +373,7 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
     <div style="text-align:center;margin-bottom:48px">
       <div class="section-label">Live animated demo</div>
       <h2 class="section-title">See the toolkit in action</h2>
-      <p class="section-sub" style="text-align:center;margin:0 auto">A live preview of the toolkit — 13 tools including AI-powered PS Script Maker, Email Generator, Most Used commands and more.</p>
+      <p class="section-sub" style="text-align:center;margin:0 auto">A live preview of the toolkit — click through the tabs to explore.</p>
       <div class="demo-feature-pills">
         <span class="demo-pill">🔒 Troubleshoot Playbooks</span>
         <span class="demo-pill">🤖 AI Analyzer</span>
@@ -382,50 +383,27 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
         <span class="demo-pill">🧮 Subnet Calc</span>
         <span class="demo-pill">⚡ Most Used Tools</span>
         <span class="demo-pill">🪟 PS Script Maker</span>
+        <span class="demo-pill">🗺️ Topology Designer</span>
         <span class="demo-pill">✉️ Email Generator</span>
-        <span class="demo-pill">🔌 Live Connect</span>
-        <span class="demo-pill">🧪 Lab Setup</span>
+        <span class="demo-pill">🖥️ CLI Simulator</span>
         <span class="demo-pill">📡 DHCP Diagnostics</span>
-      </div>
-      <!-- Stats bar -->
-      <div style="display:flex;justify-content:center;gap:32px;margin-top:32px;flex-wrap:wrap">
-        <div style="text-align:center">
-          <div style="font-size:28px;font-weight:800;color:var(--a);font-family:var(--mono)">50+</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin-top:2px">Playbooks</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:28px;font-weight:800;color:var(--a);font-family:var(--mono)">13</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin-top:2px">Power Tools</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:28px;font-weight:800;color:var(--a);font-family:var(--mono)">4</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin-top:2px">AI Features</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:28px;font-weight:800;color:var(--a);font-family:var(--mono)">4</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin-top:2px">Languages</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:28px;font-weight:800;color:var(--a);font-family:var(--mono)">🔐</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase;margin-top:2px">ASVS Audited</div>
-        </div>
       </div>
     </div>
     <div class="demo-shell" id="animatedDemo">
       <div class="demo-tbar">
         <div class="dot2 r"></div><div class="dot2 y"></div><div class="dot2 g"></div>
         <span class="demo-tbar-title">🐺 NetWolf Pro &nbsp;·&nbsp; netwolffortigate.com &nbsp;·&nbsp; FortiOS 6.x / 7.x</span>
-        <div style="display:flex;gap:8px;align-items:center"><span style="font-size:9px;background:rgba(248,81,73,.15);color:#f85149;padding:2px 8px;border-radius:20px;border:1px solid rgba(248,81,73,.3);font-family:var(--mono);letter-spacing:.06em;font-weight:700">NEW</span><span class="demo-tbar-badge">LIVE PREVIEW</span></div>
+        <span class="demo-tbar-badge">LIVE PREVIEW</span>
       </div>
       <div class="demo-tabs-bar" id="demoTabBar">
         <div class="demo-tab active" id="dtab0">📋 Guided Steps</div>
         <div class="demo-tab" id="dtab1">🤖 AI Analyzer</div>
         <div class="demo-tab" id="dtab2">🎭 IP Anonymizer</div>
         <div class="demo-tab" id="dtab3">🧮 Subnet Calc</div>
-        <div class="demo-tab" id="dtab4">⚡ Quick Ref</div>
-        <div class="demo-tab" id="dtab5">⚡ Most Used</div>
-        <div class="demo-tab" id="dtab6">🪟 PS Maker</div>
-        <div class="demo-tab" id="dtab7">✉️ Email</div>
+        <div class="demo-tab" id="dtab4">⚡ Most Used</div>
+        <div class="demo-tab" id="dtab5">🪟 PS Maker</div>
+        <div class="demo-tab" id="dtab6">🗺️ Topology</div>
+        <div class="demo-tab" id="dtab7">🖥️ CLI Sim</div>
       </div>
       <div class="demo-layout">
         <div class="demo-sidebar" id="animSidebar">
@@ -445,12 +423,13 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
           <div class="demo-sitem" id="asi10"><span>🎭</span><span>IP Anonymizer</span></div>
           <div class="demo-sitem" id="asi11"><span>🧮</span><span>Subnet Calc</span></div>
           <div class="demo-sitem" id="asi12"><span>📡</span><span>Quick Ref</span></div>
-          <div class="demo-slbl" style="margin-top:8px">New</div>
+          <div class="demo-slbl" style="margin-top:8px">New Features</div>
           <div class="demo-sitem" id="asi13"><span>⚡</span><span>Most Used</span></div>
           <div class="demo-sitem" id="asi14"><span>🪟</span><span>PS Script Maker</span></div>
-          <div class="demo-sitem" id="asi15"><span>✉️</span><span>Email Generator</span></div>
-          <div class="demo-sitem" id="asi16"><span>🔌</span><span>Live Connect</span></div>
-          <div class="demo-sitem" id="asi17"><span>🧪</span><span>Lab Setup</span></div>
+          <div class="demo-sitem" id="asi15"><span>🗺️</span><span>Topology Designer</span></div>
+          <div class="demo-sitem" id="asi16"><span>🖥️</span><span>CLI Simulator</span></div>
+          <div class="demo-sitem" id="asi17"><span>✉️</span><span>Email Generator</span></div>
+          <div class="demo-sitem" id="asi18"><span>📡</span><span>DHCP Diagnostics</span></div>
         </div>
         <div class="demo-content" id="animContent" style="padding:0;position:relative;overflow:hidden">
           <div class="anim-scene" id="ascene0" style="padding:18px 20px">
