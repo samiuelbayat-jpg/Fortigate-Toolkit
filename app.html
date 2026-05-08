@@ -1225,8 +1225,8 @@ function renderTopology(el){
     // ── Device palette ──
     var isMobileTopo=window.innerWidth<=768;
     var palette=document.createElement('div');
-    palette.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:10px;align-items:center'+(isMobileTopo?';display:none':'');
-    palette.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700;margin-right:4px;white-space:nowrap">ADD DEVICE:</span>';
+    palette.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:10px;align-items:center';
+    palette.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700;margin-right:4px;white-space:nowrap'+(isMobileTopo?';display:none':'')+'">ADD DEVICE:</span>';
     var devices=[
       {icon:'🛡️',label:'FortiGate',color:'#1D9E75'},
       {icon:'🔥',label:'Firewall',color:'#f85149'},
@@ -11759,11 +11759,13 @@ function renderMostUsed(el){
 }
 window.showLandingThenInit=function(){
   initAndRender(); // load the toolkit in background
-  // Show landing overlay on top
+  // Only show landing on first login of this browser session, not on refresh
+  var alreadySeen=sessionStorage.getItem('nw_landing_seen');
+  if(alreadySeen) return; // skip landing on refresh/tab restore
+  sessionStorage.setItem('nw_landing_seen','1');
   var overlay=document.getElementById('landingOverlay');
   if(overlay){
     overlay.style.display='block';
-    // Set personalized greeting
     var greet=document.getElementById('landing-greeting');
     var user=fbAuth.currentUser;
     if(greet&&user){
