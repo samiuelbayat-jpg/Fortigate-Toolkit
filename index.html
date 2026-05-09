@@ -7,8 +7,8 @@
 <link rel="apple-touch-icon" href="favicon.svg">
 <meta name="google-site-verification" content="oeYl1b9Z9yTtBtV6eDU-G9ARM3WM9O_nEq7NCcAmqvg">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NetWolf | FortiGate Troubleshooting Toolkit — CLI Playbooks, AI Analysis & Config Generator</title>
-<meta name="description" content="NetWolf Pro — FortiGate troubleshooting toolkit for network engineers. Step-by-step CLI playbooks for IPsec VPN, SSL VPN, SD-WAN, HA cluster, routing, policy and NAT. AI-powered CLI analysis, config generator, IP masking and multi-vendor CLI reference.">
+<title>NetWolf | Network Engineer Toolkit - FortiGate, Azure, Multi-Vendor CLI & AI Analysis</title>
+<meta name="description" content="NetWolf Pro - network engineering toolkit for FortiGate, Azure scripting, multi-vendor CLI learning, smart CLI simulator, AI CLI analysis, config generation, IP masking, lab setup and security documentation.">
 <meta name="keywords" content="FortiGate troubleshooting, FortiGate CLI, FortiOS debug, IPsec VPN troubleshoot, SSL VPN FortiGate, SD-WAN FortiGate, HA cluster FortiGate, FortiGate debug flow, diagnose sniffer FortiGate, FortiGate network engineer, Fortinet toolkit, FortiGate config generator, FortiGate IP masking, FortiGate commands, FortiOS 7.x">
 <meta name="author" content="NetWolf">
 <meta name="robots" content="index, follow">
@@ -37,17 +37,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,17,23,.9)
 .nav-links a{font-size:13px;color:var(--t2);text-decoration:none;transition:color .15s}.nav-links a:hover{color:var(--t)}@media(max-width:680px){.nav-links a:not(.btn-nav){display:none}.nav-links{gap:0}.btn-nav{font-size:12px;padding:6px 14px}}
 .btn-nav{background:var(--a);color:#fff!important;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:700;transition:all .2s}.btn-nav:hover{background:var(--ad)!important;transform:translateY(-1px)}
 section{position:relative;z-index:1}
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px}
-.hero-inner{max-width:780px}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.3);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--a);font-weight:600;margin-bottom:28px;font-family:var(--mono)}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:left;padding:112px 28px 62px;overflow:hidden;background:radial-gradient(circle at 16% 20%,rgba(29,158,117,.18),transparent 24%),radial-gradient(circle at 84% 8%,rgba(88,166,255,.12),transparent 22%),linear-gradient(135deg,#0d1117 0%,#07140f 48%,#05080d 100%)}
+.hero::before{content:'';position:absolute;inset:70px 4% 44px;border:1px solid rgba(29,158,117,.12);border-radius:28px;background:linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px);background-size:52px 52px;mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.18));pointer-events:none}
+.hero::after{content:'';position:absolute;right:-120px;top:110px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(29,158,117,.16),transparent 64%);filter:blur(4px);pointer-events:none}
+.hero-inner{width:min(1180px,100%);display:grid;grid-template-columns:minmax(0,.92fr) minmax(420px,1.08fr);gap:34px;align-items:center;position:relative;z-index:2}
+.hero-copy{max-width:590px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.3);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--a);font-weight:600;margin-bottom:22px;font-family:var(--mono)}
 .hero-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--g);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 h1{font-size:clamp(34px,6vw,66px);font-weight:700;line-height:1.08;margin-bottom:20px;letter-spacing:-2px}
 h1 .accent{background:linear-gradient(90deg,var(--a),#52d6b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{font-size:17px;color:var(--t2);line-height:1.75;max-width:560px;margin:0 auto 40px}
-.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-sub{font-size:17px;color:var(--t2);line-height:1.75;max-width:620px;margin:0 0 26px}
+.hero-cta{display:flex;gap:12px;justify-content:flex-start;flex-wrap:wrap;margin-bottom:22px}
 .btn-primary{background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;padding:13px 30px;border-radius:30px;font-size:15px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:all .2s;display:inline-block}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(29,158,117,.3)}
 .btn-ghost{background:transparent;color:var(--t);padding:13px 30px;border-radius:30px;font-size:15px;font-weight:600;text-decoration:none;border:1px solid var(--br);transition:all .2s;display:inline-block}.btn-ghost:hover{border-color:var(--a);color:var(--a)}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}.hero-chip{font-size:11px;padding:5px 10px;border-radius:20px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);color:var(--t2);font-family:var(--mono)}
+.hero-proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:24px;max-width:590px}.proof-card{background:rgba(22,27,34,.74);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px 14px;backdrop-filter:blur(10px)}.proof-num{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--a);line-height:1}.proof-lbl{font-size:10px;color:var(--t2);line-height:1.45;margin-top:5px;text-transform:uppercase;letter-spacing:.06em}
+.hero-visual{position:relative;min-height:560px}.product-screen{position:relative;border:1px solid rgba(29,158,117,.22);border-radius:22px;background:linear-gradient(180deg,rgba(17,24,31,.98),rgba(6,10,14,.98));box-shadow:0 34px 90px rgba(0,0,0,.58),0 0 0 1px rgba(255,255,255,.035);overflow:hidden;transform:perspective(1100px) rotateY(-7deg) rotateX(3deg);transform-origin:center}
+.screen-top{height:42px;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035)}.screen-dot{width:10px;height:10px;border-radius:50%}.screen-dot.r{background:#ff5f57}.screen-dot.y{background:#ffbd2e}.screen-dot.g{background:#28c840}.screen-title{margin-left:8px;font-family:var(--mono);font-size:11px;color:var(--t2)}
+.screen-body{display:grid;grid-template-columns:154px 1fr;min-height:478px}.screen-side{border-right:1px solid rgba(255,255,255,.08);padding:12px 10px;background:linear-gradient(180deg,rgba(18,58,46,.35),rgba(5,10,14,.12))}.side-item{display:flex;align-items:center;gap:7px;padding:8px 9px;border-radius:8px;font-size:11px;color:var(--t2);margin-bottom:4px}.side-item.active{background:rgba(29,158,117,.14);color:#61e0b8;border-left:2px solid var(--a)}
+.screen-main{padding:14px}.screen-tabs{display:flex;gap:7px;overflow:hidden;margin-bottom:12px}.screen-tab{font-family:var(--mono);font-size:10px;color:var(--t2);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:7px 9px;background:rgba(255,255,255,.035);white-space:nowrap}.screen-tab.active{color:#dffcf0;border-color:rgba(29,158,117,.38);background:rgba(29,158,117,.14)}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.dash-card{border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.035);padding:12px}.dash-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em}.dash-value{font-family:var(--mono);font-size:20px;color:var(--a);font-weight:800;margin-top:7px}.dash-note{font-size:11px;color:var(--t2);line-height:1.5;margin-top:6px}
+.terminal-card{border:1px solid rgba(29,158,117,.22);border-radius:13px;background:#030704;overflow:hidden}.terminal-head{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--mono);font-size:10px;color:var(--t2)}.terminal-body{font-family:var(--mono);font-size:11px;line-height:1.8;color:#3fb950;padding:12px 14px;min-height:142px}.term-warn{color:#d29922}.term-red{color:#f85149}.term-blue{color:#58a6ff}
+.floating-card{position:absolute;border:1px solid rgba(255,255,255,.1);border-radius:15px;background:rgba(13,17,23,.82);backdrop-filter:blur(16px);box-shadow:0 20px 50px rgba(0,0,0,.35);padding:13px 15px}.floating-card.one{left:-24px;top:68px;width:190px}.floating-card.two{right:-12px;bottom:42px;width:210px}.float-title{font-size:12px;color:var(--t);font-weight:800;margin-bottom:5px}.float-text{font-size:11px;color:var(--t2);line-height:1.55}.risk-row{display:flex;gap:5px;margin-top:8px}.risk-pill{font-family:var(--mono);font-size:9px;padding:3px 7px;border-radius:10px}.risk-pill.g{color:#3fb950;background:rgba(63,185,80,.12)}.risk-pill.y{color:#d29922;background:rgba(210,153,34,.12)}.risk-pill.r{color:#f85149;background:rgba(248,81,73,.12)}
+@media(max-width:960px){.hero{text-align:center;padding-top:104px}.hero-inner{grid-template-columns:1fr}.hero-copy{max-width:760px;margin:0 auto}.hero-sub{margin-left:auto;margin-right:auto}.hero-cta{justify-content:center}.hero-chips{justify-content:center}.hero-proof{margin-left:auto;margin-right:auto}.hero-visual{min-height:0}.product-screen{transform:none}.floating-card{display:none}}
+@media(max-width:620px){.hero{padding:96px 16px 48px}.hero::before{inset:72px 10px 30px}.hero-proof{grid-template-columns:1fr}.screen-body{grid-template-columns:1fr}.screen-side{display:none}.dash-grid{grid-template-columns:1fr}.product-screen{border-radius:16px}.terminal-body{font-size:10px}.hero-chip{font-size:10px}.hero-cta a{width:100%;text-align:center}}
 .stats-bar{background:var(--b2);border-top:1px solid var(--br);border-bottom:1px solid var(--br);padding:26px 24px;display:flex;justify-content:center;gap:56px;flex-wrap:wrap}
 .stat{text-align:center}.stat-num{font-size:26px;font-weight:700;color:var(--a);font-family:var(--mono)}.stat-lbl{font-size:11px;color:var(--t2);margin-top:4px;text-transform:uppercase;letter-spacing:.07em}
 .features{padding:90px 24px}
@@ -211,13 +225,87 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-badge">🐺 NetWolf | Fortigate Pro Toolkit</div>
-    <h1>The Engineer's<br><span class="accent">FortiGate Command Centre</span></h1>
-    <p class="hero-sub">The professional browser-based toolkit for FortiGate network engineers. Troubleshoot faster, configure smarter, and document safely — all in one place.</p>
-    <div class="hero-cta">
-      <a href="https://netwolffortigate.com/app.html" class="btn-primary" style="background:linear-gradient(90deg,#1D9E75,#0F6E56);font-size:16px;padding:14px 32px">🚀 Open Toolkit →</a>
-      <a href="#demo" class="btn-ghost">▶ See Demo</a>
-      <a href="#pricing" class="btn-ghost">View Pricing</a>
+    <div class="hero-copy">
+      <div class="hero-badge">Live engineer workspace | FortiGate, Azure & multi-vendor CLI</div>
+      <h1>One command center for<br><span class="accent">real network work</span></h1>
+      <p class="hero-sub">NetWolf brings FortiGate troubleshooting, Azure scripting, multi-vendor switch/router learning, a smarter CLI simulator, AI analysis, config generators and security notes into one focused browser toolkit.</p>
+      <div class="hero-cta">
+        <a href="https://netwolffortigate.com/app.html" class="btn-primary" style="background:linear-gradient(90deg,#1D9E75,#0F6E56);font-size:16px;padding:14px 32px">Open Toolkit →</a>
+        <a href="#demo" class="btn-ghost">See Live Demo</a>
+        <a href="#pricing" class="btn-ghost">View Pricing</a>
+      </div>
+      <div class="hero-chips">
+        <span class="hero-chip">FortiGate playbooks</span>
+        <span class="hero-chip">Azure scripting</span>
+        <span class="hero-chip">CLI simulator</span>
+        <span class="hero-chip">10 vendors</span>
+        <span class="hero-chip">AI analyzer</span>
+        <span class="hero-chip">Config generator</span>
+      </div>
+      <div class="hero-proof">
+        <div class="proof-card"><div class="proof-num">70+</div><div class="proof-lbl">commands per vendor reference</div></div>
+        <div class="proof-card"><div class="proof-num">13</div><div class="proof-lbl">daily diagnostic utilities</div></div>
+        <div class="proof-card"><div class="proof-num">10</div><div class="proof-lbl">visual themes for the app</div></div>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-label="NetWolf toolkit preview">
+      <div class="floating-card one">
+        <div class="float-title">Azure learning added</div>
+        <div class="float-text">Read-only discovery, caution previews and write commands are clearly color coded.</div>
+        <div class="risk-row"><span class="risk-pill g">read</span><span class="risk-pill y">caution</span><span class="risk-pill r">write</span></div>
+      </div>
+      <div class="product-screen">
+        <div class="screen-top">
+          <span class="screen-dot r"></span><span class="screen-dot y"></span><span class="screen-dot g"></span>
+          <span class="screen-title">NetWolf Advanced Diagnostics</span>
+        </div>
+        <div class="screen-body">
+          <div class="screen-side">
+            <div class="side-item active">🛡️ FortiGate</div>
+            <div class="side-item">☁️ Azure</div>
+            <div class="side-item">🔁 Vendors</div>
+            <div class="side-item">⌨️ CLI Lab</div>
+            <div class="side-item">🧩 Config</div>
+            <div class="side-item">🔐 Security</div>
+          </div>
+          <div class="screen-main">
+            <div class="screen-tabs">
+              <div class="screen-tab active">Guide</div>
+              <div class="screen-tab">VPN</div>
+              <div class="screen-tab">Azure</div>
+              <div class="screen-tab">Vendors</div>
+              <div class="screen-tab">AI</div>
+            </div>
+            <div class="dash-grid">
+              <div class="dash-card">
+                <div class="dash-label">Workspace coverage</div>
+                <div class="dash-value">71</div>
+                <div class="dash-note">tabs and guided tools grouped into clear categories.</div>
+              </div>
+              <div class="dash-card">
+                <div class="dash-label">Learning paths</div>
+                <div class="dash-value">Cloud + CLI</div>
+                <div class="dash-note">Azure, FortiGate and switch/router practice in one place.</div>
+              </div>
+            </div>
+            <div class="terminal-card">
+              <div class="terminal-head"><span>CLI Simulator</span><span>practice-only</span></div>
+              <div class="terminal-body">
+<span class="term-blue">Switch#</span> configure terminal<br>
+<span class="term-blue">Switch(config)#</span> interface gi1/0/10<br>
+<span class="term-blue">Switch(config-if)#</span> switchport access vlan 20<br>
+<span class="term-warn">Azure:</span> New-AzResourceGroupDeployment -WhatIf<br>
+<span class="term-red">Write command:</span> review before production
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="floating-card two">
+        <div class="float-title">Safer troubleshooting flow</div>
+        <div class="float-text">Anonymize output, test paths, generate configs, then document the customer update.</div>
+      </div>
     </div>
   </div>
 </section>

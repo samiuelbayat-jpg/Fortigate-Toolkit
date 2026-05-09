@@ -20,11 +20,26 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
 <style>
-:root{--a:#1D9E75;--ad:#0F6E56;--bg:#0d1117;--b2:#161b22;--b3:#21262d;--br:#30363d;--t:#e6edf3;--t2:#8b949e;--t3:#484f58;--g:#3fb950;--y:#d29922;--r:#f85149;--bl:#58a6ff;--mono:'Courier New',monospace}
-[data-theme="light"]{--a:#0d8a63;--ad:#0a6e4f;--bg:#f4f6f9;--b2:#ffffff;--b3:#eaedf2;--br:#d0d5dd;--t:#1a1f2e;--t2:#4a5568;--t3:#9aa5b4;--g:#1a7f42;--y:#b45309;--r:#c0392b;--bl:#2563eb}
-[data-theme="nord"]{--a:#88c0d0;--ad:#6ba3b4;--bg:#2e3440;--b2:#3b4252;--b3:#434c5e;--br:#4c566a;--t:#eceff4;--t2:#d8dee9;--t3:#81909e;--g:#a3be8c;--y:#ebcb8b;--r:#bf616a;--bl:#81a1c1}
-[data-theme="midnight"]{--a:#7c6af7;--ad:#6358d4;--bg:#0a0a1a;--b2:#12122a;--b3:#1a1a38;--br:#2a2a50;--t:#e8e8ff;--t2:#9898cc;--t3:#5555aa;--g:#6af79c;--y:#f7d06a;--r:#f76a7c;--bl:#6ab8f7}
-[data-theme="solarized"]{--a:#2aa198;--ad:#1e7d76;--bg:#002b36;--b2:#073642;--b3:#0c4a59;--br:#1a5f70;--t:#fdf6e3;--t2:#93a1a1;--t3:#586e75;--g:#859900;--y:#b58900;--r:#dc322f;--bl:#268bd2}
+:root{--a:#1D9E75;--ad:#0F6E56;--bg:#0d1117;--b2:#161b22;--b3:#21262d;--br:#30363d;--shape:#0b2a20;--shape2:#123a2e;--shape3:#17251f;--wall:radial-gradient(circle at 12% 18%,rgba(29,158,117,.16),transparent 28%),radial-gradient(circle at 86% 8%,rgba(88,166,255,.10),transparent 24%),linear-gradient(135deg,#0d1117 0%,#081710 100%);--t:#e6edf3;--t2:#9aa7a1;--t3:#66736d;--g:#3fb950;--y:#d29922;--r:#f85149;--bl:#58a6ff;--mono:'Courier New',monospace}
+[data-theme="light"]{--a:#0d8a63;--ad:#0a6e4f;--bg:#f4f6f9;--b2:#ffffff;--b3:#eaedf2;--br:#d0d5dd;--shape:#e8f3ef;--shape2:#d7ebe4;--shape3:#f7fbf9;--wall:radial-gradient(circle at 10% 12%,rgba(13,138,99,.14),transparent 26%),radial-gradient(circle at 88% 10%,rgba(37,99,235,.10),transparent 24%),linear-gradient(135deg,#f8fafc 0%,#edf7f3 100%);--t:#1a1f2e;--t2:#4a5568;--t3:#8a96a6;--g:#1a7f42;--y:#b45309;--r:#c0392b;--bl:#2563eb}
+[data-theme="nord"]{--a:#88c0d0;--ad:#6ba3b4;--bg:#2e3440;--b2:#3b4252;--b3:#434c5e;--br:#4c566a;--shape:#303946;--shape2:#3a4655;--shape3:#34404d;--wall:radial-gradient(circle at 18% 14%,rgba(136,192,208,.14),transparent 25%),radial-gradient(circle at 85% 18%,rgba(129,161,193,.16),transparent 26%),linear-gradient(135deg,#2e3440 0%,#27303c 100%);--t:#eceff4;--t2:#d8dee9;--t3:#91a0ad;--g:#a3be8c;--y:#ebcb8b;--r:#bf616a;--bl:#81a1c1}
+[data-theme="midnight"]{--a:#7c6af7;--ad:#6358d4;--bg:#0a0a1a;--b2:#12122a;--b3:#1a1a38;--br:#2a2a50;--shape:#10102b;--shape2:#1c1843;--shape3:#151533;--wall:radial-gradient(circle at 16% 14%,rgba(124,106,247,.20),transparent 25%),radial-gradient(circle at 82% 22%,rgba(106,184,247,.12),transparent 28%),linear-gradient(135deg,#080816 0%,#12102f 100%);--t:#e8e8ff;--t2:#aaa7dd;--t3:#706cb3;--g:#6af79c;--y:#f7d06a;--r:#f76a7c;--bl:#6ab8f7}
+[data-theme="solarized"]{--a:#2aa198;--ad:#1e7d76;--bg:#002b36;--b2:#073642;--b3:#0c4a59;--br:#1a5f70;--shape:#01313b;--shape2:#084653;--shape3:#073a45;--wall:radial-gradient(circle at 15% 14%,rgba(42,161,152,.18),transparent 25%),radial-gradient(circle at 88% 16%,rgba(181,137,0,.12),transparent 22%),linear-gradient(135deg,#002b36 0%,#073642 100%);--t:#fdf6e3;--t2:#b6c5c2;--t3:#7f918e;--g:#859900;--y:#b58900;--r:#dc322f;--bl:#268bd2}
+[data-theme="matrix"]{--a:#00d68f;--ad:#00a56d;--bg:#030906;--b2:#07140f;--b3:#0d241a;--br:#154832;--shape:#041b12;--shape2:#073522;--shape3:#082217;--wall:linear-gradient(90deg,rgba(0,214,143,.05) 1px,transparent 1px),linear-gradient(rgba(0,214,143,.04) 1px,transparent 1px),radial-gradient(circle at 18% 12%,rgba(0,214,143,.18),transparent 25%),linear-gradient(135deg,#020604 0%,#041b12 100%);--t:#e5fff3;--t2:#9adfbe;--t3:#4a8b69;--g:#39ff99;--y:#d6c75a;--r:#ff5d6c;--bl:#43e8ff}
+[data-theme="ocean"]{--a:#38bdf8;--ad:#0e7490;--bg:#06131f;--b2:#0b2030;--b3:#123247;--br:#1d4d66;--shape:#071b2b;--shape2:#0b314a;--shape3:#0a2538;--wall:radial-gradient(ellipse at 18% 8%,rgba(56,189,248,.18),transparent 28%),radial-gradient(ellipse at 80% 20%,rgba(45,212,191,.12),transparent 30%),linear-gradient(160deg,#06131f 0%,#06283a 52%,#04111d 100%);--t:#e6f7ff;--t2:#a8c9d9;--t3:#638a9d;--g:#2dd4bf;--y:#facc15;--r:#fb7185;--bl:#60a5fa}
+[data-theme="graphite"]{--a:#f59e0b;--ad:#b45309;--bg:#111111;--b2:#1d1d1d;--b3:#2a2a2a;--br:#3f3f46;--shape:#18181b;--shape2:#27272a;--shape3:#202020;--wall:linear-gradient(135deg,rgba(255,255,255,.035) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.025) 50%,rgba(255,255,255,.025) 75%,transparent 75%),radial-gradient(circle at 82% 12%,rgba(245,158,11,.16),transparent 26%),linear-gradient(135deg,#111 0%,#1c1c1f 100%);--t:#f4f4f5;--t2:#c4c4c7;--t3:#85858d;--g:#84cc16;--y:#f59e0b;--r:#ef4444;--bl:#38bdf8}
+[data-theme="ember"]{--a:#ff8a3d;--ad:#c2410c;--bg:#160b08;--b2:#24130d;--b3:#351b12;--br:#63311d;--shape:#231008;--shape2:#421b0b;--shape3:#2c140c;--wall:radial-gradient(circle at 20% 16%,rgba(255,138,61,.22),transparent 26%),radial-gradient(circle at 88% 18%,rgba(251,113,133,.12),transparent 24%),linear-gradient(145deg,#160b08 0%,#351609 54%,#100705 100%);--t:#fff4ea;--t2:#e0b69d;--t3:#9e7159;--g:#a3e635;--y:#fbbf24;--r:#fb7185;--bl:#60a5fa}
+[data-theme="aurora"]{--a:#22d3ee;--ad:#8b5cf6;--bg:#08111f;--b2:#101827;--b3:#18243a;--br:#2a3d5f;--shape:#0b1c2c;--shape2:#122e46;--shape3:#101d34;--wall:radial-gradient(ellipse at 18% 10%,rgba(34,211,238,.20),transparent 25%),radial-gradient(ellipse at 55% 5%,rgba(139,92,246,.20),transparent 28%),radial-gradient(ellipse at 90% 20%,rgba(52,211,153,.12),transparent 24%),linear-gradient(145deg,#08111f 0%,#111a35 58%,#071425 100%);--t:#edf7ff;--t2:#b5c8df;--t3:#7890af;--g:#34d399;--y:#fde68a;--r:#f472b6;--bl:#93c5fd}
+:root{--wallSize:auto;--chromeBg:linear-gradient(180deg,rgba(18,58,46,.96),rgba(13,35,27,.96));--railBg:linear-gradient(180deg,rgba(23,37,31,.96),rgba(8,24,18,.96));--contentBg:linear-gradient(180deg,rgba(13,17,23,.84),rgba(11,32,25,.90));--panelBg:linear-gradient(180deg,rgba(22,27,34,.94),rgba(15,25,21,.96));--panelShadow:0 12px 28px rgba(0,0,0,.22);--cardRadius:8px;--themeLine:rgba(29,158,117,.35);--tabActive:linear-gradient(180deg,rgba(29,158,117,.28),rgba(29,158,117,.12))}
+[data-theme="light"]{--chromeBg:linear-gradient(180deg,rgba(255,255,255,.96),rgba(232,243,239,.96));--railBg:linear-gradient(180deg,rgba(247,251,249,.98),rgba(226,239,235,.98));--contentBg:linear-gradient(180deg,rgba(248,250,252,.78),rgba(230,244,239,.88));--panelBg:linear-gradient(180deg,rgba(255,255,255,.96),rgba(244,248,246,.98));--panelShadow:0 10px 22px rgba(15,23,42,.10);--cardRadius:10px;--themeLine:rgba(13,138,99,.28);--tabActive:linear-gradient(180deg,rgba(13,138,99,.16),rgba(37,99,235,.08))}
+[data-theme="nord"]{--chromeBg:linear-gradient(180deg,rgba(67,76,94,.98),rgba(46,52,64,.98));--railBg:linear-gradient(180deg,rgba(59,66,82,.98),rgba(43,50,62,.98));--contentBg:linear-gradient(180deg,rgba(46,52,64,.82),rgba(54,64,79,.92));--panelBg:linear-gradient(180deg,rgba(59,66,82,.95),rgba(49,57,70,.98));--panelShadow:0 12px 26px rgba(9,13,20,.30);--cardRadius:6px;--themeLine:rgba(136,192,208,.35);--tabActive:linear-gradient(180deg,rgba(136,192,208,.24),rgba(129,161,193,.12))}
+[data-theme="midnight"]{--chromeBg:linear-gradient(180deg,rgba(28,24,67,.98),rgba(15,13,42,.98));--railBg:linear-gradient(180deg,rgba(21,21,51,.98),rgba(9,9,28,.98));--contentBg:radial-gradient(circle at 72% 12%,rgba(124,106,247,.16),transparent 28%),linear-gradient(180deg,rgba(10,10,26,.82),rgba(18,16,47,.94));--panelBg:linear-gradient(180deg,rgba(25,25,56,.96),rgba(15,14,39,.98));--panelShadow:0 16px 34px rgba(3,3,16,.46);--cardRadius:12px;--themeLine:rgba(124,106,247,.42);--tabActive:linear-gradient(180deg,rgba(124,106,247,.30),rgba(106,184,247,.10))}
+[data-theme="solarized"]{--chromeBg:linear-gradient(180deg,rgba(8,70,83,.98),rgba(0,43,54,.98));--railBg:linear-gradient(180deg,rgba(7,54,66,.98),rgba(0,35,45,.98));--contentBg:linear-gradient(180deg,rgba(0,43,54,.82),rgba(7,54,66,.92));--panelBg:linear-gradient(180deg,rgba(7,54,66,.96),rgba(0,45,56,.98));--panelShadow:0 12px 26px rgba(0,20,26,.34);--cardRadius:4px;--themeLine:rgba(181,137,0,.34);--tabActive:linear-gradient(180deg,rgba(42,161,152,.24),rgba(181,137,0,.10))}
+[data-theme="matrix"]{--wallSize:28px 28px,28px 28px,auto,auto;--chromeBg:linear-gradient(180deg,rgba(7,53,34,.96),rgba(2,15,10,.98));--railBg:linear-gradient(180deg,rgba(4,27,18,.98),rgba(1,10,6,.98));--contentBg:linear-gradient(90deg,rgba(0,214,143,.035) 1px,transparent 1px),linear-gradient(rgba(0,214,143,.03) 1px,transparent 1px),linear-gradient(180deg,rgba(3,9,6,.72),rgba(4,27,18,.94));--panelBg:linear-gradient(180deg,rgba(7,20,15,.94),rgba(3,14,9,.98));--panelShadow:0 0 26px rgba(0,214,143,.10),0 14px 30px rgba(0,0,0,.38);--cardRadius:2px;--themeLine:rgba(0,214,143,.45);--tabActive:linear-gradient(180deg,rgba(0,214,143,.30),rgba(0,214,143,.10))}
+[data-theme="ocean"]{--chromeBg:linear-gradient(180deg,rgba(11,49,74,.98),rgba(5,25,39,.98));--railBg:linear-gradient(180deg,rgba(7,36,56,.98),rgba(4,17,29,.98));--contentBg:radial-gradient(ellipse at 52% 0%,rgba(56,189,248,.13),transparent 34%),linear-gradient(180deg,rgba(6,19,31,.78),rgba(5,38,58,.94));--panelBg:linear-gradient(180deg,rgba(11,32,48,.95),rgba(6,23,36,.98));--panelShadow:0 14px 32px rgba(0,16,28,.38);--cardRadius:14px;--themeLine:rgba(56,189,248,.36);--tabActive:linear-gradient(180deg,rgba(56,189,248,.24),rgba(45,212,191,.10))}
+[data-theme="graphite"]{--wallSize:24px 24px,auto,auto;--chromeBg:linear-gradient(180deg,rgba(39,39,42,.98),rgba(19,19,20,.98));--railBg:linear-gradient(180deg,rgba(32,32,34,.98),rgba(15,15,16,.98));--contentBg:linear-gradient(135deg,rgba(255,255,255,.025) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.018) 50%,rgba(255,255,255,.018) 75%,transparent 75%),linear-gradient(180deg,rgba(17,17,17,.82),rgba(29,29,31,.95));--panelBg:linear-gradient(180deg,rgba(31,31,32,.96),rgba(19,19,20,.98));--panelShadow:0 10px 24px rgba(0,0,0,.40);--cardRadius:5px;--themeLine:rgba(245,158,11,.34);--tabActive:linear-gradient(180deg,rgba(245,158,11,.24),rgba(255,255,255,.05))}
+[data-theme="ember"]{--chromeBg:linear-gradient(180deg,rgba(66,27,11,.98),rgba(35,16,8,.98));--railBg:linear-gradient(180deg,rgba(44,20,12,.98),rgba(18,8,5,.98));--contentBg:radial-gradient(circle at 78% 10%,rgba(255,138,61,.18),transparent 28%),linear-gradient(180deg,rgba(22,11,8,.82),rgba(53,22,9,.94));--panelBg:linear-gradient(180deg,rgba(42,20,12,.96),rgba(26,12,8,.98));--panelShadow:0 16px 34px rgba(22,6,0,.44);--cardRadius:10px;--themeLine:rgba(255,138,61,.38);--tabActive:linear-gradient(180deg,rgba(255,138,61,.26),rgba(251,113,133,.10))}
+[data-theme="aurora"]{--chromeBg:linear-gradient(110deg,rgba(18,46,70,.98),rgba(16,24,52,.98) 52%,rgba(27,37,78,.98));--railBg:linear-gradient(180deg,rgba(11,28,44,.98),rgba(12,19,38,.98));--contentBg:radial-gradient(ellipse at 18% 0%,rgba(34,211,238,.16),transparent 30%),radial-gradient(ellipse at 62% 0%,rgba(139,92,246,.18),transparent 34%),linear-gradient(180deg,rgba(8,17,31,.78),rgba(17,26,53,.94));--panelBg:linear-gradient(180deg,rgba(16,33,55,.95),rgba(14,21,43,.98));--panelShadow:0 16px 36px rgba(4,9,22,.42);--cardRadius:16px;--themeLine:rgba(139,92,246,.36);--tabActive:linear-gradient(180deg,rgba(34,211,238,.22),rgba(139,92,246,.14))}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:100vh;width:100vw;overflow:hidden;background:transparent}
 
@@ -61,8 +76,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .btn-secondary-t{background:linear-gradient(90deg,#3b4b5e,#2c3e45)}
 
 /* TOOLKIT SHELL */
-.shell{width:100vw;height:100vh;margin:0;border:none;border-radius:0;overflow:hidden;position:fixed;top:0;left:0;z-index:1;background:rgba(13,17,23,0.95);display:flex;flex-direction:column}
-.tbar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--b2);border-bottom:1px solid var(--br);flex-shrink:0}
+.shell{width:100vw;height:100vh;margin:0;border:none;border-radius:0;overflow:hidden;position:fixed;top:0;left:0;z-index:1;background:var(--wall);background-size:var(--wallSize);display:flex;flex-direction:column}
+.tbar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--chromeBg);border-bottom:1px solid var(--themeLine);flex-shrink:0;box-shadow:0 10px 26px rgba(0,0,0,.16)}
 .dot{width:12px;height:12px;border-radius:50%}
 .dot.r{background:#ff5f57}.dot.y{background:#ffbd2e}.dot.g{background:#28c840}
 .ttxt{font-family:var(--mono);font-size:14px;color:var(--t);margin-left:6px;font-weight:700}
@@ -70,13 +85,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .user-pill{background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.25);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--a);font-family:var(--mono)}
 .logout-btn{background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.25);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--r);cursor:pointer;font-family:var(--mono);transition:all .15s}
 .logout-btn:hover{background:rgba(248,81,73,.2)}
-.theme-switcher{display:flex;align-items:center;gap:5px;margin-right:4px}
-.theme-btn{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .15s;flex-shrink:0;position:relative}
+.theme-switcher{display:flex;align-items:center;gap:5px;margin-right:4px;flex-wrap:wrap;max-width:260px;justify-content:flex-end}
+.theme-btn{width:18px;height:18px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .15s;flex-shrink:0;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 2px 8px rgba(0,0,0,.25)}
 .theme-btn:hover{transform:scale(1.2);border-color:rgba(255,255,255,.5)}
 .theme-btn.active{border-color:#fff;transform:scale(1.15)}
 .theme-btn.active::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(255,255,255,.3)}
 .theme-lbl{font-size:9px;color:var(--t3);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-right:4px}
-.kbar{display:flex;align-items:center;gap:8px;padding:7px 16px;background:var(--b2);border-bottom:1px solid var(--br);flex-shrink:0}
+.kbar{display:flex;align-items:center;gap:8px;padding:7px 16px;background:var(--railBg);border-bottom:1px solid var(--themeLine);flex-shrink:0}
 .kbar label{font-size:12px;color:var(--t2);white-space:nowrap}
 .kbar input{flex:1;font-size:12px;padding:5px 10px;border-radius:5px;border:1px solid var(--br);background:var(--bg);color:var(--t);font-family:var(--mono);outline:none}
 .kbar input:focus{border-color:var(--a)}
@@ -84,26 +99,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .sbtn:hover{background:var(--ad)}
 .kst{font-size:11px;white-space:nowrap}
 .layout{display:grid;grid-template-columns:240px 1fr;flex:1;overflow:hidden;min-height:0}
-.sidebar{background:var(--b2);border-right:1px solid var(--br);padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;height:100%}
+.sidebar{background:var(--railBg);border-right:1px solid var(--themeLine);padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;height:100%;box-shadow:8px 0 24px rgba(0,0,0,.12)}
 .slbl{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;padding:10px 10px 4px}
 .cb{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;font-size:13px;cursor:pointer;border:none;background:none;width:100%;text-align:left;color:var(--t2);transition:all .1s}
 .cb:hover{background:var(--b3);color:var(--t)}
 .cb.active{background:rgba(29,158,117,.15);color:var(--a);font-weight:700;border-left:2px solid var(--a);padding-left:8px}
 .cb .ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
 .main{display:flex;flex-direction:column;overflow:hidden;flex:1;min-height:0}
-.tabs{display:flex;border-bottom:2px solid rgba(29,158,117,.5);padding:0 8px;background:linear-gradient(180deg,#0f2d1e 0%,#0a2016 100%);overflow-x:auto;flex-shrink:0;scrollbar-width:thin;scrollbar-color:rgba(29,158,117,.3) transparent;-webkit-overflow-scrolling:touch;align-items:stretch}
-.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px 10px 6px;font-size:10px;cursor:pointer;border:none;background:none;color:rgba(255,255,255,.7);border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;flex-shrink:0;font-family:var(--mono);letter-spacing:.02em;min-width:60px}
-.tab:hover{color:#fff;background:rgba(29,158,117,.15)}
-.tab.active{color:#fff;border-bottom-color:#3fb950;background:rgba(29,158,117,.22);font-weight:700}
-.tab-group{display:flex;flex-direction:column;flex-shrink:0}
-.tab-group-label{font-size:8px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.12em;text-transform:uppercase;font-family:var(--mono);padding:5px 6px 2px;text-align:center}
-.tab-group-btns{display:flex;align-items:stretch}
-.tab-divider{width:1px;background:rgba(29,158,117,.2);margin:6px 3px;flex-shrink:0}
-.tab-icon{font-size:15px;line-height:1;transition:transform .15s}
-.tab.active .tab-icon{transform:scale(1.1)}
-.tab-lbl{font-size:9px;color:inherit;font-family:var(--mono);letter-spacing:.02em}
-.tab.active .tab-lbl{color:#3fb950}
-.content{flex:1;overflow-y:auto;padding:16px;min-height:0;background:var(--bg)}
+.tabs{display:flex;gap:10px;border-bottom:1px solid var(--themeLine);padding:9px 12px 10px;background:var(--chromeBg);overflow-x:auto;flex-shrink:0;scrollbar-width:thin;scrollbar-color:var(--themeLine) transparent;-webkit-overflow-scrolling:touch;align-items:stretch;box-shadow:inset 0 -1px 0 rgba(255,255,255,.04)}
+.tab{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 10px;font-size:11px;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--t2);border-radius:6px;white-space:nowrap;transition:background .16s,color .16s,border-color .16s,box-shadow .16s;flex-shrink:0;font-family:var(--mono);letter-spacing:0;min-width:auto;min-height:32px}
+.tab:hover{color:var(--t);background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.08)}
+.tab.active{color:var(--t);background:var(--tabActive);border-color:var(--themeLine);font-weight:700;box-shadow:0 0 0 1px color-mix(in srgb,var(--a) 18%,transparent),0 8px 18px rgba(0,0,0,.22)}
+.tab-group{display:flex;flex-direction:column;flex-shrink:0;gap:5px;padding:6px 7px 7px;background:color-mix(in srgb,var(--shape3) 78%,transparent);border:1px solid color-mix(in srgb,var(--a) 22%,var(--br));border-radius:8px}
+.tab-group-label{font-size:9px;font-weight:800;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);padding:0 3px;text-align:left}
+.tab-group-btns{display:flex;align-items:center;gap:4px}
+.tab-divider{width:0;margin:0;flex-shrink:0}
+.tab-icon{font-size:14px;line-height:1;transition:transform .16s;filter:saturate(.95)}
+.tab.active .tab-icon{transform:scale(1.08);filter:saturate(1.15)}
+.tab-lbl{font-size:10px;color:inherit;font-family:var(--mono);letter-spacing:0}
+.tab.active .tab-lbl{color:var(--t)}
+.content{flex:1;overflow-y:auto;padding:16px;min-height:0;background:var(--contentBg);background-size:var(--wallSize)}
 .sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .stitle{font-size:15px;font-weight:700;color:var(--t)}
 .sev{font-size:11px;padding:3px 9px;border-radius:4px;font-weight:600}
@@ -114,13 +129,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
 .chip{font-size:12px;padding:4px 10px;border-radius:20px;cursor:pointer;border:1px solid var(--br);background:var(--b2);color:var(--t2);transition:all .1s}
 .chip:hover{border-color:var(--a);color:var(--a)}
-.cblock{background:var(--b2);border:1px solid var(--br);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.cblock{background:var(--panelBg);border:1px solid var(--br);border-radius:var(--cardRadius);margin-bottom:12px;overflow:hidden;box-shadow:var(--panelShadow)}
 .cblock.danger{border-color:rgba(248,81,73,.4)}
 .cblock.warn{border-color:rgba(210,153,34,.4)}
-.chdr{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--br)}
+.chdr{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--themeLine);background:linear-gradient(180deg,color-mix(in srgb,var(--b2) 74%,var(--shape2)),color-mix(in srgb,var(--b2) 90%,transparent))}
 .chdr-l{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--t)}
 .snum{width:20px;height:20px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.cbody{padding:10px 14px}
+.cbody{padding:12px 14px}
 .clines{font-family:var(--mono);font-size:12px;line-height:1.8;white-space:pre-wrap;word-break:break-all;color:var(--g)}
 .cnote{font-size:12px;color:var(--t2);margin-top:8px;line-height:1.6;border-left:2px solid var(--br);padding-left:8px}
 .cwarn{font-size:12px;color:var(--y);margin-bottom:8px;line-height:1.6;padding:8px;border-radius:4px;background:rgba(210,153,34,.07);border-left:2px solid var(--y)}
@@ -137,7 +152,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
 .av.ai{background:rgba(29,158,117,.2);color:var(--a)}
 .av.usr{background:rgba(88,166,255,.2);color:var(--bl)}
-.bubble{max-width:82%;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.7;border:1px solid var(--br);background:var(--b2);color:var(--t)}
+.bubble{max-width:82%;padding:10px 14px;border-radius:var(--cardRadius);font-size:13px;line-height:1.7;border:1px solid var(--br);background:var(--panelBg);color:var(--t);box-shadow:var(--panelShadow)}
 .msg.user .bubble{background:var(--b3)}
 .bubble code{font-family:var(--mono);font-size:11px;background:var(--b3);padding:1px 5px;border-radius:3px;color:var(--g)}
 .bubble pre{font-family:var(--mono);font-size:11px;color:var(--g);background:var(--bg);padding:10px;border-radius:6px;margin-top:8px;overflow-x:auto;white-space:pre-wrap;border:1px solid var(--br)}
@@ -439,6 +454,94 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 .landing-card:nth-child(5){animation-delay:1.6s}
 .landing-card:nth-child(6){animation-delay:2s}
 @media(max-width:480px){#landingOverlay .grid-2col,#landingOverlay>div>div:nth-child(2){grid-template-columns:1fr!important}}
+
+/* Final mobile polish layer - desktop rules above stay unchanged */
+@media(max-width:768px){
+  html,body{width:100%;max-width:100%;overflow:hidden}
+  .shell{height:100dvh;max-width:100vw}
+  .tbar{min-height:48px}
+  .menu-toggle{display:flex!important;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.25);border-radius:8px;color:var(--a);font-size:17px;flex-shrink:0}
+  .kbar{min-height:38px}
+  .layout,.main,.content{min-width:0}
+  .content{padding:10px;scroll-padding-top:12px}
+
+  .tabs{padding:7px 8px;gap:7px;align-items:stretch;scroll-snap-type:x proximity}
+  .tab-group{padding:4px 5px;border-radius:9px;min-width:max-content}
+  .tab-group-btns{gap:5px}
+  .tab{min-width:56px;min-height:50px;padding:6px 7px;flex-direction:column;gap:3px;scroll-snap-align:start}
+  .tab-icon{font-size:17px}
+  .tab-lbl{display:block!important;font-size:8.5px;line-height:1.1;max-width:54px;white-space:normal;text-align:center;overflow-wrap:anywhere}
+
+  .sh{margin-bottom:10px;padding:0;align-items:flex-start}
+  .stitle{font-size:15px;line-height:1.3}
+  .chdr{flex-wrap:wrap;gap:8px;align-items:flex-start}
+  .chdr-l{min-width:0;line-height:1.35}
+  .chdr-r{width:100%;font-size:10.5px!important}
+  .cblock{overflow:visible;margin-bottom:10px}
+  .cbody{overflow-x:hidden}
+  .cnote,.cwarn,.cdanger{font-size:11.5px;line-height:1.55}
+
+  .content>div[style*="grid-template-columns"],
+  .cbody>div[style*="grid-template-columns"],
+  .cbody div[style*="grid-template-columns:1fr 1fr"],
+  .cbody div[style*="grid-template-columns:repeat"],
+  .rgrid,.subnet-result-grid,.grid-2col,.lab-grid,.demo-subnet-grid,
+  .email-grid,.lab-two-col,.hw-cards,.sim-shell,.mv-body{
+    grid-template-columns:1fr!important;
+  }
+
+  .content table,.cbody table{display:block;width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;border-collapse:separate}
+  .content thead,.content tbody,.cbody thead,.cbody tbody{min-width:560px}
+  .content td,.content th,.cbody td,.cbody th{font-size:11px;line-height:1.45;vertical-align:top}
+
+  pre,.clines,.code-block,.mask-preview,.analyzer-response pre,.ai-bubble pre,
+  .bubble pre,.mv-step-code,.mv-cmd-code,.sim-terminal{
+    max-width:100%;overflow-x:auto;white-space:pre-wrap;word-break:break-word;font-size:11px;line-height:1.65;
+  }
+
+  .irow,.ai-input-area,.mask-input-group,.analyzer-row{flex-direction:column;align-items:stretch}
+  .irow input,.ai-input-area input,.irow button,.ai-input-area button,.ibtn,.sbtn{width:100%;min-height:36px}
+  .chips,.button-group,.pill-group{gap:6px}
+  .chip,.pill,.sbtn,.copybtn{min-height:32px}
+
+  .messages,.ai-messages{max-height:52dvh;height:auto}
+  .bubble{max-width:100%;font-size:12px}
+  .ai-container{min-height:calc(100dvh - 170px)}
+
+  .sim-helpbar{grid-template-columns:1fr!important}
+  .sim-ref-body{max-height:260px!important}
+  .sim-terminal{min-height:330px;max-height:48dvh;padding:12px}
+  .sim-input-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px}
+  #sim-prompt{grid-column:1/-1;font-size:11px!important;white-space:normal!important;margin-right:0!important}
+  #sim-input{min-width:0;font-size:13px!important}
+  #sim-run-btn{width:auto!important;margin-left:0!important}
+
+  .mv-wrap{background:transparent}
+  .mv-vendor-tabs{padding:8px;gap:6px}
+  .mv-vtab{border-radius:18px!important;border:1px solid var(--br)!important;padding:7px 12px!important}
+  .mv-learn{padding:12px 10px}
+  .mv-learn-head{align-items:flex-start}
+  .mv-track-tabs{width:100%;display:grid!important;grid-template-columns:1fr 1fr;gap:8px}
+  .mv-track-tab{width:100%;border-radius:8px}
+  .mv-step{grid-template-columns:28px minmax(0,1fr)!important;gap:8px}
+  .mv-cmd-row{display:grid!important;grid-template-columns:1fr;gap:8px}
+  .mv-cmd-right{justify-content:flex-start}
+
+  .hw-specs{grid-template-columns:1fr!important}
+  .hw-filter{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+  .hw-fbtn{white-space:nowrap;flex-shrink:0}
+
+  .login-card,.terms-card{max-height:92dvh;overflow-y:auto;border-radius:18px}
+}
+
+@media(max-width:420px){
+  .content{padding:8px}
+  .tab{min-width:50px}
+  .tab-lbl{font-size:8px;max-width:48px}
+  .cbody{padding:9px}
+  .chdr{padding:8px 9px}
+  .sim-terminal{min-height:300px}
+}
 </style>
 </head>
 <body oncontextmenu="return false">
@@ -484,7 +587,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
         <div style="font-size:11px;color:var(--t3);line-height:1.5">Debug generator &middot; Packet walk &middot; Traceroute analyzer</div>
       </button>
     </div>
-    <button onclick="window.landingEnter()" style="width:100%;padding:14px;background:linear-gradient(90deg,var(--a),var(--ad));color:#000;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;box-shadow:0 0 20px rgba(29,158,117,.4);animation:lcPulse 2s ease-in-out infinite;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 0 36px rgba(29,158,117,.7)'" onmouseout="this.style.transform='scale(1)'">&#x1F680; Open Full Toolkit &rarr;</button>
+    <button onclick="window.landingEnter()" style="width:100%;padding:14px;background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;box-shadow:0 0 20px rgba(29,158,117,.4);animation:lcPulse 2s ease-in-out infinite;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 0 36px rgba(29,158,117,.7)'" onmouseout="this.style.transform='scale(1)'">&#x1F680; Open Full Toolkit &rarr;</button>
     <p style="text-align:center;font-size:11px;color:var(--t3)">Or click any tool above to jump straight in</p>
   </div>
 </div>
@@ -566,6 +669,11 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
         <button class="theme-btn"        id="tbtn-nord"    title="Nord"       style="background:#3b4252;border-color:#88c0d0" onclick="setTheme('nord',this)"></button>
         <button class="theme-btn"        id="tbtn-midnight" title="Midnight"  style="background:#12122a;border-color:#7c6af7" onclick="setTheme('midnight',this)"></button>
         <button class="theme-btn"        id="tbtn-solarized" title="Solarized" style="background:#073642;border-color:#2aa198" onclick="setTheme('solarized',this)"></button>
+        <button class="theme-btn"        id="tbtn-matrix"  title="Matrix"     style="background:linear-gradient(135deg,#030906,#00d68f);border-color:#00d68f" onclick="setTheme('matrix',this)"></button>
+        <button class="theme-btn"        id="tbtn-ocean"   title="Ocean"      style="background:linear-gradient(135deg,#06131f,#38bdf8);border-color:#38bdf8" onclick="setTheme('ocean',this)"></button>
+        <button class="theme-btn"        id="tbtn-graphite" title="Graphite"  style="background:linear-gradient(135deg,#111,#f59e0b);border-color:#f59e0b" onclick="setTheme('graphite',this)"></button>
+        <button class="theme-btn"        id="tbtn-ember"   title="Ember"      style="background:linear-gradient(135deg,#160b08,#ff8a3d);border-color:#ff8a3d" onclick="setTheme('ember',this)"></button>
+        <button class="theme-btn"        id="tbtn-aurora"  title="Aurora"     style="background:linear-gradient(135deg,#08111f,#22d3ee,#8b5cf6);border-color:#22d3ee" onclick="setTheme('aurora',this)"></button>
       </div>
       <span class="user-pill" id="loggedInUser"></span>
       <button class="logout-btn" onclick="doLogout()">⏻ Logout</button>
@@ -589,30 +697,30 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <div class="sidebar"></div>
     <div class="main">
       <div class="tabs">
-        <!-- GROUP: Troubleshoot -->
+        <!-- GROUP: Operations -->
         <div class="tab-group">
-          <div class="tab-group-label">Troubleshoot</div>
+          <div class="tab-group-label">Operations</div>
           <div class="tab-group-btns">
             <button class="tab active" onclick="stab('guide')" id="tab-guide" title="Guided Steps">
-              <span class="tab-icon">📋</span><span class="tab-lbl">Guided Steps</span>
+              <span class="tab-icon">🧭</span><span class="tab-lbl">Guide</span>
             </button>
             <button class="tab" onclick="stab('analyze')" id="tab-analyze" title="Analyze Output">
-              <span class="tab-icon">📊</span><span class="tab-lbl">Analyze</span>
+              <span class="tab-icon">🔎</span><span class="tab-lbl">Output</span>
             </button>
             <button class="tab" onclick="stab('advdiag')" id="tab-advdiag" title="Advanced Diagnostics">
               <span class="tab-icon">🔬</span><span class="tab-lbl">Advanced Diag</span>
             </button>
             <button class="tab" onclick="stab('mostused')" id="tab-mostused" title="Most Used Tools">
-              <span class="tab-icon">⚡</span><span class="tab-lbl">Most Used</span>
+              <span class="tab-icon">⭐</span><span class="tab-lbl">Most Used</span>
             </button>
             <button class="tab" onclick="stab('psmaker')" id="tab-psmaker" title="Smart PowerShell Script Maker">
-              <span class="tab-icon">🪟</span><span class="tab-lbl">PS Maker</span>
+              <span class="tab-icon">⌨️</span><span class="tab-lbl">PS Maker</span>
             </button>
             <button class="tab" onclick="stab('topology')" id="tab-topology" title="Network Topology Designer">
-              <span class="tab-icon">🗺️</span><span class="tab-lbl">Topology</span>
+              <span class="tab-icon">🕸️</span><span class="tab-lbl">Topology</span>
             </button>
             <button class="tab" onclick="stab('pkttools')" id="tab-pkttools" title="Packet Tools">
-              <span class="tab-icon">📦</span><span class="tab-lbl">Packet Tools</span>
+              <span class="tab-icon">📡</span><span class="tab-lbl">Packets</span>
             </button>
           </div>
         </div>
@@ -623,10 +731,10 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
           <div class="tab-group-label">AI Tools</div>
           <div class="tab-group-btns">
             <button class="tab" onclick="stab('freeai')" id="tab-freeai" title="AI CLI Analyzer">
-              <span class="tab-icon">🤖</span><span class="tab-lbl">AI Analyzer</span>
+              <span class="tab-icon">✨</span><span class="tab-lbl">AI Analyzer</span>
             </button>
             <button class="tab" onclick="stab('ai')" id="tab-ai" title="AI Assistant">
-              <span class="tab-icon">🧠</span><span class="tab-lbl">AI Assistant</span>
+              <span class="tab-icon">💬</span><span class="tab-lbl">Assistant</span>
             </button>
           </div>
         </div>
@@ -637,16 +745,27 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
           <div class="tab-group-label">Network Tools</div>
           <div class="tab-group-btns">
             <button class="tab" onclick="stab('masking')" id="tab-masking" title="IP Masking">
-              <span class="tab-icon">🎭</span><span class="tab-lbl">IP Masking</span>
+              <span class="tab-icon">🙈</span><span class="tab-lbl">Masking</span>
             </button>
             <button class="tab" onclick="stab('bulkAnon')" id="tab-bulkAnon" title="Bulk IP Anonymizer">
-              <span class="tab-icon">🔄</span><span class="tab-lbl">Bulk Anon</span>
+              <span class="tab-icon">🧹</span><span class="tab-lbl">Anon</span>
             </button>
             <button class="tab" onclick="stab('subnetcalc')" id="tab-subnetcalc" title="Subnet Calculator">
               <span class="tab-icon">🧮</span><span class="tab-lbl">Subnet Calc</span>
             </button>
             <button class="tab" onclick="stab('dhcpdiag')" id="tab-dhcpdiag" title="DHCP Diagnostics">
-              <span class="tab-icon">📡</span><span class="tab-lbl">DHCP Diag</span>
+              <span class="tab-icon">📮</span><span class="tab-lbl">DHCP</span>
+            </button>
+          </div>
+        </div>
+        <div class="tab-divider"></div>
+
+        <!-- GROUP: Cloud -->
+        <div class="tab-group">
+          <div class="tab-group-label">Cloud</div>
+          <div class="tab-group-btns">
+            <button class="tab" onclick="stab('azure')" id="tab-azure" title="Microsoft Azure Scripting">
+              <span class="tab-icon">☁️</span><span class="tab-lbl">Azure</span>
             </button>
           </div>
         </div>
@@ -657,13 +776,13 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
           <div class="tab-group-label">Reference</div>
           <div class="tab-group-btns">
             <button class="tab" onclick="stab('ref')" id="tab-ref" title="Quick Reference">
-              <span class="tab-icon">⚡</span><span class="tab-lbl">Quick Ref</span>
+              <span class="tab-icon">📚</span><span class="tab-lbl">Quick Ref</span>
             </button>
             <button class="tab" onclick="stab('multivendor')" id="tab-multivendor" title="Multi-Vendor CLI">
-              <span class="tab-icon">🌐</span><span class="tab-lbl">Multi-Vendor</span>
+              <span class="tab-icon">🔁</span><span class="tab-lbl">Vendors</span>
             </button>
             <button class="tab" onclick="stab('hwref')" id="tab-hwref" title="Hardware Reference">
-              <span class="tab-icon">🖥️</span><span class="tab-lbl">HW Ref</span>
+              <span class="tab-icon">🧱</span><span class="tab-lbl">Hardware</span>
             </button>
           </div>
         </div>
@@ -674,7 +793,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
           <div class="tab-group-label">Config</div>
           <div class="tab-group-btns">
             <button class="tab" onclick="stab('cfggen')" id="tab-cfggen" title="Config Generator">
-              <span class="tab-icon">⚙️</span><span class="tab-lbl">Generator</span>
+              <span class="tab-icon">🧩</span><span class="tab-lbl">Generator</span>
             </button>
             <button class="tab" onclick="stab('cfgmigrate')" id="tab-cfgmigrate" title="Config Migrator">
               <span class="tab-icon">🔀</span><span class="tab-lbl">Migrator</span>
@@ -683,13 +802,13 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
               <span class="tab-icon">🧪</span><span class="tab-lbl">Lab Setup</span>
             </button>
             <button class="tab" onclick="stab('security')" id="tab-security" title="Security & Privacy">
-              <span class="tab-icon">🔐</span><span class="tab-lbl">Security</span>
+              <span class="tab-icon">🛡️</span><span class="tab-lbl">Security</span>
             </button>
             <button class="tab" onclick="stab('liveconnect')" id="tab-liveconnect" title="FortiGate Live Connect">
-              <span class="tab-icon">🔌</span><span class="tab-lbl">Live Connect</span>
+              <span class="tab-icon">🟢</span><span class="tab-lbl">Live</span>
             </button>
             <button class="tab" onclick="stab('emailgen')" id="tab-emailgen" title="Customer Email Generator">
-              <span class="tab-icon">✉️</span><span class="tab-lbl">Email</span>
+              <span class="tab-icon">📝</span><span class="tab-lbl">Email</span>
             </button>
 
           </div>
@@ -720,7 +839,7 @@ const NW_CHANGELOG=[
     'Added Config Generator — 7 ready-to-paste CLI templates',
     'Added Smart Config Migrator — auto-detect + field replacement',
     'Added Lab Setup guide with PDF download',
-    'Added 5 colour themes — Dark, Light, Nord, Midnight, Solarized',
+    'Added 10 colour themes — Dark, Light, Nord, Midnight, Solarized, Matrix, Ocean, Graphite, Ember, Aurora',
     'Multi-Vendor CLI rebuilt — 70+ commands per vendor with proper layout',
     'Bulk Anonymizer and IP Masking improvements',
     'Full-page layout — no empty margins',
@@ -817,7 +936,7 @@ function renderPSMaker(el){
     +'.ps-expl{font-size:11px;color:var(--t3);padding:2px 0 4px 8px;border-left:2px solid var(--br);margin-bottom:2px;line-height:1.5}'
     +'.ps-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}'
     +'.ps-opt{background:var(--b2);border:1px solid var(--a);border-radius:20px;color:var(--a);font-size:11px;padding:5px 14px;cursor:pointer;transition:all .15s}'
-    +'.ps-opt:hover{background:var(--a);color:#000}'
+    +'.ps-opt:hover{background:var(--a);color:#fff}'
     +'.ps-cpbtn{font-size:10px;padding:3px 10px;background:var(--b3);border:1px solid var(--br);color:var(--t2);border-radius:6px;cursor:pointer;margin-top:6px}'
     +'.ps-cpbtn:hover{border-color:var(--a);color:var(--a)}';
   document.head.appendChild(css);
@@ -1171,7 +1290,7 @@ function renderTopology(el){
     +'.topo-icon-btn:hover{background:rgba(29,158,117,.1);border-color:var(--a);transform:scale(1.05)}'
     +'.topo-icon-btn span{font-size:10px;color:var(--t3)}'
     +'.topo-mode-btn{font-size:11px;padding:6px 14px;border-radius:6px;border:1px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;font-weight:600;transition:all .15s}'
-    +'.topo-mode-btn.active{background:var(--a);border-color:var(--a);color:#000}'
+    +'.topo-mode-btn.active{background:var(--a);border-color:var(--a);color:#fff}'
     +'.topo-conn-btn{font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--br);background:var(--b3);color:var(--t2);cursor:pointer;transition:all .15s}'
     +'.topo-conn-btn.active,.topo-conn-btn:hover{background:rgba(29,158,117,.1);border-color:var(--a);color:var(--a)}'
     +'.topo-viewport{overflow:hidden;position:relative;border-radius:10px;border:1px solid #30363d;background:#0d1117;width:100%;height:640px;cursor:default}'
@@ -1866,6 +1985,28 @@ function renderTopology(el){
 
 function renderCLISim(el){
   el.innerHTML='';
+  if(!document.getElementById('cliSimCSS')){
+    var simStyle=document.createElement('style');simStyle.id='cliSimCSS';
+    simStyle.textContent=`
+      .sim-shell{display:grid;grid-template-columns:320px minmax(0,1fr);gap:14px;align-items:start}
+      .sim-ref-card{border:1px solid var(--br);border-radius:8px;background:var(--b2);overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+      .sim-ref-head{padding:11px 13px;border-bottom:1px solid var(--br);background:linear-gradient(180deg,var(--b2),var(--shape3))}
+      .sim-ref-title{font-size:13px;font-weight:800;color:var(--t)}
+      .sim-ref-sub{font-size:10.5px;color:var(--t2);line-height:1.45;margin-top:3px}
+      .sim-ref-body{overflow-y:auto;max-height:620px;padding:8px}
+      .sim-ref-cat{border:1px solid var(--br);border-radius:8px;margin-bottom:8px;background:var(--bg);overflow:hidden}
+      .sim-ref-cat-h{padding:8px 10px;font-size:10px;font-weight:800;color:var(--t2);letter-spacing:.08em;background:var(--b2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
+      .sim-ref-row{padding:8px 10px;border-top:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .12s,border-color .12s}
+      .sim-ref-row:hover{background:rgba(29,158,117,.07)}
+      .sim-term-card{border:1px solid #30363d;border-radius:8px;background:#0a0e14;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.22)}
+      .sim-terminal{min-height:460px;max-height:620px;overflow-y:auto;padding:15px 17px;font-family:"Courier New",monospace;font-size:13px;line-height:1.8;background:#0a0e14;scroll-behavior:smooth}
+      .sim-input-row{display:flex;align-items:center;padding:10px 16px;border-top:1px solid #30363d;background:#0d1117}
+      .sim-helpbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:14px}
+      .sim-helpitem{background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--t2);line-height:1.45}
+      @media(max-width:900px){.sim-shell{grid-template-columns:1fr}.sim-ref-panel{position:relative!important;top:0!important}.sim-ref-body{max-height:340px}}
+    `;
+    document.head.appendChild(simStyle);
+  }
 
   // ── Header ──
   var hdr=document.createElement('div');
@@ -1873,9 +2014,11 @@ function renderCLISim(el){
   hdr.innerHTML='<span class="stitle">🖥️ CLI Simulator — Practice Lab</span><span class="sev info">FortiGate &middot; Cisco IOS &middot; Cisco NX-OS &middot; Juniper &middot; Aruba</span>';
   el.appendChild(hdr);
 
-  var intro=document.createElement('p');
-  intro.style.cssText='font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7';
-  intro.innerHTML='Practice routing &amp; switching commands in a safe simulated environment. Type <span style="color:var(--a);font-family:var(--mono)">?</span> or <span style="color:var(--a);font-family:var(--mono)">help</span> to list all available commands. Use <span style="color:var(--a);font-family:var(--mono)">↑↓</span> arrows for command history.';
+  var intro=document.createElement('div');
+  intro.className='sim-helpbar';
+  intro.innerHTML='<div class="sim-helpitem"><strong style="color:var(--t)">Natural practice:</strong><br>Try real config flow: <span style="color:var(--a);font-family:var(--mono)">enable</span>, <span style="color:var(--a);font-family:var(--mono)">conf t</span>, <span style="color:var(--a);font-family:var(--mono)">interface ...</span>, <span style="color:var(--a);font-family:var(--mono)">end</span>.</div>'
+    +'<div class="sim-helpitem"><strong style="color:var(--t)">Smart parser:</strong><br>Accepts common switch/router commands, abbreviations, show commands, and vendor config lines.</div>'
+    +'<div class="sim-helpitem"><strong style="color:var(--t)">Safe lab:</strong><br>No real device is touched. Destructive commands show warnings only.</div>';
   el.appendChild(intro);
 
   // ── Vendor selector ──
@@ -1901,7 +2044,7 @@ function renderCLISim(el){
   vendors.forEach(function(v){
     var b=document.createElement('button');
     b.className='sbtn';
-    b.style.cssText='font-size:11px;padding:5px 14px;'+(v.id===currentVendor.id?'background:'+v.color+';color:#000':'background:var(--b3);border:1px solid var(--br);color:var(--t2)');
+    b.style.cssText='font-size:11px;padding:5px 14px;'+(v.id===currentVendor.id?'background:'+v.color+';color:#fff':'background:var(--b3);border:1px solid var(--br);color:var(--t2)');
     b.innerHTML=v.label;
     b.id='vsim-'+v.id;
     b.onclick=(function(vv){return function(){
@@ -1911,7 +2054,7 @@ function renderCLISim(el){
         var xb=document.getElementById('vsim-'+x.id);
         if(xb) xb.style.cssText='font-size:11px;padding:5px 14px;background:var(--b3);border:1px solid var(--br);color:var(--t2)';
       });
-      this.style.cssText='font-size:11px;padding:5px 14px;background:'+vv.color+';color:#000';
+      this.style.cssText='font-size:11px;padding:5px 14px;background:'+vv.color+';color:#fff';
       bootDevice(vv);
     };})(v);
     vendorBar.appendChild(b);
@@ -1922,12 +2065,14 @@ function renderCLISim(el){
   // ── Layout: left=command ref, right=terminal ──
   var layout=document.createElement('div');
   var isMobile=window.innerWidth<=768;
-  layout.style.cssText=isMobile?'display:flex;flex-direction:column;gap:14px':'display:grid;grid-template-columns:300px 1fr;gap:14px;align-items:start';
+  layout.className='sim-shell';
+  layout.style.cssText=isMobile?'display:flex;flex-direction:column;gap:14px':'';
   el.appendChild(layout);
 
   // ── LEFT: Command Reference ──
   var refPanel=document.createElement('div');
   refPanel.id='sim-ref-panel';
+  refPanel.className='sim-ref-panel';
   refPanel.style.cssText='position:sticky;top:16px';
   layout.appendChild(refPanel);
 
@@ -1936,8 +2081,7 @@ function renderCLISim(el){
   layout.appendChild(termPanel);
 
   var termCard=document.createElement('div');
-  termCard.className='cblock';
-  termCard.style.cssText='background:#0a0e14;border-color:#30363d';
+  termCard.className='sim-term-card';
 
   var termHdr=document.createElement('div');
   termHdr.className='chdr';
@@ -1949,10 +2093,10 @@ function renderCLISim(el){
 
   var termBody=document.createElement('div');
   termBody.id='sim-output';
-  termBody.style.cssText='min-height:400px;max-height:500px;overflow-y:auto;padding:14px 16px;font-family:"Courier New",monospace;font-size:13px;line-height:1.8;background:#0a0e14;scroll-behavior:smooth';
+  termBody.className='sim-terminal';
 
   var inputRow=document.createElement('div');
-  inputRow.style.cssText='display:flex;align-items:center;padding:10px 16px;border-top:1px solid #30363d;background:#0d1117';
+  inputRow.className='sim-input-row';
   inputRow.innerHTML='<span id="sim-prompt" style="color:#3fb950;font-family:\'Courier New\',monospace;font-size:13px;white-space:nowrap;margin-right:6px">FGT-HQ-01 # </span>'
     +'<input id="sim-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" '
     +'style="flex:1;background:transparent;border:none;outline:none;color:#e6edf3;font-family:\'Courier New\',monospace;font-size:13px;caret-color:#3fb950">'
@@ -2390,25 +2534,23 @@ function renderCLISim(el){
     if(!db) return;
     refPanel.innerHTML='';
     var rc=document.createElement('div');
-    rc.className='cblock';
-    rc.innerHTML='<div class="chdr" style="background:'+v.color+'22;border-color:'+v.color+'44"><div class="chdr-l" style="color:'+v.color+'">📖 Command Reference</div></div>';
+    rc.className='sim-ref-card';
+    rc.innerHTML='<div class="sim-ref-head"><div class="sim-ref-title" style="color:'+v.color+'">📖 Command Reference</div><div class="sim-ref-sub">Click a command to place it in the terminal. Use it as a guide while practicing real switch/router flow.</div></div>';
     var rb=document.createElement('div');
-    rb.style.cssText='overflow-y:auto;max-height:520px';
+    rb.className='sim-ref-body';
     db.categories.forEach(function(cat){
       var catDiv=document.createElement('div');
-      catDiv.style.cssText='border-bottom:1px solid var(--br)';
+      catDiv.className='sim-ref-cat';
       var catHdr=document.createElement('div');
-      catHdr.style.cssText='padding:8px 12px;font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;background:rgba(0,0,0,.2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none';
+      catHdr.className='sim-ref-cat-h';
       catHdr.innerHTML=cat.name+'<span style="color:var(--t3);font-size:10px">▼</span>';
       var catBody=document.createElement('div');
       catBody.style.display='block';
       cat.cmds.forEach(function(c){
         var cmdRow=document.createElement('div');
-        cmdRow.style.cssText='padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .1s';
+        cmdRow.className='sim-ref-row';
         cmdRow.innerHTML='<div style="font-family:\'Courier New\',monospace;font-size:11px;color:'+v.color+';margin-bottom:2px">'+c.cmd+'</div>'
           +'<div style="font-size:10px;color:var(--t3);line-height:1.4">'+c.desc+'</div>';
-        cmdRow.onmouseenter=function(){this.style.background='rgba(255,255,255,.04)';};
-        cmdRow.onmouseleave=function(){this.style.background='transparent';};
         cmdRow.onclick=(function(cmd){return function(){
           document.getElementById('sim-input').value=cmd;
           document.getElementById('sim-input').focus();
@@ -2474,6 +2616,52 @@ function renderCLISim(el){
 
   function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
+  function isLikelyConfigCommand(cmdLow){
+    return /^(hostname|interface|int |vlan |router |line |ip route|ip address|switchport|description|username|enable secret|crypto|spanning-tree|channel-group|no shutdown|shutdown|transport input|login|password|neighbor|network|router-id|area |set |edit |next|config |\/|system-view|sysname|port |undo |commit|delete |dhcp|aaa|local-user|user-interface)/.test(cmdLow);
+  }
+
+  function normalizeCommand(cmd){
+    var c=cmd.trim();
+    var l=c.toLowerCase();
+    if(l==='sh run') return 'show running-config';
+    if(l==='sh ip int br') return 'show ip interface brief';
+    if(l==='sh ver') return 'show version';
+    if(l==='wr') return 'write memory';
+    if(l==='conf t') return 'configure terminal';
+    if(l==='int g1/0/1') return 'interface GigabitEthernet1/0/1';
+    return c;
+  }
+
+  function genericShow(cmdLow,v){
+    if(cmdLow.startsWith('show ')||cmdLow.startsWith('display ')||cmdLow.startsWith('get ')||cmdLow.startsWith('diagnose ')){
+      if(cmdLow.includes('version')||cmdLow.includes('status')) return 'Software: simulated lab image\nUptime: 12 days, 04:18:22\nModel: NetWolf virtual '+v+'\nSerial: LAB123456';
+      if(cmdLow.includes('interface')) return 'Interface              IP-Address      Status    Protocol\nGigabitEthernet0/0      10.0.0.1        up        up\nGigabitEthernet0/1      192.168.1.1     up        up\nVlan10                  10.10.10.1      up        up';
+      if(cmdLow.includes('vlan')) return 'VLAN  Name        Status   Ports\n10    USERS       active   Gi1/0/10\n20    SERVERS     active   Gi1/0/20\n99    MGMT        active   Gi1/0/48';
+      if(cmdLow.includes('route')) return 'Gateway of last resort is <UPSTREAM_GW>\nC 10.10.10.0/24 is directly connected\nS 0.0.0.0/0 via <UPSTREAM_GW>\nO <REMOTE_NET> learned via OSPF';
+      if(cmdLow.includes('ospf')&&cmdLow.includes('neighbor')) return 'Neighbor ID     Pri   State           Address         Interface\n10.0.0.2        1     FULL/DR         10.0.0.2        Gi0/1';
+      if(cmdLow.includes('bgp')&&cmdLow.includes('summary')) return 'Neighbor        AS      State/PfxRcd\n10.0.0.2        65002   Established 12';
+      if(cmdLow.includes('running')||cmdLow.includes('current-configuration')) return 'Building configuration...\n!\nhostname '+(v==='cisco_sw'?'Switch':'Router')+'\ninterface Vlan10\n ip address 10.10.10.1 255.255.255.0\n!\nend';
+      return 'Command accepted. Simulated output for: '+cmdLow;
+    }
+    return null;
+  }
+
+  function genericConfigAccept(cmdLow){
+    if(cmdLow.startsWith('description ')) return 'Description configured.';
+    if(cmdLow.startsWith('switchport mode access')) return 'Interface set to access mode.';
+    if(cmdLow.startsWith('switchport access vlan')) return 'Access VLAN assigned.';
+    if(cmdLow.startsWith('switchport mode trunk')) return 'Interface set to trunk mode.';
+    if(cmdLow.startsWith('switchport trunk allowed')) return 'Allowed VLAN list updated.';
+    if(cmdLow.startsWith('spanning-tree')) return 'Spanning-tree setting accepted.';
+    if(cmdLow.startsWith('channel-group')) return 'Interface added to port-channel/LAG.';
+    if(cmdLow.startsWith('ip route')) return 'Static route installed in running configuration.';
+    if(cmdLow.startsWith('network ')) return 'Network statement accepted.';
+    if(cmdLow.startsWith('neighbor ')) return 'Neighbor statement accepted.';
+    if(cmdLow.startsWith('username ')||cmdLow.startsWith('user ')||cmdLow.startsWith('local-user ')) return 'Local user configuration accepted.';
+    if(cmdLow.startsWith('transport input')||cmdLow==='login'||cmdLow.startsWith('password ')) return 'Line authentication setting accepted.';
+    return 'Configuration accepted.';
+  }
+
   // ── Command processor ──
   // ── Mode state ──
   // modes: 'user' | 'enable' | 'config' | 'config-if' | 'config-vlan' | 'config-router'
@@ -2518,7 +2706,7 @@ function renderCLISim(el){
   }
 
   function runCommand(raw){
-    var cmd = raw.trim();
+    var cmd = normalizeCommand(raw.trim());
     if(!cmd) return;
     cmdHistory.unshift(cmd);
     histIdx = -1;
@@ -2541,12 +2729,35 @@ function renderCLISim(el){
         else { printLine('<span style="color:#8b949e">Already at top level.</span>'); }
         return;
       }
+      if(v==='fortigate' && (cmdLow.startsWith('config ')||cmdLow.startsWith('edit ')||cmdLow.startsWith('set ')||cmdLow==='next')){
+        if(cmdLow.startsWith('config ')) setMode('config',cmd.substring(7));
+        printLine('<span style="color:#3fb950">'+escH(genericConfigAccept(cmdLow))+'</span>');
+        return;
+      }
+      if(v==='mikrotik' && cmdLow.startsWith('/')){
+        printLine('<span style="color:#3fb950">RouterOS command accepted in the simulated running configuration.</span>');
+        return;
+      }
     }
 
     if(v === 'juniper'){
+      if(cmdLow==='configure'){
+        setMode('config');
+        printLine('<span style="color:#8b949e">Entering configuration mode</span>');
+        return;
+      }
       if(cmdLow === 'exit'||cmdLow === 'quit'||cmdLow === 'exit configuration-mode'){
         if(accessMode === 'config'){ setMode('user'); printLine('<span style="color:#8b949e">Exiting configuration mode.</span>'); }
         else { printLine('<span style="color:#8b949e">Already in operational mode.</span>'); }
+        return;
+      }
+      if(cmdLow.startsWith('set ')||cmdLow.startsWith('delete ')){
+        setMode('config');
+        printLine('<span style="color:#3fb950">Candidate configuration updated.</span>');
+        return;
+      }
+      if(cmdLow==='commit'||cmdLow.startsWith('commit ')){
+        printLine('<span style="color:#8b949e">commit complete</span>');
         return;
       }
     }
@@ -2557,6 +2768,10 @@ function renderCLISim(el){
     if(isCiscoStyle){
       // User mode commands
       if(accessMode === 'user'){
+        if(isLikelyConfigCommand(cmdLow)||cmdLow==='configure terminal'){
+          printLine('<span style="color:#8b949e">Auto-entering privileged/config mode for practice.</span>');
+          setMode(cmdLow==='configure terminal'?'config':'config');
+        } else {
         if(cmdLow === 'enable' || cmdLow === 'en'){
           // Simulate enable password prompt (always accept)
           printLine('<span style="color:#8b949e">Password: </span>');
@@ -2583,6 +2798,7 @@ function renderCLISim(el){
           printLine('<span style="color:#f85149">% Command not available in user EXEC mode.</span>');
           printLine('<span style="color:#484f58">Type <span style="color:#e6edf3">enable</span> to enter privileged mode first.</span>');
           return;
+        }
         }
       }
 
@@ -2694,7 +2910,7 @@ function renderCLISim(el){
           return;
         }
         // Accept config commands silently (config applied)
-        printLine('<span style="color:#8b949e">Configuration accepted.</span>');
+        printLine('<span style="color:#3fb950">'+escH(genericConfigAccept(cmdLow))+'</span>');
         return;
       }
 
@@ -2748,7 +2964,7 @@ function renderCLISim(el){
           return;
         }
         // Accept all other sub-config commands
-        printLine('<span style="color:#8b949e">Configuration accepted.</span>');
+        printLine('<span style="color:#3fb950">'+escH(genericConfigAccept(cmdLow))+'</span>');
         return;
       }
     }
@@ -2801,6 +3017,29 @@ function renderCLISim(el){
       if(resp==='') printLine('<span style="color:#8b949e"></span>');
       else printOutput(resp,'#c9d1d9');
     } else {
+      var showOut=genericShow(cmdLow,v);
+      if(showOut!==null){
+        printOutput(showOut,'#c9d1d9');
+        printLine('');
+        return;
+      }
+      if(cmdLow.startsWith('ping ')||cmdLow.startsWith('execute ping')){
+        var target=cmd.split(/\s+/).pop();
+        printOutput('Sending 5 ICMP echoes to '+target+'...\n!!!!!\nSuccess rate is 100 percent, round-trip min/avg/max = 4/12/22 ms','#c9d1d9');
+        printLine('');
+        return;
+      }
+      if(cmdLow.startsWith('traceroute ')||cmdLow.startsWith('tracert ')||cmdLow.startsWith('execute traceroute')){
+        var dst=cmd.split(/\s+/).pop();
+        printOutput('Tracing route to '+dst+'\n 1 10.0.0.1 1 ms 1 ms 1 ms\n 2 203.0.113.1 8 ms 8 ms 9 ms\n 3 '+dst+' 14 ms 15 ms 14 ms','#c9d1d9');
+        printLine('');
+        return;
+      }
+      if(isLikelyConfigCommand(cmdLow)){
+        printLine('<span style="color:#3fb950">'+escH(genericConfigAccept(cmdLow))+'</span>');
+        printLine('');
+        return;
+      }
       var errMsgs={
         fortigate:'Unknown action 0',
         cisco_ios:'% Invalid input detected at '^' marker.',
@@ -3421,7 +3660,26 @@ function sel(c){
   if(document.getElementById('cat-'+c)) document.getElementById('cat-'+c).classList.add('active');
   render();
 }
-function stab(t){tab=t;localStorage.setItem('nw_tab',t);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');render();}
+function closeSidebarOnMobile(){
+  if(window.innerWidth<=768){
+    const sidebar=document.querySelector('.sidebar');
+    const overlay=document.getElementById('sidebarOverlay');
+    if(sidebar) sidebar.classList.remove('open');
+    if(overlay) overlay.classList.remove('open');
+    const btn=document.getElementById('menuToggleBtn');
+    if(btn) btn.textContent='☰';
+  }
+}
+function nav(id){
+  if(D[id]) sel(id);
+  else {
+    stab(id);
+    document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));
+    if(document.getElementById('cat-'+id)) document.getElementById('cat-'+id).classList.add('active');
+    closeSidebarOnMobile();
+  }
+}
+function stab(t){tab=t;localStorage.setItem('nw_tab',t);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');if(t!=='guide'){document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+t))document.getElementById('cat-'+t).classList.add('active');}else{document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+cur))document.getElementById('cat-'+cur).classList.add('active');}render();}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(t){t=t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
 function copyAll(btn,key,idx){const step=D[cur].steps?D[cur].steps[idx]:D[cur].sections[idx];const cmds=(step.cmds||[]).filter(c=>!c.startsWith('('));navigator.clipboard.writeText(cmds.join('\n')).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy all',1500);});}
@@ -3842,7 +4100,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -3889,6 +4147,111 @@ function renderGuide(el,d){
 function renderCfg(el,d){let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev info">Config Guide</span></div>';d.sections.forEach((s,i)=>{const real=s.cmds.filter(c=>!c.startsWith('('));const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':'';h+='<div class="cblock '+risk+'"><div class="chdr"><div class="chdr-l"><span style="margin-right:4px">'+(s.icon||'📄')+'</span>'+s.t+'</div><div style="display:flex;gap:6px;">'+(risk==='danger'?'<span class="cbadge danger">⚠️ service impact</span>':risk==='warn'?'<span class="cbadge caution">⚠️ config change</span>':'')+'<button class="copybtn" onclick="copyAll(this,\''+cur+'\','+i+')">Copy all</button></div></div><div class="cbody">'+(s.warn?'<div class="cdanger">⚠️ '+s.warn+'</div>':'')+'<div class="clines">'+s.cmds.map(c=>{if(c.startsWith('('))return'<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>\n';const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';return'<span style="color:'+col+'">'+esc(c)+'</span>\n';}).join('')+'</div>'+(s.note?'<div class="cnote">'+s.note+'</div>':'')+'</div></div>';});el.innerHTML=h;}
 
 function renderRef(el){let h='<div class="rgrid">';QREF.forEach((s,ci)=>{h+='<div class="cblock"><div class="chdr"><span style="font-weight:700;font-size:13px;">'+s.cat+'</span></div><div class="cbody">';s.cmds.forEach((c,si)=>{const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--br);"><span style="font-family:var(--mono);font-size:11px;color:'+col+';">'+esc(c)+'</span><button class="copybtn" style="margin-left:8px;" onclick="copyRef(this,'+ci+','+si+')">Copy</button></div>';});h+='</div></div>';});h+='</div>';el.innerHTML=h;}
+
+function renderAzureLearn(el){
+  const blocks=[
+    {t:'1. Login and choose subscription',tag:'Start here',kind:'caution',why:'This sets your working Azure context. It does not change Azure resources, but choosing the wrong tenant or subscription can make later commands dangerous.',cmds:[
+      {risk:'safe',cmd:'Connect-AzAccount',why:'Opens Microsoft login for Azure PowerShell.'},
+      {risk:'safe',cmd:'Get-AzSubscription | Select-Object Name,Id,TenantId,State',why:'Lists subscriptions you can access.'},
+      {risk:'caution',cmd:'Set-AzContext -Subscription "<SUBSCRIPTION_ID>"',why:'Selects where future PowerShell commands run.'},
+      {risk:'safe',cmd:'az login',why:'Opens Microsoft login for Azure CLI.'},
+      {risk:'safe',cmd:'az account list --output table',why:'Shows available Azure CLI subscriptions.'},
+      {risk:'caution',cmd:'az account set --subscription "<SUBSCRIPTION_ID>"',why:'Selects where future Azure CLI commands run.'}
+    ]},
+    {t:'2. Resource inventory',tag:'Discovery',kind:'read',why:'Use this when you enter an unfamiliar Azure environment. It gives you a map before touching anything.',cmds:[
+      {risk:'safe',cmd:'Get-AzResourceGroup | Select-Object ResourceGroupName,Location,ProvisioningState',why:'Shows resource groups and their regions.'},
+      {risk:'safe',cmd:'Get-AzResource | Select-Object Name,ResourceGroupName,ResourceType,Location',why:'Lists all resources with type and location.'},
+      {risk:'safe',cmd:'az group list --output table',why:'Azure CLI version of resource group discovery.'},
+      {risk:'safe',cmd:'az resource list --query "[].{name:name,group:resourceGroup,type:type,location:location}" --output table',why:'Compact resource inventory table.'}
+    ]},
+    {t:'3. Virtual network and subnet review',tag:'Networking',kind:'read',why:'Check address spaces, subnet names, route table links, and NSG links before troubleshooting connectivity.',cmds:[
+      {risk:'safe',cmd:'Get-AzVirtualNetwork | Select-Object Name,ResourceGroupName,Location,AddressSpace',why:'Lists VNets and CIDR ranges.'},
+      {risk:'safe',cmd:'Get-AzVirtualNetworkSubnetConfig -VirtualNetwork (Get-AzVirtualNetwork -Name "<VNET_NAME>" -ResourceGroupName "<RG>")',why:'Shows subnets inside one VNet.'},
+      {risk:'safe',cmd:'az network vnet list --output table',why:'Azure CLI VNet inventory.'},
+      {risk:'safe',cmd:'az network vnet subnet list --resource-group "<RG>" --vnet-name "<VNET_NAME>" --output table',why:'Lists subnet details for one VNet.'}
+    ]},
+    {t:'4. NSG rule inspection',tag:'Security',kind:'read',why:'NSG rules decide allowed and denied traffic. Lowest priority number wins first.',cmds:[
+      {risk:'safe',cmd:'Get-AzNetworkSecurityGroup -ResourceGroupName "<RG>" -Name "<NSG_NAME>"',why:'Loads one Network Security Group.'},
+      {risk:'safe',cmd:'Get-AzNetworkSecurityRuleConfig -NetworkSecurityGroup (Get-AzNetworkSecurityGroup -ResourceGroupName "<RG>" -Name "<NSG_NAME>") | Select-Object Name,Priority,Direction,Access,Protocol,SourceAddressPrefix,DestinationAddressPrefix,DestinationPortRange',why:'Shows readable NSG rule fields.'},
+      {risk:'safe',cmd:'az network nsg rule list --resource-group "<RG>" --nsg-name "<NSG_NAME>" --output table',why:'Azure CLI NSG rule table.'}
+    ]},
+    {t:'5. Effective routes and effective security rules',tag:'Troubleshoot',kind:'read',why:'Effective commands show what Azure actually applies to a NIC after subnet, NIC, and inherited settings are combined.',cmds:[
+      {risk:'safe',cmd:'az network nic show-effective-route-table --resource-group "<RG>" --name "<NIC_NAME>" --output table',why:'Shows real routes used by this NIC.'},
+      {risk:'safe',cmd:'az network nic list-effective-nsg --resource-group "<RG>" --name "<NIC_NAME>" --output table',why:'Shows final NSG rules applied to this NIC.'},
+      {risk:'safe',cmd:'Get-AzEffectiveRouteTable -NetworkInterfaceName "<NIC_NAME>" -ResourceGroupName "<RG>"',why:'PowerShell effective route table.'},
+      {risk:'safe',cmd:'Get-AzEffectiveNetworkSecurityGroup -NetworkInterfaceName "<NIC_NAME>" -ResourceGroupName "<RG>"',why:'PowerShell effective NSG view.'}
+    ]},
+    {t:'6. Test VM connectivity with Network Watcher',tag:'Diagnostics',kind:'read',why:'Use this to prove if Azure routing, NSGs, or platform paths block traffic before blaming the guest OS.',cmds:[
+      {risk:'safe',cmd:'az network watcher test-connectivity --source-resource "<SOURCE_VM_ID>" --dest-address "<DEST_IP_OR_FQDN>" --dest-port 443',why:'Tests a path from one Azure resource to an IP/FQDN and port.'},
+      {risk:'safe',cmd:'Test-AzNetworkWatcherConnectivity -NetworkWatcherName "<WATCHER_NAME>" -ResourceGroupName "<WATCHER_RG>" -SourceId "<SOURCE_VM_ID>" -DestinationAddress "<DEST_IP_OR_FQDN>" -DestinationPort 443',why:'PowerShell version of the same connectivity test.'}
+    ]},
+    {t:'7. Safe export before changes',tag:'Backup',kind:'read',why:'Save the current state before production changes. These commands read Azure and create local export files.',cmds:[
+      {risk:'safe',cmd:'Export-AzResourceGroup -ResourceGroupName "<RG>" -Path ".\\\\azure-export"',why:'Exports a resource group ARM template to a local folder.'},
+      {risk:'safe',cmd:'az group export --name "<RG>" > azure-export.json',why:'Exports a resource group template to a local JSON file.'},
+      {risk:'safe',cmd:'Get-AzResourceGroupDeployment -ResourceGroupName "<RG>" | Select-Object DeploymentName,Timestamp,ProvisioningState',why:'Shows recent deployments for rollback investigation.'},
+      {risk:'safe',cmd:'az deployment group list --resource-group "<RG>" --output table',why:'Azure CLI deployment history.'}
+    ]},
+    {t:'8. Preview and write commands',tag:'Change control',kind:'danger',why:'This section separates safe previews from real writes. Yellow commands preview impact. Red commands can change Azure resources.',cmds:[
+      {risk:'safe',cmd:'Get-AzResource | Export-Csv ".\\\\azure-inventory.csv" -NoTypeInformation',why:'Safe local inventory export.'},
+      {risk:'caution',cmd:'New-AzResourceGroupDeployment -ResourceGroupName "<RG>" -TemplateFile ".\\\\template.json" -WhatIf',why:'Previews template changes without applying them.'},
+      {risk:'caution',cmd:'az deployment group what-if --resource-group "<RG>" --template-file template.json',why:'Azure CLI what-if preview.'},
+      {risk:'write',cmd:'New-AzResourceGroupDeployment -ResourceGroupName "<RG>" -TemplateFile ".\\\\template.json"',why:'Writes changes from a template into Azure.'},
+      {risk:'write',cmd:'az deployment group create --resource-group "<RG>" --template-file template.json',why:'Azure CLI deployment that changes Azure resources.'}
+    ]}
+  ];
+  const riskMeta={safe:{label:'READ / SAVE',cls:'ro',color:'var(--g)'},caution:{label:'CAUTION',cls:'caution',color:'var(--y)'},write:{label:'WRITE',cls:'danger',color:'var(--r)'}};
+  const line=function(item){
+    const meta=riskMeta[item.risk]||riskMeta.safe;
+    return '<div style="display:grid;grid-template-columns:92px minmax(0,1fr);gap:10px;align-items:start;padding:9px 0;border-bottom:1px solid var(--br)">'
+      +'<span class="cbadge '+meta.cls+'" style="text-align:center;margin-top:2px">'+meta.label+'</span>'
+      +'<div style="min-width:0"><div style="font-family:var(--mono);font-size:12px;line-height:1.65;color:'+meta.color+';white-space:pre-wrap;word-break:break-word;background:#010409;border:1px solid var(--br);border-radius:6px;padding:8px 10px">'+esc(item.cmd)+'</div>'
+      +'<div style="font-size:12px;color:var(--t2);line-height:1.55;margin-top:5px">'+esc(item.why)+'</div></div></div>';
+  };
+  let h='<div class="sh"><span class="stitle">☁️ Microsoft Azure Scripting</span><span class="sev info">PowerShell · Azure CLI · Learning</span></div>';
+  h+='<div class="cnote" style="margin-bottom:14px">Practical Azure scripting patterns for network engineers: discovery first, prove effective config, then make guarded changes. These examples are templates, so replace placeholders like <code>&lt;RG&gt;</code>, <code>&lt;VNET_NAME&gt;</code>, and <code>&lt;SUBSCRIPTION_ID&gt;</code>.</div>';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"><span class="cbadge ro">green = read-only / local save</span><span class="cbadge caution">yellow = caution / context / preview</span><span class="cbadge danger">red = writes Azure changes</span></div>';
+  h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:14px">';
+  [
+    ['🧭','Order of work','Login → inventory → network map → effective rules → test path → change preview','az-block-0','Start with login'],
+    ['🔐','Safety habit','Check tenant and subscription before every session. Export before production changes.','az-block-6','Jump to safe export'],
+    ['🧰','Tools to learn','Az PowerShell for scripting objects, Azure CLI for quick terminal workflows, Bicep for repeatable builds.','az-learning-doc','Open learning document'],
+    ['🌐','Network focus','VNet, subnet, NSG, route table, NIC, public IP, load balancer, Azure Firewall, VPN gateway.','az-block-2','Jump to networking']
+  ].forEach(c=>{h+='<button class="cblock" onclick="azureJump(&quot;'+c[3]+'&quot;)" style="display:block;width:100%;text-align:left;cursor:pointer;border-color:var(--br);transition:border-color .15s,transform .15s"><div class="cbody" style="min-height:112px"><div style="font-size:22px;margin-bottom:6px">'+c[0]+'</div><div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:5px">'+c[1]+'</div><div style="font-size:12px;color:var(--t2);line-height:1.55">'+c[2]+'</div><div style="font-size:11px;color:var(--a);font-weight:700;margin-top:8px">'+c[4]+' →</div></div></button>';});
+  h+='</div>';
+  blocks.forEach((b,i)=>{
+    const risk=b.kind==='danger'?'danger':b.kind==='caution'?'warn':'';
+    const badge=b.kind==='danger'?'danger':b.kind==='caution'?'caution':'ro';
+    h+='<div class="cblock '+risk+'" id="az-block-'+i+'"><div class="chdr"><div class="chdr-l"><div class="snum">'+(i+1)+'</div>'+b.t+'</div><div style="display:flex;gap:6px"><span class="cbadge '+badge+'">'+b.tag+'</span><button class="copybtn" onclick="copyAzureBlock(this,'+i+')">Copy all</button></div></div><div class="cbody">';
+    if(b.kind==='danger') h+='<div class="cdanger">Red commands can change Azure resources. Use only after reviewing the green discovery and yellow preview commands.</div>';
+    else if(b.kind==='caution') h+='<div class="cwarn">Caution means the command changes your active context or previews changes. Verify tenant, subscription, and resource group.</div>';
+    h+='<div class="cnote" style="margin-bottom:10px">'+esc(b.why)+'</div>'+b.cmds.map(line).join('')+'</div></div>';
+  });
+  h+='<div class="cblock" id="az-learning-doc"><div class="chdr"><div class="chdr-l">🎓 Azure learning document</div><span class="cbadge ro">study guide</span></div><div class="cbody">';
+  h+='<div class="cnote" style="margin-bottom:12px">This mini-document explains what to learn and why it matters for a network/security engineer. Read one module, run the matching green commands above, then do the lab task.</div>';
+  const lessons=[
+    {w:'Module 1',t:'Azure structure: tenant, subscription, resource group',learn:'A tenant is the identity boundary. A subscription is the billing and management boundary. A resource group is a container for related resources. Most mistakes start when the active subscription is wrong.',doit:'Run the login/subscription commands. Write down the tenant ID, subscription name, and the resource groups you are allowed to see.',check:'You should be able to answer: where am I working, who owns it, and which resource group contains the workload?'},
+    {w:'Module 2',t:'Resource inventory and naming',learn:'Azure resources have types such as Microsoft.Network/virtualNetworks, Microsoft.Network/networkSecurityGroups, Microsoft.Compute/virtualMachines. Good troubleshooting starts by listing types and locations.',doit:'Run the inventory commands and group resources by ResourceGroupName and Location.',check:'Look for resources spread across unexpected regions or names that do not match the application.'},
+    {w:'Module 3',t:'VNets, subnets, and IP planning',learn:'A VNet is the private network boundary. Subnets divide address space and are where NSGs, route tables, and workloads attach. Overlapping CIDR ranges break peering and VPN designs.',doit:'List VNets and subnets. Compare address spaces with your on-premises networks.',check:'Confirm no overlap with branch, datacenter, VPN, or FortiGate protected networks.'},
+    {w:'Module 4',t:'NSGs and effective security',learn:'NSGs are stateful packet filters. They can attach to a subnet or NIC. The effective NSG view tells you the final result after all attached rules are combined.',doit:'Inspect NSG rules, then check effective NSG on the VM NIC.',check:'Find the rule that allows or denies the exact source, destination, protocol, and port.'},
+    {w:'Module 5',t:'Routes and traffic path',learn:'Azure route selection uses system routes, user-defined routes, BGP routes, and special next hops like VirtualAppliance. Effective routes show the real path from a NIC.',doit:'Run effective route table commands on the source VM NIC.',check:'Confirm whether traffic goes directly, to a VPN gateway, to Azure Firewall, or to a FortiGate/NVA.'},
+    {w:'Module 6',t:'Network Watcher diagnostics',learn:'Network Watcher helps test connectivity without guessing. It can show if traffic is blocked by NSG, routing, or platform path.',doit:'Run a test-connectivity check from a source VM to a destination IP/FQDN and port.',check:'Read the hop/result details and compare them with your expected path.'},
+    {w:'Module 7',t:'Safe changes and rollback thinking',learn:'Export first, preview with what-if, then apply. Green commands read or save locally. Yellow commands preview or change context. Red commands write to Azure.',doit:'Export a resource group and run a what-if deployment before any create/update command.',check:'If you cannot explain the what-if output, do not run the red write command yet.'},
+    {w:'Lab',t:'Build a small hub-spoke practice design',learn:'A useful beginner lab is one hub VNet, one spoke VNet, one VM, one NSG, and one route table. Later you can add Azure Firewall or a FortiGate NVA.',doit:'Create or use a test environment only. Allow one port with NSG, deny another, then prove both results with Network Watcher.',check:'You understand the relationship between VNet, subnet, NIC, NSG, route table, and effective state.'}
+  ];
+  lessons.forEach(m=>{
+    h+='<div style="display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--br)">'
+      +'<div><span class="cbadge ro" style="display:block;text-align:center">'+m.w+'</span></div>'
+      +'<div style="min-width:0"><div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:6px">'+m.t+'</div>'
+      +'<div style="font-size:12px;color:var(--t2);line-height:1.65"><strong style="color:var(--t)">Learn:</strong> '+m.learn+'</div>'
+      +'<div style="font-size:12px;color:var(--t2);line-height:1.65;margin-top:5px"><strong style="color:var(--t)">Practice:</strong> '+m.doit+'</div>'
+      +'<div style="font-size:12px;color:var(--t2);line-height:1.65;margin-top:5px"><strong style="color:var(--t)">Check yourself:</strong> '+m.check+'</div></div></div>';
+  });
+  h+='</div></div>';
+  el.innerHTML=h;
+  window.AZURE_BLOCKS=blocks.map(b=>b.cmds.map(c=>c.cmd).join('\n'));
+}
+function copyAzureBlock(btn,idx){navigator.clipboard.writeText((window.AZURE_BLOCKS||[])[idx]||'').then(()=>{btn.textContent='✓ Copied';setTimeout(()=>btn.textContent='Copy',1200);});}
+function azureJump(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
 
 function renderAI(el){
   let msgs='';
@@ -4190,31 +4553,49 @@ function renderMultiVendorTab(el){
   if(!document.getElementById('mvCSS')){
     const s=document.createElement('style');s.id='mvCSS';
     s.textContent=`
-      .mv-wrap{display:flex;flex-direction:column;height:100%;min-height:0}
-      .mv-vendor-tabs{display:flex;gap:6px;padding:10px 14px 0;flex-shrink:0;border-bottom:1px solid var(--br);background:var(--b2)}
+      .mv-wrap{display:flex;flex-direction:column;min-height:100%;overflow-y:auto;background:var(--bg)}
+      .mv-vendor-tabs{display:flex;gap:6px;padding:10px 14px 0;flex-shrink:0;border-bottom:1px solid var(--br);background:var(--b2);overflow-x:auto}
       .mv-vtab{padding:7px 18px;border-radius:8px 8px 0 0;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;border-bottom:none;transition:all .15s;font-family:var(--mono);white-space:nowrap}
       .mv-vtab:not(.active){color:var(--t2);background:transparent}.mv-vtab:not(.active):hover{color:var(--t);background:var(--b3)}
       .mv-vtab.active{color:var(--t);background:var(--bg);border-color:var(--br)}
-      .mv-body{display:grid;grid-template-columns:200px 1fr;flex:1;min-height:0;overflow:hidden}
-      .mv-cats{overflow-y:auto;background:var(--b2);border-right:1px solid var(--br);padding:8px 6px}
+      .mv-ref{margin:14px 16px 18px;border:1px solid var(--br);border-radius:8px;overflow:hidden;background:var(--b2)}
+      .mv-ref-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--br);background:linear-gradient(180deg,var(--b2),var(--shape3))}
+      .mv-ref-title{font-size:14px;font-weight:800;color:var(--t)}
+      .mv-ref-sub{font-size:11px;color:var(--t2);line-height:1.5;margin-top:3px}
+      .mv-ref-legend{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+      .mv-body{display:grid;grid-template-columns:220px 1fr;min-height:520px;overflow:visible}
+      .mv-cats{overflow-y:auto;background:var(--b2);border-right:1px solid var(--br);padding:10px 8px;max-height:calc(100vh - 260px);position:sticky;top:0}
       .mv-cat{padding:7px 12px;border-radius:7px;font-size:11.5px;color:var(--t2);cursor:pointer;margin-bottom:2px;transition:all .12s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .mv-cat:hover{background:var(--b3);color:var(--t)}.mv-cat.active{background:rgba(29,158,117,.12);color:var(--a);font-weight:700;border-left:2px solid var(--a);padding-left:10px}
       .mv-cat-group{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;padding:10px 12px 4px;font-family:var(--mono)}
-      .mv-cmds{overflow-y:auto;padding:14px 16px;background:var(--bg)}
-      .mv-cmd-row{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:8px;margin-bottom:4px;border:1px solid transparent;transition:border-color .12s}
-      .mv-cmd-row:hover{border-color:rgba(29,158,117,.2);background:rgba(29,158,117,.03)}
+      .mv-cmds{overflow:visible;padding:14px 16px;background:var(--bg)}
+      .mv-cmd-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px;padding:10px 12px;border-radius:8px;margin-bottom:8px;border:1px solid var(--br);background:var(--b2);transition:border-color .12s,transform .12s}
+      .mv-cmd-row:hover{border-color:rgba(29,158,117,.35);background:color-mix(in srgb,var(--b2) 88%,var(--a));transform:translateY(-1px)}
       .mv-cmd-left{flex:1;min-width:0}
-      .mv-cmd-code{font-family:var(--mono);font-size:12px;font-weight:600;margin-bottom:3px}
-      .mv-cmd-exp{font-size:11px;color:var(--t2);line-height:1.5}
-      .mv-cmd-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
+      .mv-cmd-code{font-family:var(--mono);font-size:12px;font-weight:700;margin-bottom:5px;line-height:1.55;word-break:break-word}
+      .mv-cmd-exp{font-size:11.5px;color:var(--t2);line-height:1.55}
+      .mv-cmd-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
       .mv-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;font-family:var(--mono);white-space:nowrap}
       .mv-badge.ro{background:rgba(63,185,80,.1);color:#3fb950;border:1px solid rgba(63,185,80,.2)}
       .mv-badge.caution{background:rgba(210,153,34,.1);color:#d29922;border:1px solid rgba(210,153,34,.2)}
       .mv-badge.danger{background:rgba(248,81,73,.1);color:#f85149;border:1px solid rgba(248,81,73,.2)}
       .mv-copy{font-size:9px;padding:2px 9px;border-radius:10px;border:1px solid var(--br);background:var(--b2);color:var(--t3);cursor:pointer;font-family:var(--mono);transition:all .12s}
       .mv-copy:hover{border-color:var(--a);color:var(--a)}
-      .mv-cat-hdr{font-size:12px;font-weight:700;color:var(--t);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--br);font-family:var(--mono)}
+      .mv-cat-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:800;color:var(--t);margin-bottom:12px;padding:10px 12px;border:1px solid var(--br);border-radius:8px;background:var(--b2);font-family:var(--mono)}
       .mv-count{font-size:10px;color:var(--t3);margin-left:8px;font-weight:400}
+      .mv-learn{padding:14px 16px;background:var(--bg);border-bottom:1px solid var(--br)}
+      .mv-learn-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+      .mv-learn-title{font-size:14px;font-weight:800;color:var(--t)}
+      .mv-learn-sub{font-size:11px;color:var(--t2);line-height:1.55;margin-top:3px}
+      .mv-track-tabs{display:flex;gap:6px;flex-wrap:wrap}
+      .mv-track-tab{font-size:10px;padding:5px 10px;border-radius:20px;border:1px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;font-family:var(--mono)}
+      .mv-track-tab.active{border-color:var(--a);color:var(--a);background:rgba(29,158,117,.1);font-weight:700}
+      .mv-step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--br)}
+      .mv-step-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(29,158,117,.14);color:var(--a);font-size:11px;font-weight:800;font-family:var(--mono)}
+      .mv-step-title{font-size:12px;font-weight:800;color:var(--t);margin-bottom:5px}
+      .mv-step-exp{font-size:11.5px;color:var(--t2);line-height:1.55;margin-bottom:7px}
+      .mv-step-code{font-family:var(--mono);font-size:11.5px;line-height:1.65;white-space:pre-wrap;word-break:break-word;background:#010409;border:1px solid var(--br);border-radius:6px;padding:8px 10px}
+      .mv-prompt{color:var(--bl);font-weight:700}
     `;
     document.head.appendChild(s);
   }
@@ -5272,6 +5653,7 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 };
 
   let curV='cisco', curC=null;
+  let mvTrack='switch';
 
   function getFirstCat(vid){ return Object.keys(MV_DATA[vid].cats)[0]; }
 
@@ -5303,7 +5685,7 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 
   function cmdsHTML(vid, cat){
     const cmds=MV_DATA[vid].cats[cat]||[];
-    let h=`<div class="mv-cat-hdr">${cat}<span class="mv-count">${cmds.length} commands</span></div>`;
+    let h=`<div class="mv-cat-hdr"><span>${cat}</span><span class="mv-count">${cmds.length} commands</span></div>`;
     for(const [cmd,exp,safety] of cmds){
       const col=safety==='ro'?'var(--g)':safety==='caution'?'var(--y)':'var(--r)';
       h+=`<div class="mv-cmd-row">
@@ -5320,6 +5702,152 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
     return h;
   }
 
+  const LEARN={
+    cisco:{name:'Cisco IOS / IOS-XE',switch:[
+      ['Enter configuration mode','Move from EXEC mode into global configuration so the next commands change the running configuration.','configure terminal','caution'],
+      ['Set identity and management basics','Set hostname, DNS lookup behavior, domain name, and an encrypted enable secret.','hostname SW-ACCESS-01\nno ip domain-lookup\nip domain-name lab.local\nenable secret <ENABLE_SECRET>','caution'],
+      ['Create VLANs and management SVI','Create user/server VLANs, then add an SVI so the switch can be managed by IP.','vlan 10\n name USERS\nvlan 20\n name SERVERS\ninterface vlan 10\n ip address 10.10.10.2 255.255.255.0\n no shutdown','caution'],
+      ['Configure access and trunk ports','Access ports carry one VLAN. Trunks carry multiple VLANs between switches, firewalls, or routers.','interface GigabitEthernet1/0/10\n description USER-PORT\n switchport mode access\n switchport access vlan 10\n spanning-tree portfast\n spanning-tree bpduguard enable\ninterface GigabitEthernet1/0/48\n description UPLINK\n switchport mode trunk\n switchport trunk allowed vlan 10,20','caution'],
+      ['Add default gateway and SSH admin','Layer 2 switches need a default gateway for management traffic. SSH gives secure remote CLI access.','ip default-gateway 10.10.10.1\nusername admin privilege 15 secret <PASSWORD>\ncrypto key generate rsa modulus 2048\nip ssh version 2\nline vty 0 4\n login local\n transport input ssh','caution'],
+      ['Verify and save','Check VLANs, trunks, management IP, neighbors, then save startup configuration.','show vlan brief\nshow interfaces trunk\nshow ip interface brief\nshow cdp neighbors\ncopy running-config startup-config','ro']
+    ],router:[
+      ['Enter configuration mode','Start from a clean global configuration context.','configure terminal','caution'],
+      ['Set hostname and secure access','Basic identity and SSH management for a router or L3 switch.','hostname RTR-EDGE-01\nno ip domain-lookup\nip domain-name lab.local\nusername admin privilege 15 secret <PASSWORD>\ncrypto key generate rsa modulus 2048\nip ssh version 2','caution'],
+      ['Configure routed interfaces','Assign IPs to WAN/LAN routed interfaces and bring them up.','interface GigabitEthernet0/0\n description WAN\n ip address <WAN_IP> <WAN_MASK>\n no shutdown\ninterface GigabitEthernet0/1\n description LAN\n ip address <LAN_GW_IP> <LAN_MASK>\n no shutdown','caution'],
+      ['Add routing','Use a default route for internet/upstream and specific routes for internal networks.','ip route 0.0.0.0 0.0.0.0 <UPSTREAM_GW>\nip route <REMOTE_NET> <MASK> <NEXT_HOP>','caution'],
+      ['Optional dynamic routing','Advertise connected networks with OSPF when multiple routers exchange routes.','router ospf 10\n router-id <ROUTER_ID>\n network <LAN_NET> <WILDCARD> area 0\n network <TRANSIT_NET> <WILDCARD> area 0','caution'],
+      ['Verify and save','Confirm interfaces, routes, neighbors, and reachability before saving.','show ip interface brief\nshow ip route\nshow ip ospf neighbor\nping <DESTINATION> source <SOURCE_INTERFACE>\ncopy running-config startup-config','ro']
+    ]},
+    aruba:{name:'ArubaOS-CX',switch:[
+      ['Enter configuration mode','ArubaOS-CX uses a Cisco-like config mode but different interface and VLAN syntax.','configure terminal','caution'],
+      ['Set identity and admin access','Name the switch, create an admin user, and enable SSH management.','hostname SW-ACCESS-01\nuser admin group administrators password plaintext <PASSWORD>\nssh server vrf mgmt','caution'],
+      ['Create VLANs and SVI','Create VLANs and add an IP interface for management or routing.','vlan 10\n name USERS\nvlan 20\n name SERVERS\ninterface vlan 10\n ip address 10.10.10.2/24\n no shutdown','caution'],
+      ['Configure access and trunk ports','Use access VLAN for endpoints and trunk allowed VLANs for uplinks.','interface 1/1/10\n description USER-PORT\n no shutdown\n vlan access 10\n spanning-tree port-type admin-edge\n spanning-tree bpdu-guard\ninterface 1/1/48\n description UPLINK\n no shutdown\n vlan trunk native 10\n vlan trunk allowed 10,20','caution'],
+      ['Add default route or gateway','If routing is enabled, use an IP route. For management VRF, use the management gateway design.','ip route 0.0.0.0/0 <NEXT_HOP>','caution'],
+      ['Verify and save','Review VLANs, interfaces, LLDP neighbors, and write memory.','show vlan\nshow interface brief\nshow lldp neighbor-info\nshow ip route\nwrite memory','ro']
+    ],router:[
+      ['Enter configuration and enable routing','Prepare the ArubaOS-CX device for Layer 3 routing.','configure terminal\nip routing','caution'],
+      ['Configure routed/SVI interfaces','Use VLAN interfaces for gateway routing, or routed physical interfaces where supported.','vlan 10\n name USERS\ninterface vlan 10\n ip address 10.10.10.1/24\n no shutdown\ninterface vlan 20\n ip address 10.10.20.1/24\n no shutdown','caution'],
+      ['Create static routes','Add upstream default route and any remote network routes.','ip route 0.0.0.0/0 <UPSTREAM_GW>\nip route <REMOTE_PREFIX> <NEXT_HOP>','caution'],
+      ['Optional OSPF','Advertise local prefixes into OSPF for routed campus designs.','router ospf 10\n router-id <ROUTER_ID>\n area 0.0.0.0\ninterface vlan 10\n ip ospf 10 area 0.0.0.0','caution'],
+      ['Secure management','Use local admin/SSH and avoid insecure management exposure.','ssh server vrf default\nuser admin group administrators password plaintext <PASSWORD>','caution'],
+      ['Verify and save','Check route table, OSPF neighbors, and reachability.','show ip route\nshow ip ospf neighbor\nping <DESTINATION> source <SOURCE_IP>\nwrite memory','ro']
+    ]},
+    huawei:{name:'Huawei VRP',switch:[
+      ['Enter system view','Huawei uses system-view for configuration and display commands for show output.','system-view','caution'],
+      ['Set identity and management','Set hostname, create VLAN interface, and prepare management IP.','sysname SW-ACCESS-01\nvlan 10\ndescription USERS\ninterface Vlanif10\n ip address 10.10.10.2 255.255.255.0','caution'],
+      ['Configure access ports','Set endpoint-facing ports as access and place them in the correct VLAN.','interface GigabitEthernet0/0/10\n description USER-PORT\n port link-type access\n port default vlan 10\n stp edged-port enable','caution'],
+      ['Configure trunk uplink','Trunks carry multiple VLANs toward aggregation, router, or firewall.','interface GigabitEthernet0/0/48\n description UPLINK\n port link-type trunk\n port trunk allow-pass vlan 10 20\n port trunk pvid vlan 10','caution'],
+      ['Secure SSH access','Create local user and allow SSH on VTY lines.','aaa\n local-user admin password cipher <PASSWORD>\n local-user admin privilege level 15\n local-user admin service-type ssh\nuser-interface vty 0 4\n authentication-mode aaa\n protocol inbound ssh','caution'],
+      ['Verify and save','Display VLAN, interface, neighbors, then save.','display vlan\ndisplay ip interface brief\ndisplay lldp neighbor brief\nsave','ro']
+    ],router:[
+      ['Enter system view','Start global configuration.','system-view','caution'],
+      ['Set identity and routed interfaces','Configure router name and interface IPs.','sysname RTR-EDGE-01\ninterface GigabitEthernet0/0/0\n description WAN\n ip address <WAN_IP> <MASK>\n undo shutdown\ninterface GigabitEthernet0/0/1\n description LAN\n ip address <LAN_GW_IP> <MASK>\n undo shutdown','caution'],
+      ['Add static routing','Default route sends unknown destinations upstream.','ip route-static 0.0.0.0 0.0.0.0 <UPSTREAM_GW>\nip route-static <REMOTE_NET> <MASK> <NEXT_HOP>','caution'],
+      ['Optional OSPF','Create OSPF process, area, and advertise networks.','ospf 10 router-id <ROUTER_ID>\n area 0.0.0.0\n  network <LAN_NET> <WILDCARD>','caution'],
+      ['Secure management','Use AAA local users and SSH-only VTY access.','aaa\n local-user admin password cipher <PASSWORD>\n local-user admin privilege level 15\n local-user admin service-type ssh\nuser-interface vty 0 4\n authentication-mode aaa\n protocol inbound ssh','caution'],
+      ['Verify and save','Confirm routes, OSPF peers, and connectivity.','display ip routing-table\ndisplay ospf peer\nping -a <SOURCE_IP> <DESTINATION>\nsave','ro']
+    ]},
+    fortigate:{name:'FortiGate / FortiOS',switch:[
+      ['Set system basics','FortiGate is not a traditional switch, but you can build VLAN interfaces and LAN segmentation.','config system global\n set hostname FGT-EDGE-01\nend','caution'],
+      ['Create VLAN interfaces','Create VLAN subinterfaces on a physical or aggregate interface.','config system interface\n edit VLAN10-USERS\n  set interface port2\n  set vlanid 10\n  set ip 10.10.10.1 255.255.255.0\n  set allowaccess ping\n next\n edit VLAN20-SERVERS\n  set interface port2\n  set vlanid 20\n  set ip 10.10.20.1 255.255.255.0\n next\nend','caution'],
+      ['Create address objects','Address objects make policies readable and reusable.','config firewall address\n edit NET-USERS\n  set subnet 10.10.10.0 255.255.255.0\n next\n edit NET-SERVERS\n  set subnet 10.10.20.0 255.255.255.0\n next\nend','caution'],
+      ['Allow traffic by policy','FortiGate denies by default. Add explicit firewall policies.','config firewall policy\n edit 0\n  set name USERS-TO-INTERNET\n  set srcintf VLAN10-USERS\n  set dstintf wan1\n  set srcaddr NET-USERS\n  set dstaddr all\n  set action accept\n  set schedule always\n  set service ALL\n  set nat enable\n next\nend','caution'],
+      ['Configure default route','Default route points toward ISP or upstream firewall/router.','config router static\n edit 1\n  set dst 0.0.0.0 0.0.0.0\n  set gateway <UPSTREAM_GW>\n  set device wan1\n next\nend','caution'],
+      ['Verify','Check interfaces, routes, policies, and sessions.','get system interface\nget router info routing-table all\nshow firewall policy\ndiagnose sys session list','ro']
+    ],router:[
+      ['Create routed interfaces','Use physical, VLAN, or aggregate interfaces as routing boundaries.','config system interface\n edit port1\n  set alias WAN\n  set ip <WAN_IP> <MASK>\n  set allowaccess ping https ssh\n next\n edit port2\n  set alias LAN\n  set ip <LAN_GW_IP> <MASK>\n  set allowaccess ping\n next\nend','caution'],
+      ['Add routes','Static routes define next hops. Dynamic routing can be added later.','config router static\n edit 1\n  set dst 0.0.0.0 0.0.0.0\n  set gateway <UPSTREAM_GW>\n  set device port1\n next\nend','caution'],
+      ['Create security zones or objects','Objects and zones keep policies clean as the design grows.','config firewall address\n edit LAN-NET\n  set subnet <LAN_NET> <MASK>\n next\nend','caution'],
+      ['Create firewall policy','Routing alone is not enough; policy must allow the traffic.','config firewall policy\n edit 0\n  set name LAN-TO-WAN\n  set srcintf port2\n  set dstintf port1\n  set srcaddr LAN-NET\n  set dstaddr all\n  set action accept\n  set schedule always\n  set service ALL\n  set nat enable\n next\nend','caution'],
+      ['Optional OSPF/BGP','Use dynamic routing only when needed for larger networks.','config router ospf\n set router-id <ROUTER_ID>\n config area\n  edit 0.0.0.0\n  next\n end\n config network\n  edit 1\n   set prefix <LAN_PREFIX>\n  next\n end\nend','caution'],
+      ['Verify','Confirm route lookup, policy match, and packet flow.','get router info routing-table all\ndiagnose ip route get <DESTINATION>\ndiagnose firewall iprope lookup <SRC> <DST> 6 0 443 <INTF>','ro']
+    ]}
+  };
+  LEARN.cisco_sw=LEARN.cisco;
+  LEARN.cisco_nxos={name:'Cisco Nexus NX-OS',switch:LEARN.cisco.switch.map(x=>x),router:LEARN.cisco.router.map(x=>x)};
+  LEARN.juniper={name:'Juniper Junos',switch:[
+    ['Enter configuration mode','Junos uses candidate configuration. Changes are not active until commit.','configure','caution'],
+    ['Set identity and root/admin access','Set hostname and a local admin account.','set system host-name SW-ACCESS-01\nset system login user admin class super-user authentication plain-text-password','caution'],
+    ['Create VLANs and IRB gateway','VLANs define L2 domains. IRB interfaces provide L3 gateway addresses.','set vlans USERS vlan-id 10\nset vlans USERS l3-interface irb.10\nset interfaces irb unit 10 family inet address 10.10.10.1/24','caution'],
+    ['Configure access and trunk ports','Access ports carry one VLAN; trunks carry multiple VLANs.','set interfaces ge-0/0/10 unit 0 family ethernet-switching interface-mode access\nset interfaces ge-0/0/10 unit 0 family ethernet-switching vlan members USERS\nset interfaces ge-0/0/47 unit 0 family ethernet-switching interface-mode trunk\nset interfaces ge-0/0/47 unit 0 family ethernet-switching vlan members [ USERS SERVERS ]','caution'],
+    ['Preview and commit','Always compare before committing Junos changes.','show | compare\ncommit confirmed 5\ncommit','caution'],
+    ['Verify','Check VLANs, interfaces, routes, and commit history.','show vlans\nshow interfaces terse\nshow route\nshow system commit','ro']
+  ],router:[
+    ['Enter candidate configuration','Junos changes are staged before commit.','configure','caution'],
+    ['Configure routed interfaces','Set WAN/LAN interface IP addresses.','set interfaces ge-0/0/0 unit 0 family inet address <WAN_IP>/<PREFIX>\nset interfaces ge-0/0/1 unit 0 family inet address <LAN_GW_IP>/<PREFIX>','caution'],
+    ['Add static routes','Default route sends unknown destinations upstream.','set routing-options static route 0.0.0.0/0 next-hop <UPSTREAM_GW>\nset routing-options static route <REMOTE_PREFIX> next-hop <NEXT_HOP>','caution'],
+    ['Optional OSPF','Enable OSPF on selected interfaces.','set protocols ospf area 0.0.0.0 interface ge-0/0/1.0\nset protocols ospf area 0.0.0.0 interface ge-0/0/0.0 passive','caution'],
+    ['Preview and commit safely','commit confirmed auto-rolls back unless confirmed.','show | compare\ncommit confirmed 5\ncommit','caution'],
+    ['Verify','Review interface state, route table, and neighbors.','show interfaces terse\nshow route\nshow ospf neighbor\nping <DESTINATION> source <SOURCE_IP>','ro']
+  ]};
+  LEARN.paloalto={name:'Palo Alto PAN-OS',switch:LEARN.fortigate.switch,router:LEARN.fortigate.router};
+  LEARN.mikrotik={name:'MikroTik RouterOS',switch:[
+    ['Set identity','Name the device and create a clean baseline.','/system identity set name=SW-ACCESS-01','caution'],
+    ['Create bridge and VLAN filtering','RouterOS switching commonly uses a bridge with VLAN filtering.','/interface bridge add name=br-lan vlan-filtering=yes','caution'],
+    ['Add access and trunk ports','Add ports to bridge and define PVID for access ports.','/interface bridge port add bridge=br-lan interface=ether10 pvid=10\n/interface bridge port add bridge=br-lan interface=ether1','caution'],
+    ['Define VLAN table','Declare which VLANs are tagged/untagged on which ports.','/interface bridge vlan add bridge=br-lan vlan-ids=10 tagged=br-lan,ether1 untagged=ether10','caution'],
+    ['Add management IP','Put management IP on VLAN interface.','/interface vlan add name=vlan10 interface=br-lan vlan-id=10\n/ip address add address=10.10.10.2/24 interface=vlan10','caution'],
+    ['Verify and export','Check bridge/VLAN state and export config.','/interface bridge port print\n/interface bridge vlan print\n/ip address print\n/export','ro']
+  ],router:[
+    ['Set identity and IPs','Configure WAN/LAN IP addresses.','/system identity set name=RTR-EDGE-01\n/ip address add address=<WAN_IP>/<PREFIX> interface=ether1\n/ip address add address=<LAN_GW_IP>/<PREFIX> interface=ether2','caution'],
+    ['Add default route','Point default traffic to upstream gateway.','/ip route add dst-address=0.0.0.0/0 gateway=<UPSTREAM_GW>','caution'],
+    ['Configure NAT','Masquerade LAN traffic going out WAN.','/ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade','caution'],
+    ['Add basic firewall filter','Allow established traffic and drop unwanted inbound WAN traffic.','/ip firewall filter add chain=input connection-state=established,related action=accept\n/ip firewall filter add chain=input in-interface=ether1 action=drop','caution'],
+    ['Optional DHCP server','Provide addresses to LAN clients.','/ip pool add name=pool-lan ranges=10.10.10.100-10.10.10.200\n/ip dhcp-server add name=dhcp-lan interface=ether2 address-pool=pool-lan disabled=no','caution'],
+    ['Verify','Check routes, NAT, firewall, and connectivity.','/ip route print\n/ip firewall nat print\n/ip firewall filter print\n/ping 8.8.8.8','ro']
+  ]};
+  LEARN.hp_procurve={name:'HP / Aruba ProCurve',switch:LEARN.aruba.switch,router:LEARN.aruba.router};
+
+  function mvLearnHTML(vid){
+    const p=LEARN[vid]||LEARN.cisco;
+    const steps=(mvTrack==='router'?p.router:p.switch)||p.switch;
+    const host=mvTrack==='router'?'Router':'Switch';
+    function promptLine(v,line,prev){
+      const raw=line.trim();
+      if(!raw) return '';
+      if(v==='huawei'){
+        if(raw==='system-view') return '<span class="mv-prompt">&lt;'+host+'&gt;</span> '+esc(raw);
+        if(raw.startsWith('interface ')) return '<span class="mv-prompt">['+host+']</span> '+esc(raw);
+        if(prev&&prev.trim().startsWith('interface ')) return '<span class="mv-prompt">['+host+'-'+prev.trim().split(' ')[1]+']</span> '+esc(raw);
+        return '<span class="mv-prompt">['+host+']</span> '+esc(raw);
+      }
+      if(v==='juniper'){
+        if(raw==='configure') return '<span class="mv-prompt">admin@'+host+'&gt;</span> '+esc(raw);
+        if(raw.startsWith('show ')||raw.startsWith('commit')||raw.startsWith('set ')||raw.startsWith('delete ')) return '<span class="mv-prompt">[edit]\nadmin@'+host+'#</span> '+esc(raw);
+        return '<span class="mv-prompt">admin@'+host+'#</span> '+esc(raw);
+      }
+      if(v==='mikrotik'){
+        return '<span class="mv-prompt">[admin@'+host+'] &gt;</span> '+esc(raw);
+      }
+      if(v==='fortigate'||v==='paloalto'){
+        if(raw.startsWith('config ')) return '<span class="mv-prompt">'+host+' #</span> '+esc(raw);
+        if(raw.startsWith('edit ')) return '<span class="mv-prompt">'+host+' ('+(prev&&prev.startsWith('config ')?prev.replace('config ',''):'config')+') #</span> '+esc(raw);
+        if(raw==='next'||raw==='end'||raw.startsWith('set ')||raw.startsWith('show ')||raw.startsWith('get ')||raw.startsWith('diagnose ')) return '<span class="mv-prompt">'+host+' #</span> '+esc(raw);
+        return '<span class="mv-prompt">'+host+' #</span> '+esc(raw);
+      }
+      const configStarters=/^(hostname|no ip|ip domain|enable secret|vlan |name |interface |description |switchport |spanning-tree |ip address|no shutdown|shutdown|username |crypto |line |login|transport |ip route|router |network |neighbor |area |user |ssh |lag |lacp |mtu |ip routing)/;
+      if(raw==='configure terminal') return '<span class="mv-prompt">'+host+'#</span> '+esc(raw);
+      if(raw.startsWith('show ')||raw.startsWith('copy ')||raw.startsWith('write ')||raw.startsWith('ping ')) return '<span class="mv-prompt">'+host+'#</span> '+esc(raw);
+      if(prev&&prev.trim().startsWith('interface ')) return '<span class="mv-prompt">'+host+'(config-if)#</span> '+esc(raw);
+      if(prev&&prev.trim().startsWith('router ')) return '<span class="mv-prompt">'+host+'(config-router)#</span> '+esc(raw);
+      if(configStarters.test(raw)) return '<span class="mv-prompt">'+host+'(config)#</span> '+esc(raw);
+      return '<span class="mv-prompt">'+host+'#</span> '+esc(raw);
+    }
+    function sessionHTML(v,code){
+      const lines=String(code).split('\n');
+      return lines.map((ln,i)=>promptLine(v,ln,lines[i-1]||'')).join('\n');
+    }
+    let h=`<div class="mv-learn"><div class="mv-learn-head"><div><div class="mv-learn-title">🎓 ${p.name} learning: ${mvTrack==='router'?'Router / Layer 3 setup':'Switch setup'} from start to finish</div><div class="mv-learn-sub">Follow these steps in order. Green rows are verification/save, yellow rows change configuration, red rows are destructive or disruptive.</div></div><div class="mv-track-tabs"><button class="mv-track-tab ${mvTrack==='switch'?'active':''}" onclick="mvSetTrack('switch')">Switch setup</button><button class="mv-track-tab ${mvTrack==='router'?'active':''}" onclick="mvSetTrack('router')">Router / L3 setup</button></div></div>`;
+    steps.forEach((s,i)=>{
+      const col=s[3]==='ro'?'var(--g)':s[3]==='danger'?'var(--r)':'var(--y)';
+      const badge=s[3]==='ro'?'safe':s[3];
+      h+=`<div class="mv-step"><div class="mv-step-num">${i+1}</div><div><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><div class="mv-step-title">${s[0]}</div><span class="mv-badge ${s[3]}">${badge}</span></div><div class="mv-step-exp">${s[1]}</div><div class="mv-step-code" style="color:${col}">${sessionHTML(vid,s[2])}</div></div></div>`;
+    });
+    h+='</div>';
+    return h;
+  }
+
   function render(){
     const c=curC||getFirstCat(curV);
     el.innerHTML=`
@@ -5329,9 +5857,16 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
           <div class="mv-vendor-tabs" id="mvVTabs" style="flex:1">${vendorTabsHTML()}</div>
         </div>
         <div id="mvCatOverlay" onclick="mvCloseCats()" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:498"></div>
-        <div class="mv-body">
-          <div class="mv-cats" id="mvCats">${catsHTML(curV)}</div>
-          <div class="mv-cmds" id="mvCmds">${cmdsHTML(curV,c)}</div>
+        <div id="mvLearn">${mvLearnHTML(curV)}</div>
+        <div class="mv-ref">
+          <div class="mv-ref-head">
+            <div><div class="mv-ref-title">Command reference</div><div class="mv-ref-sub">Pick a category on the left. Commands are grouped by purpose and color-coded by operational risk.</div></div>
+            <div class="mv-ref-legend"><span class="mv-badge ro">safe</span><span class="mv-badge caution">caution</span><span class="mv-badge danger">danger</span></div>
+          </div>
+          <div class="mv-body">
+            <div class="mv-cats" id="mvCats">${catsHTML(curV)}</div>
+            <div class="mv-cmds" id="mvCmds">${cmdsHTML(curV,c)}</div>
+          </div>
         </div>
       </div>`;
   }
@@ -5367,8 +5902,15 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
   window.mvSetV=function(vid){
     curV=vid; curC=getFirstCat(vid);
     document.getElementById('mvVTabs').innerHTML=vendorTabsHTML();
+    document.getElementById('mvLearn').innerHTML=mvLearnHTML(vid);
     document.getElementById('mvCats').innerHTML=catsHTML(vid);
     document.getElementById('mvCmds').innerHTML=cmdsHTML(vid,curC);
+  };
+
+  window.mvSetTrack=function(track){
+    mvTrack=track;
+    const learn=document.getElementById('mvLearn');
+    if(learn) learn.innerHTML=mvLearnHTML(curV);
   };
 
   window.mvSetC=function(cat,vid){
@@ -5754,7 +6296,7 @@ function renderSubnetCalc(el){
       +'</div>'
 
       // Octet labels
-      +'<div style="font-family:\'Courier New\',monospace;font-size:10px;color:#30363d;margin-bottom:6px;white-space:nowrap">'
+      +'<div style="font-family:\'Courier New\',monospace;font-size:10px;color:var(--t2);margin-bottom:6px;white-space:nowrap">'
       +'<span style="display:inline-block;width:66px"></span>'
       +'<span style="display:inline-block;width:118px;text-align:center;border-top:1px solid #30363d;color:#484f58">Octet 1</span>'
       +'<span style="display:inline-block;width:4px"></span>'
@@ -10013,32 +10555,50 @@ function renderHWRef(el){
 function initSidebar(){
   let sidebar=document.querySelector('.sidebar');
   let categories=[
-    {section:"Troubleshoot",items:["vpn","ssl","policy","portfwd","sdwan","routing","vlan","intervdom","ha","auth","utm","cert","dhcp","fguard","sniffer","debug","session","sysdiag","hwnpu","routing3","pbr","logging","snmp","ntp","fmgr","wanopt","ztna","fortiswitch","fortiap","ipv6","trafficshaping","sip","secfabric","cfgtransaction","fnsysctladv","cfgbackup","netflow"]},
+    {section:"VPN & Remote Access",items:["vpn","ssl","ztna","cert","auth"]},
+    {section:"Firewall & Traffic",items:["policy","portfwd","session","sniffer","debug","utm","trafficshaping","sip"]},
+    {section:"Network & Routing",items:["sdwan","routing","routing3","pbr","vlan","intervdom","ipv6","dhcp","ntp","snmp","netflow"]},
+    {section:"System & Operations",items:["sysdiag","hwnpu","ha","logging","fguard","fmgr","wanopt","secfabric","cfgtransaction","fnsysctladv","cfgbackup"]},
+    {section:"Switching & Wireless",items:["fortiswitch","fortiap"]},
+    {section:"Diagnostics Tools",items:["analyze","advdiag","mostused","pkttools","dhcpdiag","subnetcalc","masking","bulkAnon"]},
+    {section:"AI Tools",items:["freeai","ai"]},
+    {section:"Cloud Learning",items:["azure"]},
+    {section:"Reference",items:["ref","multivendor","hwref"]},
+    {section:"Builders & Utilities",items:["psmaker","topology","cfggen","cfgmigrate","labsetup","security","liveconnect","emailgen"]},
     {section:"Config Guides",items:["cfg-init","cfg-vdom","cfg-ipsec","cfg-sslvpn","cfg-sdwan","cfg-ha","cfg-intervdom","cfg-portfwd","cfg-ospfbgp","cfg-sec","cfg-fortiswitch","cfg-ztna","cfg-netflow"]}
   ];
   let labelMap={
-    vpn:"🔒 VPN / IPsec",ssl:"🕵️ SSL VPN",policy:"📃 Policy / NAT",portfwd:"↩️ Port Forwarding",
-    sdwan:"🌐 SD-WAN",routing:"🔧 Routing",vlan:"💾 VLAN / Interface",intervdom:"🏢 Inter-VDOM",
-    ha:"⚙️ HA / Cluster",auth:"🔑 Auth / LDAP",utm:"🛡️ UTM / App",cert:"📄 Certificates",
-    dhcp:"📡 DHCP / DNS",fguard:"☁️ FortiGuard",sniffer:"🔍 Sniffer",debug:"🐛 Debug Flow",
-    session:"📊 Session Table",sysdiag:"🩺 System Diagnostics",hwnpu:"🧠 Hardware & NPU",
-    routing3:"🌍 Advanced Routing",pbr:"🔀 Policy Routing",logging:"📜 Logging & Syslog",
+    vpn:"🔐 VPN / IPsec",ssl:"🛡️ SSL VPN",policy:"📜 Policy / NAT",portfwd:"🚪 Port Forwarding",
+    sdwan:"🛰️ SD-WAN",routing:"🧭 Routing",vlan:"🔌 VLAN / Interface",intervdom:"🏛️ Inter-VDOM",
+    ha:"🔁 HA / Cluster",auth:"🔑 Auth / LDAP",utm:"🛡️ UTM / App",cert:"📄 Certificates",
+    dhcp:"📮 DHCP / DNS",fguard:"☁️ FortiGuard",sniffer:"🔎 Sniffer",debug:"🧪 Debug Flow",
+    session:"📊 Session Table",sysdiag:"🩺 System Diagnostics",hwnpu:"🧱 Hardware & NPU",
+    routing3:"🗺️ Advanced Routing",pbr:"🔀 Policy Routing",logging:"📘 Logging & Syslog",
     snmp:"📡 SNMP",ntp:"⏱️ NTP / Time",fmgr:"🏢 FortiManager/FAZ",wanopt:"⚡ WAN Optimization",
-    ztna:"🛡️ ZTNA / Zero Trust",fortiswitch:"🔀 FortiSwitch",fortiap:"📡 FortiAP / WiFi",
-    ipv6:"🌐 IPv6",trafficshaping:"⚡ Traffic Shaping",sip:"📞 SIP / VoIP",
-    secfabric:"🔗 Security Fabric",cfgtransaction:"🔄 Config Transactions",
-    fnsysctladv:"🐧 Advanced fnsysctl",cfgbackup:"💾 Backup & Firmware",
-    "cfg-init":"🚀 Initial Setup","cfg-vdom":"🏛️ VDOM Setup","cfg-ipsec":"🔌 IPsec Site2Site",
-    "cfg-sslvpn":"💻 SSL VPN Full","cfg-sdwan":"🛰️ SD-WAN Config","cfg-ha":"🔄 HA Cluster",
-    "cfg-intervdom":"↔️ Inter-VDOM","cfg-portfwd":"🚪 Port Forward VIP",
-    "cfg-ospfbgp":"📊 OSPF/BGP","cfg-sec":"✨ Security Profiles",
-    "cfg-fortiswitch":"🔀 FortiSwitch Config","cfg-ztna":"🛡️ ZTNA Config","cfg-netflow":"📊 NetFlow Config","netflow":"📡 NetFlow / sFlow"
+    ztna:"🪪 ZTNA / Zero Trust",fortiswitch:"🔀 FortiSwitch",fortiap:"📶 FortiAP / WiFi",
+    ipv6:"🌐 IPv6",trafficshaping:"🚦 Traffic Shaping",sip:"☎️ SIP / VoIP",
+    secfabric:"🕸️ Security Fabric",cfgtransaction:"↩️ Config Transactions",
+    fnsysctladv:"🧰 Advanced fnsysctl",cfgbackup:"💾 Backup & Firmware",
+    "cfg-init":"🚀 Initial Setup","cfg-vdom":"🏛️ VDOM Setup","cfg-ipsec":"🔐 IPsec Site2Site",
+    "cfg-sslvpn":"🛡️ SSL VPN Full","cfg-sdwan":"🛰️ SD-WAN Config","cfg-ha":"🔁 HA Cluster",
+    "cfg-intervdom":"🔗 Inter-VDOM","cfg-portfwd":"🚪 Port Forward VIP",
+    "cfg-ospfbgp":"🧭 OSPF/BGP","cfg-sec":"🛡️ Security Profiles",
+    "cfg-fortiswitch":"🔀 FortiSwitch Config","cfg-ztna":"🪪 ZTNA Config","cfg-netflow":"📈 NetFlow Config","netflow":"📈 NetFlow / sFlow",
+    analyze:"🔎 Analyze Output",advdiag:"🔬 Advanced Diagnostics",mostused:"⭐ Most Used Tools",
+    pkttools:"📡 Packet Tools",dhcpdiag:"📮 DHCP Diagnostics",subnetcalc:"🧮 Subnet Calculator",
+    masking:"🕶️ IP Masking",bulkAnon:"🧹 Bulk Anonymizer",freeai:"✨ AI Analyzer",
+    ai:"💬 AI Assistant",ref:"📚 Quick Reference",multivendor:"🔁 Multi-Vendor CLI",
+    hwref:"🧱 Hardware Reference",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
+    cfggen:"🧩 Config Generator",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
+    security:"🛡️ Security & Privacy",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
+    azure:"☁️ Azure Scripting"
   };
   let html='';
   for(let cat of categories){
     html+=`<div class="slbl">${cat.section}</div>`;
     for(let id of cat.items){
-      html+=`<button class="cb ${cur===id?'active':''}" onclick="sel('${id}')" id="cat-${id}">${labelMap[id]||id}</button>`;
+      const active=(D[id]?cur===id:tab===id);
+      html+=`<button class="cb ${active?'active':''}" onclick="nav('${id}')" id="cat-${id}">${labelMap[id]||id}</button>`;
     }
   }
   sidebar.innerHTML=html;
@@ -10075,6 +10635,30 @@ function globalSearchFn(query){
   }
 
   const matches = [];
+  const standaloneTools=[
+    {id:'analyze',title:'Analyze Output',match:'Tool: Paste CLI output for analysis'},
+    {id:'advdiag',title:'Advanced Diagnostics',match:'Tool: Expert diagnostics commands'},
+    {id:'mostused',title:'Most Used Tools',match:'Tool: Common daily troubleshooting generators'},
+    {id:'pkttools',title:'Packet Tools',match:'Tool: Packet debug, packet walk, traceroute analyzer'},
+    {id:'dhcpdiag',title:'DHCP Diagnostics',match:'Tool: DHCP lease, conflict, and rogue server checks'},
+    {id:'subnetcalc',title:'Subnet Calculator',match:'Tool: IPv4 subnet calculator'},
+    {id:'masking',title:'IP Masking',match:'Tool: Mask individual IP addresses'},
+    {id:'bulkAnon',title:'Bulk Anonymizer',match:'Tool: Bulk anonymize IPs and hostnames'},
+    {id:'freeai',title:'AI CLI Analyzer',match:'Tool: AI-powered CLI analysis'},
+    {id:'ai',title:'AI Assistant',match:'Tool: FortiGate assistant chat'},
+    {id:'ref',title:'Quick Reference',match:'Reference: Common CLI commands'},
+    {id:'multivendor',title:'Multi-Vendor CLI',match:'Reference: Cisco, Aruba, Huawei, Juniper, Palo Alto'},
+    {id:'hwref',title:'Hardware Reference',match:'Reference: FortiGate hardware lookup'},
+    {id:'psmaker',title:'PowerShell Script Maker',match:'Tool: Smart PowerShell generator'},
+    {id:'topology',title:'Topology Designer',match:'Tool: Network topology drawing'},
+    {id:'cfggen',title:'Config Generator',match:'Tool: FortiGate config templates'},
+    {id:'cfgmigrate',title:'Config Migrator',match:'Tool: Migrate and replace config fields'},
+    {id:'labsetup',title:'Lab Setup Guide',match:'Tool: Lab build guide'},
+    {id:'security',title:'Security & Privacy',match:'Tool: Privacy and safety information'},
+    {id:'liveconnect',title:'Live Connect',match:'Tool: FortiGate live connection'},
+    {id:'emailgen',title:'Customer Email Generator',match:'Tool: Customer email drafting'},
+    {id:'azure',title:'Azure Scripting',match:'Learning: Microsoft Azure PowerShell, Azure CLI, networking and security scripts'}
+  ];
   for(const [id, data] of Object.entries(D)){
     if(!data || !data.t) continue;
     // Match category title
@@ -10090,12 +10674,20 @@ function globalSearchFn(query){
     // Match step titles and commands only — NOT notes
     if(data.steps){
       for(const step of data.steps){
-        if(step.title && step.title.toLowerCase().includes(q)){
-          matches.push({id, title:data.t, type:'step', match:'Step: '+step.title}); break;
+        const stepTitle=step.t||step.title;
+        const stepCmds=step.cmds||step.commands;
+        if(stepTitle && stepTitle.toLowerCase().includes(q)){
+          matches.push({id, title:data.t, type:'step', match:'Step: '+stepTitle}); break;
         }
-        if(step.commands){
-          const cmd = step.commands.find(c=>c.cmd && c.cmd.toLowerCase().includes(q));
-          if(cmd){ matches.push({id, title:data.t, type:'command', match:'Command: '+cmd.cmd}); break; }
+        if(stepCmds){
+          const cmd = stepCmds.find(c=>{
+            const txt=typeof c==='string'?c:(c&&c.cmd?c.cmd:'');
+            return txt && !txt.startsWith('(') && txt.toLowerCase().includes(q);
+          });
+          if(cmd){
+            const cmdText=typeof cmd==='string'?cmd:cmd.cmd;
+            matches.push({id, title:data.t, type:'command', match:'Command: '+cmdText}); break;
+          }
         }
       }
     }
@@ -10112,6 +10704,10 @@ function globalSearchFn(query){
       }
     }
   }
+  standaloneTools.forEach(tool=>{
+    const hay=(tool.title+' '+tool.match).toLowerCase();
+    if(hay.includes(q)) matches.push({id:tool.id,title:tool.title,type:'tool',match:tool.match});
+  });
 
   if(!matches.length){
     resultsDiv.innerHTML='<div style="padding:12px 14px;font-size:12px;color:var(--t3)">No results for "'+escapeHtml(query)+'"</div>';
@@ -10119,7 +10715,7 @@ function globalSearchFn(query){
     return;
   }
 
-  const icons = {category:'📁', step:'📋', command:'💻', note:'💡'};
+  const icons = {category:'📁', step:'📋', command:'💻', note:'💡', tool:'🧰'};
   resultsDiv.innerHTML = matches.slice(0,12).map(m=>`
     <div onclick="globalSearchSelect('${m.id}')" style="padding:9px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);transition:background .1s" onmouseover="this.style.background='rgba(29,158,117,.08)'" onmouseout="this.style.background=''">
       <div style="display:flex;align-items:center;gap:7px">
@@ -10136,9 +10732,7 @@ function globalSearchSelect(id){
   const searchBox = document.getElementById('globalSearch');
   if(resultsDiv) resultsDiv.style.display='none';
   if(searchBox) searchBox.value='';
-  // Switch to guide tab and select the category
-  stab('guide');
-  sel(id);
+  nav(id);
 }
 
 // Close search results when clicking outside
@@ -10454,8 +11048,24 @@ function renderSecurityTab(el){
     <!-- INTRO -->
     <div style="padding:14px 16px;background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.25);border-radius:10px;margin-bottom:20px;font-size:13px;color:var(--t);line-height:1.7">
       <strong style="color:var(--a);font-size:14px;">NetWolf was built for professional network engineers.</strong><br>
-      This page explains exactly how every part of the tool handles your data — transparently and honestly.
+      This page explains exactly how every part of the tool handles your data — including the Azure scripting lessons,
+      multi-vendor configuration guides, CLI simulator, AI tabs, Live Connect preparation, and local generators.
       No marketing language. Just facts.
+    </div>
+
+    <!-- COVERAGE SNAPSHOT -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:20px;">
+      ${[
+        ['🛡️','Privacy covered','Login, browser storage, AI API use, Firebase, local tools and future Live Connect are documented.'],
+        ['☁️','Azure covered','Azure CLI, Az PowerShell, Bicep and Network Watcher learning content stays local unless you copy commands into Azure yourself.'],
+        ['🖥️','CLI covered','The simulator, vendor prompts and generated command output run inside your browser only.'],
+        ['🔀','Multi-vendor covered','Cisco, Aruba, Huawei, FortiGate, Juniper, Palo Alto, MikroTik and ProCurve learning/config references are static local content.'],
+        ['⚠️','Action clarity','Read-only, caution and write/config commands are marked in the learning areas so production-impacting commands are easier to spot.']
+      ].map(([ic,t,d])=>`
+        <div style="background:var(--panelBg);border:1px solid var(--br);border-radius:var(--cardRadius);padding:12px;box-shadow:var(--panelShadow);">
+          <div style="display:flex;align-items:center;gap:8px;color:var(--t);font-weight:700;font-size:13px;margin-bottom:6px;"><span>${ic}</span><span>${t}</span></div>
+          <div style="color:var(--t2);font-size:12px;line-height:1.6">${d}</div>
+        </div>`).join('')}
     </div>
 
     <!-- LEGEND -->
@@ -10485,7 +11095,7 @@ function renderSecurityTab(el){
           </tr>
           <tr>
             <td style="padding:8px 10px;color:var(--t2)">Terms acceptance</td>
-            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#d29922">●</span> Stored in <code>sessionStorage</code> — cleared on tab close.</td>
+            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#58a6ff">●</span> Stored in Firebase Realtime Database under your user ID so it follows your login across devices. If Firebase DB is unavailable, NetWolf falls back to local browser storage.</td>
           </tr>
         </table>
         <div style="margin-top:10px;padding:8px 12px;background:rgba(88,166,255,.05);border-radius:6px;font-size:11px;color:var(--t3)">
@@ -10531,7 +11141,23 @@ function renderSecurityTab(el){
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
             <td style="padding:8px 10px;color:var(--t2)">🖥️ Multi-Vendor CLI</td>
-            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#1D9E75">●</span> Static reference content. No data collected.</td>
+            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#1D9E75">●</span> Static reference plus new switch/router learning steps for Cisco, Aruba, Huawei, FortiGate, Juniper, Palo Alto, MikroTik and ProCurve. Vendor commands are displayed locally only.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">⌨️ CLI Simulator</td>
+            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#1D9E75">●</span> Interactive simulated router/switch sessions run in browser memory. Commands you type are not sent to a server. Configuration mode is practice-only.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">☁️ Azure Scripting</td>
+            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#1D9E75">●</span> Azure CLI, Az PowerShell, Bicep and Network Watcher lessons are static learning content. Commands only affect Azure if you copy and run them in your own Azure tenant.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">🛡️ Security Profiles / Config Guides</td>
+            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#1D9E75">●</span> FortiGate setup, SSL VPN, IPsec, SD-WAN, HA, ZTNA, FortiSwitch, NetFlow and security profile guides are local static templates. No device is changed from this tab.</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;color:var(--t2)">🕸️ Topology Designer</td>
+            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#d29922">●</span> Local drawing state stays in your browser/app view. If you open embedded diagrams.net features, that frame is provided by diagrams.net and should be treated as an external tool.</td>
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
             <td style="padding:8px 10px;color:var(--t2)">⚙️ Config Generator</td>
@@ -10620,6 +11246,16 @@ function renderSecurityTab(el){
             <td style="padding:8px 10px;color:var(--t2)">Your colour theme preference</td>
             <td style="padding:8px 10px;color:var(--t2)">Browser settings → Clear site data</td>
           </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">nw_last_active</td>
+            <td style="padding:8px 10px;color:var(--t2)">Last activity timestamp for the 8-hour idle logout check</td>
+            <td style="padding:8px 10px;color:var(--t2)">Logout or browser settings → Clear site data</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">forti_terms_*</td>
+            <td style="padding:8px 10px;color:var(--t2)">Fallback terms acceptance if Firebase Database is unavailable</td>
+            <td style="padding:8px 10px;color:var(--t2)">Browser settings → Clear site data</td>
+          </tr>
           <tr>
             <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">lab_progress</td>
             <td style="padding:8px 10px;color:var(--t2)">Lab Setup checklist progress</td>
@@ -10653,10 +11289,16 @@ function renderSecurityTab(el){
             <td style="padding:8px 10px;color:var(--t2)">None — script download only</td>
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
-            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--bl)">firebase.google.com</td>
-            <td style="padding:8px 10px;color:var(--t2)">User authentication</td>
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--bl)">securetoken.googleapis.com / identitytoolkit.googleapis.com</td>
+            <td style="padding:8px 10px;color:var(--t2)">Firebase user authentication and session refresh</td>
             <td style="padding:8px 10px;color:var(--t2)">Login / logout only</td>
             <td style="padding:8px 10px;color:var(--t2)">Email address + password (hashed)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--bl)">*.firebasedatabase.app</td>
+            <td style="padding:8px 10px;color:var(--t2)">Save/read terms acceptance for the signed-in user</td>
+            <td style="padding:8px 10px;color:var(--t2)">After login and when accepting terms</td>
+            <td style="padding:8px 10px;color:var(--t2)">User ID path + boolean terms_accepted value only</td>
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
             <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--bl)">api.groq.com</td>
@@ -10670,6 +11312,12 @@ function renderSecurityTab(el){
             <td style="padding:8px 10px;color:var(--t2)">When Hardware Reference tab is open</td>
             <td style="padding:8px 10px;color:var(--t2)">None — image download only</td>
           </tr>
+          <tr style="border-bottom:1px solid var(--br)">
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--bl)">app.diagrams.net / embed.diagrams.net</td>
+            <td style="padding:8px 10px;color:var(--t2)">Embedded diagram editor frame for topology work</td>
+            <td style="padding:8px 10px;color:var(--t2)">Only when an embedded diagram feature is opened</td>
+            <td style="padding:8px 10px;color:var(--t2)">Whatever you choose to create or load inside the embedded diagrams.net frame</td>
+          </tr>
           <tr>
             <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">Everything else</td>
             <td style="padding:8px 10px;color:var(--t2)" colspan="3">No other external connections are made. All other features run 100% locally.</td>
@@ -10679,9 +11327,30 @@ function renderSecurityTab(el){
       </div>
     </div>
 
-    <!-- SECTION 6: No tracking -->
+    <!-- SECTION 6: Command safety and new learning areas -->
+    <div class="cblock" style="margin-bottom:16px;">
+      <div class="chdr"><div class="chdr-l"><span style="margin-right:8px">🧯</span>6. Command Safety — Learning vs Real Devices</div><span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(210,153,34,.1);color:var(--y);border:1px solid rgba(210,153,34,.2)">User controlled</span></div>
+      <div class="cbody">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;font-size:12px;">
+          ${[
+            ['🟢 Read-only commands','Show, get, display, az list/show, Get-Az*, Network Watcher checks and other inspection commands are marked as safer learning commands. They still may expose sensitive output, so anonymize before AI use.'],
+            ['🟡 Caution commands','Debug, packet capture, sniffer, what-if, export, test and monitor commands can create load, reveal sensitive traffic, or require cleanup. Use in a lab first.'],
+            ['🔴 Write/config commands','Config, set, delete, remove, New-Az*, Set-Az*, az create/update/delete, Bicep deployment and commit commands can change production. NetWolf displays them only; it does not run them for you.'],
+            ['☁️ Azure scripts','Azure examples are teaching material. Nothing connects to Microsoft Azure from this app unless you manually copy commands into your own Azure CLI, PowerShell or portal session.'],
+            ['🔌 Live Connect','The Live Connect tab is preparation content right now. Future live device access is designed to be direct browser-to-FortiGate, token-based, and clearly separated from local learning tabs.'],
+            ['🖥️ CLI Simulator','The simulator accepts commands naturally for practice, but it is not connected to any router, switch, firewall, cloud tenant or production network.']
+          ].map(([t,d])=>`
+            <div style="background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px;line-height:1.65;">
+              <div style="color:var(--t);font-weight:700;margin-bottom:5px">${t}</div>
+              <div style="color:var(--t2)">${d}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 7: No tracking -->
     <div class="cblock">
-      <div class="chdr"><div class="chdr-l"><span style="margin-right:8px">🚫</span>6. What NetWolf Does NOT Do</div><span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.2)">No tracking</span></div>
+      <div class="chdr"><div class="chdr-l"><span style="margin-right:8px">🚫</span>7. What NetWolf Does NOT Do</div><span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.2)">No tracking</span></div>
       <div class="cbody">
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;font-size:12px;">
           ${['No analytics or tracking scripts','No advertising or third-party cookies','No telemetry or usage reporting','No keylogging or input recording','No screen capture or session recording','No data sold or shared with third parties','No background sync or push notifications','No access to files on your device','No geolocation data collected','No ads — ever'].map(item=>'<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--b3);border-radius:6px;border:1px solid var(--br)"><span style="color:var(--a);font-size:14px">✓</span><span style="color:var(--t)">'+item+'</span></div>').join('')}
@@ -10692,10 +11361,10 @@ function renderSecurityTab(el){
       </div>
     </div>
 
-    <!-- SECTION 7: Security audit trust statement -->
+    <!-- SECTION 8: Security audit trust statement -->
     <div class="cblock">
       <div class="chdr">
-        <div class="chdr-l"><span style="margin-right:8px">🛡️</span>7. Security Audit</div>
+        <div class="chdr-l"><span style="margin-right:8px">🛡️</span>8. Security Audit</div>
         <span style="font-size:10px;padding:2px 10px;border-radius:20px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.2)">Verified</span>
       </div>
       <div class="cbody" style="color:var(--t2)">
@@ -10872,7 +11541,7 @@ function renderLiveConnect(el){
     ].map(step=>`
       <div style="margin-bottom:16px;padding:14px;background:var(--b2);border:1px solid var(--br);border-radius:8px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-          <span style="background:var(--a);color:#000;font-weight:700;font-size:11px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">${step.n}</span>
+          <span style="background:var(--a);color:#fff;font-weight:700;font-size:11px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">${step.n}</span>
           <span style="font-size:13px;font-weight:700;color:var(--t)">${step.title}</span>
         </div>
         <div style="font-size:12px;color:var(--t2);margin-bottom:10px;line-height:1.6">${step.desc}</div>
