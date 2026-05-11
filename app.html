@@ -118,7 +118,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .cb .ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
 .main{display:flex;flex-direction:column;overflow:hidden;flex:1;min-height:0}
 .tabs{display:flex;gap:10px;border-bottom:1px solid var(--themeLine);padding:9px 12px 10px;background:var(--chromeBg);overflow-x:auto;flex-shrink:0;scrollbar-width:thin;scrollbar-color:var(--themeLine) transparent;-webkit-overflow-scrolling:touch;align-items:stretch;box-shadow:inset 0 -1px 0 rgba(255,255,255,.04)}
-.tab{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 10px;font-size:11px;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--t2);border-radius:6px;white-space:nowrap;transition:background .16s,color .16s,border-color .16s,box-shadow .16s;flex-shrink:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:0;min-width:auto;min-height:32px}
+.tab{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 10px;font-size:12px;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--t2);border-radius:6px;white-space:nowrap;transition:background .16s,color .16s,border-color .16s,box-shadow .16s;flex-shrink:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:0;min-width:auto;min-height:32px}
 .tab:hover{color:var(--t);background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.08)}
 .tab.active{color:var(--t);background:var(--tabActive);border-color:var(--themeLine);font-weight:700;box-shadow:0 0 0 1px color-mix(in srgb,var(--a) 18%,transparent),0 8px 18px rgba(0,0,0,.22)}
 .tab-group{display:flex;flex-direction:column;flex-shrink:0;gap:5px;padding:6px 7px 7px;background:color-mix(in srgb,var(--shape3) 78%,transparent);border:1px solid color-mix(in srgb,var(--a) 22%,var(--br));border-radius:8px}
@@ -127,7 +127,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .tab-divider{width:0;margin:0;flex-shrink:0}
 .tab-icon{font-size:14px;line-height:1;transition:transform .16s;filter:saturate(.95)}
 .tab.active .tab-icon{transform:scale(1.08);filter:saturate(1.15)}
-.tab-lbl{font-size:10px;color:inherit;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:0}
+.tab-lbl{font-size:11px;color:inherit;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:0}
 .tab.active .tab-lbl{color:var(--t)}
 .content{flex:1;overflow-y:auto;padding:16px;min-height:0;background:var(--contentBg);background-size:var(--wallSize)}
 .sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
@@ -411,9 +411,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   /* Tab bar — horizontal scroll */
   .tabs{overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;gap:4px}
   .tabs::-webkit-scrollbar{display:none}
-  .tab{white-space:nowrap;flex-shrink:0;font-size:11px;padding:6px 10px}
+  .tab{white-space:nowrap;flex-shrink:0;font-size:12px;padding:6px 10px}
   .tab-icon{font-size:14px}
-  .tab-lbl{font-size:10px}
+  .tab-lbl{font-size:11px}
 
   /* Cards */
   .cblock{border-radius:8px}
@@ -490,7 +490,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   .tab-group-btns{gap:5px}
   .tab{min-width:56px;min-height:50px;padding:6px 7px;flex-direction:column;gap:3px;scroll-snap-align:start}
   .tab-icon{font-size:17px}
-  .tab-lbl{display:block!important;font-size:8.5px;line-height:1.1;max-width:54px;white-space:normal;text-align:center;overflow-wrap:anywhere}
+  .tab-lbl{display:block!important;font-size:9.5px;line-height:1.1;max-width:58px;white-space:normal;text-align:center;overflow-wrap:anywhere}
 
   .sh{margin-bottom:10px;padding:0;align-items:flex-start}
   .stitle{font-size:15px;line-height:1.3}
@@ -557,7 +557,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 @media(max-width:420px){
   .content{padding:8px}
   .tab{min-width:50px}
-  .tab-lbl{font-size:8px;max-width:48px}
+  .tab-lbl{font-size:9px;max-width:52px}
   .cbody{padding:9px}
   .chdr{padding:8px 9px}
   .sim-terminal{min-height:300px}
@@ -6005,6 +6005,61 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 ]}}
 };
 
+  (function extendMultiVendorConfigLibrary(){
+    function add(vid, cat, rows){
+      if(!MV_DATA[vid]) return;
+      const cats=MV_DATA[vid].cats;
+      if(!cats[cat]) cats[cat]=[];
+      const seen=new Set(cats[cat].map(r=>String(r[0]).toLowerCase()));
+      rows.forEach(r=>{const k=String(r[0]).toLowerCase();if(!seen.has(k)){cats[cat].push(r);seen.add(k);}});
+    }
+
+    add('cisco','Config - System, AAA, ACL, NAT & QoS',[
+      ['hostname <NAME>','Set device hostname','caution'],['ip domain-name <DOMAIN>','Set DNS domain for SSH keys','caution'],['username <USER> privilege 15 secret <PASS>','Create local privileged admin','caution'],['aaa new-model','Enable AAA framework','caution'],['aaa authentication login default local','Use local users for login authentication','caution'],['aaa authorization exec default local','Authorize EXEC shell from local user database','caution'],['logging host <SYSLOG_IP>','Send logs to syslog server','caution'],['snmp-server community <COMMUNITY> RO','Configure read-only SNMPv2c community','caution'],['ip access-list extended <ACL_NAME>','Create named extended ACL','caution'],['deny ip any any log','Deny all other IP traffic and log matches','caution'],['ip access-group <ACL_NAME> in','Apply ACL inbound on interface','caution'],['ip nat inside source list <ACL> interface <WAN_INTF> overload','Configure PAT/NAT overload','caution'],['ip nat inside','Mark interface as NAT inside','caution'],['ip nat outside','Mark interface as NAT outside','caution'],['class-map match-any <CLASS>','Create QoS class map','caution'],['policy-map <POLICY>','Create QoS policy map','caution'],['service-policy output <POLICY>','Apply QoS policy outbound','caution']
+    ]);
+    add('cisco','Config - Routing Protocols Advanced',[
+      ['passive-interface default','Suppress OSPF/EIGRP hellos by default','caution'],['no passive-interface <INTF>','Enable neighbor formation on selected interface','caution'],['default-information originate','Advertise default route into OSPF','caution'],['area <AREA> stub no-summary','Configure totally stubby OSPF area','caution'],['router eigrp <ASN>','Enter EIGRP process configuration','caution'],['eigrp router-id <IP>','Set EIGRP router ID','caution'],['router bgp <ASN>','Enter BGP configuration','caution'],['neighbor <IP> remote-as <ASN>','Define BGP neighbor AS','caution'],['neighbor <IP> password <PASS>','Configure BGP MD5 password','caution'],['address-family ipv4 unicast','Enter BGP IPv4 unicast address family','caution'],['network <PREFIX> mask <MASK>','Advertise prefix in BGP','caution'],['ip prefix-list <NAME> seq 10 permit <PREFIX>','Create prefix-list entry','caution'],['route-map <NAME> permit 10','Create route-map sequence','caution']
+    ]);
+    add('cisco','Config - Rollback, Archive & Restore',[
+      ['show archive','Show config archive history','ro'],['archive','Enter archive configuration mode','caution'],['path flash:archive-$h-$t','Set archive path template','caution'],['write-memory','Archive config whenever write memory is run','caution'],['archive config','Manually create configuration archive','caution'],['configure replace flash:<CONFIG_FILE> force','Replace running config from file','danger'],['configure replace nvram:startup-config force','Rollback running config to startup config','danger'],['copy running-config flash:<FILE>','Save running config snapshot to flash','caution'],['copy flash:<FILE> running-config','Merge saved config into running config','danger'],['reload in 10','Schedule safety reload for rollback window','caution'],['reload cancel','Cancel scheduled reload after confirming access','ro']
+    ]);
+
+    add('cisco_sw','Config - Switch Security, Access Edge & Rollback',[
+      ['spanning-tree mode rapid-pvst','Enable Rapid PVST+','caution'],['spanning-tree portfast default','Enable PortFast globally for access ports','caution'],['spanning-tree portfast bpduguard default','Enable BPDU Guard globally for PortFast ports','caution'],['errdisable recovery cause bpduguard','Allow automatic recovery from BPDU Guard errdisable','caution'],['switchport port-security','Enable port security on interface','caution'],['switchport port-security maximum 2','Set maximum secure MAC addresses','caution'],['switchport port-security violation restrict','Restrict on violation and count/log','caution'],['switchport port-security mac-address sticky','Learn sticky secure MAC addresses','caution'],['ip dhcp snooping vlan <LIST>','Enable DHCP snooping for VLANs','caution'],['ip arp inspection vlan <LIST>','Enable Dynamic ARP Inspection','caution'],['ip verify source','Enable IP Source Guard on interface','caution'],['configure replace flash:<CONFIG_FILE> force','Replace current config with saved file','danger'],['copy running-config flash:<BACKUP_FILE>','Save running config snapshot','caution'],['reload in 10','Schedule rollback reload','caution'],['reload cancel','Cancel scheduled reload','ro']
+    ]);
+
+    add('cisco_nxos','Config - System, VXLAN, Checkpoints & Rollback',[
+      ['hostname <NAME>','Set switch hostname','caution'],['vrf context <VRF_NAME>','Create or enter VRF context','caution'],['ip route 0.0.0.0/0 <NEXT_HOP> vrf management','Add management VRF default route','caution'],['username <USER> password <PASS> role network-admin','Create network-admin user','caution'],['feature interface-vlan','Enable SVI feature','caution'],['feature hsrp','Enable HSRP feature','caution'],['feature nv overlay','Enable VXLAN overlay feature','caution'],['feature vn-segment-vlan-based','Enable VLAN-to-VNI mapping','caution'],['interface nve 1','Create NVE interface','caution'],['source-interface loopback0','Use loopback0 as VXLAN source','caution'],['member vni <VNI>','Add layer-2 VNI','caution'],['checkpoint <NAME>','Create named configuration checkpoint','caution'],['show diff rollback-patch checkpoint <NAME> running-config','Preview rollback diff','ro'],['rollback running-config checkpoint <NAME>','Rollback running config to checkpoint','danger'],['copy running-config bootflash:<FILE>','Backup running config to bootflash','caution']
+    ]);
+
+    add('aruba','Config - System, AAA, ACL, QoS & Rollback',[
+      ['hostname <NAME>','Set switch hostname','caution'],['domain-name <DOMAIN>','Set DNS domain name','caution'],['user <USER> group administrators password plaintext <PASS>','Create admin user','caution'],['ssh server vrf mgmt','Enable SSH on management VRF','caution'],['https-server vrf mgmt','Enable HTTPS server on management VRF','caution'],['ip dns server-address <DNS_IP> vrf mgmt','Configure DNS server','caution'],['radius-server host <IP> key plaintext <KEY>','Configure RADIUS server','caution'],['aaa authentication login default group radius local','Use RADIUS then local login','caution'],['access-list ip <ACL_NAME>','Create IPv4 ACL','caution'],['apply access-list ip <ACL_NAME> in','Apply ACL inbound on interface','caution'],['class ip <CLASS_NAME>','Create traffic class','caution'],['policy <POLICY_NAME>','Create policy','caution'],['checkpoint <NAME>','Create configuration checkpoint','caution'],['checkpoint diff running-config <NAME>','Compare running config with checkpoint','ro'],['checkpoint rollback <NAME>','Rollback to checkpoint','danger'],['copy tftp://<IP>/<FILE> running-config','Restore/merge config from TFTP','danger']
+    ]);
+
+    add('huawei','Config - System, AAA, Services & Rollback',[
+      ['sysname <NAME>','Set hostname','caution'],['stelnet server enable','Enable SSH server','caution'],['ssh user <USER> authentication-type password','Set SSH user auth type','caution'],['ssh user <USER> service-type stelnet','Allow SSH service for user','caution'],['aaa','Enter AAA view','caution'],['local-user <USER> password irreversible-cipher <PASS>','Create local user password','caution'],['local-user <USER> service-type ssh terminal','Allow SSH and terminal login','caution'],['local-user <USER> privilege level 15','Set admin privilege','caution'],['ntp-service unicast-server <NTP_IP>','Configure NTP server','caution'],['info-center loghost <SYSLOG_IP>','Configure syslog host','caution'],['snmp-agent community read cipher <COMMUNITY>','Configure read-only SNMP community','caution'],['display configuration commit list','Show configuration commit history','ro'],['configuration rollback changes last 1','Rollback the most recent committed change','danger'],['configuration rollback changes to commit-id <ID>','Rollback to a specific commit ID','danger'],['backup startup-configuration to <FILE>','Backup startup configuration locally','caution'],['restore startup-configuration from <FILE>','Restore startup configuration from file','danger']
+    ]);
+
+    add('fortigate','Config - Interfaces, Policies, VPN & Rollback',[
+      ['config system global','Enter global system settings','caution'],['set hostname <NAME>','Set FortiGate hostname','caution'],['config system interface','Enter interface configuration table','caution'],['edit <PORT_NAME>','Edit interface object','caution'],['set ip <IP> <MASK>','Set interface IP address','caution'],['set allowaccess ping https ssh snmp','Set allowed management protocols','caution'],['config router static','Enter static route table','caution'],['set gateway <GW_IP>','Set route gateway','caution'],['config firewall address','Enter address object table','caution'],['set subnet <IP> <MASK>','Set address object subnet','caution'],['config firewall policy','Enter firewall policy table','caution'],['set srcintf <SRC_INTF>','Set source interface','caution'],['set dstintf <DST_INTF>','Set destination interface','caution'],['set nat enable','Enable source NAT on policy','caution'],['config vpn ipsec phase1-interface','Enter IPsec phase1 interface mode','caution'],['execute revision list config','List configuration revisions','ro'],['execute revision diff <REV1> <REV2>','Compare two config revisions','ro'],['execute revision rollback config <REV_ID>','Rollback to saved config revision','danger'],['execute backup config tftp <FILE> <TFTP_IP>','Backup full config to TFTP','caution'],['execute restore config tftp <FILE> <TFTP_IP>','Restore full config from TFTP','danger']
+    ]);
+
+    add('juniper','Config - Switching, SRX Security & Rollback',[
+      ['set vlans <VLAN_NAME> vlan-id <ID>','Create VLAN','caution'],['set vlans <VLAN_NAME> l3-interface irb.<ID>','Bind VLAN to IRB SVI','caution'],['set interfaces irb unit <ID> family inet address <IP/PREFIX>','Set IRB IP address','caution'],['set interfaces <INTF> unit 0 family ethernet-switching interface-mode access','Set access port','caution'],['set interfaces <INTF> unit 0 family ethernet-switching interface-mode trunk','Set trunk port','caution'],['set protocols rstp interface <INTF> edge','Set RSTP edge port','caution'],['set security zones security-zone trust interfaces <INTF>.0','Assign SRX interface to zone','caution'],['set security policies from-zone trust to-zone untrust policy <POLICY> then permit','Permit traffic in SRX policy','caution'],['set security nat source rule-set <RS> rule <RULE> then source-nat interface','Configure interface source NAT','caution'],['commit check','Validate candidate config','ro'],['commit confirmed 5 comment "<CHANGE_ID>"','Commit with automatic rollback timer','caution'],['rollback 0','Discard uncommitted candidate changes','caution'],['rollback 1','Load previous committed configuration','danger'],['show system rollback compare 0 1','Compare current and previous rollback files','ro'],['load override /var/tmp/<FILE>.conf','Replace candidate config from file','danger'],['request system configuration rescue save','Save rescue configuration','caution'],['rollback rescue','Load rescue configuration','danger']
+    ]);
+
+    add('paloalto','Config - Interfaces, Objects, NAT & Rollback',[
+      ['set deviceconfig system hostname <NAME>','Set firewall hostname','caution'],['set network interface ethernet ethernet1/1 layer3 ip <IP/PREFIX>','Set L3 interface IP','caution'],['set zone trust network layer3 ethernet1/2','Add interface to trust zone','caution'],['set network virtual-router default interface ethernet1/1','Add interface to virtual router','caution'],['set network virtual-router default routing-table ip static-route default destination 0.0.0.0/0 nexthop ip-address <GW>','Add default route','caution'],['set address <OBJ> ip-netmask <IP/PREFIX>','Create address object','caution'],['set rulebase security rules <RULE> from trust to untrust source any destination any application any service application-default action allow','Create security policy','caution'],['set rulebase nat rules <RULE> from trust to untrust source any destination any service any source-translation dynamic-ip-and-port interface-address interface ethernet1/1','Create outbound NAT rule','caution'],['show config diff','Show candidate vs running diff','ro'],['revert config','Revert candidate configuration','caution'],['commit comment "<CHANGE_ID>"','Commit with audit comment','caution'],['show config audit version <OLD> <NEW>','Compare two config versions','ro'],['load config version <VERSION>','Load previous running config version','danger'],['save named-config <NAME>','Save named configuration snapshot','caution'],['load named-config <NAME>','Load named configuration snapshot','danger']
+    ]);
+
+    add('mikrotik','Config - Services, Hardening, Backup & Rollback',[
+      ['/system identity set name=<NAME>','Set router identity/hostname','caution'],['/user add name=<USER> group=full password=<PASS>','Create full admin user','caution'],['/user set admin disabled=yes','Disable default admin account','caution'],['/ip service set telnet disabled=yes','Disable Telnet service','caution'],['/ip service set ftp disabled=yes','Disable FTP service','caution'],['/ip service set www disabled=yes','Disable HTTP service','caution'],['/ip service set ssh address=<MGMT_SUBNET>','Restrict SSH management source','caution'],['/ip dns set servers=<DNS1>,<DNS2> allow-remote-requests=no','Set DNS resolvers','caution'],['/system ntp client set enabled=yes servers=<NTP_IP>','Configure NTP client','caution'],['/system logging action add name=remote target=remote remote=<SYSLOG_IP>','Add remote syslog target','caution'],['/export file=<NAME>','Export readable configuration script','ro'],['/system backup save name=<NAME>','Create binary backup','caution'],['/system backup load name=<NAME>.backup','Restore binary backup','danger'],['/import file-name=<NAME>.rsc','Import configuration script','danger'],['/system scheduler add name=safety-reboot interval=10m on-event="/system reboot"','Create safety rollback reboot timer','danger'],['/system scheduler remove [find name=safety-reboot]','Remove safety rollback reboot timer','caution']
+    ]);
+
+    add('hp_procurve','Config - Management, AAA & Rollback',[
+      ['hostname <NAME>','Set switch hostname','caution'],['ip default-gateway <GW>','Set default gateway for management','caution'],['ip dns server-address priority 1 <DNS_IP>','Configure DNS server','caution'],['timesync sntp','Use SNTP for time sync','caution'],['sntp server priority 1 <NTP_IP>','Configure NTP/SNTP server','caution'],['logging <SYSLOG_IP>','Configure syslog server','caution'],['snmp-server community <COMMUNITY> operator unrestricted','Configure SNMP community','caution'],['aaa authentication ssh login local','Use local authentication for SSH','caution'],['aaa authentication console login local','Use local authentication for console','caution'],['ip ssh filetransfer','Enable secure file transfer over SSH','caution'],['copy running-config tftp <IP> <FILE>','Backup running config to TFTP','caution'],['copy startup-config tftp <IP> <FILE>','Backup startup config to TFTP','caution'],['copy tftp running-config <IP> <FILE>','Merge config from TFTP into running config','danger'],['copy tftp startup-config <IP> <FILE>','Restore startup config from TFTP','danger'],['reload after 10','Schedule safety reload if supported','caution'],['no reload','Cancel scheduled reload','ro']
+    ]);
+  })();
   let curV='cisco', curC=null;
   let mvTrack='switch';
 
@@ -10980,6 +11035,7 @@ function renderDevices(el){
       .dev-img-wrap{width:100%;height:150px;background:#070d17;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--br);overflow:hidden;position:relative}
       .dev-img{width:100%;height:100%;object-fit:contain;padding:12px;position:relative;z-index:1}
       .dev-img-err{display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%;width:100%;position:absolute;top:0;left:0;z-index:2}
+      .dev-img-src{position:absolute;right:8px;bottom:7px;z-index:3;font-size:9px;font-family:var(--mono);color:rgba(255,255,255,.55);background:rgba(1,4,9,.62);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:2px 7px}
       .dev-body{padding:13px 15px;flex:1;display:flex;flex-direction:column;gap:8px}
       .dev-model{font-size:14px;font-weight:800;color:var(--t);font-family:var(--mono)}
       .dev-role{font-size:11px;font-weight:700;color:var(--a)}
@@ -11042,14 +11098,14 @@ function renderDevices(el){
     ]},
     juniper:{label:'🟣 Juniper',sections:[
       {title:'🔌 EX Series (Access)',id:'access',devices:[
-        {model:'EX2300',role:'Entry Access Switch',desc:'Compact Junos access switch. Virtual Chassis stacking up to 4 units, PoE+, 802.1X, Juniper Mist AI cloud management.',specs:{Ports:'24/48x GbE',Uplinks:'4x SFP+',PoE:'Up to 740W',Stacking:'Virtual Chassis (4)',OS:'Junos'},tags:['Virtual Chassis','Mist AI','Junos','PoE+'],img:'https://www.juniper.net/us/en/products/switches/ex-series/ex2300/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
-        {model:'EX4300',role:'Stackable Access Switch',desc:'Most popular Juniper access switch. Virtual Chassis up to 10 units, 40GbE uplinks, MACsec, full L3 routing. Widely used in enterprise access layers.',specs:{Ports:'24/48x GbE',Uplinks:'4x 40GbE QSFP+',PoE:'Up to 1440W',Stacking:'Virtual Chassis (10)',OS:'Junos'},tags:['Virtual Chassis','40GbE','MACsec','L3'],img:'https://www.juniper.net/us/en/products/switches/ex-series/ex4300/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
-        {model:'EX4650',role:'High-Density Access',desc:'High-performance access/aggregation. 25GbE downlinks and 100GbE uplinks. For high-density server access or campus aggregation.',specs:{Ports:'48x 25GbE SFP28',Uplinks:'8x 100GbE QSFP28',Throughput:'3.2 Tbps',Stacking:'Virtual Chassis',OS:'Junos'},tags:['25GbE','100GbE','High-density','Aggregation'],img:'https://www.juniper.net/us/en/products/switches/ex-series/ex4650/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
+        {model:'EX2300',role:'Entry Access Switch',desc:'Compact Junos access switch. Virtual Chassis stacking up to 4 units, PoE+, 802.1X, Juniper Mist AI cloud management.',specs:{Ports:'24/48x GbE',Uplinks:'4x SFP+',PoE:'Up to 740W',Stacking:'Virtual Chassis (4)',OS:'Junos'},tags:['Virtual Chassis','Mist AI','Junos','PoE+'],img:'https://www.juniper.net/content/dam/www/assets/images/us/en/image-library/ex-series/ex2300-24p/ex2300-24p-front-low.png'},
+        {model:'EX4300',role:'Stackable Access Switch',desc:'Most popular Juniper access switch. Virtual Chassis up to 10 units, 40GbE uplinks, MACsec, full L3 routing. Widely used in enterprise access layers.',specs:{Ports:'24/48x GbE',Uplinks:'4x 40GbE QSFP+',PoE:'Up to 1440W',Stacking:'Virtual Chassis (10)',OS:'Junos'},tags:['Virtual Chassis','40GbE','MACsec','L3'],img:'https://www.juniper.net/content/dam/www/assets/images/us/en/image-library/ex-series/ex4300-48mp/ex4300-48mp-front-low.png'},
+        {model:'EX4650',role:'High-Density Access',desc:'High-performance access/aggregation. 25GbE downlinks and 100GbE uplinks. For high-density server access or campus aggregation.',specs:{Ports:'48x 25GbE SFP28',Uplinks:'8x 100GbE QSFP28',Throughput:'3.2 Tbps',Stacking:'Virtual Chassis',OS:'Junos'},tags:['25GbE','100GbE','High-density','Aggregation'],img:'https://www.juniper.net/content/dam/www/assets/images/us/en/image-library/ex-series/ex4650-48y/ex4650-48y-front-low.png'},
       ]},
       {title:'🔀 QFX Data Centre + MX WAN Routers',id:'dc',devices:[
-        {model:'QFX5120',role:'DC Leaf / Spine Switch',desc:'Data centre leaf/spine for IP fabric. Full EVPN/VXLAN, MPLS, Juniper Apstra intent-based networking. Available in 48x25GbE or 32x100GbE.',specs:{Ports:'48x 25GbE or 32x 100GbE',Uplinks:'6x 100GbE QSFP28',Throughput:'3.2 Tbps',EVPN:'Full VXLAN/EVPN',OS:'Junos / Apstra'},tags:['DC fabric','EVPN','VXLAN','Apstra'],img:'https://www.juniper.net/us/en/products/switches/qfx-series/qfx5120/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
-        {model:'MX204',role:'WAN / Internet Edge Router',desc:'Universal routing platform for WAN and internet peering. Full BGP table, MPLS, segment routing. Used by ISPs and large enterprise WAN edges.',specs:{Throughput:'400 Gbps',Ports:'4x 100GbE + 8x 25GbE',MPLS:'Full label stack',BGP:'Full internet table',OS:'Junos'},tags:['WAN Edge','MPLS','BGP','Segment Routing'],img:'https://www.juniper.net/us/en/products/routers/mx-series/mx204/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
-        {model:'MX480',role:'Service Provider Core Router',desc:'Mid-range MX chassis router. Used by ISPs as PE/P router and large enterprise WAN. Modular line cards, redundant routing engines, hitless upgrades.',specs:{Throughput:'Up to 16 Tbps',Slots:'8x line card slots',MPLS:'Full',BGP:'Full internet table',OS:'Junos'},tags:['SP Core','Chassis','MPLS PE/P','Redundant RE'],img:'https://www.juniper.net/us/en/products/routers/mx-series/mx480/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
+        {model:'QFX5120',role:'DC Leaf / Spine Switch',desc:'Data centre leaf/spine for IP fabric. Full EVPN/VXLAN, MPLS, Juniper Apstra intent-based networking. Available in 48x25GbE or 32x100GbE.',specs:{Ports:'48x 25GbE or 32x 100GbE',Uplinks:'6x 100GbE QSFP28',Throughput:'3.2 Tbps',EVPN:'Full VXLAN/EVPN',OS:'Junos / Apstra'},tags:['DC fabric','EVPN','VXLAN','Apstra'],img:'https://www.juniper.net/content/dam/www/assets/images/us/en/image-library/qfx-series/qfx5120-48ym/qfx5120-48ym-front-low.png'},
+        {model:'MX204',role:'WAN / Internet Edge Router',desc:'Universal routing platform for WAN and internet peering. Full BGP table, MPLS, segment routing. Used by ISPs and large enterprise WAN edges.',specs:{Throughput:'400 Gbps',Ports:'4x 100GbE + 8x 25GbE',MPLS:'Full label stack',BGP:'Full internet table',OS:'Junos'},tags:['WAN Edge','MPLS','BGP','Segment Routing'],img:'https://www.juniper.net/content/dam/www/assets/images/us/en/image-library/mx-series/mx204/mx204-front-low.png'},
+        {model:'MX480',role:'Service Provider Core Router',desc:'Mid-range MX chassis router. Used by ISPs as PE/P router and large enterprise WAN. Modular line cards, redundant routing engines, hitless upgrades.',specs:{Throughput:'Up to 16 Tbps',Slots:'8x line card slots',MPLS:'Full',BGP:'Full internet table',OS:'Junos'},tags:['SP Core','Chassis','MPLS PE/P','Redundant RE'],img:'https://www.juniper.net/content/dam/www/assets/images/us/en/image-library/mx-series/mx480/mx480-front-low.png'},
       ]},
     ]},
   };
@@ -11058,6 +11114,34 @@ function renderDevices(el){
   let activeSection='all';
   let searchTerm='';
 
+  function devProxyImage(url){
+    if(!url) return '';
+    const normalized=url.replace(/^https:\/\//,'ssl:').replace(/^http:\/\//,'');
+    return 'https://images.weserv.nl/?output=png&url='+encodeURIComponent(normalized);
+  }
+  function devImageCandidates(d){
+    const raw=[d.img].concat(d.imgs||[]).filter(Boolean);
+    const out=[];
+    raw.forEach(u=>{
+      if(!out.includes(u)) out.push(u);
+      const prox=devProxyImage(u);
+      if(prox&&!out.includes(prox)) out.push(prox);
+    });
+    return out;
+  }
+  window.devImgNext=function(img){
+    let list=[];
+    try{list=JSON.parse(decodeURIComponent(img.dataset.imgs||'[]'));}catch(e){list=[];}
+    const next=(parseInt(img.dataset.idx||'0',10)||0)+1;
+    if(next<list.length){
+      img.dataset.idx=String(next);
+      img.src=list[next];
+      return;
+    }
+    img.style.display='none';
+    const fallback=img.parentElement&&img.parentElement.querySelector('.dev-img-err');
+    if(fallback) fallback.style.display='flex';
+  };
   function buildGrid(){
     const cont=document.getElementById('devGrid');
     if(!cont) return;
@@ -11079,9 +11163,8 @@ function renderDevices(el){
         const specs=Object.entries(d.specs).slice(0,6);
         html+=`<div class="dev-card">
           <div class="dev-img-wrap">
-            <img class="dev-img" src="${d.img}" alt="${d.model}" loading="lazy"
-              onerror="this.style.display='none';this.parentElement.querySelector('.dev-img-err').style.display='flex'">
-            <div class="dev-img-err">
+            ${(()=>{const imgs=devImageCandidates(d);return `<img class="dev-img" src="${imgs[0]||''}" data-imgs="${encodeURIComponent(JSON.stringify(imgs))}" data-idx="0" alt="${d.model}" loading="lazy" onerror="devImgNext(this)">`;})()}
+            <div class="dev-img-src">Vendor image · PNG fallback</div><div class="dev-img-err">
               <span style="font-size:36px">🖥️</span>
               <span style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.3)">${d.model}</span>
             </div>
@@ -11154,34 +11237,51 @@ function renderSwCfg(el){
     Generate a complete baseline configuration for a new switch or router from scratch. Select vendor, device type and fill in your details.
   </p>
 
-  <!-- Vendor + Device type row -->
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end">
+  <!-- Compact selectors -->
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:10px;margin-bottom:14px;align-items:end">
     <div>
-      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:5px">🏢 Vendor</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap" id="swVendorBtns">
-        <button class="sbtn swv-btn active" data-v="cisco" onclick="swSetVendor('cisco',this)">🔵 Cisco IOS</button>
-        <button class="sbtn swv-btn" data-v="aruba" onclick="swSetVendor('aruba',this)" style="background:var(--b3)">🟢 HP/Aruba CX</button>
-        <button class="sbtn swv-btn" data-v="juniper" onclick="swSetVendor('juniper',this)" style="background:var(--b3)">🟣 Juniper EX</button>
-        <button class="sbtn swv-btn" data-v="fortiswitch" onclick="swSetVendor('fortiswitch',this)" style="background:var(--b3)">🛡️ FortiSwitch</button>
-      </div>
+      <label style="font-size:11px;font-weight:700;color:var(--t2);display:block;margin-bottom:5px">📦 Device Type</label>
+      <select id="swTypeSelect" onchange="swSetType(this.value)" style="width:100%;background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:9px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+        <option value="switch">🔌 Access Switch</option>
+        <option value="core">🏗️ Core / Distribution</option>
+        <option value="router">🌐 Router / Firewall</option>
+      </select>
     </div>
     <div>
-      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:5px">📦 Device Type</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap" id="swTypeBtns">
-        <button class="sbtn swt-btn active" data-t="switch" onclick="swSetType('switch',this)">🔌 Access Switch</button>
-        <button class="sbtn swt-btn" data-t="router" onclick="swSetType('router',this)" style="background:var(--b3)">🌐 Router</button>
-        <button class="sbtn swt-btn" data-t="core" onclick="swSetType('core',this)" style="background:var(--b3)">🏗️ Core / Distribution</button>
-      </div>
+      <label style="font-size:11px;font-weight:700;color:var(--t2);display:block;margin-bottom:5px">🏢 Vendor / Platform</label>
+      <select id="swVendorSelect" onchange="swSetVendor(this.value)" style="width:100%;background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:9px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+      </select>
     </div>
+    <div>
+      <label style="font-size:11px;font-weight:700;color:var(--t2);display:block;margin-bottom:5px">🧩 Template</label>
+      <select id="swCfgSelect" onchange="swSetCfg(this.value)" style="width:100%;background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:9px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+        <option value="full">🚀 Full Setup</option>
+        <option value="vlan">💾 VLANs / Interfaces</option>
+        <option value="routing">🔀 Routing</option>
+        <option value="security">🛡️ Security</option>
+        <option value="mgmt">🖥️ Management</option>
+      </select>
+    </div>
+    <button class="sbtn" onclick="swPreviewTemplate()" style="padding:10px;font-size:12px;background:#1d4ed8">👁️ Preview Template</button>
   </div>
 
-  <!-- Config type tabs -->
-  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="swCfgTypeBtns">
-    <button class="sbtn swc-btn active" data-c="full" onclick="swSetCfg('full',this)">🚀 Full Setup</button>
-    <button class="sbtn swc-btn" data-c="vlan" onclick="swSetCfg('vlan',this)" style="background:var(--b3)">💾 VLANs</button>
-    <button class="sbtn swc-btn" data-c="routing" onclick="swSetCfg('routing',this)" style="background:var(--b3)">🔀 Routing</button>
-    <button class="sbtn swc-btn" data-c="security" onclick="swSetCfg('security',this)" style="background:var(--b3)">🛡️ Security</button>
-    <button class="sbtn swc-btn" data-c="mgmt" onclick="swSetCfg('mgmt',this)" style="background:var(--b3)">🖥️ Management</button>
+  <div id="swTemplateSummary" style="background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.22);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:11.5px;color:var(--t2);line-height:1.5"></div>
+
+  <div id="swTemplateModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(1,4,9,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:18px">
+    <div style="width:min(760px,96vw);max-height:86vh;overflow:hidden;background:var(--b);border:1px solid var(--br);border-radius:10px;box-shadow:0 22px 70px rgba(0,0,0,.45);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--br)">
+        <div>
+          <div id="swTemplateModalTitle" style="font-size:15px;font-weight:800;color:var(--t)">Template preview</div>
+          <div id="swTemplateModalSub" style="font-size:11px;color:var(--t3);margin-top:3px"></div>
+        </div>
+        <button class="sbtn" onclick="swCloseTemplatePreview()" style="background:var(--b3);padding:6px 10px">✕</button>
+      </div>
+      <div id="swTemplateModalBody" style="padding:16px;overflow:auto;color:var(--t2);font-size:12px;line-height:1.6"></div>
+      <div style="padding:12px 16px;border-top:1px solid var(--br);display:flex;justify-content:flex-end;gap:8px">
+        <button class="sbtn" onclick="swCloseTemplatePreview()" style="background:var(--b3)">Close</button>
+        <button class="sbtn" onclick="swCloseTemplatePreview();swGenerate();" style="background:#15803D">Generate This Config</button>
+      </div>
+    </div>
   </div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
@@ -11494,7 +11594,7 @@ function renderSwCfg(el){
     const ntp=v('ntp'), syslog=v('syslog'), enablePass=v('enable_pass')||'ChangeMe123!', sshUser=v('ssh_user')||'admin', sshPass=v('ssh_pass')||'ChangeMe123!';
     const vlanList=v('vlan_list')||'10:Management,20:Users,30:Servers', accessPorts=v('access_ports'), accessVlan=v('access_vlan')||'20';
     const trunkPorts=v('trunk_ports'), trunkAllowed=v('trunk_allowed')||'10,20,30', nativeVlan=v('native_vlan')||'1';
-    const defRoute=v('default_route'), routingProto=v('routing_proto')||'static';
+    const defRoute=v('default_route')||mgmtGw, routingProto=v('routing_proto')||'static';
     const ospfId=v('ospf_id')||'1', ospfArea=v('ospf_area')||'0', ospfNets=v('ospf_nets');
     const bgpAsn=v('bgp_asn'), bgpPeer=v('bgp_peer');
     const portfast=v('portfast')||'yes', dot1x=v('dot1x')||'no', radiusIp=v('radius_ip'), radiusKey=v('radius_key');
@@ -11506,6 +11606,7 @@ function renderSwCfg(el){
     const wanInterface=v('wan_interface'), wanIp=v('wan_ip'), wanMask=v('wan_mask')||'255.255.255.252', wanGw=v('wan_gw');
     const lanInterface=v('lan_interface'), lanIp=v('lan_ip'), lanMask=v('lan_mask')||'255.255.255.0';
     const nat=v('nat')||'yes', routerOnStick=v('router_on_stick')||'no';
+    const lanNetwork=lanIp?lanIp.split('.').slice(0,3).join('.')+'.0':'192.168.1.0';
     const aclWan=v('acl_wan')||'yes';
     // Core-specific fields
     const vlanGateways=v('vlan_gateways'), stpRoot=v('stp_root')||'yes', stpVlans=v('stp_vlans')||'10,20,30,40';
@@ -11521,6 +11622,28 @@ function renderSwCfg(el){
     }).filter(vl=>vl.id&&/^\d+$/.test(vl.id)&&parseInt(vl.id)>=1&&parseInt(vl.id)<=4094);
 
     let cfg='';
+
+    if(swType==='router'&&swVendor!=='cisco'){
+      const L=swLabels();
+      const platform=L.vendor[swVendor]||swVendor;
+      cfg=`# ${platform} - ${L.cfg[swCfgType]} template
+# This platform is now correctly listed under Router / Firewall, but its full
+# generator still needs a dedicated syntax pack before it is safe to paste.
+#
+# Recommended baseline sections for this platform:
+# - Identity: hostname, admin account, SSH-only management
+# - Management: loopback or management interface, NTP, syslog, SNMP
+# - WAN: ${wanInterface||'<WAN_INTERFACE>'} with ${wanIp||'DHCP or static ISP IP'}
+# - LAN: ${lanInterface||'<LAN_INTERFACE>'} with ${lanIp||'192.168.1.1'} ${lanMask}
+# - Default route: ${wanGw||mgmtGw||'<UPSTREAM_GATEWAY>'}
+# - Security: deny unsolicited WAN access, permit required management only
+# - Optional routing: ${routingProto.toUpperCase()} ${routingProto==='bgp'?(bgpAsn||'<ASN>'):''}
+#
+# Select Cisco ISR / ASR if you need a ready-to-paste router config today.
+# Next step: add a dedicated ${platform} renderer so this output becomes paste-ready.`;
+      out.textContent=cfg;
+      return;
+    }
 
     if(swVendor==='cisco'){
       cfg+=`! ═══════════════════════════════════════════════
@@ -11550,6 +11673,9 @@ aaa authorization exec default local
 
       if(swCfgType==='full'||swCfgType==='vlan'){
         if(swType==='router'){
+          if(mgmtIp){
+            cfg+=`\n! ── MANAGEMENT LOOPBACK ──────────────────────\ninterface Loopback0\n description MANAGEMENT-LOOPBACK\n ip address ${mgmtIp} ${mgmtMask||'255.255.255.255'}\n no shutdown\n!\n`;
+          }
           // Router: WAN + LAN physical interfaces
           cfg+=`\n! ── WAN INTERFACE ────────────────────────────\n`;
           if(wanInterface){
@@ -11575,7 +11701,7 @@ aaa authorization exec default local
           }
           // NAT/PAT
           if(nat==='yes'&&wanInterface){
-            cfg+=`\n! ── NAT (PAT/OVERLOAD) ───────────────────────\nip nat inside source list NAT-ACL interface ${wanInterface} overload\n!\nip access-list standard NAT-ACL\n permit ${lanIp?lanIp.split('.').slice(0,3).join('.')+'.0':'192.168.1.0'} 0.0.0.255\n!\n`;
+            cfg+=`\n! ── NAT (PAT/OVERLOAD) ───────────────────────\nip nat inside source list NAT-ACL interface ${wanInterface} overload\n!\nip access-list standard NAT-ACL\n permit ${lanNetwork} 0.0.0.255\n!\n`;
           }
           // WAN ACL
           if(aclWan==='yes'&&wanInterface){
@@ -11669,16 +11795,16 @@ aaa authorization exec default local
 ! ── SECURITY ─────────────────────────────────
 no cdp run
 `;
-        if(dhcpSnoop==='yes'){
+        if(swType!=='router'&&dhcpSnoop==='yes'){
           cfg+=`ip dhcp snooping\n`;
           vlans.filter(vl=>vl.id!==mgmtVlan).forEach(vl=>cfg+=`ip dhcp snooping vlan ${vl.id}\n`);
           if(trunkPorts) cfg+=`interface ${trunkPorts}\n ip dhcp snooping trust\n!\n`;
         }
-        if(dai==='yes'){
+        if(swType!=='router'&&dai==='yes'){
           vlans.filter(vl=>vl.id!==mgmtVlan).forEach(vl=>cfg+=`ip arp inspection vlan ${vl.id}\n`);
           if(trunkPorts) cfg+=`interface ${trunkPorts}\n ip arp inspection trust\n!\n`;
         }
-        if(dot1x==='yes'&&radiusIp){
+        if(swType==='switch'&&dot1x==='yes'&&radiusIp){
           cfg+=`\naaa authentication dot1x default group radius local
 dot1x system-auth-control
 radius server RADIUS-SRV
@@ -11822,13 +11948,11 @@ set system services netconf ssh
         if(defRoute) cfg+=`set routing-options static route 0.0.0.0/0 next-hop ${defRoute}\n`;
         if(routingProto==='ospf'){
           if(mgmtIp) cfg+=`set routing-options router-id ${mgmtIp}\n`;
-          // Add all OSPF networks
-          (ospfNets||'').split(',').forEach(n=>{
-            const net=n.trim();
-            if(net) cfg+=`set protocols ospf area ${ospfArea} interface irb.${net.split('/')[0].split('.').slice(0,3).join('.')}\n`;
+          cfg+=`# Junos enables OSPF per interface, not by network wildcard.\n`;
+          vlans.forEach(vl=>cfg+=`set protocols ospf area ${ospfArea} interface irb.${vl.id}\n`);
+          (ospfNets||'').split(',').map(n=>n.trim()).filter(Boolean).forEach(n=>{
+            cfg+=`# Advertised by connected interface/SVI covering ${n}\n`;
           });
-          // Also add the management irb
-          cfg+=`set protocols ospf area ${ospfArea} interface irb.${mgmtVlan}\n`;
         }
         if(routingProto==='bgp'&&bgpAsn){
           const [peerIp,peerAsn]=(bgpPeer||'203.0.113.1:65000').split(':');
@@ -11923,10 +12047,124 @@ end
     if(!mask) return '24';
     return mask.split('.').reduce((a,o)=>a+parseInt(o).toString(2).split('1').length-1,0);
   }
+  function swLabels(){
+    return {
+      vendor:{cisco:'Cisco IOS / IOS-XE',aruba:'HP / Aruba CX',juniper:'Juniper EX / QFX',fortiswitch:'FortiSwitch',juniper_router:'Juniper SRX / MX',fortigate:'FortiGate',mikrotik:'MikroTik RouterOS'},
+      type:{switch:'Access Switch',core:'Core / Distribution',router:'Router / Firewall'},
+      cfg:{full:'Full Setup',vlan:'VLANs / Interfaces',routing:'Routing',security:'Security',mgmt:'Management'}
+    };
+  }
+  function swVendorOptions(){
+    return {
+      switch:[
+        {v:'cisco',l:'🔵 Cisco Catalyst / IOS-XE'},
+        {v:'aruba',l:'🟢 HP / Aruba CX'},
+        {v:'juniper',l:'🟣 Juniper EX / QFX'},
+        {v:'fortiswitch',l:'🛡️ FortiSwitch'}
+      ],
+      core:[
+        {v:'cisco',l:'🔵 Cisco Catalyst / Nexus'},
+        {v:'aruba',l:'🟢 Aruba CX L3 Switch'},
+        {v:'juniper',l:'🟣 Juniper EX / QFX'}
+      ],
+      router:[
+        {v:'cisco',l:'🔵 Cisco ISR / ASR'},
+        {v:'juniper_router',l:'🟣 Juniper SRX / MX'},
+        {v:'fortigate',l:'🛡️ FortiGate Firewall'},
+        {v:'mikrotik',l:'⚙️ MikroTik RouterOS'}
+      ]
+    };
+  }
+  function swTemplateInfo(){
+    const L=swLabels();
+    const focus={
+      full:'End-to-end baseline: identity, management, interfaces, routing where supported, security hardening, logging and monitoring.',
+      vlan:'Layer-2 and interface work: VLAN database, access ports, trunk ports, native/allowed VLANs and SVIs where relevant.',
+      routing:'Layer-3 work: default routes, static routing, OSPF, BGP and vendor-appropriate routing syntax.',
+      security:'Hardening profile: SSH-only access, login banner, access switch protections and WAN ACLs for supported routers.',
+      mgmt:'Operations profile: SSH, NTP, syslog, SNMP, LLDP and stack/virtual-chassis helper snippets.'
+    };
+    const support={
+      cisco:{
+        switch:'Strong fit for access switching with VLANs, trunks, management SVI, PortFast/BPDU Guard, DHCP snooping and DAI.',
+        core:'Strong fit for L3 switching with SVIs, inter-VLAN routing, STP root settings and dynamic routing options.',
+        router:'Supported for baseline edge routing with WAN/LAN interfaces, NAT/PAT, default route, Loopback0, OSPF/BGP and WAN ACL.'
+      },
+      aruba:{
+        switch:'Good fit for Aruba CX access switching with VLANs, access/trunk ports, management, SSH, SNMP and LLDP.',
+        core:'Good fit for Aruba CX L3 switching with SVIs, ip routing, default route and OSPF/BGP starter config.',
+        router:'Dedicated router baseline is not enabled here. Use Core / Distribution for Aruba CX L3 switch routing.'
+      },
+      juniper:{
+        switch:'Good fit for EX/QFX switching in Junos set format with VLANs, ethernet-switching ports, IRB management and LLDP.',
+        core:'Good fit for EX/QFX L3 switching with IRB interfaces, static routes and per-interface OSPF/BGP starter config.',
+        router:'Dedicated router baseline is not enabled here. Use Core / Distribution for Juniper L3 switch routing.'
+      },
+      fortiswitch:{
+        switch:'Limited standalone FortiSwitch baseline for VLANs, ports, management, SNMP and security features.',
+        core:'Limited standalone FortiSwitch template. In production, FortiSwitch is usually managed by FortiGate/FortiLink.',
+        router:'FortiSwitch router templates are intentionally disabled. Use FortiGate for routing/firewall work.'
+      },
+      juniper_router:{
+        switch:'Use Juniper EX / QFX for switching templates.',
+        core:'Use Juniper EX / QFX for L3 switching templates.',
+        router:'Preview support for Juniper SRX/MX router/firewall baselines. Config generation is marked as a platform-specific placeholder until the SRX/MX template is filled in.'
+      },
+      fortigate:{
+        switch:'Use FortiSwitch for switch templates.',
+        core:'Use FortiSwitch or a routing switch platform for core templates.',
+        router:'Preview support for FortiGate routing/firewall baselines. Config generation is marked as a platform-specific placeholder until the FortiGate template is filled in.'
+      },
+      mikrotik:{
+        switch:'Use Cisco, Aruba, Juniper EX/QFX, or FortiSwitch for switch templates.',
+        core:'Use a routing switch platform for core templates.',
+        router:'Preview support for MikroTik RouterOS baselines. Config generation is marked as a platform-specific placeholder until the RouterOS template is filled in.'
+      }
+    };
+    const fields={
+      switch:['Hostname and admin access','Management VLAN/IP/gateway','VLAN list','Access ports and uplink trunk','Optional voice VLAN, PoE, SNMP, LLDP'],
+      core:['Hostname and admin access','Management SVI','VLAN gateways','Trunk uplinks','STP root and routing protocol settings'],
+      router:['Hostname and admin access','Loopback management IP','WAN and LAN interfaces','NAT/PAT and default route','Optional OSPF/BGP and WAN ACL']
+    };
+    return {
+      title:`${L.vendor[swVendor]} - ${L.type[swType]} - ${L.cfg[swCfgType]}`,
+      focus:focus[swCfgType],
+      support:(support[swVendor]||support.cisco)[swType],
+      fields:fields[swType]||fields.switch
+    };
+  }
+  function syncSwSelectors(){
+    const vs=document.getElementById('swVendorSelect');
+    const ts=document.getElementById('swTypeSelect');
+    const cs=document.getElementById('swCfgSelect');
+    if(ts) ts.value=swType;
+    if(vs){
+      const opts=swVendorOptions()[swType]||swVendorOptions().switch;
+      const valid=opts.some(o=>o.v===swVendor);
+      if(!valid) swVendor=opts[0].v;
+      vs.innerHTML=opts.map(o=>`<option value="${o.v}">${o.l}</option>`).join('');
+      vs.value=swVendor;
+    }
+    if(cs) cs.value=swCfgType;
+    updateTemplateSummary();
+  }
+  function updateTemplateSummary(){
+    const el=document.getElementById('swTemplateSummary');
+    if(!el) return;
+    const info=swTemplateInfo();
+    el.innerHTML=`<strong style="color:var(--bl)">${info.title}</strong><br>${info.support}<br><span style="color:var(--t3)">${info.focus}</span>`;
+  }
+  function enforceSwSupport(){
+    const opts=swVendorOptions()[swType]||swVendorOptions().switch;
+    if(!opts.some(o=>o.v===swVendor)){
+      swVendor=opts[0].v;
+    }
+  }
 
   window.swSetVendor=function(v,btn){
     swVendor=v;
-    document.querySelectorAll('.swv-btn').forEach(b=>{b.style.background=b.dataset.v===v?'var(--a)':'var(--b3)';b.classList.toggle('active',b.dataset.v===v);});
+    enforceSwSupport();
+    syncSwSelectors();
     buildForm();
     document.getElementById('swCfgOutput').textContent='— Fill the form and click Generate —';
     // Update download hint
@@ -11936,13 +12174,39 @@ end
   };
   window.swSetType=function(t,btn){
     swType=t;
-    document.querySelectorAll('.swt-btn').forEach(b=>{b.style.background=b.dataset.t===t?'var(--a)':'var(--b3)';b.classList.toggle('active',b.dataset.t===t);});
+    enforceSwSupport();
+    syncSwSelectors();
     buildForm();document.getElementById('swCfgOutput').textContent='— Fill the form and click Generate —';
   };
   window.swSetCfg=function(c,btn){
     swCfgType=c;
-    document.querySelectorAll('.swc-btn').forEach(b=>{b.style.background=b.dataset.c===c?'var(--a)':'var(--b3)';b.classList.toggle('active',b.dataset.c===c);});
+    syncSwSelectors();
     buildForm();document.getElementById('swCfgOutput').textContent='— Fill the form and click Generate —';
+  };
+  window.swPreviewTemplate=function(){
+    const info=swTemplateInfo();
+    const modal=document.getElementById('swTemplateModal');
+    const title=document.getElementById('swTemplateModalTitle');
+    const sub=document.getElementById('swTemplateModalSub');
+    const body=document.getElementById('swTemplateModalBody');
+    if(!modal||!title||!sub||!body) return;
+    title.textContent=info.title;
+    sub.textContent='Review what this selection will build before filling the form.';
+    body.innerHTML=`
+      <div style="background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.2);border-radius:8px;padding:10px 12px;margin-bottom:12px">
+        <strong style="color:var(--a)">Template scope</strong><br>${info.focus}
+      </div>
+      <div style="background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:8px;padding:10px 12px;margin-bottom:12px">
+        <strong style="color:var(--bl)">Vendor/type support</strong><br>${info.support}
+      </div>
+      <div style="font-size:11px;font-weight:800;color:var(--t);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Fields this template will ask for</div>
+      <ul style="margin:0 0 0 18px;padding:0">${info.fields.map(f=>`<li style="margin-bottom:5px">${f}</li>`).join('')}</ul>
+    `;
+    modal.style.display='flex';
+  };
+  window.swCloseTemplatePreview=function(){
+    const modal=document.getElementById('swTemplateModal');
+    if(modal) modal.style.display='none';
   };
   window.swGenerate=swGenerate;
   window.swCopy=function(){
@@ -11965,6 +12229,7 @@ end
   };
 
   buildForm();
+  syncSwSelectors();
 }
 
 function initSidebar(){
