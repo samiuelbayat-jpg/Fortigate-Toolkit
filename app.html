@@ -4266,7 +4266,7 @@ const QREF=[
 /* ══ RENDER FUNCTIONS ══ */
 function render(){const el=document.getElementById('mc');
   // Toggle chat-fill class so chat tabs fill the full content area
-  const chatTabs=['ai','claudechat'];
+  const chatTabs=['ai','claudechat','masking','bulkAnon'];
   el.classList.toggle('chat-fill', chatTabs.includes(tab));
   if(tab==='guide'){
   const d=D[cur];
@@ -4621,12 +4621,65 @@ function loadMappingsStandalone(){let s=localStorage.getItem("forti_masks_standa
 function renderMaskTableStandalone(){const cont=document.getElementById("maskTableStandalone");if(!cont)return;if(!ipMappings.length){cont.innerHTML="<div style='color:#FCD34D;'>✨ No IP mappings yet.</div>";return;}let html="<table class='ip-mask-table'><thead><tr><th>Real IP</th><th>Fake IP</th><th>Description</th><th>Action</th></tr></thead><tbody>";ipMappings.forEach(m=>{html+=`<tr><td>${escapeHtml(m.real)}</td><td>${escapeHtml(m.fake)}</td><td>${escapeHtml(m.desc||'')}</td><td><button class='delMaskBtnStandalone' data-real='${escapeHtml(m.real)}' style='background:#B91C1C;color:white;border:none;border-radius:20px;padding:2px 8px;cursor:pointer;'>❌</button></td></tr>`;});html+="</tbody></table>";cont.innerHTML=html;document.querySelectorAll('.delMaskBtnStandalone').forEach(btn=>{btn.addEventListener('click',()=>{ipMappings=ipMappings.filter(m=>m.real!==btn.getAttribute('data-real'));saveMappings();});});}
 function addMappingStandalone(real,desc){if(ipMappings.find(m=>m.real===real)){alert("IP already mapped");return false;}ipMappings.push({real,fake:generateFakeIP(real),desc:desc||""});saveMappings();return true;}
 function maskTextStandalone(input){let out=input;ipMappings.forEach(m=>{let regex=new RegExp(m.real.replace(/\./g,'\\.'),'g');out=out.replace(regex,m.fake);});return out;}
-function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:var(--b2);border-radius:12px;padding:16px;"><div class="stitle" style="margin-bottom:12px;">🎭 IP Masking</div><div class="mask-input-group"><input type="text" id="realIpMask" placeholder="Real IP (e.g., 192.168.1.100)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><input type="text" id="descMask" placeholder="Description (optional)" style="background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px"><button class="sbtn" id="addMaskBtnStandalone">➕ Add</button></div><div id="maskTableStandalone" style="background:#010409;border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto;"></div><div style="display:flex;gap:8px;margin-bottom:16px;"><button class="sbtn" id="deleteAllMaskStandalone" style="background:#B91C1C;">🗑️ Delete all</button><button class="sbtn" id="exportMaskStandalone" style="background:#15803D;">📄 Export</button></div><textarea id="rawTextMask" rows="10" placeholder="Paste any FortiGate output with real IPs..." style="width:100%;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:10px;font-family:var(--mono);font-size:12px;"></textarea><button class="sbtn" id="applyMaskStandalone" style="background:var(--a);margin-top:6px;">🎭 Mask this text</button><pre id="maskedPreviewStandalone" class="mask-preview">Masked output will appear here.</pre></div>`;loadMappingsStandalone();document.getElementById("addMaskBtnStandalone")?.addEventListener('click',()=>{let real=document.getElementById("realIpMask").value.trim();let desc=document.getElementById("descMask").value.trim();if(real)addMappingStandalone(real,desc);document.getElementById("realIpMask").value="";document.getElementById("descMask").value="";});document.getElementById("deleteAllMaskStandalone")?.addEventListener('click',()=>{if(confirm("Delete ALL mappings?")){ipMappings=[];saveMappings();}});const maskPrivNote=document.createElement('div');
-  maskPrivNote.style.cssText='font-size:11px;color:var(--t3);margin:6px 0 10px;padding:8px 12px;background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.15);border-radius:6px;line-height:1.6';
-  maskPrivNote.innerHTML='🔒 <strong style="color:var(--t2)">Privacy note:</strong> IP mappings are stored in your browser only — never sent externally. Click <strong style="color:var(--r)">🗑️ Delete all</strong> before using a shared computer.';
-  const _mt=document.getElementById('maskTableStandalone');
-  if(_mt&&_mt.parentNode) _mt.parentNode.insertBefore(maskPrivNote,_mt.nextSibling);
-  document.getElementById("exportMaskStandalone")?.addEventListener('click',()=>{let content="# NetWolf IP Masking Report\n\n";ipMappings.forEach(m=>{content+=`${m.real} → ${m.fake} (${m.desc||''})\n`;});let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:"text/plain"}));a.download=`netwolf_mask_${Date.now()}.txt`;a.click();});document.getElementById("applyMaskStandalone")?.addEventListener('click',()=>{let raw=document.getElementById("rawTextMask").value;document.getElementById("maskedPreviewStandalone").innerText=maskTextStandalone(raw)||"(nothing to mask)";});}
+function renderMaskingTab(el){
+  el.innerHTML=`
+  <div style="display:flex;flex-direction:column;flex:1;min-height:0;gap:10px">
+    <div class="sh" style="flex-shrink:0"><span class="stitle">🎭 IP Masking</span><span class="sev info">Replace real IPs with safe placeholders</span></div>
+
+    <!-- Add mapping row -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0">
+      <input type="text" id="realIpMask" placeholder="Real IP (e.g. 192.168.1.100)" style="flex:1;min-width:150px;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px 10px;font-size:12px;font-family:var(--mono);outline:none">
+      <input type="text" id="descMask" placeholder="Description (optional)" style="flex:1;min-width:120px;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:8px 10px;font-size:12px;outline:none">
+      <button class="sbtn" id="addMaskBtnStandalone">➕ Add</button>
+      <button class="sbtn" id="deleteAllMaskStandalone" style="background:#B91C1C">🗑️ Clear all</button>
+      <button class="sbtn" id="exportMaskStandalone" style="background:#15803D">📄 Export</button>
+    </div>
+
+    <!-- Privacy note -->
+    <div id="maskPrivNote" style="font-size:11px;color:var(--t3);padding:7px 12px;background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.15);border-radius:6px;line-height:1.6;flex-shrink:0">
+      🔒 <strong style="color:var(--t2)">Privacy note:</strong> Mappings are stored in your browser only — never sent externally. Click <strong style="color:var(--r)">Clear all</strong> before using a shared computer.
+    </div>
+
+    <!-- Mapping table -->
+    <div id="maskTableStandalone" style="background:#010409;border-radius:8px;padding:10px;overflow-x:auto;flex-shrink:0;max-height:140px;overflow-y:auto;min-height:40px"></div>
+
+    <!-- Input / Output side by side -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;min-height:0">
+      <div style="display:flex;flex-direction:column;gap:6px;min-height:0">
+        <div style="font-size:11px;font-weight:700;color:var(--t2)">📥 Paste CLI output</div>
+        <textarea id="rawTextMask" placeholder="Paste any FortiGate output with real IPs..." style="flex:1;min-height:0;width:100%;background:var(--bg);color:var(--t);border:1px solid var(--br);border-radius:6px;padding:10px;font-family:var(--mono);font-size:11.5px;resize:none;outline:none;line-height:1.7;box-sizing:border-box"></textarea>
+        <button class="sbtn" id="applyMaskStandalone" style="background:var(--a);flex-shrink:0">🎭 Mask this text</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;min-height:0">
+        <div style="font-size:11px;font-weight:700;color:var(--t2)">📤 Masked output</div>
+        <pre id="maskedPreviewStandalone" class="mask-preview" style="flex:1;min-height:0;margin:0;overflow-y:auto;white-space:pre-wrap;word-break:break-all">Masked output will appear here.</pre>
+      </div>
+    </div>
+  </div>`;
+
+  loadMappingsStandalone();
+  document.getElementById('addMaskBtnStandalone')?.addEventListener('click',()=>{
+    const real=document.getElementById('realIpMask').value.trim();
+    const desc=document.getElementById('descMask').value.trim();
+    if(real) addMappingStandalone(real,desc);
+    document.getElementById('realIpMask').value='';
+    document.getElementById('descMask').value='';
+  });
+  document.getElementById('deleteAllMaskStandalone')?.addEventListener('click',()=>{
+    if(confirm('Delete ALL mappings?')){ipMappings=[];saveMappings();}
+  });
+  document.getElementById('exportMaskStandalone')?.addEventListener('click',()=>{
+    let content='# NetWolf IP Masking Report\n\n';
+    ipMappings.forEach(m=>{content+=`${m.real} → ${m.fake} (${m.desc||''})\n`;});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([content],{type:'text/plain'}));
+    a.download=`netwolf_mask_${Date.now()}.txt`;a.click();
+  });
+  document.getElementById('applyMaskStandalone')?.addEventListener('click',()=>{
+    const raw=document.getElementById('rawTextMask').value;
+    document.getElementById('maskedPreviewStandalone').innerText=maskTextStandalone(raw)||'(nothing to mask)';
+  });
+}
 
 let groqApiKeyFree=_loadKey('groq_key')||'';
 let claudeApiKeyFree=_loadKey('claude_key')||'';
@@ -6371,42 +6424,41 @@ let _anonMapping = '';
 
 function renderBulkAnonTab(el){
   el.innerHTML=`
-  <div class="sh"><span class="stitle">🔄 Bulk Anonymizer</span><span class="sev info">IPs · MACs · Usernames · Passwords · Hostnames</span></div>
-  <p style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6">
-    Paste any FortiGate CLI output — all sensitive data is replaced with safe placeholders before sharing with vendors or colleagues.
-  </p>
+  <div style="display:flex;flex-direction:column;flex:1;min-height:0;gap:10px">
+    <div class="sh" style="flex-shrink:0"><span class="stitle">📋 Bulk Anonymizer</span><span class="sev info">IPs · MACs · Usernames · Passwords · Hostnames</span></div>
 
-  <!-- Options -->
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
-    <span style="font-size:11px;font-weight:600;color:var(--t2)">Anonymize:</span>
-    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonIPs" checked> IPv4 addresses</label>
-    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonMACs" checked> MAC addresses</label>
-    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonPasswords" checked> Passwords / PSKs</label>
-    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonUsernames" checked> Usernames</label>
-    <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonHostnames" checked> Hostnames / SN</label>
-  </div>
+    <!-- Options row -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;flex-shrink:0;padding:8px 12px;background:var(--b2);border:1px solid var(--br);border-radius:8px">
+      <span style="font-size:11px;font-weight:700;color:var(--t2)">Anonymize:</span>
+      <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonIPs" checked> IPv4</label>
+      <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonMACs" checked> MACs</label>
+      <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonPasswords" checked> Passwords/PSKs</label>
+      <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonUsernames" checked> Usernames</label>
+      <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer"><input type="checkbox" id="anonHostnames" checked> Hostnames/SN</label>
+      <button class="sbtn" id="bulkAnonConvertBtn" style="margin-left:auto;padding:6px 18px">✨ Anonymize</button>
+      <button class="sbtn" id="bulkAnonClearBtn" style="background:var(--b3)">🗑️ Clear</button>
+    </div>
 
-  <div class="cblock" style="margin-bottom:10px">
-    <div class="chdr"><div class="chdr-l">📥 Input — Paste CLI output here</div></div>
-    <div class="cbody" style="padding:10px">
-      <textarea id="bulkAnonInput" rows="10" style="width:100%;background:#010409;color:#e6edf3;font-family:var(--mono);font-size:11px;border:1px solid var(--br);border-radius:6px;padding:10px;resize:vertical;outline:none;line-height:1.7" placeholder="Paste FortiGate CLI output here...&#10;&#10;Example:&#10;  set remote-gw 203.0.113.5&#10;  set psksecret MySecret123&#10;  set username admin&#10;  MAC: aa:bb:cc:dd:ee:ff"></textarea>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-        <button class="sbtn" id="bulkAnonConvertBtn" style="padding:8px 20px">✨ Anonymize All</button>
-        <button class="sbtn" id="bulkAnonClearBtn" style="background:var(--b3)">🗑️ Clear</button>
+    <!-- Input / Output side by side -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;min-height:0">
+      <div style="display:flex;flex-direction:column;gap:6px;min-height:0">
+        <div style="font-size:11px;font-weight:700;color:var(--t2)">📥 Input — paste CLI output</div>
+        <textarea id="bulkAnonInput" placeholder="Paste FortiGate CLI output here...&#10;&#10;Example:&#10;  set remote-gw 203.0.113.5&#10;  set psksecret MySecret123&#10;  set username admin&#10;  MAC: aa:bb:cc:dd:ee:ff" style="flex:1;min-height:0;width:100%;background:#010409;color:#e6edf3;font-family:var(--mono);font-size:11.5px;border:1px solid var(--br);border-radius:6px;padding:10px;resize:none;outline:none;line-height:1.7;box-sizing:border-box"></textarea>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;min-height:0">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;font-weight:700;color:var(--t2)">📤 Anonymized output</span>
+          <button class="sbtn" id="bulkAnonCopyBtn" style="background:#15803D;font-size:10px;padding:3px 10px;margin-left:auto">📋 Copy</button>
+        </div>
+        <pre id="bulkAnonOutput" style="flex:1;min-height:0;margin:0;background:#010409;color:#e6edf3;border-radius:6px;padding:12px;font-family:var(--mono);font-size:11.5px;white-space:pre-wrap;overflow-y:auto;border:1px solid var(--br);line-height:1.7;word-break:break-all">— Output will appear here —</pre>
       </div>
     </div>
-  </div>
 
-  <div class="cblock" style="margin-bottom:10px">
-    <div class="chdr"><div class="chdr-l">📤 Anonymized Output</div><button class="sbtn" id="bulkAnonCopyBtn" style="background:#15803D;font-size:10px;padding:3px 10px">📋 Copy</button></div>
-    <div class="cbody" style="padding:10px">
-      <pre id="bulkAnonOutput" style="background:#010409;color:#e6edf3;border-radius:8px;padding:12px;font-family:var(--mono);font-size:11px;white-space:pre-wrap;overflow-x:auto;max-height:400px;margin:0;line-height:1.7;border:1px solid var(--br)">— Output will appear here —</pre>
+    <!-- Mapping table -->
+    <div style="flex-shrink:0;max-height:130px;overflow-y:auto">
+      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:4px">🗺️ Replacement map</div>
+      <div class="cbody" id="bulkAnonMappingContainer" style="background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:8px"><div class="cnote" style="font-size:11px;color:var(--t3)">Run anonymization to see what was replaced.</div></div>
     </div>
-  </div>
-
-  <div class="cblock">
-    <div class="chdr"><div class="chdr-l">🗺️ Replacement Mapping Table</div></div>
-    <div class="cbody" id="bulkAnonMappingContainer"><div class="cnote">Run anonymization to see what was replaced.</div></div>
   </div>`;
 
   // ── Core anonymization engine ──
