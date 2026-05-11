@@ -4378,7 +4378,7 @@ function renderAI(el){
   const _hasKey = freeAIProvider==='claude' ? !!claudeApiKey : !!groqApiKey;
   let msgs='';
   if(!chat.length){
-    msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about FortiGate.<br><br>Tip: click any chip to auto-fill a question.<br><br>✨ Powered by '+_activeProv+(_hasKey?'':' <span style="color:var(--r);font-size:11px">(no key set)</span>')+'</div>';
+    msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about FortiGate — or switch to <strong>Free Ask</strong> for any networking question.<br><br>✨ Powered by '+_activeProv+(_hasKey?'':' <span style="color:var(--r);font-size:11px">(no key set)</span>')+'</div>';
   } else {
     chat.forEach(m=>{
       const u=m.role==='user';
@@ -4396,11 +4396,23 @@ function renderAI(el){
     +'<input type="radio" name="aiChatProv" value="claude" '+(freeAIProvider==='claude'?'checked':'')+' onchange="aiChatProvChange(\'claude\')" style="accent-color:var(--a)"> Claude'
     +(claudeApiKey?' <span style="color:var(--g);font-size:10px">✓</span>':' <span style="color:var(--r);font-size:10px">(no key)</span>')+'</label>'
     +(!_hasKey?'<span style="color:var(--r);font-size:10px">— Enter key via <strong>Set Key</strong> above</span>':'')
+    +'<span style="margin-left:auto;display:flex;align-items:center;gap:6px">'
+    +'<span style="font-size:10px;color:var(--t3)">Mode:</span>'
+    +'<button id="aiModeForti" onclick="aiSetMode(\'fortigate\')" style="font-size:10px;padding:3px 10px;border-radius:20px;cursor:pointer;font-family:var(--mono);border:1px solid '+(aiChatMode==='fortigate'?'var(--a)':'var(--br)')+';background:'+(aiChatMode==='fortigate'?'rgba(29,158,117,.18)':'var(--bg)')+';color:'+(aiChatMode==='fortigate'?'var(--a)':'var(--t2)')+'">🛡 FortiGate</button>'
+    +'<button id="aiModeFree" onclick="aiSetMode(\'free\')" style="font-size:10px;padding:3px 10px;border-radius:20px;cursor:pointer;font-family:var(--mono);border:1px solid '+(aiChatMode==='free'?'var(--bl)':'var(--br)')+';background:'+(aiChatMode==='free'?'rgba(88,166,255,.18)':'var(--bg)')+';color:'+(aiChatMode==='free'?'var(--bl)':'var(--t2)')+'">💬 Free Ask</button>'
+    +'</span>'
     +'</div>';
-  const privBanner='<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5"><span style="flex-shrink:0">⚠️</span><div><strong>Messages are sent to '+_activeProv+' API</strong> (third party). Avoid sharing real IPs or credentials.<br>Before sending CLI output: use <span class="ai-mask-link" style="color:var(--a);cursor:pointer;text-decoration:underline">🎭 IP Masking</span> to replace individual IPs, or <span class="ai-bulk-link" style="color:var(--a);cursor:pointer;text-decoration:underline">📋 Bulk Anonymizer</span> to anonymize a full CLI output at once (replaces all IPs, MACs, hostnames).</div></div>';
-  const ipWarn='<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:#f87171;line-height:1.5"><span style="flex-shrink:0">🚨</span><div>Private IPs detected: <strong style="font-family:var(--mono);color:#fca5a5"></strong><br>Use <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'masking\')">🎭 IP Masking</span> for individual IPs or <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'bulkAnon\')">📋 Bulk Anonymizer</span> for full CLI output before sending.</div></div>';
 
-  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;height:100%">'+provSelector+privBanner.replace('margin-bottom:8px','margin:6px 10px 0')+ipWarn.replace('margin-bottom:8px','margin:4px 10px 0')+'<div class="messages" id="chatm">'+msgs+'</div>'+'<div class="irow"><input type="text" id="chi" placeholder="Ask anything about FortiGate..." /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div></div>';
+  const modeNotice = aiChatMode==='free'
+    ? '<div style="display:flex;align-items:center;gap:8px;margin:4px 10px 0;padding:6px 12px;background:rgba(88,166,255,.07);border:1px solid rgba(88,166,255,.2);border-radius:7px;font-size:11px;color:var(--bl)">💬 <strong>Free Ask mode</strong> — ask anything: networking, Linux, Windows, general IT. Not limited to FortiGate.</div>'
+    : '<div style="display:flex;align-items:center;gap:8px;margin:4px 10px 0;padding:6px 12px;background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.18);border-radius:7px;font-size:11px;color:var(--a)">🛡 <strong>FortiGate mode</strong> — focused on category: <em>'+((D[cur]&&D[cur].t)||cur)+'</em>. Switch to <strong>Free Ask</strong> for unrelated questions.</div>';
+
+  const privBanner='<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin:4px 10px 0;font-size:11px;color:var(--y);line-height:1.5"><span style="flex-shrink:0">⚠️</span><div><strong>Messages are sent to '+_activeProv+' API</strong> (third party). Avoid sharing real IPs or credentials.<br>Use <span class="ai-mask-link" style="color:var(--a);cursor:pointer;text-decoration:underline">🎭 IP Masking</span> or <span class="ai-bulk-link" style="color:var(--a);cursor:pointer;text-decoration:underline">📋 Bulk Anonymizer</span> before sending CLI output.</div></div>';
+  const ipWarn='<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin:4px 10px 0;font-size:11px;color:#f87171;line-height:1.5"><span style="flex-shrink:0">🚨</span><div>Private IPs detected: <strong style="font-family:var(--mono);color:#fca5a5"></strong><br>Use <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'masking\')">🎭 IP Masking</span> or <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'bulkAnon\')">📋 Bulk Anonymizer</span> before sending.</div></div>';
+
+  const placeholder = aiChatMode==='free' ? 'Ask anything — networking, Linux, Windows, general IT...' : 'Ask about FortiGate or '+((D[cur]&&D[cur].t)||'current category')+'...';
+
+  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;height:100%">'+provSelector+modeNotice+privBanner+ipWarn+'<div class="messages" id="chatm">'+msgs+'</div>'+'<div class="irow"><input type="text" id="chi" placeholder="'+placeholder+'" /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div></div>';
 
   // Wire input events cleanly — no inline handlers
   const chiEl=document.getElementById('chi');
@@ -4421,7 +4433,14 @@ function renderAI(el){
 function aiChatProvChange(prov){
   freeAIProvider=prov;
   localStorage.setItem('freeai_provider',prov);
-  render(); // re-render the current tab so banners/header update
+  render();
+}
+
+let aiChatMode=localStorage.getItem('ai_chat_mode')||'fortigate';
+function aiSetMode(mode){
+  aiChatMode=mode;
+  localStorage.setItem('ai_chat_mode',mode);
+  render();
 }
 
 /* ══ CLAUDE CHAT TAB ══ */
@@ -4512,7 +4531,9 @@ async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loadi
   const _aw=document.getElementById('aiPrivWarn');
   if(_ips.length>0&&_aw){_aw.style.display='flex';_aw.querySelector('strong').textContent=_ips.slice(0,4).join(', ')+(_ips.length>4?' …':'');}
   inp.value='';chat.push({role:'user',content:text});loading=true;render();
-  const sys='You are a senior FortiGate engineer. Current category: "'+D[cur].t+'". Give concise, practical FortiGate CLI. Use backticks.';
+  const sys = aiChatMode==='free'
+    ? 'You are a knowledgeable network and IT engineer. Answer any question the user has — networking, FortiGate, Linux, Windows, routing, security, or general IT. Be concise and practical. Use backticks for commands and code.'
+    : 'You are a senior FortiGate engineer. Current category: "'+((D[cur]&&D[cur].t)||cur)+'". Give concise, practical FortiGate CLI answers. Use backticks for commands.';
   try{
     const useClaude = freeAIProvider==='claude' ? !!claudeApiKey : (!groqApiKey && !!claudeApiKey);
     if(!groqApiKey&&!claudeApiKey)throw new Error('no-key');
