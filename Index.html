@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NetWolf | Network Engineer Toolkit</title>
+<meta name="description" content="NetWolf — network engineering toolkit for multi-vendor CLI work, AI analysis, config generation, IP masking and lab setup.">
+<meta name="theme-color" content="#1D9E75">
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<style>
+:root{
+  --a:#1D9E75;--ad:#0F6E56;--a2:#52d6b0;
+  --bg:#0a0d12;--b2:#11161d;--b3:#181f28;--br:#222b36;--br2:#2c3744;
+  --t:#e8eef5;--t2:#8a94a3;--t3:#525c6b;
+  --g:#3fb950;--y:#d29922;--r:#f85149;--bl:#58a6ff;--pu:#a78bfa;
+  --mono:'JetBrains Mono','SF Mono','Courier New',monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--t);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+a{color:inherit}
+button{font-family:inherit}
+
+/* ── ICON SYSTEM ── */
+.ic{width:1em;height:1em;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0;display:inline-block;vertical-align:-0.15em}
+.ic-fill{fill:currentColor;stroke:none}
+
+#matBg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.3}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(10,13,18,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06);padding:14px 28px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--t);letter-spacing:-.01em}
+.logo .logo-text{color:var(--t)}
+.logo .logo-text>span{color:var(--a)}
+.logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--ad));display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;box-shadow:0 6px 16px rgba(29,158,117,.32),inset 0 1px 0 rgba(255,255,255,.18)}
+.logo span{color:var(--a)}
+.nav-links{display:flex;align-items:center;gap:26px}
+.nav-links a{font-size:13px;color:var(--t2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--t)}
+.btn-nav{display:inline-flex;align-items:center;gap:7px;background:var(--a);color:#fff!important;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;transition:all .2s}
+.btn-nav:hover{background:var(--ad)!important;transform:translateY(-1px)}
+.btn-nav .ic{font-size:14px}
+@media(max-width:680px){.nav-links a:not(.btn-nav){display:none}.nav-links{gap:0}}
+
+section{position:relative;z-index:1}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 28px 80px;overflow:hidden;background:radial-gradient(circle at 18% 22%,rgba(29,158,117,.16),transparent 28%),radial-gradient(circle at 82% 8%,rgba(88,166,255,.08),transparent 26%),linear-gradient(180deg,#0a0d12 0%,#06090d 100%)}
+.hero::before{content:'';position:absolute;inset:80px 4% 40px;border:1px solid rgba(29,158,117,.1);border-radius:24px;background:linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,rgba(0,0,0,.85),rgba(0,0,0,.1));pointer-events:none}
+.hero-inner{width:min(1200px,100%);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(440px,1.05fr);gap:48px;align-items:center;position:relative;z-index:2}
+.hero-copy{max-width:600px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.22);border-radius:999px;padding:6px 14px 6px 10px;font-size:11.5px;color:var(--a2);font-weight:600;margin-bottom:24px;font-family:var(--mono);letter-spacing:.02em}
+.hero-badge .ic{font-size:13px;color:var(--a)}
+.hero-badge .pulse{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+h1{font-size:clamp(36px,5.6vw,64px);font-weight:700;line-height:1.04;margin-bottom:22px;letter-spacing:-.025em}
+h1 .accent{background:linear-gradient(120deg,var(--a),#7fe5c2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:17px;color:var(--t2);line-height:1.7;max-width:560px;margin:0 0 30px}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,var(--a),var(--ad));color:#fff;padding:13px 22px;border-radius:10px;font-size:14.5px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all .2s;box-shadow:0 6px 18px rgba(29,158,117,.25),inset 0 1px 0 rgba(255,255,255,.16)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(29,158,117,.36),inset 0 1px 0 rgba(255,255,255,.18)}
+.btn-primary .ic{font-size:16px}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);color:var(--t);padding:13px 20px;border-radius:10px;font-size:14.5px;font-weight:600;text-decoration:none;border:1px solid rgba(255,255,255,.1);transition:all .2s}
+.btn-ghost:hover{border-color:var(--a);color:var(--a);background:rgba(29,158,117,.05)}
+.btn-ghost .ic{font-size:16px}
+.hero-chips{display:flex;gap:6px;flex-wrap:wrap}
+.hero-chip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);color:var(--t2);font-family:var(--mono)}
+.hero-chip .ic{font-size:12px;color:var(--a)}
+.hero-proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:30px;max-width:560px}
+.proof-card{background:rgba(17,22,29,.65);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 14px;backdrop-filter:blur(10px)}
+.proof-num{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--a);line-height:1;letter-spacing:-.02em}
+.proof-lbl{font-size:10.5px;color:var(--t2);line-height:1.45;margin-top:6px;text-transform:uppercase;letter-spacing:.06em}
+
+/* ── HERO VISUAL ── */
+.hero-visual{position:relative;min-height:560px}
+.product-screen{position:relative;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:linear-gradient(180deg,#0f141c,#080b10);box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 0 1px rgba(29,158,117,.06),0 0 80px rgba(29,158,117,.08);overflow:hidden;transform:perspective(1200px) rotateY(-6deg) rotateX(2deg)}
+.screen-top{height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
+.screen-dot{width:10px;height:10px;border-radius:50%}
+.screen-dot.r{background:#ff5f57}.screen-dot.y{background:#ffbd2e}.screen-dot.g{background:#28c840}
+.screen-title{margin-left:8px;font-family:var(--mono);font-size:11px;color:var(--t2);display:flex;align-items:center;gap:6px}
+.screen-body{display:grid;grid-template-columns:160px 1fr;min-height:460px}
+.screen-side{border-right:1px solid rgba(255,255,255,.06);padding:14px 10px;background:linear-gradient(180deg,rgba(29,158,117,.04),transparent)}
+.side-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;font-size:11.5px;color:var(--t2);margin-bottom:2px;transition:background .15s}
+.side-item .ic{font-size:14px;color:var(--t3)}
+.side-item.active{background:rgba(29,158,117,.1);color:#a8eed1;border-left:2px solid var(--a);padding-left:8px}
+.side-item.active .ic{color:var(--a)}
+.screen-main{padding:16px}
+.screen-tabs{display:flex;gap:6px;overflow:hidden;margin-bottom:14px}
+.screen-tab{font-family:var(--mono);font-size:10.5px;color:var(--t2);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:6px 10px;background:rgba(255,255,255,.02);white-space:nowrap}
+.screen-tab.active{color:#dffcf0;border-color:rgba(29,158,117,.35);background:rgba(29,158,117,.1)}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.dash-card{border:1px solid rgba(255,255,255,.07);border-radius:11px;background:rgba(255,255,255,.025);padding:13px}
+.dash-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:5px}
+.dash-label .ic{font-size:11px;color:var(--a)}
+.dash-value{font-family:var(--mono);font-size:22px;color:var(--a);font-weight:700;margin-top:8px;letter-spacing:-.02em}
+.dash-note{font-size:11px;color:var(--t2);line-height:1.5;margin-top:5px}
+.terminal-card{border:1px solid rgba(29,158,117,.18);border-radius:11px;background:#040608;overflow:hidden}
+.terminal-head{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06);font-family:var(--mono);font-size:10px;color:var(--t2)}
+.terminal-head .left{display:flex;align-items:center;gap:6px}
+.terminal-head .ic{font-size:12px;color:var(--a)}
+.terminal-body{font-family:var(--mono);font-size:11px;line-height:1.85;color:#3fb950;padding:12px 14px;min-height:140px}
+.term-warn{color:#d29922}.term-red{color:#f85149}.term-blue{color:#58a6ff}.term-dim{color:rgba(255,255,255,.32)}
+
+.floating-card{position:absolute;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(11,15,20,.85);backdrop-filter:blur(18px);box-shadow:0 24px 50px rgba(0,0,0,.4);padding:14px 16px}
+.floating-card.one{left:-28px;top:62px;width:200px}
+.floating-card.two{right:-16px;bottom:36px;width:216px}
+.float-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.float-head .ic{font-size:16px;color:var(--a);background:rgba(29,158,117,.12);width:26px;height:26px;border-radius:7px;padding:5px}
+.float-title{font-size:12.5px;color:var(--t);font-weight:600}
+.float-text{font-size:11.5px;color:var(--t2);line-height:1.55}
+.risk-row{display:flex;gap:5px;margin-top:9px}
+.risk-pill{font-family:var(--mono);font-size:9.5px;padding:3px 8px;border-radius:999px;display:inline-flex;align-items:center;gap:4px}
+.risk-pill .ic{font-size:10px}
+.risk-pill.g{color:#3fb950;background:rgba(63,185,80,.12)}
+.risk-pill.y{color:#d29922;background:rgba(210,153,34,.12)}
+.risk-pill.r{color:#f85149;background:rgba(248,81,73,.12)}
+
+@media(max-width:980px){.hero{padding-top:110px}.hero-inner{grid-template-columns:1fr;gap:40px}.hero-copy{max-width:none}.product-screen{transform:none}.floating-card{display:none}.hero-visual{min-height:0}}
+@media(max-width:620px){.hero{padding:96px 16px 60px}.hero-proof{grid-template-columns:1fr}.screen-body{grid-template-columns:1fr}.screen-side{display:none}.dash-grid{grid-template-columns:1fr}}
+
+/* ── SECTIONS ── */
+.section-label{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--a);margin-bottom:14px;text-align:center;font-family:var(--mono);display:inline-flex;align-items:center;gap:8px}
+.section-label-wrap{display:flex;justify-content:center;margin-bottom:14px}
+.section-label::before,.section-label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,var(--a),transparent)}
+.section-title{font-size:clamp(26px,3.8vw,40px);font-weight:700;text-align:center;margin-bottom:14px;letter-spacing:-.025em;line-height:1.1}
+.section-sub{text-align:center;font-size:15px;color:var(--t2);max-width:580px;margin:0 auto 56px;line-height:1.65}
+
+/* ── FEATURES ── */
+.features{padding:100px 24px}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;max-width:980px;margin:0 auto 56px}
+.stat-card{background:linear-gradient(180deg,var(--b2),rgba(17,22,29,.4));border:1px solid var(--br);border-radius:14px;padding:22px 14px;text-align:center;transition:border-color .2s}
+.stat-card:hover{border-color:rgba(29,158,117,.3)}
+.stat-num{font-size:34px;font-weight:700;color:var(--a);font-family:var(--mono);line-height:1;letter-spacing:-.03em}
+.stat-lbl{font-size:11px;color:var(--t2);margin-top:8px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:14px;max-width:1180px;margin:0 auto}
+.feat-card{background:linear-gradient(180deg,var(--b2),rgba(17,22,29,.55));border:1px solid var(--br);border-radius:14px;padding:24px 22px;transition:all .25s;position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(29,158,117,.35),transparent);opacity:0;transition:opacity .25s}
+.feat-card:hover{border-color:rgba(29,158,117,.32);transform:translateY(-3px);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.feat-card:hover::before{opacity:1}
+.feat-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,rgba(29,158,117,.16),rgba(29,158,117,.06));border:1px solid rgba(29,158,117,.22);display:flex;align-items:center;justify-content:center;color:var(--a);margin-bottom:16px}
+.feat-icon .ic{font-size:20px;stroke-width:1.7}
+.feat-title{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--t);letter-spacing:-.01em}
+.feat-desc{font-size:13px;color:var(--t2);line-height:1.65}
+.feat-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:14px}
+.feat-tag{font-size:10px;padding:3px 9px;border-radius:999px;background:rgba(29,158,117,.08);color:var(--a);border:1px solid rgba(29,158,117,.16);font-family:var(--mono)}
+
+.trust-strip{max-width:960px;margin:56px auto 0;background:var(--b2);border:1px solid var(--br);border-radius:16px;padding:30px 32px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:640px){.trust-strip{grid-template-columns:1fr;padding:24px}}
+.trust-item{text-align:center}
+.trust-icon{width:44px;height:44px;border-radius:11px;background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.18);display:inline-flex;align-items:center;justify-content:center;color:var(--a);margin-bottom:12px}
+.trust-icon .ic{font-size:22px}
+.trust-title{font-size:14px;font-weight:600;color:var(--t);margin-bottom:5px}
+.trust-text{font-size:12.5px;color:var(--t2);line-height:1.6}
+
+/* ── DEMO ── */
+.demo-section{padding:100px 24px;background:linear-gradient(180deg,var(--bg) 0%,#070a0e 100%);border-top:1px solid rgba(255,255,255,.04);position:relative;overflow:hidden}
+.demo-section::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse at 50% 0%,rgba(29,158,117,.06),transparent 70%);pointer-events:none}
+.demo-inner{max-width:1140px;margin:0 auto}
+.demo-feature-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px;justify-content:center}
+.demo-pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(29,158,117,.06);color:var(--t2);border:1px solid rgba(29,158,117,.16);font-family:var(--mono)}
+.demo-pill .ic{font-size:13px;color:var(--a)}
+
+.demo-snapshot{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;margin:40px 0 0}
+.demo-snapshot-panel{background:rgba(17,22,29,.7);border:1px solid var(--br);border-radius:14px;padding:18px;box-shadow:0 18px 46px rgba(0,0,0,.28)}
+.demo-snapshot-title{font-size:13px;font-weight:600;color:var(--t);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.demo-snapshot-title .badge{font-family:var(--mono);font-size:9.5px;color:var(--a);border:1px solid rgba(29,158,117,.28);border-radius:999px;padding:3px 9px;background:rgba(29,158,117,.08);font-weight:700;letter-spacing:.04em}
+.demo-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.demo-mini-card{background:rgba(0,0,0,.22);border:1px solid var(--br);border-radius:10px;padding:12px;min-height:78px}
+.demo-mini-k{font-family:var(--mono);font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:5px}
+.demo-mini-k .ic{font-size:12px;color:var(--a)}
+.demo-mini-v{font-size:20px;font-weight:700;color:var(--a);margin:6px 0 4px;font-family:var(--mono);letter-spacing:-.02em}
+.demo-mini-t{font-size:10.5px;color:var(--t2);line-height:1.4}
+.demo-workflow{display:grid;gap:8px}
+.demo-workflow-row{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;background:rgba(0,0,0,.22);border:1px solid var(--br);border-radius:10px;padding:9px 12px}
+.demo-workflow-row strong{font-family:var(--mono);font-size:10.5px;color:var(--a);display:flex;align-items:center;gap:5px}
+.demo-workflow-row strong .ic{font-size:12px}
+.demo-workflow-row em{font-style:normal;font-size:11.5px;color:var(--t2);line-height:1.4}
+.demo-workflow-row span{font-family:var(--mono);font-size:9.5px;color:var(--g);border:1px solid rgba(63,185,80,.22);border-radius:999px;padding:2px 8px;background:rgba(63,185,80,.08);white-space:nowrap}
+
+.demo-cinematic{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(280px,.82fr);gap:14px;margin:14px 0 0}
+.cinema-stage{position:relative;min-height:320px;border:1px solid rgba(29,158,117,.18);border-radius:16px;background:radial-gradient(circle at 50% 46%,rgba(29,158,117,.12),transparent 30%),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),#05080d;background-size:auto,34px 34px,34px 34px,auto;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.48)}
+.cinema-stage::before{content:'';position:absolute;inset:-45%;background:conic-gradient(from 0deg,transparent 0 62%,rgba(29,158,117,.14),transparent 73%);animation:radarSpin 8s linear infinite;opacity:.9}
+.cinema-stage::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(5,9,13,.7));pointer-events:none}
+.cinema-node{position:absolute;z-index:2;width:78px;height:78px;border-radius:14px;background:rgba(13,17,23,.94);border:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 0 0 1px rgba(29,158,117,.08),0 16px 34px rgba(0,0,0,.35);animation:nodeFloat 5.4s ease-in-out infinite}
+.cinema-node .ic{font-size:18px;color:var(--a)}
+.cinema-node strong{font-family:var(--mono);font-size:10px;color:var(--t);letter-spacing:.04em}
+.cinema-node span{font-family:var(--mono);font-size:8.5px;color:var(--t2)}
+.cinema-node.core{left:50%;top:34%;transform:translate(-50%,-50%);border-color:rgba(29,158,117,.48);box-shadow:0 0 30px rgba(29,158,117,.18),0 18px 40px rgba(0,0,0,.4)}
+.cinema-node.core .ic{font-size:22px}
+.cinema-node.wan{left:12%;top:18%;animation-delay:-1s}
+.cinema-node.branch{right:12%;top:18%;animation-delay:-2s}
+.cinema-node.lan{left:18%;bottom:12%;animation-delay:-3s}
+.cinema-node.soc{right:18%;bottom:12%;animation-delay:-4s}
+.cinema-link{position:absolute;z-index:1;height:2px;background:linear-gradient(90deg,transparent,rgba(29,158,117,.55),transparent);transform-origin:left center;opacity:.75}
+.cinema-link.l1{left:25%;top:31%;width:26%;transform:rotate(15deg)}
+.cinema-link.l2{left:50%;top:31%;width:26%;transform:rotate(-15deg)}
+.cinema-link.l3{left:28%;top:60%;width:24%;transform:rotate(-24deg)}
+.cinema-link.l4{left:50%;top:60%;width:25%;transform:rotate(24deg)}
+.packet{position:absolute;z-index:3;width:8px;height:8px;border-radius:50%;background:#52d6b0;box-shadow:0 0 18px var(--a);animation:packetMove 3.2s ease-in-out infinite}
+.packet.p2{animation-delay:.8s}.packet.p3{animation-delay:1.6s}.packet.p4{animation-delay:2.4s}
+.cinema-alert{position:absolute;z-index:4;left:18px;bottom:18px;right:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cinema-alert div{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 10px;backdrop-filter:blur(8px)}
+.cinema-alert b{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:var(--a);margin-bottom:4px;font-weight:700}
+.cinema-alert b .ic{font-size:11px}
+.cinema-alert span{font-family:var(--mono);font-size:9.5px;color:var(--t2)}
+.cinema-panel{border:1px solid rgba(255,255,255,.08);border-radius:16px;background:linear-gradient(180deg,rgba(17,22,29,.86),rgba(5,9,13,.92));overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.38)}
+.cinema-panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06);font-family:var(--mono);font-size:11px;color:var(--t2)}
+.cinema-panel-head strong{display:flex;align-items:center;gap:6px;color:var(--t)}
+.cinema-panel-head .ic{font-size:13px;color:var(--a)}
+.cinema-panel-head span{color:var(--g);display:flex;align-items:center;gap:6px}
+.cinema-panel-head span::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g);animation:pulse 1.4s infinite}
+.cinema-console{padding:14px;font-family:var(--mono);font-size:11px;line-height:1.85;min-height:188px;background:#030608}
+.cinema-line{opacity:0;transform:translateY(6px);animation:consoleReveal 9s infinite}
+.cinema-line:nth-child(2){animation-delay:.7s}.cinema-line:nth-child(3){animation-delay:1.4s}.cinema-line:nth-child(4){animation-delay:2.1s}.cinema-line:nth-child(5){animation-delay:2.8s}.cinema-line:nth-child(6){animation-delay:3.5s}.cinema-line:nth-child(7){animation-delay:4.2s}
+.cinema-ok{color:#3fb950}.cinema-warn{color:#d29922}.cinema-blue{color:#58a6ff}.cinema-dim{color:rgba(255,255,255,.32)}
+.cinema-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;background:rgba(29,158,117,.04);border-top:1px solid rgba(29,158,117,.1)}
+.cinema-actions div{border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:10px;background:rgba(0,0,0,.18)}
+.cinema-actions b{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--t);margin-bottom:4px}
+.cinema-actions b .ic{font-size:12px;color:var(--a)}
+.cinema-actions span{font-size:10.5px;color:var(--t2);line-height:1.4}
+
+@keyframes radarSpin{to{transform:rotate(360deg)}}
+@keyframes nodeFloat{0%,100%{margin-top:0}50%{margin-top:-7px}}
+@keyframes packetMove{0%{left:50%;top:40%;opacity:0}12%{opacity:1}45%{left:14%;top:20%}65%{left:86%;top:20%}88%{left:50%;top:72%;opacity:1}100%{left:50%;top:40%;opacity:0}}
+@keyframes consoleReveal{0%,8%{opacity:0;transform:translateY(8px)}14%,72%{opacity:1;transform:translateY(0)}86%,100%{opacity:0;transform:translateY(-6px)}}
+
+.demo-shell{background:#050709;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;margin-top:14px;box-shadow:0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(29,158,117,.06)}
+.demo-tbar{display:flex;align-items:center;gap:8px;padding:11px 16px;background:rgba(17,22,29,.85);border-bottom:1px solid rgba(255,255,255,.05)}
+.dot2{width:11px;height:11px;border-radius:50%}.dot2.r{background:#ff5f57}.dot2.y{background:#ffbd2e}.dot2.g{background:#28c840}
+.demo-tbar-title{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.4);margin-left:8px;flex:1;letter-spacing:.02em}
+.demo-tbar-title .ic{font-size:13px;color:var(--a)}
+.demo-tbar-badge{font-family:var(--mono);font-size:9px;background:rgba(29,158,117,.14);color:var(--a);padding:3px 10px;border-radius:999px;border:1px solid rgba(29,158,117,.2);letter-spacing:.06em;font-weight:700}
+.demo-tabs-bar{display:flex;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(8,12,18,.6);overflow-x:auto;padding:0 4px;scrollbar-width:thin}
+.demo-tab{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;font-size:11.5px;color:rgba(255,255,255,.4);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;font-family:var(--mono)}
+.demo-tab .ic{font-size:13px}
+.demo-tab:hover{color:rgba(255,255,255,.7)}
+.demo-tab.active{color:var(--a);border-bottom-color:var(--a);background:rgba(29,158,117,.04)}
+.demo-layout{display:grid;grid-template-columns:220px 1fr;min-height:480px}
+@media(max-width:700px){.demo-layout{grid-template-columns:1fr}.demo-sidebar{max-height:160px;overflow-y:auto}}
+.demo-sidebar{background:rgba(10,14,20,.8);border-right:1px solid rgba(255,255,255,.05);padding:12px 8px;overflow-y:auto}
+.demo-sitem{display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:7px;font-size:11.5px;color:rgba(255,255,255,.4);cursor:pointer;transition:all .15s;margin-bottom:1px;font-family:var(--mono)}
+.demo-sitem .ic{font-size:13px;color:rgba(255,255,255,.35)}
+.demo-sitem:hover{background:rgba(255,255,255,.04);color:rgba(255,255,255,.75)}
+.demo-sitem.active{background:rgba(29,158,117,.1);color:var(--a);font-weight:600;border-left:2px solid var(--a);padding-left:10px}
+.demo-sitem.active .ic{color:var(--a)}
+.demo-sitem.visited{color:rgba(255,255,255,.4)}
+.demo-slbl{font-size:9.5px;font-weight:700;color:rgba(255,255,255,.22);letter-spacing:.12em;text-transform:uppercase;padding:10px 12px 5px;font-family:var(--mono)}
+.demo-content{padding:0;overflow-y:auto;max-height:480px;background:rgba(5,8,12,.5);position:relative}
+
+.anim-scene{padding:18px 20px;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.scene-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.scene-hdr .ic{font-size:18px;color:var(--a)}
+.scene-hdr .title{font-size:13px;font-weight:600;color:var(--t)}
+.scene-hdr .meta{font-size:10.5px;color:rgba(255,255,255,.35);font-family:var(--mono);margin-left:auto}
+.anim-step-card{background:rgba(17,22,29,.7);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:10px;overflow:hidden;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.anim-step-card.show{opacity:1;transform:translateY(0)}
+.anim-step-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04);background:rgba(0,0,0,.22)}
+.anim-step-title{font-size:12px;font-weight:600;color:rgba(255,255,255,.88);display:flex;align-items:center;gap:8px}
+.anim-step-num{width:20px;height:20px;border-radius:50%;background:rgba(29,158,117,.18);color:var(--a);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(29,158,117,.22);font-family:var(--mono)}
+.anim-badge{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;padding:2px 8px;border-radius:999px;font-weight:700;font-family:var(--mono)}
+.anim-badge .ic{font-size:10px}
+.anim-badge.ro{background:rgba(63,185,80,.1);color:var(--g);border:1px solid rgba(63,185,80,.2)}
+.anim-badge.warn{background:rgba(210,153,34,.1);color:var(--y);border:1px solid rgba(210,153,34,.2)}
+.anim-badge.danger{background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)}
+.anim-cmds{padding:10px 14px;font-family:var(--mono);font-size:11.5px;line-height:2;background:rgba(0,0,0,.25)}
+.anim-cmd{display:block}
+.anim-cmd.ro{color:#3fb950}.anim-cmd.warn{color:#d29922}.anim-cmd.danger{color:#f85149}
+.anim-cmd.note{color:rgba(255,255,255,.22);font-style:italic}
+.anim-note{display:flex;align-items:flex-start;gap:6px;font-size:10.5px;color:rgba(255,255,255,.4);padding:8px 14px 10px;border-top:1px solid rgba(255,255,255,.04);line-height:1.5;background:rgba(29,158,117,.03)}
+.anim-note .ic{font-size:12px;color:var(--y);margin-top:1px}
+.anim-dot{width:5px;height:5px;border-radius:50%;background:var(--a);display:inline-block;animation:blink 1.2s infinite}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
+
+.sub-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px 13px;opacity:0;transform:scale(.96);transition:opacity .35s,transform .35s}
+.sub-card.show{opacity:1;transform:scale(1)}
+.sub-lbl{font-size:9.5px;color:rgba(255,255,255,.32);text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono);margin-bottom:4px}
+.sub-val{font-family:var(--mono);font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.qref-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
+.qref-title{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;color:var(--a);font-family:var(--mono);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.05);letter-spacing:.04em;background:rgba(29,158,117,.05)}
+.qref-title .ic{font-size:12px}
+.qref-cmd{font-family:var(--mono);font-size:10.5px;padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;justify-content:space-between;align-items:center;gap:4px}
+.qref-cmd:last-child{border-bottom:none}
+.qref-copy{display:inline-flex;align-items:center;gap:3px;font-size:9.5px;padding:2px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);cursor:pointer;font-family:var(--mono);flex-shrink:0}
+.qref-copy .ic{font-size:10px}
+.qref-copy:hover{border-color:var(--a);color:var(--a)}
+
+/* ── PRICING ── */
+.pricing-section{padding:100px 24px}
+.pricing-inner{max-width:860px;margin:0 auto}
+.price-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:640px){.price-cards{grid-template-columns:1fr}}
+.price-card{background:linear-gradient(180deg,var(--b2),rgba(17,22,29,.5));border:1px solid var(--br);border-radius:18px;padding:32px 28px;position:relative;transition:all .25s}
+.price-card:hover{transform:translateY(-3px)}
+.price-card.featured{border:2px solid var(--a);background:linear-gradient(180deg,#0f1815,#0a120e);box-shadow:0 24px 60px rgba(29,158,117,.12)}
+.featured-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--a);color:#fff;font-size:10.5px;font-weight:700;padding:5px 14px;border-radius:999px;letter-spacing:.06em;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;box-shadow:0 6px 18px rgba(29,158,117,.3)}
+.featured-badge .ic{font-size:12px}
+.price-name{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--a);font-family:var(--mono);margin-bottom:14px}
+.price-amount{display:flex;align-items:flex-start;gap:4px;margin-bottom:6px}
+.price-cur{font-size:20px;font-weight:700;color:var(--t);padding-top:10px}
+.price-num{font-size:58px;font-weight:700;color:var(--t);line-height:1;letter-spacing:-.04em}
+.price-period{font-size:13px;color:var(--t2);margin-bottom:8px}
+.price-feats{list-style:none;margin-bottom:4px;display:flex;flex-direction:column;gap:9px}
+.price-feats li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--t)}
+.price-feats li .ic{width:18px;height:18px;border-radius:50%;background:rgba(29,158,117,.15);color:var(--a);padding:3px;font-size:18px;flex-shrink:0}
+.price-note{font-size:11.5px;color:var(--t3);text-align:center;margin-top:14px}
+
+/* ── ORDER ── */
+.order-section{padding:90px 24px;background:var(--b2);border-top:1px solid var(--br)}
+.order-inner{max-width:720px;margin:0 auto}
+.form-card{background:var(--bg);border:1px solid var(--br);border-radius:16px;padding:36px 32px}
+@media(max-width:540px){.form-card{padding:24px 18px}}
+.form-divider{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);font-family:var(--mono);border-bottom:1px solid var(--br);padding-bottom:8px;margin:28px 0 18px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:540px){.form-row{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.form-group label{font-size:11.5px;font-weight:600;color:var(--t2);letter-spacing:.02em}
+.form-group input,.form-group select,.form-group textarea{background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:10px 13px;font-size:13.5px;color:var(--t);font-family:inherit;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(29,158,117,.1)}
+.form-group select{cursor:pointer}
+.form-group select option{background:var(--b2)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--t3)}
+.pass-hint{font-size:11px;color:var(--t3);margin-top:3px}
+.strength-bar{height:3px;border-radius:2px;background:var(--br);margin-top:5px;overflow:hidden}
+.strength-fill{height:100%;border-radius:2px;transition:all .3s;width:0}
+.cc-logos{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.cc-logo{background:var(--b2);border:1px solid var(--br);border-radius:5px;padding:4px 9px;font-size:10.5px;color:var(--t2);font-family:var(--mono);font-weight:700;letter-spacing:.04em}
+.security-note{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--t3);background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:9px;padding:11px 13px;margin-bottom:20px;line-height:1.5}
+.security-note .ic{font-size:14px;color:var(--a);margin-top:1px}
+#stripe-card-element{background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 13px;transition:border-color .2s}
+#stripe-card-element.StripeElement--focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(29,158,117,.1)}
+#card-errors{color:var(--r);font-size:12px;margin-top:5px;min-height:16px}
+.btn-submit{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--a),var(--ad));border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;color:#fff;cursor:pointer;transition:all .2s;margin-top:20px;box-shadow:0 8px 20px rgba(29,158,117,.25),inset 0 1px 0 rgba(255,255,255,.16)}
+.btn-submit:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(29,158,117,.32)}
+.btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.stripe-powered{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--t3);margin-top:10px}
+.form-err{color:var(--r);font-size:12.5px;margin:10px 0;display:none;align-items:flex-start;gap:6px}
+.form-err .ic{font-size:14px;margin-top:1px}
+.success-msg{display:none;text-align:center;padding:44px 20px}
+.success-check{width:68px;height:68px;border-radius:50%;background:rgba(63,185,80,.12);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;color:var(--g);margin:0 auto 20px}
+.success-check .ic{font-size:36px;stroke-width:2.2}
+.success-msg h3{font-size:21px;margin-bottom:10px}
+.success-msg p{color:var(--t2);font-size:14px;line-height:1.7;max-width:420px;margin:0 auto}
+.success-creds{background:var(--b2);border:1px solid var(--a);border-radius:10px;padding:16px 20px;margin:20px auto 0;max-width:380px;font-family:var(--mono);font-size:13px;text-align:left}
+.success-creds div{margin-bottom:7px;color:var(--t2)}
+.success-creds span{color:var(--g)}
+.beta-notice{background:rgba(210,153,34,.05);border:1px solid rgba(210,153,34,.22);border-radius:11px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.beta-notice .ic{font-size:18px;color:var(--y);flex-shrink:0;margin-top:1px}
+.beta-notice .title{font-size:13px;font-weight:700;color:var(--y);margin-bottom:4px}
+.beta-notice .text{font-size:12px;color:var(--t2);line-height:1.6}
+
+.howit{background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.15);border-radius:11px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--t2);line-height:1.7}
+.howit strong{color:var(--t)}
+.howit ol{list-style:none;counter-reset:s;margin-top:8px}
+.howit ol li{counter-increment:s;padding-left:28px;position:relative;margin-bottom:4px}
+.howit ol li::before{content:counter(s);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:50%;background:rgba(29,158,117,.15);color:var(--a);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--mono)}
+
+.plan-display{background:rgba(29,158,117,.06);border:2px solid rgba(29,158,117,.22);border-radius:11px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.plan-display-left{display:flex;align-items:center;gap:12px}
+.plan-display-mark{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--a),var(--ad));display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 14px rgba(29,158,117,.28)}
+.plan-display-mark .ic{font-size:20px}
+.plan-display-name{font-size:15px;font-weight:700;color:var(--a)}
+.plan-display-price{font-size:12.5px;color:var(--t2);margin-top:2px}
+.plan-change{font-size:11px;color:var(--t3);text-decoration:none;border:1px solid var(--br);border-radius:999px;padding:6px 12px;cursor:pointer;transition:all .2s}
+.plan-change:hover{border-color:var(--a);color:var(--a)}
+
+.tos-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);z-index:9000;align-items:center;justify-content:center}
+.tos-overlay.open{display:flex}
+.tos-card{background:var(--b2);border:1px solid rgba(29,158,117,.32);border-radius:18px;padding:30px 26px;width:620px;max-width:94%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 30px 60px rgba(0,0,0,.7)}
+.tos-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.tos-hdr h3{font-size:16px;font-weight:700;color:var(--t);display:flex;align-items:center;gap:8px}
+.tos-hdr .ic{font-size:18px;color:var(--a)}
+.tos-close{background:var(--b3);border:1px solid var(--br);border-radius:7px;padding:5px 12px;font-size:12.5px;color:var(--t2);cursor:pointer}
+.tos-close:hover{border-color:var(--r);color:var(--r)}
+.tos-body{overflow-y:auto;flex:1;font-size:13px;color:var(--t2);line-height:1.75;padding-right:8px}
+.tos-body h4{font-size:11px;font-weight:700;color:var(--a);margin:18px 0 7px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.tos-body h4:first-child{margin-top:0}
+.tos-body p{margin-bottom:10px}
+.tos-body strong{color:var(--t)}
+.tos-body code{font-family:var(--mono);font-size:11px;background:var(--b3);padding:1px 5px;border-radius:3px;color:var(--g)}
+.tos-foot{margin-top:18px;padding-top:16px;border-top:1px solid var(--br);display:flex;gap:10px;justify-content:flex-end}
+.tos-btn-accept{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(180deg,var(--a),var(--ad));border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;color:#fff;cursor:pointer}
+.tos-btn-close{background:transparent;border:1px solid var(--br);border-radius:8px;padding:9px 18px;font-size:13px;color:var(--t2);cursor:pointer}
+
+footer{padding:30px 24px;border-top:1px solid var(--br);text-align:center}
+footer p{font-size:12px;color:var(--t3)}
+footer a{color:var(--t3);text-decoration:none;transition:color .15s}
+footer a:hover{color:var(--a)}
+
+.toast{position:fixed;bottom:26px;right:26px;background:var(--b2);border:1px solid var(--a);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--t);z-index:9999;transform:translateY(70px);opacity:0;transition:all .3s;max-width:320px;line-height:1.5;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast .ic{font-size:16px;color:var(--g)}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     UNIFIED ICON SYSTEM (Lucide-style strokes)
+     ════════════════════════════════════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- WOLF / LOGO -->
+    <symbol id="i-wolf" viewBox="0 0 24 24">
+      <path d="M4 10 6 4l3 3.5 3-1 3 1 3-3.5 2 6"/>
+      <path d="M4 10c0 6 4 9 8 9s8-3 8-9"/>
+      <path d="M9 13.5h.01M15 13.5h.01"/>
+      <path d="M10.5 16.5l1.5 1 1.5-1"/>
+    </symbol>
+    <!-- shield -->
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-shield-lock" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><rect x="9.5" y="10.5" width="5" height="5" rx="1"/><path d="M10.5 10.5V9a1.5 1.5 0 0 1 3 0v1.5"/></symbol>
+    <!-- cloud -->
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.78A6 6 0 0 0 4 12.5 4.5 4.5 0 0 0 5 19h12.5z"/></symbol>
+    <!-- terminal / cli -->
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 10 3 2-3 2M13 16h4"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M8 14h8"/></symbol>
+    <!-- network / globe -->
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+    <symbol id="i-network" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/><path d="M12 8v4M5 16v-2h14v2"/></symbol>
+    <symbol id="i-router" viewBox="0 0 24 24"><rect x="3" y="13" width="18" height="8" rx="2"/><path d="M7 17h.01M11 17h.01M15 9V5M11 9V7M19 9V3"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h7a4 4 0 0 0 0-8h-6a4 4 0 0 1 0-8h7"/></symbol>
+    <!-- refresh / repeat -->
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.3L3 16M3 21v-5h5"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+    <!-- AI / sparkles / cpu -->
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-3 3v1a3 3 0 0 0 1 5 3 3 0 0 0 5 1 3 3 0 0 0 5-1 3 3 0 0 0 1-5v-1a3 3 0 0 0-3-3 3 3 0 0 0-3-3z"/><path d="M12 5v14M9 9h.01M15 9h.01"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+    <!-- settings / gear / wrench -->
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 1 5 5L13 18a3 3 0 1 1-4-4l5.7-7.7z"/></symbol>
+    <symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M19.4 7H17V4.6A2.6 2.6 0 0 0 12 5.4V7H9.4A2.4 2.4 0 0 0 7 9.4V12H5.4a2.4 2.4 0 0 0 0 4.8H7v2.6A2.4 2.4 0 0 0 9.4 22H12v-1.6a2.4 2.4 0 0 1 4.8 0V22h2.6a2.6 2.6 0 0 0 2.6-2.6V17H21a2.4 2.4 0 0 0 0-4.8h-1.6V9.4A2.4 2.4 0 0 0 17 7"/></symbol>
+    <!-- lock / key -->
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7" cy="15" r="4"/><path d="m21 2-9.5 9.5M16 7l3 3M14 9l3 3"/></symbol>
+    <!-- bolt / zap -->
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></symbol>
+    <!-- search / find / detective / eye -->
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M4 4 20 20M10 6.5a8 8 0 0 1 2-.5c6.5 0 10 6 10 6a18 18 0 0 1-3 3.5M6.6 6.6A18 18 0 0 0 2 12s3.5 6 10 6c1.7 0 3.2-.4 4.5-1"/><path d="M9 9a3 3 0 0 0 4 4"/></symbol>
+    <symbol id="i-mask" viewBox="0 0 24 24"><path d="M12 4c-5 0-9 2-9 7s4 9 9 9 9-4 9-9-4-7-9-7z"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><path d="M10 17h4"/></symbol>
+    <!-- file / document / clipboard -->
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/><path d="M8 12h8M8 16h6"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+    <!-- calculator -->
+    <symbol id="i-calculator" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></symbol>
+    <!-- map / topology -->
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 2h6M10 2v6L4 20a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1L14 8V2"/><path d="M7 14h10"/></symbol>
+    <!-- mail -->
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <!-- wifi / dhcp -->
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 9a16 16 0 0 1 20 0M5 12.5a11 11 0 0 1 14 0M8.5 16a6 6 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1" class="ic-fill"/></symbol>
+    <!-- pc / monitor / server -->
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h.01M7 17h.01"/></symbol>
+    <!-- rocket -->
+    <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M5 14c-2 0-3 2-3 4s2 3 4 3c2 0 4-1 4-3"/><path d="M14.5 9.5 9 15l-3-3 5.5-5.5a8 8 0 0 1 7-2.3c.5 4.5-1.2 7.5-4 9.8z"/><circle cx="15" cy="9" r="1.5"/></symbol>
+    <!-- arrows / chevrons -->
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol>
+    <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14M5 13l7 7 7-7"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></symbol>
+    <!-- check / x / info / alert -->
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 12v5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 2.3 17.5A2 2 0 0 0 4 20.5h16a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-lightbulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2v.3h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></symbol>
+    <!-- copy / clipboard-copy -->
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <!-- power / activity -->
+    <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+    <symbol id="i-heart-pulse" viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.5 3-6a4 4 0 0 0-7-2.6A4 4 0 0 0 8 4a4 4 0 0 0-3 6c0 4 6 8 7 10l1 1"/><path d="M3 12h2l2-3 3 6 2-3h3"/></symbol>
+    <!-- chart / bar -->
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M7 14v4M11 10v8M15 6v12M19 13v5"/></symbol>
+    <!-- windows -->
+    <symbol id="i-windows" viewBox="0 0 24 24"><path d="M3 6.5 11 5v6.5H3zM13 4.7l8-1.7V11h-8zM3 12.5h8V19l-8-1.5zM13 12.5h8V21l-8-1.7z"/></symbol>
+    <!-- broom / clean -->
+    <symbol id="i-paintbrush" viewBox="0 0 24 24"><path d="M18 2 22 6 12 16 8 12zM8 12 4 16a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-2"/></symbol>
+    <!-- play -->
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m6 4 14 8-14 8z"/></symbol>
+    <!-- coins / euro -->
+    <symbol id="i-euro" viewBox="0 0 24 24"><path d="M19.5 5.5A8 8 0 0 0 14 4a8 8 0 0 0 0 16 8 8 0 0 0 5.5-2M3 10h10M3 14h10"/></symbol>
+    <!-- box / cube -->
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="m3 7 9-5 9 5v10l-9 5-9-5z"/><path d="M3 7l9 5 9-5M12 12v10"/></symbol>
+    <!-- construction -->
+    <symbol id="i-construction" viewBox="0 0 24 24"><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M4 14V8h16v6M6 22v-4M10 22v-4M14 22v-4M18 22v-4M8 6V4M16 6V4"/></symbol>
+    <!-- gauge -->
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M12 14m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0"/><path d="M13.4 12.6 19 7M22 14a10 10 0 1 0-20 0"/></symbol>
+    <!-- layers -->
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5-10-5zM2 12l10 5 10-5M2 17l10 5 10-5"/></symbol>
+    <!-- scroll / doc text -->
+    <symbol id="i-scroll" viewBox="0 0 24 24"><path d="M19 17V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3h3M17 19a2 2 0 0 0 4 0v-2H8v2a2 2 0 0 0 2 2h9"/></symbol>
+    <!-- workflow -->
+    <symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M12 15V9M6 9v3h12V9"/></symbol>
+  </defs>
+</svg>
+
+<canvas id="matBg"></canvas>
+
+<nav>
+  <div class="logo"><span class="logo-emoji">🐺</span><span class="logo-text">Net<span>Wolf</span></span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#demo">Demo</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#order">Subscribe</a>
+    <a href="https://netwolffortigate.com/app.html" class="btn-nav">Open Toolkit <svg class="ic"><use href="#i-arrow-right"/></svg></a>
+  </div>
+</nav>
+
+<!-- ─────────────── HERO ─────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-badge">
+        <span class="pulse"></span> Live engineer workspace · multi-vendor CLI
+      </div>
+      <h1>One command center for<br><span class="accent">real network work</span></h1>
+      <p class="hero-sub">NetWolf brings firewall troubleshooting, cloud scripting, multi-vendor switch and router learning, a smarter CLI simulator, AI analysis, config generators and security notes into one focused browser toolkit.</p>
+      <div class="hero-cta">
+        <a href="https://netwolffortigate.com/app.html" class="btn-primary">Open Toolkit <svg class="ic"><use href="#i-arrow-right"/></svg></a>
+        <a href="#demo" class="btn-ghost"><svg class="ic"><use href="#i-play"/></svg> See Live Demo</a>
+        <a href="#pricing" class="btn-ghost"><svg class="ic"><use href="#i-euro"/></svg> View Pricing</a>
+      </div>
+      <div class="hero-chips">
+        <span class="hero-chip"><svg class="ic"><use href="#i-shield"/></svg> Firewall playbooks</span>
+        <span class="hero-chip"><svg class="ic"><use href="#i-cloud"/></svg> Cloud scripting</span>
+        <span class="hero-chip"><svg class="ic"><use href="#i-terminal"/></svg> CLI simulator</span>
+        <span class="hero-chip"><svg class="ic"><use href="#i-network"/></svg> 10 vendors</span>
+        <span class="hero-chip"><svg class="ic"><use href="#i-sparkles"/></svg> AI analyzer</span>
+        <span class="hero-chip"><svg class="ic"><use href="#i-settings"/></svg> Config generator</span>
+      </div>
+      <div class="hero-proof">
+        <div class="proof-card"><div class="proof-num">70+</div><div class="proof-lbl">commands per vendor reference</div></div>
+        <div class="proof-card"><div class="proof-num">13</div><div class="proof-lbl">daily diagnostic utilities</div></div>
+        <div class="proof-card"><div class="proof-num">10</div><div class="proof-lbl">visual themes for the app</div></div>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-label="NetWolf toolkit preview">
+      <div class="floating-card one">
+        <div class="float-head">
+          <svg class="ic"><use href="#i-cloud"/></svg>
+          <div class="float-title">Cloud scripting</div>
+        </div>
+        <div class="float-text">Read-only discovery, caution previews and write commands clearly colour coded.</div>
+        <div class="risk-row">
+          <span class="risk-pill g"><svg class="ic"><use href="#i-eye"/></svg> read</span>
+          <span class="risk-pill y"><svg class="ic"><use href="#i-alert"/></svg> caution</span>
+          <span class="risk-pill r"><svg class="ic"><use href="#i-zap"/></svg> write</span>
+        </div>
+      </div>
+      <div class="product-screen">
+        <div class="screen-top">
+          <span class="screen-dot r"></span><span class="screen-dot y"></span><span class="screen-dot g"></span>
+          <span class="screen-title"><svg class="ic"><use href="#i-gauge"/></svg> NetWolf Advanced Diagnostics</span>
+        </div>
+        <div class="screen-body">
+          <div class="screen-side">
+            <div class="side-item active"><svg class="ic"><use href="#i-shield"/></svg> Firewall</div>
+            <div class="side-item"><svg class="ic"><use href="#i-cloud"/></svg> Cloud</div>
+            <div class="side-item"><svg class="ic"><use href="#i-repeat"/></svg> Vendors</div>
+            <div class="side-item"><svg class="ic"><use href="#i-keyboard"/></svg> CLI Lab</div>
+            <div class="side-item"><svg class="ic"><use href="#i-puzzle"/></svg> Config</div>
+            <div class="side-item"><svg class="ic"><use href="#i-lock"/></svg> Security</div>
+          </div>
+          <div class="screen-main">
+            <div class="screen-tabs">
+              <div class="screen-tab active">Guide</div>
+              <div class="screen-tab">VPN</div>
+              <div class="screen-tab">Cloud</div>
+              <div class="screen-tab">Vendors</div>
+              <div class="screen-tab">AI</div>
+            </div>
+            <div class="dash-grid">
+              <div class="dash-card">
+                <div class="dash-label"><svg class="ic"><use href="#i-layers"/></svg> Workspace coverage</div>
+                <div class="dash-value">71</div>
+                <div class="dash-note">tabs and guided tools grouped into clear categories.</div>
+              </div>
+              <div class="dash-card">
+                <div class="dash-label"><svg class="ic"><use href="#i-workflow"/></svg> Learning paths</div>
+                <div class="dash-value">Cloud + CLI</div>
+                <div class="dash-note">Cloud, firewall and switch/router practice in one place.</div>
+              </div>
+            </div>
+            <div class="terminal-card">
+              <div class="terminal-head">
+                <div class="left"><svg class="ic"><use href="#i-terminal"/></svg><span>CLI Simulator</span></div>
+                <span>practice-only</span>
+              </div>
+              <div class="terminal-body">
+<span class="term-blue">Switch#</span> configure terminal<br>
+<span class="term-blue">Switch(config)#</span> interface gi1/0/10<br>
+<span class="term-blue">Switch(config-if)#</span> switchport access vlan 20<br>
+<span class="term-warn">Cloud:</span> New-ResourceGroupDeployment -WhatIf<br>
+<span class="term-red">Write command:</span> review before production
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="floating-card two">
+        <div class="float-head">
+          <svg class="ic"><use href="#i-shield-check"/></svg>
+          <div class="float-title">Safer troubleshooting flow</div>
+        </div>
+        <div class="float-text">Anonymize output, test paths, generate configs, then document the customer update.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── FEATURES ─────────────── -->
+<section class="features" id="features">
+  <div class="section-label-wrap"><div class="section-label">What's inside</div></div>
+  <h2 class="section-title">Every tool a network engineer needs</h2>
+  <p class="section-sub">Built from real production experience — not theory. Every feature solves a real problem network engineers face daily.</p>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num">50+</div><div class="stat-lbl">Troubleshoot<br>Playbooks</div></div>
+    <div class="stat-card"><div class="stat-num">26</div><div class="stat-lbl">Trouble<br>Categories</div></div>
+    <div class="stat-card"><div class="stat-num">12</div><div class="stat-lbl">Config<br>Guides</div></div>
+    <div class="stat-card"><div class="stat-num">10</div><div class="stat-lbl">Vendor<br>CLI Refs</div></div>
+    <div class="stat-card"><div class="stat-num">1,100+</div><div class="stat-lbl">CLI<br>Commands</div></div>
+    <div class="stat-card"><div class="stat-num">13</div><div class="stat-lbl">Power<br>Tools</div></div>
+    <div class="stat-card"><div class="stat-num">AI</div><div class="stat-lbl">Claude &amp;<br>LLM Powered</div></div>
+  </div>
+
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-shield-lock"/></svg></div>
+      <div class="feat-title">Guided Troubleshoot Playbooks</div>
+      <div class="feat-desc">Stop guessing. Every category has a proven step-by-step CLI sequence — from tunnel failures to HA sync issues. Each command is tagged read-only, caution, or service-impact so you always know what's safe.</div>
+      <div class="feat-tags"><span class="feat-tag">IPsec VPN</span><span class="feat-tag">SSL VPN</span><span class="feat-tag">SD-WAN</span><span class="feat-tag">HA Cluster</span><span class="feat-tag">Routing</span><span class="feat-tag">+21 more</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-sparkles"/></svg></div>
+      <div class="feat-title">AI CLI Analyzer</div>
+      <div class="feat-desc">Paste raw firewall output — get an instant AI diagnosis with root cause, fix commands and explanation. No more staring at debug output wondering what went wrong. Works with any OS version.</div>
+      <div class="feat-tags"><span class="feat-tag">Claude AI</span><span class="feat-tag">LLaMA 3.3 70B</span><span class="feat-tag">root cause</span><span class="feat-tag">fix commands</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-settings"/></svg></div>
+      <div class="feat-title">Config Generator</div>
+      <div class="feat-desc">Fill in a simple form — get a complete, ready-to-paste firewall CLI config. No more writing configs from scratch or copying from old devices. Covers the most common deployment scenarios.</div>
+      <div class="feat-tags"><span class="feat-tag">Initial Setup</span><span class="feat-tag">IPsec VPN</span><span class="feat-tag">SSL VPN</span><span class="feat-tag">HA Cluster</span><span class="feat-tag">SD-WAN</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-refresh"/></svg></div>
+      <div class="feat-title">Smart Config Migrator</div>
+      <div class="feat-desc">Upload an existing firewall backup config. The tool automatically detects every IP, hostname, PSK, gateway and server address. Update what needs changing — download the migrated config ready to apply.</div>
+      <div class="feat-tags"><span class="feat-tag">auto-detect</span><span class="feat-tag">IP replace</span><span class="feat-tag">add sections</span><span class="feat-tag">download .conf</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-globe"/></svg></div>
+      <div class="feat-title">Multi-Vendor CLI Reference</div>
+      <div class="feat-desc">Working with mixed environments? Full CLI reference for Cisco IOS-XE, ArubaOS-CX and Huawei VRP — troubleshoot and config commands, with explanations and safety badges on every single command.</div>
+      <div class="feat-tags"><span class="feat-tag">Cisco IOS-XE</span><span class="feat-tag">ArubaOS-CX</span><span class="feat-tag">Huawei VRP</span><span class="feat-tag">70+ cmds each</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-mask"/></svg></div>
+      <div class="feat-title">IP Masking &amp; Anonymizer</div>
+      <div class="feat-desc">Share CLI output safely with vendors and colleagues. Replace all real IPs with RFC 5737 documentation addresses in one click — with a full real→fake mapping table so you can reverse it anytime.</div>
+      <div class="feat-tags"><span class="feat-tag">RFC 5737</span><span class="feat-tag">bulk auto-detect</span><span class="feat-tag">mapping table</span><span class="feat-tag">export</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-calculator"/></svg></div>
+      <div class="feat-title">Subnet Calculator</div>
+      <div class="feat-desc">Enter any CIDR — instantly get network address, broadcast, first and last usable host, subnet mask, wildcard mask, usable host count and full binary breakdown. Essential for VIP ranges and DHCP scopes.</div>
+      <div class="feat-tags"><span class="feat-tag">CIDR</span><span class="feat-tag">wildcard mask</span><span class="feat-tag">binary view</span><span class="feat-tag">usable hosts</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-clipboard"/></svg></div>
+      <div class="feat-title">Config Guides — 12 Templates</div>
+      <div class="feat-desc">Full step-by-step configuration walkthroughs for the most common deployments — from initial setup and VDOM architecture to ZTNA, managed switches and inter-VDOM routing. Every command copy-ready.</div>
+      <div class="feat-tags"><span class="feat-tag">Initial Setup</span><span class="feat-tag">VDOM</span><span class="feat-tag">ZTNA</span><span class="feat-tag">Switches</span><span class="feat-tag">+8 more</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-cpu"/></svg></div>
+      <div class="feat-title">Advanced Diagnostics</div>
+      <div class="feat-desc">Go deeper than the standard CLI. Kernel-level commands, daemon debugging, local-in policy inspection, DoS policy monitoring, config transaction workflows, and hardware NPU diagnostics.</div>
+      <div class="feat-tags"><span class="feat-tag">fnsysctl</span><span class="feat-tag">daemon debug</span><span class="feat-tag">config tx</span><span class="feat-tag">NPU / hardware</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-shield"/></svg></div>
+      <div class="feat-title">Full Firewall OS Coverage</div>
+      <div class="feat-desc">Not just VPN and routing. Complete playbooks for ZTNA, managed switching, wireless APs, IPv6, SIP/VoIP, Traffic Shaping, Security Fabric, central management, log analytics, SNMP and certificates.</div>
+      <div class="feat-tags"><span class="feat-tag">ZTNA</span><span class="feat-tag">Switching</span><span class="feat-tag">Wireless</span><span class="feat-tag">Fabric</span><span class="feat-tag">Mgmt</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-flask"/></svg></div>
+      <div class="feat-title">Lab Setup Guide</div>
+      <div class="feat-desc">Build a full firewall lab on your local PC using EVE-NG Community and a firewall VM — completely free. Includes a step-by-step PDF guide covering everything from installation to running IPsec between two sites.</div>
+      <div class="feat-tags"><span class="feat-tag">EVE-NG</span><span class="feat-tag">VirtualBox</span><span class="feat-tag">Firewall VM</span><span class="feat-tag">PDF guide</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><svg class="ic"><use href="#i-paintbrush"/></svg></div>
+      <div class="feat-title">Built for Daily Use</div>
+      <div class="feat-desc">Works in any browser — no install needed. 5 colour themes so it fits your setup. One-click copy on every command. Version changelog so you always know what's new. Built to be open all day alongside your terminal.</div>
+      <div class="feat-tags"><span class="feat-tag">5 themes</span><span class="feat-tag">one-click copy</span><span class="feat-tag">any browser</span><span class="feat-tag">changelog</span></div>
+    </div>
+  </div>
+
+  <div class="trust-strip">
+    <div class="trust-item">
+      <div class="trust-icon"><svg class="ic"><use href="#i-zap"/></svg></div>
+      <div class="trust-title">Instant access</div>
+      <div class="trust-text">Your account is created immediately after subscribing. No waiting, no manual setup.</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon"><svg class="ic"><use href="#i-lock"/></svg></div>
+      <div class="trust-title">Secure &amp; private</div>
+      <div class="trust-text">Firebase-secured personal login. Your credentials are yours alone — no shared accounts.</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon"><svg class="ic"><use href="#i-refresh"/></svg></div>
+      <div class="trust-title">Always updated</div>
+      <div class="trust-text">New playbooks, commands and features added regularly. Your subscription includes all updates.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── DEMO ─────────────── -->
+<section class="demo-section" id="demo">
+  <div class="demo-inner">
+    <div style="text-align:center">
+      <div class="section-label-wrap"><div class="section-label">Live animated demo</div></div>
+      <h2 class="section-title">See the toolkit in action</h2>
+      <p class="section-sub" style="margin-bottom:0">A live preview of the toolkit — click through the tabs to explore.</p>
+      <div class="demo-feature-pills">
+        <span class="demo-pill"><svg class="ic"><use href="#i-shield-lock"/></svg> Playbooks</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-sparkles"/></svg> AI Analyzer</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-mask"/></svg> IP Anonymizer</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-globe"/></svg> Multi-Vendor CLI</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-settings"/></svg> Config Tools</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-calculator"/></svg> Subnet Calc</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-zap"/></svg> Most Used</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-windows"/></svg> PS Script Maker</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-map"/></svg> Topology Designer</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-mail"/></svg> Email Generator</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-terminal"/></svg> CLI Simulator</span>
+        <span class="demo-pill"><svg class="ic"><use href="#i-wifi"/></svg> DHCP Diagnostics</span>
+      </div>
+    </div>
+
+    <div class="demo-snapshot">
+      <div class="demo-snapshot-panel">
+        <div class="demo-snapshot-title">Inside the app <span class="badge">FROM APP.HTML</span></div>
+        <div class="demo-mini-grid">
+          <div class="demo-mini-card"><div class="demo-mini-k"><svg class="ic"><use href="#i-shield-lock"/></svg> Playbooks</div><div class="demo-mini-v">50+</div><div class="demo-mini-t">VPN, HA, SD-WAN, routing and policy flows.</div></div>
+          <div class="demo-mini-card"><div class="demo-mini-k"><svg class="ic"><use href="#i-zap"/></svg> Fast tools</div><div class="demo-mini-v">13</div><div class="demo-mini-t">Most-used generators for daily checks.</div></div>
+          <div class="demo-mini-card"><div class="demo-mini-k"><svg class="ic"><use href="#i-network"/></svg> Vendors</div><div class="demo-mini-v">10</div><div class="demo-mini-t">CLI simulator coverage for common platforms.</div></div>
+        </div>
+      </div>
+      <div class="demo-snapshot-panel">
+        <div class="demo-snapshot-title">Example workflow <span class="badge">SAFE FIRST</span></div>
+        <div class="demo-workflow">
+          <div class="demo-workflow-row"><strong><svg class="ic"><use href="#i-clipboard"/></svg>Paste</strong><em>Drop CLI output into the analyzer.</em><span>input</span></div>
+          <div class="demo-workflow-row"><strong><svg class="ic"><use href="#i-sparkles"/></svg>Diagnose</strong><em>Get likely root cause, risk level and next commands.</em><span>AI</span></div>
+          <div class="demo-workflow-row"><strong><svg class="ic"><use href="#i-copy"/></svg>Generate</strong><em>Copy a clean command set with read/write labels.</em><span>copy</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-cinematic">
+      <div class="cinema-stage">
+        <div class="cinema-link l1"></div><div class="cinema-link l2"></div><div class="cinema-link l3"></div><div class="cinema-link l4"></div>
+        <div class="packet p1"></div><div class="packet p2"></div><div class="packet p3"></div><div class="packet p4"></div>
+        <div class="cinema-node wan"><svg class="ic"><use href="#i-cloud"/></svg><strong>WAN</strong><span>198.51.100.5</span></div>
+        <div class="cinema-node branch"><svg class="ic"><use href="#i-router"/></svg><strong>BRANCH</strong><span>10.20.0.0/16</span></div>
+        <div class="cinema-node core"><svg class="ic"><use href="#i-shield-check"/></svg><strong>FW-HQ</strong><span>active</span></div>
+        <div class="cinema-node lan"><svg class="ic"><use href="#i-network"/></svg><strong>LAN</strong><span>172.16.0.0/20</span></div>
+        <div class="cinema-node soc"><svg class="ic"><use href="#i-eye"/></svg><strong>SOC</strong><span>logs live</span></div>
+        <div class="cinema-alert">
+          <div><b><svg class="ic"><use href="#i-lock"/></svg>VPN</b><span>Phase 2 selectors up</span></div>
+          <div><b><svg class="ic"><use href="#i-route"/></svg>Route</b><span>SD-WAN rule matched</span></div>
+          <div><b><svg class="ic"><use href="#i-alert"/></svg>Risk</b><span>1 caution command</span></div>
+        </div>
+      </div>
+      <div class="cinema-panel">
+        <div class="cinema-panel-head"><strong><svg class="ic"><use href="#i-sparkles"/></svg>AI diagnostic run</strong><span>live</span></div>
+        <div class="cinema-console">
+          <div class="cinema-line cinema-dim">$ paste vpn debug output</div>
+          <div class="cinema-line cinema-blue">Analyzing IKE negotiation...</div>
+          <div class="cinema-line cinema-warn">Detected: NO_PROPOSAL_CHOSEN</div>
+          <div class="cinema-line cinema-ok">Root cause: phase1 proposal mismatch</div>
+          <div class="cinema-line cinema-dim">Generating safe command path...</div>
+          <div class="cinema-line cinema-ok">show vpn ipsec phase1-interface SiteA-HQ</div>
+          <div class="cinema-line cinema-warn">diagnose debug application ike -1</div>
+        </div>
+        <div class="cinema-actions">
+          <div><b><svg class="ic"><use href="#i-eye"/></svg>Read commands</b><span>Green labels for checks that do not change config.</span></div>
+          <div><b><svg class="ic"><use href="#i-alert"/></svg>Caution steps</b><span>Yellow labels before debug or operational impact.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-shell" id="animatedDemo">
+      <div class="demo-tbar">
+        <div class="dot2 r"></div><div class="dot2 y"></div><div class="dot2 g"></div>
+        <span class="demo-tbar-title"><svg class="ic"><use href="#i-wolf"/></svg> NetWolf Pro &nbsp;·&nbsp; netwolffortigate.com</span>
+        <span class="demo-tbar-badge">LIVE PREVIEW</span>
+      </div>
+      <div class="demo-tabs-bar" id="demoTabBar">
+        <div class="demo-tab active" id="dtab0"><svg class="ic"><use href="#i-list"/></svg> Guided Steps</div>
+        <div class="demo-tab" id="dtab1"><svg class="ic"><use href="#i-sparkles"/></svg> AI Analyzer</div>
+        <div class="demo-tab" id="dtab2"><svg class="ic"><use href="#i-mask"/></svg> IP Anonymizer</div>
+        <div class="demo-tab" id="dtab3"><svg class="ic"><use href="#i-calculator"/></svg> Subnet Calc</div>
+        <div class="demo-tab" id="dtab4"><svg class="ic"><use href="#i-zap"/></svg> Most Used</div>
+        <div class="demo-tab" id="dtab5"><svg class="ic"><use href="#i-windows"/></svg> PS Maker</div>
+        <div class="demo-tab" id="dtab6"><svg class="ic"><use href="#i-map"/></svg> Topology</div>
+        <div class="demo-tab" id="dtab7"><svg class="ic"><use href="#i-terminal"/></svg> CLI Sim</div>
+      </div>
+      <div class="demo-layout">
+        <div class="demo-sidebar" id="animSidebar">
+          <div class="demo-slbl">Troubleshoot</div>
+          <div class="demo-sitem active" id="asi0"><svg class="ic"><use href="#i-lock"/></svg><span>VPN / IPsec</span></div>
+          <div class="demo-sitem" id="asi1"><svg class="ic"><use href="#i-shield-lock"/></svg><span>SSL VPN</span></div>
+          <div class="demo-sitem" id="asi2"><svg class="ic"><use href="#i-scroll"/></svg><span>Policy / NAT</span></div>
+          <div class="demo-sitem" id="asi3"><svg class="ic"><use href="#i-settings"/></svg><span>HA Cluster</span></div>
+          <div class="demo-sitem" id="asi4"><svg class="ic"><use href="#i-globe"/></svg><span>SD-WAN</span></div>
+          <div class="demo-sitem" id="asi5"><svg class="ic"><use href="#i-route"/></svg><span>Routing</span></div>
+          <div class="demo-sitem" id="asi6"><svg class="ic"><use href="#i-key"/></svg><span>Auth / LDAP</span></div>
+          <div class="demo-slbl">Config Guides</div>
+          <div class="demo-sitem" id="asi7"><svg class="ic"><use href="#i-rocket"/></svg><span>Initial Setup</span></div>
+          <div class="demo-sitem" id="asi8"><svg class="ic"><use href="#i-shield-check"/></svg><span>ZTNA Config</span></div>
+          <div class="demo-sitem" id="asi9"><svg class="ic"><use href="#i-monitor"/></svg><span>SSL VPN Full</span></div>
+          <div class="demo-slbl">Tools</div>
+          <div class="demo-sitem" id="asi10"><svg class="ic"><use href="#i-mask"/></svg><span>IP Anonymizer</span></div>
+          <div class="demo-sitem" id="asi11"><svg class="ic"><use href="#i-calculator"/></svg><span>Subnet Calc</span></div>
+          <div class="demo-sitem" id="asi12"><svg class="ic"><use href="#i-wifi"/></svg><span>Quick Ref</span></div>
+          <div class="demo-slbl">New Features</div>
+          <div class="demo-sitem" id="asi13"><svg class="ic"><use href="#i-zap"/></svg><span>Most Used</span></div>
+          <div class="demo-sitem" id="asi14"><svg class="ic"><use href="#i-windows"/></svg><span>PS Script Maker</span></div>
+          <div class="demo-sitem" id="asi15"><svg class="ic"><use href="#i-map"/></svg><span>Topology Designer</span></div>
+          <div class="demo-sitem" id="asi16"><svg class="ic"><use href="#i-terminal"/></svg><span>CLI Simulator</span></div>
+          <div class="demo-sitem" id="asi17"><svg class="ic"><use href="#i-mail"/></svg><span>Email Generator</span></div>
+          <div class="demo-sitem" id="asi18"><svg class="ic"><use href="#i-wifi"/></svg><span>DHCP Diagnostics</span></div>
+        </div>
+        <div class="demo-content" id="animContent">
+
+          <div class="anim-scene" id="ascene0">
+            <div class="scene-hdr"><svg class="ic"><use href="#i-lock"/></svg><span class="title">IPsec VPN Troubleshooting</span><span class="meta">4 steps</span></div>
+            <div class="anim-step-card" id="asc0"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">1</div>Check tunnel status</div><span class="anim-badge ro"><svg class="ic"><use href="#i-eye"/></svg>read-only</span></div><div class="anim-cmds" id="acmds0"></div><div class="anim-note"><svg class="ic"><use href="#i-lightbulb"/></svg>Look for "established" in both phases. Missing = tunnel never came up.</div></div>
+            <div class="anim-step-card" id="asc1"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">2</div>Live IKE negotiation debug</div><span class="anim-badge warn"><svg class="ic"><use href="#i-alert"/></svg>config</span></div><div class="anim-cmds" id="acmds1"></div><div class="anim-note"><svg class="ic"><use href="#i-lightbulb"/></svg>Look for: NO_PROPOSAL_CHOSEN · AUTH_FAILED · PAYLOAD_MALFORMED</div></div>
+            <div class="anim-step-card" id="asc2"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">3</div>Compare phase proposals</div><span class="anim-badge ro"><svg class="ic"><use href="#i-eye"/></svg>read-only</span></div><div class="anim-cmds" id="acmds2"></div><div class="anim-note"><svg class="ic"><use href="#i-lightbulb"/></svg>Encryption, DH group and lifetime must match exactly on both peers.</div></div>
+            <div class="anim-step-card" id="asc3"><div class="anim-step-hdr"><div class="anim-step-title"><div class="anim-step-num">4</div>Check routing to remote subnet</div><span class="anim-badge ro"><svg class="ic"><use href="#i-eye"/></svg>read-only</span></div><div class="anim-cmds" id="acmds3"></div><div class="anim-note"><svg class="ic"><use href="#i-lightbulb"/></svg>Missing static route = traffic blackholed before reaching tunnel.</div></div>
+          </div>
+
+          <div class="anim-scene" id="ascene2" style="display:none">
+            <div class="scene-hdr"><svg class="ic"><use href="#i-sparkles"/></svg><span class="title">AI CLI Analyzer</span><span class="meta">Claude AI + Groq LLaMA 3.3 70B</span></div>
+            <div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:12px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.5);line-height:1.9;margin-bottom:12px"><div style="font-size:9.5px;color:rgba(255,255,255,.25);margin-bottom:8px;letter-spacing:.06em;display:flex;align-items:center;gap:5px"><svg class="ic"><use href="#i-chevron-right"/></svg>PASTED CLI OUTPUT</div><span style="color:rgba(255,255,255,.3)"># get vpn ipsec tunnel summary</span><br><span style="color:#e6edf3">Tunnel name &nbsp;: SiteA-HQ</span><br><span style="color:#f85149">Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: down</span><br><span style="color:rgba(255,255,255,.4)">Local IP &nbsp;&nbsp;&nbsp;&nbsp;: 203.0.113.1 &nbsp;Remote: 198.51.100.5</span><br><span style="color:#d29922">Last error &nbsp;&nbsp;: no proposal chosen</span></div>
+            <div id="aiThinking" style="padding:8px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:8px"><div style="display:flex;gap:4px"><span class="anim-dot"></span><span class="anim-dot" style="animation-delay:.2s"></span><span class="anim-dot" style="animation-delay:.4s"></span></div>Analyzing output with AI...</div>
+            <div id="aiResult" style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:9px;padding:14px;font-size:12px;color:rgba(255,255,255,.8);line-height:1.8;display:none"><div style="font-size:10.5px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic" style="font-size:12px"><use href="#i-sparkles"/></svg>AI Diagnosis — Claude AI + LLaMA 3.3 70B</div><strong style="color:#58a6ff">Root cause:</strong> Phase 1 IKE proposal mismatch. The error <span style="font-family:var(--mono);font-size:10.5px;background:rgba(0,0,0,.4);padding:1px 5px;border-radius:3px;color:#3fb950">no proposal chosen</span> means the initiator is advertising encryption/DH-group combinations the remote peer cannot accept.<br><br><strong style="color:#58a6ff">Fix commands:</strong><br><span style="font-family:var(--mono);font-size:10.5px;color:#3fb950;display:block;margin:3px 0">show vpn ipsec phase1-interface SiteA-HQ</span><span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug application ike -1</span><span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug enable</span><br><strong style="color:#58a6ff">Resolution:</strong> Align <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set proposal aes256-sha256</span> and <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set dhgrp 14</span> on both peers. Switch to IKEv2.</div>
+          </div>
+
+          <div class="anim-scene" id="ascene3" style="display:none">
+            <div class="scene-hdr"><svg class="ic"><use href="#i-mask"/></svg><span class="title">IP Anonymizer</span><span class="meta">RFC 5737 safe IPs</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+              <div><div style="font-size:9.5px;color:rgba(255,255,255,.25);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:5px"><svg class="ic"><use href="#i-chevron-right"/></svg>ORIGINAL OUTPUT</div><div style="background:rgba(0,0,0,.4);border:1px solid rgba(248,81,73,.15);border-radius:8px;padding:12px;font-family:var(--mono);font-size:10.5px;line-height:1.9"><span style="color:#f85149">src=192.168.10.50</span><br><span style="color:#f85149">dst=10.0.0.1</span><br><span style="color:rgba(255,255,255,.4)">proto=6 sport=52441</span><br><span style="color:#f85149">gw=172.16.1.254</span><br><span style="color:rgba(255,255,255,.4)">policy-id=42 nat</span><br><span style="color:#f85149">SNAT 192.168.10.50</span><br><span style="color:#f85149">&nbsp;&nbsp;->203.88.12.1</span></div></div>
+              <div><div style="font-size:9.5px;color:rgba(255,255,255,.25);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:5px"><svg class="ic"><use href="#i-shield-check"/></svg>ANONYMIZED OUTPUT</div><div style="background:rgba(0,0,0,.4);border:1px solid rgba(63,185,80,.15);border-radius:8px;padding:12px;font-family:var(--mono);font-size:10.5px;line-height:1.9"><span style="color:#3fb950">src=192.0.2.1</span><br><span style="color:#3fb950">dst=192.0.2.2</span><br><span style="color:rgba(255,255,255,.4)">proto=6 sport=52441</span><br><span style="color:#3fb950">gw=192.0.2.3</span><br><span style="color:rgba(255,255,255,.4)">policy-id=42 nat</span><br><span style="color:#3fb950">SNAT 192.0.2.1</span><br><span style="color:#3fb950">&nbsp;&nbsp;->198.51.100.1</span></div></div>
+            </div>
+            <div style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:8px;padding:12px 14px;margin-bottom:10px"><div style="font-size:10.5px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:5px"><svg class="ic"><use href="#i-list"/></svg>IP MAPPING TABLE</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;font-family:var(--mono);font-size:10.5px"><span style="color:rgba(255,255,255,.3)">Real IP</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:rgba(255,255,255,.3)">Safe IP</span><span style="color:#f85149">192.168.10.50</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.1</span><span style="color:#f85149">10.0.0.1</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.2</span><span style="color:#f85149">172.16.1.254</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">192.0.2.3</span><span style="color:#f85149">203.88.12.1</span><span style="color:rgba(255,255,255,.3)">→</span><span style="color:#3fb950">198.51.100.1</span></div></div>
+            <div style="font-size:10.5px;color:rgba(255,255,255,.32);font-family:var(--mono);display:flex;align-items:center;gap:5px"><svg class="ic" style="color:var(--g)"><use href="#i-check"/></svg>4 unique IPs replaced · RFC 5737 ranges · Safe to share with vendor</div>
+          </div>
+
+          <div class="anim-scene" id="ascene4" style="display:none">
+            <div class="scene-hdr"><svg class="ic"><use href="#i-calculator"/></svg><span class="title">IPv4 Subnet Calculator</span></div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:11px 14px"><span style="font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.32)">$</span><span id="subTyping" style="font-family:var(--mono);font-size:12px;color:#e6edf3"></span><span id="subCursor" style="font-family:var(--mono);font-size:12px;color:var(--a);animation:cur .6s infinite">▊</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="subCards">
+              <div class="sub-card"><div class="sub-lbl">Network Address</div><div class="sub-val" style="color:#58a6ff">172.16.0.0</div></div>
+              <div class="sub-card"><div class="sub-lbl">Broadcast Address</div><div class="sub-val" style="color:#d29922">172.16.15.255</div></div>
+              <div class="sub-card"><div class="sub-lbl">First Usable IP</div><div class="sub-val" style="color:#3fb950">172.16.0.1</div></div>
+              <div class="sub-card"><div class="sub-lbl">Last Usable IP</div><div class="sub-val" style="color:#3fb950">172.16.15.254</div></div>
+              <div class="sub-card"><div class="sub-lbl">Subnet Mask</div><div class="sub-val" style="color:rgba(255,255,255,.75)">255.255.240.0</div></div>
+              <div class="sub-card"><div class="sub-lbl">Wildcard Mask</div><div class="sub-val" style="color:rgba(255,255,255,.75)">0.0.15.255</div></div>
+              <div class="sub-card"><div class="sub-lbl">Usable Hosts</div><div class="sub-val" style="color:var(--a);font-size:18px">4,094</div></div>
+              <div class="sub-card"><div class="sub-lbl">CIDR Prefix</div><div class="sub-val" style="color:rgba(255,255,255,.75)">/20</div></div>
+            </div>
+          </div>
+
+          <div class="anim-scene" id="ascene6" style="display:none">
+            <div class="scene-hdr"><svg class="ic"><use href="#i-zap"/></svg><span class="title">Most Used Network Tools</span><span class="meta">13 power tools</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+              <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.25);border-radius:9px;padding:11px 13px">
+                <div style="font-size:10.5px;color:var(--a);font-weight:700;font-family:var(--mono);margin-bottom:6px;display:flex;align-items:center;gap:5px"><svg class="ic"><use href="#i-search"/></svg>Policy Lookup</div>
+                <div style="font-family:var(--mono);font-size:10px;color:#3fb950;line-height:1.75">diagnose firewall iprope lookup<br>192.168.1.1 8.8.8.8 443 tcp</div>
+                <span style="background:rgba(63,185,80,.15);color:#3fb950;font-size:8.5px;padding:2px 7px;border-radius:10px;border:1px solid rgba(63,185,80,.3);margin-top:6px;display:inline-block">READ</span>
+              </div>
+              <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.25);border-radius:9px;padding:11px 13px">
+                <div style="font-size:10.5px;color:var(--a);font-weight:700;font-family:var(--mono);margin-bottom:6px;display:flex;align-items:center;gap:5px"><svg class="ic"><use href="#i-lock"/></svg>VPN Status</div>
+                <div style="font-family:var(--mono);font-size:10px;color:#3fb950;line-height:1.75">get vpn ipsec tunnel summary<br>diagnose vpn tunnel list</div>
+                <span style="background:rgba(63,185,80,.15);color:#3fb950;font-size:8.5px;padding:2px 7px;border-radius:10px;border:1px solid rgba(63,185,80,.3);margin-top:6px;display:inline-block">READ</span>
+              </div>
+              <div style="background:rgba(88,166,255,.06);border:1px solid rgba(88,166,255,.25);border-radius:9px;padding:11px 13px">
+                <div style="font-size:10.5px;color:#58a6ff;font-weight:700;font-family:var(--mono);margin-bottom:6px;display:flex;align-items:center;gap:5px"><svg class="ic"><use href="#i-wifi"/></svg>Port Reachability</div>
+                <div style="font-family:var(--mono);font-size:10px;color:#58a6ff;line-height:1.75">UDP 500 · TCP 443 · SSH 22<br>RDP 3389 · DNS 53 · Custom</div>
+                <span style="background:rgba(88,166,255,.15);color:#58a6ff;font-size:8.5px;padding:2px 7px;border-radius:10px;border:1px solid rgba(88,166,255,.3);margin-top:6px;display:inline-block">GENERATE</span>
+              </div>
+              <div style="background:rgba(210,153,34,.06);border:1px solid rgba(210,153,34,.25);border-radius:9px;padding:11px 13px">
+                <div style="font-size:10.5px;color:#d29922;font-weight:700;font-family:var(--mono);margin-bottom:6px;display:flex;align-items:center;gap:5px"><svg class="ic"><use href="#i-refresh"/></svg>Firmware Upgrade</div>
+                <div style="font-family:var(--mono);font-size:10px;color:#d29922;line-height:1.75">7.4.3 → 7.4.5 · Backup first<br>HA-aware · Post-verify steps</div>
+                <span style="background:rgba(210,153,34,.15);color:#d29922;font-size:8.5px;padding:2px 7px;border-radius:10px;border:1px solid rgba(210,153,34,.3);margin-top:6px;display:inline-block">CAUTION</span>
+              </div>
+            </div>
+            <div style="font-size:10.5px;color:rgba(255,255,255,.3);font-family:var(--mono);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span>+ 9 more:</span>
+              <span style="display:inline-flex;align-items:center;gap:3px"><svg class="ic"><use href="#i-heart-pulse"/></svg>Health</span>
+              <span style="display:inline-flex;align-items:center;gap:3px"><svg class="ic"><use href="#i-route"/></svg>BGP/OSPF</span>
+              <span style="display:inline-flex;align-items:center;gap:3px"><svg class="ic"><use href="#i-monitor"/></svg>SSL VPN</span>
+              <span style="display:inline-flex;align-items:center;gap:3px"><svg class="ic"><use href="#i-file"/></svg>Certs</span>
+              <span style="display:inline-flex;align-items:center;gap:3px"><svg class="ic"><use href="#i-chart"/></svg>Bandwidth</span>
+            </div>
+          </div>
+
+          <div class="anim-scene" id="ascene7" style="display:none">
+            <div class="scene-hdr"><svg class="ic"><use href="#i-windows"/></svg><span class="title">Smart PowerShell Script Maker</span><span class="meta">Claude AI + Groq LLaMA 3.3 70B</span></div>
+            <div style="background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:11px 14px;margin-bottom:10px;font-size:11.5px;color:#e6edf3;line-height:1.6">
+              <span style="color:rgba(255,255,255,.3);font-family:var(--mono);font-size:9.5px;display:flex;align-items:center;gap:4px;margin-bottom:5px"><svg class="ic"><use href="#i-chevron-right"/></svg>YOU TYPE</span>
+              My Windows Server is slow — check CPU, memory, top processes and event log errors from last 24 hours
+            </div>
+            <div style="background:#0a0e14;border:1px solid #30363d;border-radius:9px;padding:12px 14px;font-family:var(--mono);font-size:10.5px;line-height:1.9">
+              <div style="color:#58a6ff;margin-bottom:4px"># === SYSTEM PERFORMANCE CHECK ===</div>
+              <div style="background:rgba(63,185,80,.07);border-left:2px solid #3fb950;padding:2px 8px;margin-left:-8px">
+                <span style="color:#3fb950">Get-Process | Sort CPU -Desc | Select -First 10</span>
+                <span style="background:rgba(63,185,80,.18);color:#3fb950;font-size:8.5px;padding:1px 6px;border-radius:4px;margin-left:6px">READ</span>
+              </div>
+              <div style="color:#484f58;font-size:9.5px;padding-left:4px">→ Top 10 processes by CPU usage</div>
+              <div style="background:rgba(63,185,80,.07);border-left:2px solid #3fb950;padding:2px 8px;margin-left:-8px">
+                <span style="color:#3fb950">Get-WinEvent -LogName System -MaxEvents 100 | Where Level -le 2</span>
+                <span style="background:rgba(63,185,80,.18);color:#3fb950;font-size:8.5px;padding:1px 6px;border-radius:4px;margin-left:6px">READ</span>
+              </div>
+              <div style="color:#484f58;font-size:9.5px;padding-left:4px">→ Last 100 Critical/Error events</div>
+              <div style="background:rgba(248,81,73,.07);border-left:2px solid #f85149;padding:2px 8px;margin-left:-8px">
+                <span style="color:#f85149">Clear-EventLog -LogName Application</span>
+                <span style="background:rgba(248,81,73,.18);color:#f85149;font-size:8.5px;padding:1px 6px;border-radius:4px;margin-left:6px">WRITE</span>
+              </div>
+              <div style="color:#484f58;font-size:9.5px;padding-left:4px">→ Clear Application event log</div>
+            </div>
+          </div>
+
+          <div class="anim-scene" id="ascene8" style="display:none">
+            <div class="scene-hdr"><svg class="ic"><use href="#i-map"/></svg><span class="title">Network Topology Designer</span><span class="meta">Infinite Canvas · draw.io</span></div>
+            <div style="background:#0d1117;border:1px solid #30363d;border-radius:11px;padding:12px;position:relative">
+              <svg width="100%" height="210" viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg">
+                <pattern id="g2" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.4" fill="rgba(255,255,255,.05)"/></pattern>
+                <rect width="460" height="210" fill="url(#g2)"/>
+                <line x1="230" y1="38" x2="130" y2="98" stroke="#d29922" stroke-width="1.5" stroke-dasharray="5,3"/>
+                <line x1="230" y1="38" x2="330" y2="98" stroke="#d29922" stroke-width="1.5" stroke-dasharray="5,3"/>
+                <line x1="130" y1="98" x2="330" y2="98" stroke="#1D9E75" stroke-width="1.5" stroke-dasharray="7,4"/>
+                <line x1="130" y1="98" x2="80" y2="160" stroke="#3fb950" stroke-width="1.5"/>
+                <line x1="130" y1="98" x2="180" y2="160" stroke="#3fb950" stroke-width="1.5"/>
+                <line x1="330" y1="98" x2="280" y2="160" stroke="#3fb950" stroke-width="1.5"/>
+                <line x1="330" y1="98" x2="380" y2="160" stroke="#3fb950" stroke-width="1.5"/>
+                <!-- WAN cloud -->
+                <circle cx="230" cy="38" r="20" fill="rgba(22,27,34,.97)" stroke="#8b949e" stroke-width="1.5"/>
+                <g transform="translate(230 38) scale(.85)"><use href="#i-cloud" x="-10" y="-10" width="20" height="20" stroke="#8b949e" stroke-width="1.6" fill="none"/></g>
+                <text x="230" y="74" text-anchor="middle" font-size="8.5" fill="#8b949e" font-family="monospace">Internet</text>
+                <!-- FW A -->
+                <circle cx="130" cy="98" r="22" fill="rgba(22,27,34,.97)" stroke="#1D9E75" stroke-width="2"/>
+                <g transform="translate(130 98)"><use href="#i-shield-check" x="-10" y="-10" width="20" height="20" stroke="#1D9E75" stroke-width="1.7" fill="none"/></g>
+                <text x="130" y="135" text-anchor="middle" font-size="9" fill="#e6edf3" font-family="sans-serif" font-weight="600">FW-A</text>
+                <text x="130" y="148" text-anchor="middle" font-size="8" fill="#1D9E75" font-family="monospace">10.0.0.1</text>
+                <!-- FW B -->
+                <circle cx="330" cy="98" r="22" fill="rgba(22,27,34,.97)" stroke="#1D9E75" stroke-width="2"/>
+                <g transform="translate(330 98)"><use href="#i-shield-check" x="-10" y="-10" width="20" height="20" stroke="#1D9E75" stroke-width="1.7" fill="none"/></g>
+                <text x="330" y="135" text-anchor="middle" font-size="9" fill="#e6edf3" font-family="sans-serif" font-weight="600">FW-B</text>
+                <text x="330" y="148" text-anchor="middle" font-size="8" fill="#1D9E75" font-family="monospace">10.0.0.2</text>
+                <!-- Switch A -->
+                <circle cx="80" cy="170" r="14" fill="rgba(22,27,34,.97)" stroke="#58a6ff" stroke-width="1.5"/>
+                <g transform="translate(80 170) scale(.7)"><use href="#i-router" x="-10" y="-10" width="20" height="20" stroke="#58a6ff" stroke-width="1.8" fill="none"/></g>
+                <text x="80" y="195" text-anchor="middle" font-size="8" fill="#8b949e" font-family="sans-serif">SW-A</text>
+                <!-- PC A -->
+                <circle cx="180" cy="170" r="13" fill="rgba(22,27,34,.97)" stroke="#3fb950" stroke-width="1.5"/>
+                <g transform="translate(180 170) scale(.65)"><use href="#i-monitor" x="-10" y="-10" width="20" height="20" stroke="#3fb950" stroke-width="1.8" fill="none"/></g>
+                <text x="180" y="194" text-anchor="middle" font-size="8" fill="#8b949e" font-family="sans-serif">PC-A</text>
+                <!-- Switch B -->
+                <circle cx="280" cy="170" r="14" fill="rgba(22,27,34,.97)" stroke="#58a6ff" stroke-width="1.5"/>
+                <g transform="translate(280 170) scale(.7)"><use href="#i-router" x="-10" y="-10" width="20" height="20" stroke="#58a6ff" stroke-width="1.8" fill="none"/></g>
+                <text x="280" y="195" text-anchor="middle" font-size="8" fill="#8b949e" font-family="sans-serif">SW-B</text>
+                <!-- Server -->
+                <circle cx="380" cy="170" r="13" fill="rgba(22,27,34,.97)" stroke="#a78bfa" stroke-width="1.5"/>
+                <g transform="translate(380 170) scale(.65)"><use href="#i-server" x="-10" y="-10" width="20" height="20" stroke="#a78bfa" stroke-width="1.8" fill="none"/></g>
+                <text x="380" y="194" text-anchor="middle" font-size="8" fill="#8b949e" font-family="sans-serif">Server</text>
+              </svg>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:10px;font-size:10.5px;font-family:var(--mono);flex-wrap:wrap">
+              <span style="color:#d29922">─── WAN</span>
+              <span style="color:#1D9E75">╌╌╌ IPsec VPN</span>
+              <span style="color:#3fb950">─── LAN</span>
+              <span style="color:rgba(255,255,255,.3)">Drag · Connect · Resize · Export PNG</span>
+            </div>
+          </div>
+
+          <div class="anim-scene" id="ascene9" style="display:none">
+            <div class="scene-hdr"><svg class="ic"><use href="#i-terminal"/></svg><span class="title">CLI Practice Simulator</span><span class="meta">10 vendors · 1,100+ commands</span></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+              <span style="background:rgba(29,158,117,.1);color:#1D9E75;font-size:10px;padding:3px 10px;border-radius:999px;border:1px solid rgba(29,158,117,.25);font-family:var(--mono);display:inline-flex;align-items:center;gap:4px"><svg class="ic"><use href="#i-shield"/></svg>Firewall</span>
+              <span style="background:rgba(88,166,255,.08);color:#58a6ff;font-size:10px;padding:3px 10px;border-radius:999px;border:1px solid rgba(88,166,255,.25);font-family:var(--mono);display:inline-flex;align-items:center;gap:4px"><svg class="ic"><use href="#i-router"/></svg>Cisco IOS</span>
+              <span style="background:rgba(210,153,34,.08);color:#d29922;font-size:10px;padding:3px 10px;border-radius:999px;border:1px solid rgba(210,153,34,.25);font-family:var(--mono);display:inline-flex;align-items:center;gap:4px"><svg class="ic"><use href="#i-network"/></svg>NX-OS</span>
+              <span style="background:rgba(167,139,250,.08);color:#c084fc;font-size:10px;padding:3px 10px;border-radius:999px;border:1px solid rgba(192,132,252,.25);font-family:var(--mono);display:inline-flex;align-items:center;gap:4px"><svg class="ic"><use href="#i-globe"/></svg>Juniper</span>
+              <span style="background:rgba(248,81,73,.08);color:#f87171;font-size:10px;padding:3px 10px;border-radius:999px;border:1px solid rgba(248,81,73,.25);font-family:var(--mono);display:inline-flex;align-items:center;gap:4px"><svg class="ic"><use href="#i-router"/></svg>Huawei</span>
+              <span style="background:rgba(255,131,0,.08);color:#fb923c;font-size:10px;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,131,0,.25);font-family:var(--mono);display:inline-flex;align-items:center;gap:4px"><svg class="ic"><use href="#i-shield"/></svg>Palo Alto</span>
+            </div>
+            <div style="background:#0a0e14;border:1px solid #30363d;border-radius:9px;overflow:hidden">
+              <div style="background:#0d1117;padding:7px 12px;border-bottom:1px solid #30363d;display:flex;align-items:center;gap:8px">
+                <span style="width:6px;height:6px;border-radius:50%;background:#3fb950;display:inline-block"></span>
+                <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">FW-HQ-01 # </span>
+                <span style="font-family:var(--mono);font-size:10.5px;color:#e6edf3">get vpn ipsec tunnel summary</span>
+              </div>
+              <div style="padding:10px 14px;font-family:var(--mono);font-size:10.5px;line-height:1.95;color:#c9d1d9">
+                <div><span style="color:#3fb950">'SITE-B-VPN'</span> 10.0.0.2:0 selectors(total,up): <span style="color:#3fb950">2/2</span></div>
+                <div>rx(pkt,err): <span style="color:#3fb950">14523/0</span> &nbsp;tx(pkt,err): <span style="color:#3fb950">13891/0</span></div>
+                <div style="margin-top:4px;color:var(--a)">FW-HQ-01 # <span style="color:rgba(255,255,255,.4)">_</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div style="height:2px;background:rgba(255,255,255,.05)"><div id="animProgress" style="height:100%;background:linear-gradient(90deg,var(--a),var(--a2));width:0;transition:width .1s linear"></div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 18px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.05)">
+        <span id="animStatus" style="font-family:var(--mono);font-size:10.5px;color:rgba(255,255,255,.32)">50+ playbooks · AI-powered</span>
+        <span style="font-family:var(--mono);font-size:10.5px;color:var(--a);display:flex;align-items:center;gap:6px"><span style="width:5px;height:5px;border-radius:50%;background:var(--g);display:inline-block;box-shadow:0 0 8px var(--g)"></span>netwolffortigate.com</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(29,158,117,.05);border-top:1px solid rgba(29,158,117,.12);flex-wrap:wrap;gap:10px">
+        <div style="font-size:12.5px;color:rgba(255,255,255,.55)"><strong style="color:rgba(255,255,255,.85)">NetWolf Pro</strong> — Professional CLI toolkit for network engineers</div>
+        <a href="#order" class="btn-primary" style="padding:9px 18px;font-size:12.5px">Subscribe — €10/month <svg class="ic"><use href="#i-arrow-right"/></svg></a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <a href="#order" class="btn-primary" style="font-size:15px;padding:14px 30px">Get Instant Access <svg class="ic"><use href="#i-arrow-right"/></svg></a>
+      <span style="font-size:12px;color:var(--t3)">€10/month · Cancel anytime · Credentials delivered instantly</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── PRICING ─────────────── -->
+<section class="pricing-section" id="pricing">
+  <div class="section-label-wrap"><div class="section-label">Pricing</div></div>
+  <h2 class="section-title">Simple, honest pricing</h2>
+  <p class="section-sub">Full access to the complete toolkit. Cancel anytime.</p>
+  <div class="pricing-inner">
+    <div class="price-cards">
+      <div class="price-card">
+        <div class="price-name">NetWolf Pro · Monthly</div>
+        <div class="price-amount"><span class="price-cur">€</span><span class="price-num">10</span></div>
+        <div class="price-period">per month · billed monthly · cancel anytime</div>
+        <ul class="price-feats" style="margin-top:16px">
+          <li><svg class="ic"><use href="#i-check"/></svg>50+ guided troubleshoot playbooks</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>12 firewall configuration guides</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>AI CLI Analyzer — powered by Claude AI &amp; Groq</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>IP Masking &amp; Bulk Anonymizer</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Subnet Calculator + Quick Reference</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Multi-vendor CLI — Cisco, Aruba, Huawei</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Config Generator &amp; Smart Config Migrator</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Advanced diagnostics &amp; kernel commands</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>EVE-NG Lab Setup Guide + PDF</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>5 colour themes</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Personal Firebase-secured login</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Any browser · any device · instant access</li>
+        </ul>
+        <a href="#order" class="btn-ghost" style="display:flex;justify-content:center;text-decoration:none;margin-top:20px" onclick="setPlan('monthly')">Subscribe Monthly <svg class="ic"><use href="#i-arrow-right"/></svg></a>
+        <div class="price-note">Cancel anytime · No commitment</div>
+      </div>
+      <div class="price-card featured">
+        <div class="featured-badge"><svg class="ic"><use href="#i-zap"/></svg>BEST VALUE — SAVE €20</div>
+        <div class="price-name">NetWolf Pro · Yearly</div>
+        <div class="price-amount"><span class="price-cur">€</span><span class="price-num">100</span></div>
+        <div class="price-period">per year — <span style="color:var(--g);font-weight:700">≈ €8.33/mo</span></div>
+        <ul class="price-feats" style="margin-top:16px">
+          <li><svg class="ic"><use href="#i-check"/></svg>Everything in the Monthly plan</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>2 months free vs monthly billing</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Priority email support — 24h response</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>New content added throughout the year</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Single annual payment — no monthly hassle</li>
+        </ul>
+        <a href="#order" class="btn-primary" style="display:flex;justify-content:center;text-decoration:none;margin-top:20px" onclick="setPlan('yearly')">Subscribe Yearly — Best Value <svg class="ic"><use href="#i-arrow-right"/></svg></a>
+        <div class="price-note">One payment · 12 months access · Priority support</div>
+        <div style="margin-top:12px;background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:9px;padding:10px 12px;font-size:11.5px;color:var(--t2);text-align:center;line-height:1.6;display:flex;align-items:center;justify-content:center;gap:6px">
+          <svg class="ic" style="color:var(--a)"><use href="#i-rocket"/></svg> <strong style="color:var(--a)">Going live soon</strong> — automatic billing coming when we launch out of beta
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── ORDER ─────────────── -->
+<section class="order-section" id="order">
+  <div class="order-inner">
+    <div class="section-label-wrap" style="justify-content:flex-start"><div class="section-label" style="text-align:left">Subscribe</div></div>
+    <h2 class="section-title" style="text-align:left;margin-bottom:8px">Create your account</h2>
+    <p style="color:var(--t2);font-size:14px;margin-bottom:28px;line-height:1.7">Fill in your details below and choose your plan. Once the form is complete click <strong style="color:var(--t)">Subscribe &amp; Create Account</strong> — you will be taken to Stripe's secure checkout to complete payment. Questions? Email <a href="/cdn-cgi/l/email-protection#bfcccacfcfd0cdcbffd1dacbc8d0d3d9d9d0cdcbd6d8decbda91dcd0d2" style="color:var(--a)"><span class="__cf_email__" data-cfemail="b9caccc9c9d6cbcdf9d7dccdced6d5dfdfd6cbcdd0ded8cddc97dad6d4">[email&#160;protected]</span></a></p>
+
+    <div class="beta-notice">
+      <svg class="ic"><use href="#i-construction"/></svg>
+      <div>
+        <div class="title">Beta Launch — Manual Verification Active</div>
+        <div class="text">NetWolf Pro is currently in beta. After subscribing your account will be <strong style="color:var(--t)">manually verified</strong> before toolkit access is granted. You will receive a confirmation email within 24 hours once verified. Payment is currently processed in <strong style="color:var(--t)">test mode</strong> — no real charges will be made during this period.</div>
+      </div>
+    </div>
+
+    <div class="form-card" id="formCard">
+      <div class="howit">
+        <strong>How it works (Beta):</strong>
+        <ol>
+          <li>Fill in all your details below</li>
+          <li>Click Subscribe — Stripe secure checkout opens</li>
+          <li>Your account is created and sent for manual verification</li>
+          <li>You receive confirmation at your email within 24 hours</li>
+          <li>Log in at <a href="https://netwolffortigate.com/app.html" style="color:var(--a)">netwolffortigate.com/app.html</a></li>
+        </ol>
+      </div>
+
+      <form id="orderForm" novalidate>
+        <div class="form-divider">Your login credentials</div>
+        <div class="form-group">
+          <label>Username *</label>
+          <input type="text" name="username" id="inp_username" placeholder="Choose a username (e.g. jsmith_net)" required autocomplete="username">
+          <div class="pass-hint">Letters, numbers and underscores only. Min 4 characters.</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Password *</label>
+            <input type="password" name="password" id="inp_password" placeholder="Choose a strong password" required autocomplete="new-password">
+            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+            <div class="pass-hint" id="strengthLabel">Min 8 characters</div>
+          </div>
+          <div class="form-group">
+            <label>Confirm password *</label>
+            <input type="password" name="confirmPassword" id="inp_confirm" placeholder="Repeat your password" required autocomplete="new-password">
+          </div>
+        </div>
+        <div class="form-divider">Personal information</div>
+        <div class="form-row">
+          <div class="form-group"><label>First name *</label><input type="text" name="firstName" placeholder="John" required></div>
+          <div class="form-group"><label>Last name *</label><input type="text" name="lastName" placeholder="Smith" required></div>
+        </div>
+        <div class="form-group">
+          <label>Work email * <span style="color:var(--t3);font-weight:400">(confirmation sent here)</span></label>
+          <input type="email" name="email" placeholder="john@company.com" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Company</label><input type="text" name="company" placeholder="Acme Corp (optional)"></div>
+          <div class="form-group">
+            <label>Country *</label>
+            <select name="country" required>
+              <option value="">— Select —</option>
+              <option>Netherlands</option><option>Belgium</option><option>Germany</option>
+              <option>United Kingdom</option><option>United States</option><option>France</option>
+              <option>Spain</option><option>Italy</option><option>Sweden</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-divider">Your selected plan</div>
+        <div class="plan-display">
+          <div class="plan-display-left">
+            <div class="plan-display-mark"><svg class="ic"><use href="#i-wolf"/></svg></div>
+            <div>
+              <div id="selectedPlanName" class="plan-display-name">NetWolf Pro — Monthly</div>
+              <div id="selectedPlanPrice" class="plan-display-price">€10 / month · billed monthly · cancel anytime</div>
+            </div>
+          </div>
+          <a href="#pricing" class="plan-change">← Change plan</a>
+        </div>
+
+        <div class="form-divider">Payment — secured by Stripe</div>
+        <div class="cc-logos"><span class="cc-logo">VISA</span><span class="cc-logo">MC</span><span class="cc-logo">AMEX</span><span class="cc-logo">iDEAL</span></div>
+        <div class="security-note"><svg class="ic"><use href="#i-lock"/></svg> Card details go directly to Stripe's encrypted servers. NetWolf never sees or stores your card number.</div>
+        <div class="form-group"><label>Cardholder name *</label><input type="text" name="cardName" id="inp_cardName" placeholder="Name as printed on card" required></div>
+        <div class="form-group"><label>Card details *</label><div id="stripe-card-element"></div><div id="card-errors"></div></div>
+
+        <div class="form-divider">Anything else?</div>
+        <div class="form-group"><label>Message / notes</label><textarea name="message" rows="2" placeholder="Invoice requirements, team size, questions..."></textarea></div>
+        <div class="form-group" style="flex-direction:row;align-items:flex-start;gap:9px;margin-top:4px">
+          <input type="checkbox" id="terms" style="margin-top:3px;width:auto;flex-shrink:0" required>
+          <label for="terms" style="font-size:12.5px;color:var(--t2);cursor:pointer;line-height:1.6">I agree to the <a href="#" onclick="openTos(event)" style="color:var(--a)">Terms of Service</a> and authorise the selected subscription charge to my card until cancelled.</label>
+        </div>
+        <div class="form-err" id="formError"></div>
+        <button type="submit" class="btn-submit" id="submitBtn"><svg class="ic"><use href="#i-lock"/></svg>Subscribe &amp; Request Access</button>
+        <div class="stripe-powered">Payments secured by <strong style="color:var(--t2)">Stripe</strong></div>
+      </form>
+
+      <div class="success-msg" id="successMsg">
+        <div class="success-check"><svg class="ic"><use href="#i-check"/></svg></div>
+        <h3>Request received!</h3>
+        <p>Your subscription request has been received. Your account has been created and is pending manual verification.</p>
+        <p style="margin-top:8px">You will receive a confirmation email at your registered address within <strong>24 hours</strong> once your access is activated. Questions? Email <a href="/cdn-cgi/l/email-protection#27545257574855536749425350484b41414855534e404653420944484a" style="color:var(--a)"><span class="__cf_email__" data-cfemail="e5969095958a9791a58b8091928a8983838a97918c82849180cb868a88">[email&#160;protected]</span></a></p>
+        <div class="success-creds">
+          <div>Username: <span id="showUsername">—</span></div>
+          <div>Password: <span id="showPassword">—</span></div>
+          <div style="margin-top:10px;font-size:11px;color:var(--t3)">Keep these safe — you'll need them to log in at app.html</div>
+        </div>
+        <a href="https://netwolffortigate.com/app.html" class="btn-primary" style="margin-top:24px;display:inline-flex">Open Toolkit <svg class="ic"><use href="#i-arrow-right"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:60px 24px 30px;border-top:1px solid var(--br);background:linear-gradient(180deg,transparent,rgba(210,153,34,.02))">
+  <div style="max-width:880px;margin:0 auto;display:grid;gap:14px">
+    <div style="display:flex;align-items:flex-start;gap:14px;background:rgba(210,153,34,.05);border:1px solid rgba(210,153,34,.22);border-radius:12px;padding:18px 22px">
+      <svg class="ic" style="font-size:22px;color:var(--y);flex-shrink:0;margin-top:2px"><use href="#i-alert"/></svg>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--y);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Surgical precision is a requirement</div>
+        <div style="font-size:13.5px;color:var(--t2);line-height:1.7">Proceed with caution in production environments. Every command in this toolkit should be reviewed, understood, and validated against your specific environment before execution. <strong style="color:var(--t)">You are solely responsible for any changes made to live production equipment.</strong></div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:14px;background:rgba(255,255,255,.02);border:1px solid var(--br);border-radius:12px;padding:18px 22px">
+      <svg class="ic" style="font-size:20px;color:var(--t3);flex-shrink:0;margin-top:2px"><use href="#i-info"/></svg>
+      <div style="font-size:12.5px;color:var(--t3);line-height:1.7">
+        <strong style="color:var(--t2)">Trademark notice.</strong> NetWolf is an independent toolkit and is <strong style="color:var(--t2)">not affiliated with, endorsed by, or sponsored by Fortinet, Cisco, Microsoft, Anthropic</strong> (Claude AI), or any other vendor referenced in the product. All product names, logos, and trademarks are the property of their respective owners and are used here solely for identification and educational purposes. Any references to vendor commands, output formats, or platforms reflect publicly available documentation and the operator's own field experience.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 NetWolf · All rights reserved · <a href="https://netwolffortigate.com/app.html">Open Toolkit</a> · <a href="/cdn-cgi/l/email-protection#d4a7a1a4a4bba6a094bab1a0a3bbb8b2b2bba6a0bdb3b5a0b1fab7bbb9"><span class="__cf_email__" data-cfemail="285b5d5858475a5c68464d5c5f47444e4e475a5c414f495c4d064b4745">[email&#160;protected]</span></a> · <a href="#" onclick="openTos(event)">Terms of Use</a></p>
+</footer>
+
+<div class="toast" id="toast"><svg class="ic"><use href="#i-check"/></svg><span id="toastMsg"></span></div>
+
+<div class="tos-overlay" id="tosOverlay" onclick="if(event.target===this)closeTos()">
+  <div class="tos-card">
+    <div class="tos-hdr"><h3><svg class="ic"><use href="#i-scroll"/></svg>Terms of Service — NetWolf Pro</h3><button class="tos-close" onclick="closeTos()">Close</button></div>
+    <div class="tos-body">
+      <h4>1. Acceptance of Terms</h4><p>By accessing, subscribing to, or otherwise using NetWolf Pro (the "Service"), you ("User") agree to be bound by these Terms of Use ("Terms"). If you do not agree, you must not use the Service. These Terms form a legally binding contract between you and the operator of NetWolf ("NetWolf", "we", "us").</p>
+      <h4>2. Eligibility</h4><p>You must be at least 18 years old and legally able to enter into a binding contract under the laws of your country of residence. By using the Service in a professional capacity, you represent that you are authorised by your employer or client to do so.</p>
+      <h4>3. Description of Service</h4><p>NetWolf Pro is a browser-based reference and productivity toolkit aimed at network engineers. It contains command references, configuration templates, troubleshooting playbooks, AI-assisted analysis, anonymisation, calculators, and lab guidance. The Service is an <strong>educational and operational aid</strong> — it is not a replacement for vendor documentation, qualified engineering judgement, formal change-management procedures, or independent verification.</p>
+      <h4>4. Subscription, Billing &amp; Refunds</h4><p>NetWolf Pro is offered as a monthly subscription (€10/month) or an annual subscription (€100/year). Payments are processed by <strong>Stripe</strong>; NetWolf does not store card data. By subscribing you authorise recurring charges to your payment method at the chosen interval until you cancel. <strong>All sales are final.</strong> No refunds are issued for partial billing periods, unused time, forgotten cancellations, or perceived under-use. Price changes will be communicated at least 30 days in advance and take effect at your next renewal.</p>
+      <h4>5. Account &amp; Credentials</h4><p>You are responsible for maintaining the confidentiality of your username, password, and any device or session used to access the Service. Each subscription is for a <strong>single named individual</strong>. Sharing, reselling, or transferring credentials, or accessing the Service through automated means, may result in immediate suspension or termination without refund.</p>
+      <h4>6. Beta Phase</h4><p>The Service is currently offered in a beta phase. Features, pricing, and content may change without notice. New accounts may be subject to manual verification before access is granted. Payments during the beta phase may be processed in Stripe test mode, in which case no real charge is captured.</p>
+      <h4>7. Permitted Use</h4><p>You may use the Service only for <strong>lawful, legitimate professional or educational network engineering work</strong>. You are responsible for ensuring you have explicit, documented authorisation from the owner of any device, system, or network on which you run any command, configuration, or diagnostic derived from the Service.</p>
+      <h4>8. Prohibited Use</h4><p>You agree not to, and not to attempt to: (a) access systems or networks without authorisation; (b) perform unauthorised security testing, scanning, or intrusion; (c) violate any applicable law, regulation, or third-party right; (d) reverse engineer, scrape, mirror, or republish the Service or its content; (e) resell, sublicense, or share the Service with third parties; (f) submit content to the AI analyser that you are not legally entitled to share; (g) use the Service to develop a competing product. Violation of this section terminates your licence immediately and without refund.</p>
+      <h4>9. Operational Responsibility &amp; "Surgical Precision" Clause</h4><p>Production networks are sensitive, high-impact environments. <strong>Surgical precision is a requirement.</strong> The User acknowledges and agrees that:</p><p>(a) every command, configuration, script, or recommendation surfaced by the Service — including outputs produced by the AI analyser, configuration generator, migrator, and PowerShell maker — must be independently reviewed, understood, and validated by a qualified engineer before execution;<br>(b) the User is <strong>solely and exclusively responsible</strong> for any command they execute, any configuration they deploy, and any change they make to any device, system, network, or environment, whether in production, staging, lab, or otherwise;<br>(c) the User must follow their organisation's change-management, peer-review, backup, and rollback procedures at all times;<br>(d) NetWolf, its operators, contributors, and licensors accept <strong>no liability whatsoever</strong> for any direct, indirect, incidental, special, consequential, or punitive damage — including but not limited to outage, data loss, financial loss, regulatory penalty, contractual penalty, reputational harm, hardware damage, security breach, or business interruption — arising from or related to use of the Service.</p>
+      <h4>10. AI-Generated Output</h4><p>The Service incorporates third-party large language models (including Anthropic's Claude and models served via Groq). AI output may be <strong>incomplete, inaccurate, outdated, or unsuitable</strong> for your specific environment. The User must treat all AI-generated commands, scripts, and diagnoses as suggestions only, and must verify them against vendor documentation and the live target system before any execution. NetWolf makes no warranty regarding the accuracy of AI output. Do not paste secrets, credentials, or regulated personal data into the AI analyser.</p>
+      <h4>11. Privacy &amp; Data Handling</h4><p>Account credentials are managed via Firebase Authentication; payment data is handled by Stripe; transactional notifications use Formspree. NetWolf processes only the minimum data required to operate the Service (account email, username, country, optional company, plan selection). The User is responsible for anonymising any sensitive customer or production data before submitting it to the AI analyser or any other Service feature.</p>
+      <h4>12. Intellectual Property</h4><p>All content within NetWolf Pro — including UI design, playbook structures, accompanying text, configuration templates, the EVE-NG lab guide, and the curated CLI command sets — is the intellectual property of NetWolf and is protected by applicable copyright and database-rights legislation. The User receives a <strong>non-exclusive, non-transferable, revocable licence</strong> to use the content for their own professional and educational purposes only. Copying, publishing, or distributing the content outside of internal personal use without written permission is prohibited.</p>
+      <h4>13. Trademarks &amp; Third-Party References</h4><p>NetWolf is an independent toolkit. NetWolf is <strong>not affiliated with, endorsed by, or sponsored by Fortinet, Cisco, Microsoft, Aruba, HPE, Huawei, Juniper, Palo Alto Networks, VMware, Stripe, Firebase, Anthropic, Groq</strong>, or any other vendor referenced in the product. All product names, logos, and trademarks remain the property of their respective owners and are used solely for identification and educational reference.</p>
+      <h4>14. Service Availability</h4><p>The Service is provided on a best-effort basis. NetWolf does not guarantee uninterrupted availability, error-free operation, or compatibility with every browser, OS, or assistive technology. Planned maintenance, third-party outages (Firebase, Stripe, Groq, Formspree, the hosting provider), or force majeure events may cause temporary unavailability without entitlement to refund.</p>
+      <h4>15. Suspension &amp; Termination</h4><p>NetWolf may suspend or terminate any account that breaches these Terms, abuses the Service, charges back without prior contact, or poses a security risk — at its sole discretion, with or without notice, and without refund. The User may cancel at any time by emailing <a href="/cdn-cgi/l/email-protection#97e4e2e7e7f8e5e3d7f9f2e3e0f8fbf1f1f8e5e3fef0f6e3f2b9f4f8fa" style="color:var(--a)"><span class="__cf_email__" data-cfemail="45363035352a3731052b2031322a2923232a37312c222431206b262a28">[email&#160;protected]</span></a>; cancellation takes effect at the end of the current billing period.</p>
+      <h4>16. Disclaimer of Warranties</h4><p>The Service is provided <strong>"AS IS" and "AS AVAILABLE"</strong>, without warranty of any kind, whether express, implied, statutory, or otherwise, including warranties of merchantability, fitness for a particular purpose, accuracy, completeness, non-infringement, security, or uninterrupted use. No advice or information obtained from the Service creates any warranty not expressly stated in these Terms.</p>
+      <h4>17. Limitation of Liability</h4><p>To the maximum extent permitted by Dutch and EU law, NetWolf's total aggregate liability arising out of or relating to the Service is limited to the amount actually paid by the User to NetWolf in the <strong>twelve (12) months</strong> immediately preceding the event giving rise to the claim. NetWolf is not liable for any indirect, incidental, consequential, special, exemplary, or punitive damages.</p>
+      <h4>18. Indemnification</h4><p>The User agrees to defend, indemnify, and hold harmless NetWolf and its operators against any claim, demand, loss, or expense (including reasonable legal fees) arising from the User's breach of these Terms, misuse of the Service, or violation of any law or third-party right.</p>
+      <h4>19. Changes to These Terms</h4><p>NetWolf may update these Terms from time to time. Material changes will be communicated by email or in-app notice at least 14 days before taking effect. Continued use of the Service after the effective date constitutes acceptance of the revised Terms.</p>
+      <h4>20. Governing Law &amp; Jurisdiction</h4><p>These Terms, and any dispute or claim arising out of or in connection with them, are <strong>governed exclusively by the laws of the Netherlands</strong>, without regard to its conflict-of-law principles. The United Nations Convention on Contracts for the International Sale of Goods does not apply. Any dispute that cannot be resolved amicably shall be submitted to the <strong>exclusive jurisdiction of the competent courts of the Netherlands</strong>. Where the User qualifies as a consumer under mandatory provisions of the law of their habitual residence, those mandatory protections remain unaffected.</p>
+      <h4>21. Severability &amp; Entire Agreement</h4><p>If any provision of these Terms is held unenforceable, the remaining provisions remain in full force and effect. These Terms constitute the entire agreement between the User and NetWolf regarding the Service and supersede any prior agreements on the same subject matter.</p>
+      <h4>22. Contact</h4><p>Questions, notices, or legal correspondence: <a href="/cdn-cgi/l/email-protection#cdbeb8bdbda2bfb98da3a8b9baa2a1ababa2bfb9a4aaacb9a8e3aea2a0" style="color:var(--a)"><span class="__cf_email__" data-cfemail="e5969095958a9791a58b8091928a8983838a97918c82849180cb868a88">[email&#160;protected]</span></a>.</p>
+      <p style="margin-top:20px;font-size:12px;color:var(--t3)">Last updated: May 2025 · NetWolf Pro Toolkit · Governed by the laws of the Netherlands</p>
+    </div>
+    <div class="tos-foot"><button class="tos-btn-close" onclick="closeTos()">Close</button><button class="tos-btn-accept" onclick="acceptTos()"><svg class="ic"><use href="#i-check"/></svg>I Accept</button></div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ── MATRIX ── */
+const canvas = document.getElementById('matBg');
+const ctx = canvas.getContext('2d');
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
+const FS = 14;
+let W, H, drops;
+
+function init(){
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  const cols = Math.floor(W / FS);
+  drops = new Array(cols).fill(0).map(() => Math.random() * -150);
+}
+
+function draw(){
+  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  ctx.fillRect(0,0,W,H);
+  ctx.font = FS + 'px Courier New';
+  drops.forEach((y, i) => {
+    const r = Math.random();
+    if(r > 0.97) ctx.fillStyle = '#c0ffe8';
+    else if(r > 0.85) ctx.fillStyle = '#3fb950';
+    else if(r > 0.5) ctx.fillStyle = '#1D9E75';
+    else ctx.fillStyle = '#0a4a2e';
+    ctx.fillText(CHARS[Math.floor(Math.random()*CHARS.length)], i*FS, y*FS);
+    if(y*FS > H && Math.random() > 0.975) drops[i] = 0;
+    drops[i] += 0.35 + Math.random()*0.25;
+  });
+}
+
+init();
+setInterval(draw, 38);
+window.addEventListener('resize', init);
+
+/* ── FIREBASE ── */
+const firebaseConfig={apiKey:"AIzaSyBU2ojtAtH2PvvrNJgG4vH3mbPdAPAGhzk",authDomain:"netwolf-ccd3d.firebaseapp.com",projectId:"netwolf-ccd3d",storageBucket:"netwolf-ccd3d.firebasestorage.app",messagingSenderId:"942931607129",appId:"1:942931607129:web:5f644a2625931c70d6bb48",measurementId:"G-W0G3X4T0EW"};
+firebase.initializeApp(firebaseConfig);
+const fbAuth=firebase.auth();
+
+/* ── PLAN SELECTION ── */
+let selectedPlan = 'monthly';
+const STRIPE_LINKS = {
+  monthly: 'https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00',
+  yearly:  'https://buy.stripe.com/test_bJebJ0ajn2NWdeuaVygrS01'
+};
+function setPlan(plan){
+  selectedPlan = plan;
+  const nameEl = document.getElementById('selectedPlanName');
+  const priceEl = document.getElementById('selectedPlanPrice');
+  if(nameEl) nameEl.textContent = plan==='monthly' ? 'NetWolf Pro — Monthly' : 'NetWolf Pro — Yearly';
+  if(priceEl) priceEl.textContent = plan==='monthly' ? '€10 / month · billed monthly' : '€100 / year · save €20';
+  const formCard = document.getElementById('formCard');
+  if(formCard) formCard.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ── STRIPE ── */
+let stripe,cardEl;
+try{
+  stripe=Stripe('pk_test_51TSFD7Bqf1D7wxWnqqjK2SdGEZ2rFZeU0MbfcWlJXrbRQNRIG4W3bRJqz8sIHTIuuWIy0rxdiYRpfwwoJenMgffS00hbta37GW');
+  const els=stripe.elements();
+  cardEl=els.create('card',{style:{base:{color:'#e8eef5',fontFamily:"'JetBrains Mono','Courier New',monospace",fontSize:'13px','::placeholder':{color:'#525c6b'}},invalid:{color:'#f85149'}}});
+  cardEl.mount('#stripe-card-element');
+  cardEl.on('change',e=>{document.getElementById('card-errors').textContent=e.error?e.error.message:'';});
+}catch(e){document.getElementById('stripe-card-element').innerHTML='<div style="color:var(--y);font-size:12px;padding:8px 0;">Add your Stripe publishable key to enable card payments.</div>';}
+
+/* ── TOAST ── */
+function showToast(m){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4200);}
+function showErr(m){const e=document.getElementById('formError');e.innerHTML='<svg class="ic"><use href="#i-alert"/></svg> '+m;e.style.display='flex';document.getElementById('submitBtn').disabled=false;}
+
+/* ── PASSWORD STRENGTH ── */
+document.getElementById('inp_password').addEventListener('input',function(){
+  const v=this.value;const fill=document.getElementById('strengthFill'),lbl=document.getElementById('strengthLabel');
+  let s=0;if(v.length>=8)s++;if(v.length>=12)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  const cols=['#f85149','#d29922','#d29922','#3fb950','#3fb950'];
+  const labs=['Too short','Weak','Fair','Strong','Very strong'];
+  fill.style.width=Math.min(100,s*22)+'%';fill.style.background=cols[Math.min(s,4)];
+  lbl.textContent=v.length?labs[Math.min(s,4)]:'Min 8 characters';lbl.style.color=v.length?cols[Math.min(s,4)]:'var(--t3)';
+});
+
+/* ── FORM SUBMIT ── */
+document.getElementById('orderForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  document.getElementById('formError').style.display='none';
+  const g=n=>this.querySelector(`[name="${n}"]`).value.trim();
+  const username=g('username'),password=g('password'),confirm=g('confirmPassword');
+  const firstName=g('firstName'),lastName=g('lastName'),email=g('email'),country=g('country');
+  if(!username||username.length<4)return showErr('Username must be at least 4 characters.');
+  if(!/^[a-zA-Z0-9_]+$/.test(username))return showErr('Username: letters, numbers and underscores only.');
+  if(!password||password.length<8)return showErr('Password must be at least 8 characters.');
+  if(password!==confirm)return showErr('Passwords do not match.');
+  if(!firstName||!lastName)return showErr('Please enter your full name.');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showErr('Please enter a valid email address.');
+  if(!country)return showErr('Please select your country.');
+  if(!document.getElementById('terms').checked)return showErr('Please accept the Terms of Service.');
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;
+  btn.textContent='Creating account…';
+  try{
+    const result=await fbAuth.createUserWithEmailAndPassword(email,password);
+    await result.user.updateProfile({displayName:username});
+  }catch(firebaseErr){
+    if(firebaseErr.code==='auth/email-already-in-use')showErr('This email already has an account. Log in at app.html instead.');
+    else if(firebaseErr.code==='auth/weak-password')showErr('Password is too weak. Please use at least 8 characters.');
+    else showErr('Account error: '+firebaseErr.message);
+    return;
+  }
+  try{
+    await fetch('https://formspree.io/f/xykoyrda',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:`New NetWolf subscriber: ${username}`,_replyto:email,username,firstName,lastName,email,company:g('company')||'—',country,plan:selectedPlan,message:g('message')||'—'})});
+  }catch(ex){}
+  btn.textContent='Redirecting to payment…';
+  showToast('Account created! Redirecting to Stripe...');
+  document.getElementById('orderForm').style.display='none';
+  document.getElementById('successMsg').style.display='block';
+  document.getElementById('showUsername').textContent=username;
+  document.getElementById('showPassword').textContent='•'.repeat(password.length);
+  setTimeout(()=>{window.open(STRIPE_LINKS[selectedPlan],'_blank');}, 2000);
+});
+
+/* ── TERMS ── */
+function openTos(e){if(e)e.preventDefault();document.getElementById('tosOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeTos(){document.getElementById('tosOverlay').classList.remove('open');document.body.style.overflow='';}
+function acceptTos(){document.getElementById('terms').checked=true;closeTos();showToast('Terms accepted');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTos();});
+
+/* ── ANIMATED DEMO ── */
+const STEPS=[
+  {cmds:[{t:'get vpn ipsec tunnel summary',cl:'ro'},{t:'diagnose vpn tunnel list name <TUNNEL_NAME>',cl:'ro'},{t:'get vpn ipsec tunnel details',cl:'ro'}]},
+  {cmds:[{t:'diagnose debug reset',cl:'warn'},{t:'diagnose debug application ike -1',cl:'warn'},{t:'diagnose debug enable',cl:'warn'},{t:'(wait 30s)',cl:'note'},{t:'diagnose debug disable',cl:'warn'},{t:'diagnose debug reset',cl:'warn'}]},
+  {cmds:[{t:'show vpn ipsec phase1-interface <NAME>',cl:'ro'},{t:'show vpn ipsec phase2-interface <NAME>',cl:'ro'}]},
+  {cmds:[{t:'get router info routing-table all',cl:'ro'},{t:'diagnose ip route get <REMOTE_IP>',cl:'ro'}]},
+];
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function setTab(i){for(let j=0;j<8;j++){const t=document.getElementById('dtab'+j);if(t)t.classList.toggle('active',j===i);}}
+function setSidebar(i){for(let j=0;j<19;j++){const s=document.getElementById('asi'+j);if(!s)continue;s.classList.remove('active','visited');if(i!==null&&j<i)s.classList.add('visited');}if(i!==null){const a=document.getElementById('asi'+i);if(a)a.classList.add('active');}}
+function showScene(id){document.querySelectorAll('.anim-scene').forEach(s=>{s.style.display='none';});const sc=document.getElementById(id);if(sc)sc.style.display='block';}
+function setStatus(txt){const el=document.getElementById('animStatus');if(el)el.textContent=txt;}
+async function typeText(el,text,delay){el.textContent='';for(let i=0;i<=text.length;i++){el.textContent=text.slice(0,i);await sleep(delay||35);}}
+async function typeCmd(container,text,cls){const span=document.createElement('span');span.className='anim-cmd '+cls;container.appendChild(span);const delay=cls==='note'?10:22;for(let i=0;i<=text.length;i++){span.textContent=text.slice(0,i)||' ';if(i<text.length)await sleep(delay);}span.textContent=text;container.appendChild(document.createElement('br'));}
+async function runGuideScene(){
+  showScene('ascene0');setTab(0);setSidebar(0);setStatus('IPsec VPN Troubleshooting · Step-by-step playbook');
+  document.querySelectorAll('.anim-step-card').forEach(c=>c.classList.remove('show'));
+  for(let si=0;si<STEPS.length;si++){
+    const card=document.getElementById('asc'+si);const cmdsDiv=document.getElementById('acmds'+si);
+    if(!card||!cmdsDiv)continue;cmdsDiv.innerHTML='';await sleep(200);card.classList.add('show');await sleep(150);
+    for(let cmd of STEPS[si].cmds){await typeCmd(cmdsDiv,cmd.t,cmd.cl);await sleep(cmd.cl==='note'?300:200);}
+    await sleep(500);
+  }
+  await sleep(1800);
+}
+async function runAIScene(){
+  showScene('ascene2');setTab(1);setSidebar(null);setStatus('AI Analyzer · Paste any CLI output for instant diagnosis');
+  const thinking=document.getElementById('aiThinking');const result=document.getElementById('aiResult');
+  if(thinking)thinking.style.display='flex';if(result)result.style.display='none';
+  await sleep(1800);if(thinking)thinking.style.display='none';if(result)result.style.display='block';
+  await sleep(3200);
+}
+async function runAnonScene(){showScene('ascene3');setTab(2);setSidebar(10);setStatus('IP Anonymizer · Replace real IPs with RFC 5737 safe addresses');await sleep(3500);}
+async function runSubnetScene(){
+  showScene('ascene4');setTab(3);setSidebar(11);setStatus('Subnet Calculator · Full CIDR breakdown');
+  const typing=document.getElementById('subTyping');const cursor=document.getElementById('subCursor');
+  const cards=document.querySelectorAll('#subCards .sub-card');
+  cards.forEach(c=>c.classList.remove('show'));
+  if(typing)await typeText(typing,'172.16.0.0/20',40);
+  if(cursor)cursor.style.display='none';await sleep(400);
+  for(let i=0;i<cards.length;i++){cards[i].classList.add('show');await sleep(110);}
+  await sleep(2500);if(cursor)cursor.style.display='inline';
+}
+async function runMostUsedScene(){showScene('ascene6');setTab(4);setSidebar(13);setStatus('Most Used · 13 diagnostic & operational tools');await sleep(3500);}
+async function runPSMakerScene(){showScene('ascene7');setTab(5);setSidebar(14);setStatus('PS Maker · AI-powered PowerShell script generator');await sleep(3500);}
+async function runTopologyScene(){showScene('ascene8');setTab(6);setSidebar(15);setStatus('Topology Designer · Infinite canvas');await sleep(3500);}
+async function runCLISimScene(){showScene('ascene9');setTab(7);setSidebar(16);setStatus('CLI Simulator · Practice on 10 vendors');await sleep(3500);}
+const DEMO_SCENES=[runGuideScene,runAIScene,runAnonScene,runSubnetScene,runMostUsedScene,runPSMakerScene,runTopologyScene,runCLISimScene];
+let demoManualUntil=0;
+async function playDemoScene(i){demoManualUntil=Date.now()+12000;const runner=DEMO_SCENES[i];if(runner)await runner();}
+function bindDemoTabs(){DEMO_SCENES.forEach((_,i)=>{const tab=document.getElementById('dtab'+i);if(!tab)return;tab.setAttribute('role','button');tab.setAttribute('tabindex','0');tab.addEventListener('click',()=>playDemoScene(i));tab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();playDemoScene(i);}});});}
+async function runLoop(){while(true){for(const runner of DEMO_SCENES){if(Date.now()<demoManualUntil){await sleep(800);continue;}await runner();}}}
+function startProgress(){const fill=document.getElementById('animProgress');if(!fill)return;const cycle=42000;const start=Date.now();function tick(){fill.style.width=((Date.now()-start)%cycle)/cycle*100+'%';requestAnimationFrame(tick);}requestAnimationFrame(tick);}
+if(document.getElementById('animatedDemo')){bindDemoTabs();runLoop();startProgress();}
+</script>
+</body>
+</html>
