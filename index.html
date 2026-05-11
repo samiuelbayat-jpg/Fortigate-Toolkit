@@ -113,6 +113,46 @@ h1 .accent{background:linear-gradient(90deg,var(--a),#52d6b0);-webkit-background
 .demo-ref-cmd{font-family:var(--mono);font-size:10.5px;color:#3fb950;padding:5px 12px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;justify-content:space-between;align-items:center}.demo-ref-cmd:last-child{border-bottom:none}
 .demo-feature-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;justify-content:center}
 .demo-pill{font-size:11px;padding:4px 12px;border-radius:20px;background:rgba(29,158,117,.08);color:rgba(255,255,255,.5);border:1px solid rgba(29,158,117,.15);font-family:var(--mono)}
+.demo-snapshot{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;margin:28px 0 -20px;text-align:left}
+.demo-snapshot-panel{background:rgba(22,27,34,.72);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;box-shadow:0 18px 46px rgba(0,0,0,.28)}
+.demo-snapshot-title{font-size:12px;font-weight:800;color:var(--t);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.demo-snapshot-title span{font-family:var(--mono);font-size:9px;color:var(--a);font-weight:800;border:1px solid rgba(29,158,117,.28);border-radius:999px;padding:3px 8px;background:rgba(29,158,117,.08)}
+.demo-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.demo-mini-card{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:10px;min-height:74px}
+.demo-mini-k{font-family:var(--mono);font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em}
+.demo-mini-v{font-size:18px;font-weight:900;color:var(--a);margin:5px 0 3px;font-family:var(--mono)}
+.demo-mini-t{font-size:10.5px;color:var(--t2);line-height:1.35}
+.demo-workflow{display:grid;gap:8px}
+.demo-workflow-row{display:grid;grid-template-columns:82px 1fr auto;gap:10px;align-items:center;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:8px 10px}
+.demo-workflow-row strong{font-family:var(--mono);font-size:10px;color:var(--a)}
+.demo-workflow-row em{font-style:normal;font-size:11px;color:var(--t2);line-height:1.35}
+.demo-workflow-row span{font-family:var(--mono);font-size:9px;color:#3fb950;border:1px solid rgba(63,185,80,.22);border-radius:999px;padding:2px 7px;background:rgba(63,185,80,.08);white-space:nowrap}
+.demo-cinematic{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(280px,.82fr);gap:14px;margin:34px 0 -18px;position:relative}
+.cinema-stage{position:relative;min-height:300px;border:1px solid rgba(29,158,117,.22);border-radius:16px;background:radial-gradient(circle at 50% 46%,rgba(29,158,117,.14),transparent 28%),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),#05090d;background-size:auto,34px 34px,34px 34px,auto;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.48)}
+.cinema-stage::before{content:'';position:absolute;inset:-45%;background:conic-gradient(from 0deg,transparent 0 62%,rgba(29,158,117,.16),transparent 73%);animation:radarSpin 8s linear infinite;opacity:.95}
+.cinema-stage::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(5,9,13,.72));pointer-events:none}
+.cinema-node{position:absolute;z-index:2;width:74px;height:74px;border-radius:14px;background:rgba(13,17,23,.92);border:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 0 0 1px rgba(29,158,117,.08),0 16px 34px rgba(0,0,0,.35);animation:nodeFloat 5.4s ease-in-out infinite}
+.cinema-node strong{font-family:var(--mono);font-size:11px;color:var(--t)}
+.cinema-node span{font-family:var(--mono);font-size:9px;color:var(--a)}
+.cinema-node.core{left:50%;top:34%;transform:translate(-50%,-50%);border-color:rgba(29,158,117,.48);box-shadow:0 0 30px rgba(29,158,117,.18),0 18px 40px rgba(0,0,0,.4)}
+.cinema-node.wan{left:12%;top:18%;animation-delay:-1s}.cinema-node.branch{right:12%;top:18%;animation-delay:-2s}.cinema-node.lan{left:18%;bottom:12%;animation-delay:-3s}.cinema-node.soc{right:18%;bottom:12%;animation-delay:-4s}
+.cinema-link{position:absolute;z-index:1;height:2px;background:linear-gradient(90deg,transparent,rgba(29,158,117,.55),transparent);transform-origin:left center;opacity:.75}
+.cinema-link.l1{left:25%;top:31%;width:26%;transform:rotate(15deg)}.cinema-link.l2{left:50%;top:31%;width:26%;transform:rotate(-15deg)}.cinema-link.l3{left:28%;top:60%;width:24%;transform:rotate(-24deg)}.cinema-link.l4{left:50%;top:60%;width:25%;transform:rotate(24deg)}
+.packet{position:absolute;z-index:3;width:8px;height:8px;border-radius:50%;background:#52d6b0;box-shadow:0 0 18px #1D9E75;animation:packetMove 3.2s ease-in-out infinite}.packet.p2{animation-delay:.8s}.packet.p3{animation-delay:1.6s}.packet.p4{animation-delay:2.4s}
+.cinema-alert{position:absolute;z-index:4;left:18px;bottom:18px;right:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cinema-alert div{background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 10px;backdrop-filter:blur(8px)}
+.cinema-alert b{display:block;font-family:var(--mono);font-size:10px;color:var(--a);margin-bottom:4px}.cinema-alert span{font-family:var(--mono);font-size:10px;color:var(--t2)}
+.cinema-panel{border:1px solid rgba(255,255,255,.09);border-radius:16px;background:linear-gradient(180deg,rgba(22,27,34,.86),rgba(5,9,13,.92));overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.38)}
+.cinema-panel-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.07);font-family:var(--mono);font-size:11px;color:var(--t2)}
+.cinema-panel-head span{color:#3fb950;display:flex;align-items:center;gap:6px}.cinema-panel-head span::before{content:'';width:7px;height:7px;border-radius:50%;background:#3fb950;box-shadow:0 0 12px #3fb950;animation:pulse 1.4s infinite}
+.cinema-console{padding:14px;font-family:var(--mono);font-size:11px;line-height:1.8;min-height:188px;background:#030704}
+.cinema-line{opacity:0;transform:translateY(8px);animation:consoleReveal 9s infinite}.cinema-line:nth-child(2){animation-delay:.7s}.cinema-line:nth-child(3){animation-delay:1.4s}.cinema-line:nth-child(4){animation-delay:2.1s}.cinema-line:nth-child(5){animation-delay:2.8s}.cinema-line:nth-child(6){animation-delay:3.5s}.cinema-line:nth-child(7){animation-delay:4.2s}
+.cinema-ok{color:#3fb950}.cinema-warn{color:#d29922}.cinema-blue{color:#58a6ff}.cinema-dim{color:rgba(255,255,255,.32)}
+.cinema-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;background:rgba(29,158,117,.04);border-top:1px solid rgba(29,158,117,.12)}
+.cinema-actions div{border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:10px;background:rgba(0,0,0,.18)}
+.cinema-actions b{display:block;font-size:10px;color:var(--t);margin-bottom:4px}.cinema-actions span{font-size:10px;color:var(--t2);line-height:1.4}
+@keyframes radarSpin{to{transform:rotate(360deg)}}@keyframes nodeFloat{0%,100%{margin-top:0}50%{margin-top:-7px}}@keyframes packetMove{0%{left:50%;top:40%;opacity:0}12%{opacity:1}45%{left:14%;top:20%}65%{left:86%;top:20%}88%{left:50%;top:72%;opacity:1}100%{left:50%;top:40%;opacity:0}}@keyframes consoleReveal{0%,8%{opacity:0;transform:translateY(8px)}14%,72%{opacity:1;transform:translateY(0)}86%,100%{opacity:0;transform:translateY(-6px)}}
+@media(max-width:820px){.demo-snapshot,.demo-cinematic{grid-template-columns:1fr;margin-bottom:0}.demo-mini-grid{grid-template-columns:1fr}.demo-workflow-row{grid-template-columns:1fr}.demo-workflow-row span{width:max-content}.cinema-alert{grid-template-columns:1fr}.cinema-stage{min-height:380px}.cinema-node{width:66px;height:66px}.cinema-actions{grid-template-columns:1fr}}
 .anim-scene{animation:fadeIn .4s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .anim-step-card{background:rgba(22,27,34,.7);border:1px solid rgba(255,255,255,.06);border-radius:9px;margin-bottom:10px;overflow:hidden;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
@@ -479,6 +519,56 @@ footer p{font-size:12px;color:var(--t3)}footer a{color:var(--t3);text-decoration
         <span class="demo-pill">✉️ Email Generator</span>
         <span class="demo-pill">🖥️ CLI Simulator</span>
         <span class="demo-pill">📡 DHCP Diagnostics</span>
+      </div>
+    </div>
+    <div class="demo-snapshot" aria-label="NetWolf toolkit preview summary">
+      <div class="demo-snapshot-panel">
+        <div class="demo-snapshot-title">Inside the app <span>from app.html</span></div>
+        <div class="demo-mini-grid">
+          <div class="demo-mini-card"><div class="demo-mini-k">Playbooks</div><div class="demo-mini-v">50+</div><div class="demo-mini-t">VPN, HA, SD-WAN, routing, SSL VPN and policy flows.</div></div>
+          <div class="demo-mini-card"><div class="demo-mini-k">Fast tools</div><div class="demo-mini-v">13</div><div class="demo-mini-t">Most-used generators for daily FortiGate checks.</div></div>
+          <div class="demo-mini-card"><div class="demo-mini-k">Vendors</div><div class="demo-mini-v">10</div><div class="demo-mini-t">CLI simulator coverage for common network platforms.</div></div>
+        </div>
+      </div>
+      <div class="demo-snapshot-panel">
+        <div class="demo-snapshot-title">Example workflow <span>safe first</span></div>
+        <div class="demo-workflow">
+          <div class="demo-workflow-row"><strong>Paste</strong><em>Drop CLI output into the analyzer.</em><span>input</span></div>
+          <div class="demo-workflow-row"><strong>Diagnose</strong><em>Get likely root cause, risk level and next commands.</em><span>AI</span></div>
+          <div class="demo-workflow-row"><strong>Generate</strong><em>Copy a clean command set with read/write labels.</em><span>copy</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-cinematic" aria-label="Animated NetWolf operations demo">
+      <div class="cinema-stage">
+        <div class="cinema-link l1"></div><div class="cinema-link l2"></div><div class="cinema-link l3"></div><div class="cinema-link l4"></div>
+        <div class="packet p1"></div><div class="packet p2"></div><div class="packet p3"></div><div class="packet p4"></div>
+        <div class="cinema-node wan"><strong>WAN</strong><span>198.51.100.5</span></div>
+        <div class="cinema-node branch"><strong>BRANCH</strong><span>10.20.0.0/16</span></div>
+        <div class="cinema-node core"><strong>FGT-HQ</strong><span>active</span></div>
+        <div class="cinema-node lan"><strong>LAN</strong><span>172.16.0.0/20</span></div>
+        <div class="cinema-node soc"><strong>SOC</strong><span>logs live</span></div>
+        <div class="cinema-alert">
+          <div><b>VPN</b><span>Phase 2 selectors up</span></div>
+          <div><b>Route</b><span>SD-WAN rule matched</span></div>
+          <div><b>Risk</b><span>1 caution command</span></div>
+        </div>
+      </div>
+      <div class="cinema-panel">
+        <div class="cinema-panel-head"><strong>AI diagnostic run</strong><span>live</span></div>
+        <div class="cinema-console">
+          <div class="cinema-line cinema-dim">$ paste vpn debug output</div>
+          <div class="cinema-line cinema-blue">Analyzing IKE negotiation...</div>
+          <div class="cinema-line cinema-warn">Detected: NO_PROPOSAL_CHOSEN</div>
+          <div class="cinema-line cinema-ok">Root cause: phase1 proposal mismatch</div>
+          <div class="cinema-line cinema-dim">Generating safe command path...</div>
+          <div class="cinema-line cinema-ok">show vpn ipsec phase1-interface SiteA-HQ</div>
+          <div class="cinema-line cinema-warn">diagnose debug application ike -1</div>
+        </div>
+        <div class="cinema-actions">
+          <div><b>Read commands</b><span>Green labels for checks that do not change config.</span></div>
+          <div><b>Caution steps</b><span>Yellow labels before debug or operational impact.</span></div>
+        </div>
       </div>
     </div>
     <div class="demo-shell" id="animatedDemo">
@@ -1119,9 +1209,26 @@ async function runMostUsedScene(){showScene('ascene6');setTab(4);setSidebar(13);
 async function runPSMakerScene(){showScene('ascene7');setTab(5);setSidebar(14);setStatus('PS Maker · AI-powered PowerShell script generator with annotations');await sleep(3500);}
 async function runTopologyScene(){showScene('ascene8');setTab(6);setSidebar(15);setStatus('Topology Designer · Infinite canvas with 10 device icons + draw.io');await sleep(3500);}
 async function runCLISimScene(){showScene('ascene9');setTab(7);setSidebar(16);setStatus('CLI Simulator · Practice on FortiGate, Cisco, Juniper, Palo Alto & more');await sleep(3500);}
-async function runLoop(){while(true){await runGuideScene();await runHAScene();await runAIScene();await runAnonScene();await runSubnetScene();await runRefScene();await runMostUsedScene();await runPSMakerScene();await runTopologyScene();await runCLISimScene();}}
+const DEMO_SCENES=[runGuideScene,runAIScene,runAnonScene,runSubnetScene,runMostUsedScene,runPSMakerScene,runTopologyScene,runCLISimScene];
+let demoManualUntil=0;
+async function playDemoScene(i){
+  demoManualUntil=Date.now()+12000;
+  const runner=DEMO_SCENES[i];
+  if(runner)await runner();
+}
+function bindDemoTabs(){
+  DEMO_SCENES.forEach((_,i)=>{
+    const tab=document.getElementById('dtab'+i);
+    if(!tab)return;
+    tab.setAttribute('role','button');
+    tab.setAttribute('tabindex','0');
+    tab.addEventListener('click',()=>playDemoScene(i));
+    tab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();playDemoScene(i);}});
+  });
+}
+async function runLoop(){while(true){for(const runner of DEMO_SCENES){if(Date.now()<demoManualUntil){await sleep(800);continue;}await runner();}}}
 function startProgress(){const fill=document.getElementById('animProgress');if(!fill)return;const cycle=42000;const start=Date.now();function tick(){fill.style.width=((Date.now()-start)%cycle)/cycle*100+'%';requestAnimationFrame(tick);}requestAnimationFrame(tick);}
-if(document.getElementById('animatedDemo')){runLoop();startProgress();}
+if(document.getElementById('animatedDemo')){bindDemoTabs();runLoop();startProgress();}
 
 /* ── INIT ── */
 function initDemo(){}

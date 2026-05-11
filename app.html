@@ -40,17 +40,28 @@
 [data-theme="graphite"]{--wallSize:24px 24px,auto,auto;--chromeBg:linear-gradient(180deg,rgba(39,39,42,.98),rgba(19,19,20,.98));--railBg:linear-gradient(180deg,rgba(32,32,34,.98),rgba(15,15,16,.98));--contentBg:linear-gradient(135deg,rgba(255,255,255,.025) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.018) 50%,rgba(255,255,255,.018) 75%,transparent 75%),linear-gradient(180deg,rgba(17,17,17,.82),rgba(29,29,31,.95));--panelBg:linear-gradient(180deg,rgba(31,31,32,.96),rgba(19,19,20,.98));--panelShadow:0 10px 24px rgba(0,0,0,.40);--cardRadius:5px;--themeLine:rgba(245,158,11,.34);--tabActive:linear-gradient(180deg,rgba(245,158,11,.24),rgba(255,255,255,.05))}
 [data-theme="ember"]{--chromeBg:linear-gradient(180deg,rgba(66,27,11,.98),rgba(35,16,8,.98));--railBg:linear-gradient(180deg,rgba(44,20,12,.98),rgba(18,8,5,.98));--contentBg:radial-gradient(circle at 78% 10%,rgba(255,138,61,.18),transparent 28%),linear-gradient(180deg,rgba(22,11,8,.82),rgba(53,22,9,.94));--panelBg:linear-gradient(180deg,rgba(42,20,12,.96),rgba(26,12,8,.98));--panelShadow:0 16px 34px rgba(22,6,0,.44);--cardRadius:10px;--themeLine:rgba(255,138,61,.38);--tabActive:linear-gradient(180deg,rgba(255,138,61,.26),rgba(251,113,133,.10))}
 [data-theme="aurora"]{--chromeBg:linear-gradient(110deg,rgba(18,46,70,.98),rgba(16,24,52,.98) 52%,rgba(27,37,78,.98));--railBg:linear-gradient(180deg,rgba(11,28,44,.98),rgba(12,19,38,.98));--contentBg:radial-gradient(ellipse at 18% 0%,rgba(34,211,238,.16),transparent 30%),radial-gradient(ellipse at 62% 0%,rgba(139,92,246,.18),transparent 34%),linear-gradient(180deg,rgba(8,17,31,.78),rgba(17,26,53,.94));--panelBg:linear-gradient(180deg,rgba(16,33,55,.95),rgba(14,21,43,.98));--panelShadow:0 16px 36px rgba(4,9,22,.42);--cardRadius:16px;--themeLine:rgba(139,92,246,.36);--tabActive:linear-gradient(180deg,rgba(34,211,238,.22),rgba(139,92,246,.14))}
+/* Refined themes: neutral surfaces with accent color, so the app does not become one flat color. */
+:root{--loginBg:var(--wall);--loginCardBg:var(--panelBg)}
+[data-theme="light"]{--a:#0d8a63;--ad:#0a6e4f;--bg:#f6f8fb;--b2:#ffffff;--b3:#eef2f6;--br:#d6dde6;--shape:#edf5f2;--shape2:#e2eee9;--shape3:#f8fafc;--wall:radial-gradient(circle at 14% 12%,rgba(13,138,99,.10),transparent 25%),radial-gradient(circle at 86% 8%,rgba(37,99,235,.07),transparent 24%),linear-gradient(135deg,#f8fafc 0%,#eef3f7 100%);--t:#152033;--t2:#506071;--t3:#8a97a8;--chromeBg:linear-gradient(180deg,#ffffff,#f2f5f8);--railBg:linear-gradient(180deg,#f8fafc,#eef3f6);--contentBg:linear-gradient(180deg,#f6f8fb,#eef3f7);--panelBg:linear-gradient(180deg,#ffffff,#f7f9fb);--themeLine:rgba(13,138,99,.22);--tabActive:linear-gradient(180deg,rgba(13,138,99,.13),rgba(13,138,99,.05))}
+[data-theme="nord"]{--a:#88c0d0;--ad:#6b9fb0;--bg:#252b35;--b2:#303744;--b3:#3a4351;--br:#4b5566;--shape:#2b323e;--shape2:#323b48;--shape3:#2d3541;--wall:radial-gradient(circle at 16% 14%,rgba(136,192,208,.10),transparent 25%),linear-gradient(135deg,#252b35 0%,#202630 100%);--t:#eceff4;--t2:#c4ccd8;--t3:#8792a1;--chromeBg:linear-gradient(180deg,#333b48,#29313d);--railBg:linear-gradient(180deg,#2e3642,#242b35);--contentBg:linear-gradient(180deg,#252b35,#222933);--panelBg:linear-gradient(180deg,#303744,#28303b);--themeLine:rgba(136,192,208,.24);--tabActive:linear-gradient(180deg,rgba(136,192,208,.18),rgba(136,192,208,.06))}
+[data-theme="midnight"]{--a:#9b8cff;--ad:#7568e8;--bg:#101221;--b2:#181b2d;--b3:#22263a;--br:#31364d;--shape:#151827;--shape2:#1b2032;--shape3:#171b2b;--wall:radial-gradient(circle at 18% 12%,rgba(155,140,255,.13),transparent 25%),linear-gradient(135deg,#101221 0%,#0b0e19 100%);--t:#eef0ff;--t2:#b8bdd6;--t3:#747b99;--chromeBg:linear-gradient(180deg,#1d2134,#131728);--railBg:linear-gradient(180deg,#181d2f,#101421);--contentBg:linear-gradient(180deg,#101221,#111626);--panelBg:linear-gradient(180deg,#181b2d,#111524);--themeLine:rgba(155,140,255,.27);--tabActive:linear-gradient(180deg,rgba(155,140,255,.20),rgba(155,140,255,.06))}
+[data-theme="solarized"]{--a:#2aa198;--ad:#1f7f79;--bg:#102e35;--b2:#173942;--b3:#204852;--br:#315d67;--shape:#14353d;--shape2:#1a4049;--shape3:#153740;--wall:radial-gradient(circle at 15% 14%,rgba(42,161,152,.12),transparent 25%),linear-gradient(135deg,#102e35 0%,#0b252c 100%);--t:#f3ead2;--t2:#c6c4b5;--t3:#879188;--chromeBg:linear-gradient(180deg,#1b434c,#12313a);--railBg:linear-gradient(180deg,#173b44,#0e2a32);--contentBg:linear-gradient(180deg,#102e35,#0e2931);--panelBg:linear-gradient(180deg,#173942,#102f37);--themeLine:rgba(42,161,152,.25);--tabActive:linear-gradient(180deg,rgba(42,161,152,.19),rgba(181,137,0,.05))}
+[data-theme="matrix"]{--a:#20d08f;--ad:#12a771;--bg:#07100c;--b2:#0d1712;--b3:#14231b;--br:#244637;--shape:#09150f;--shape2:#0f2419;--shape3:#0a1811;--wall:linear-gradient(90deg,rgba(32,208,143,.035) 1px,transparent 1px),linear-gradient(rgba(32,208,143,.025) 1px,transparent 1px),linear-gradient(135deg,#07100c 0%,#040907 100%);--t:#e8fff3;--t2:#add8c1;--t3:#62856f;--chromeBg:linear-gradient(180deg,#102118,#07110d);--railBg:linear-gradient(180deg,#0d1b14,#050d09);--contentBg:linear-gradient(180deg,#07100c,#07130e);--panelBg:linear-gradient(180deg,#0d1712,#07100c);--themeLine:rgba(32,208,143,.30);--tabActive:linear-gradient(180deg,rgba(32,208,143,.20),rgba(32,208,143,.05))}
+[data-theme="ocean"]{--a:#38bdf8;--ad:#0e7490;--bg:#0b1824;--b2:#122433;--b3:#1b3243;--br:#2b5369;--shape:#0e2030;--shape2:#153149;--shape3:#0f2435;--wall:radial-gradient(ellipse at 18% 8%,rgba(56,189,248,.12),transparent 28%),linear-gradient(160deg,#0b1824 0%,#081522 100%);--t:#eaf7ff;--t2:#b2c9d8;--t3:#708da0;--chromeBg:linear-gradient(180deg,#173449,#0c2030);--railBg:linear-gradient(180deg,#10283a,#081827);--contentBg:linear-gradient(180deg,#0b1824,#0b1b29);--panelBg:linear-gradient(180deg,#122433,#0b1a27);--themeLine:rgba(56,189,248,.25);--tabActive:linear-gradient(180deg,rgba(56,189,248,.18),rgba(45,212,191,.05))}
+[data-theme="graphite"]{--a:#f59e0b;--ad:#b87509;--bg:#141414;--b2:#202020;--b3:#2b2b2d;--br:#444448;--shape:#1b1b1d;--shape2:#252527;--shape3:#1d1d1f;--wall:linear-gradient(135deg,rgba(255,255,255,.025) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.018) 50%,rgba(255,255,255,.018) 75%,transparent 75%),linear-gradient(135deg,#141414 0%,#101011 100%);--t:#f3f4f6;--t2:#c4c7cc;--t3:#858990;--chromeBg:linear-gradient(180deg,#2a2a2d,#1a1a1c);--railBg:linear-gradient(180deg,#242426,#151516);--contentBg:linear-gradient(180deg,#141414,#171719);--panelBg:linear-gradient(180deg,#202020,#171719);--themeLine:rgba(245,158,11,.24);--tabActive:linear-gradient(180deg,rgba(245,158,11,.18),rgba(245,158,11,.04))}
+[data-theme="ember"]{--a:#ff9b54;--ad:#d15f1d;--bg:#17110f;--b2:#241b17;--b3:#30231d;--br:#563b2e;--shape:#201713;--shape2:#2d1e17;--shape3:#211815;--wall:radial-gradient(circle at 20% 16%,rgba(255,155,84,.13),transparent 26%),linear-gradient(145deg,#17110f 0%,#100b09 100%);--t:#fff3ea;--t2:#d5bbaa;--t3:#93776a;--chromeBg:linear-gradient(180deg,#34231b,#1c130f);--railBg:linear-gradient(180deg,#2a1c16,#150e0b);--contentBg:linear-gradient(180deg,#17110f,#1a120f);--panelBg:linear-gradient(180deg,#241b17,#18110e);--themeLine:rgba(255,155,84,.25);--tabActive:linear-gradient(180deg,rgba(255,155,84,.18),rgba(255,155,84,.05))}
+[data-theme="aurora"]{--a:#35d3e8;--ad:#7c6df0;--bg:#0d1724;--b2:#152234;--b3:#1f3046;--br:#334966;--shape:#101e2e;--shape2:#193149;--shape3:#132235;--wall:radial-gradient(ellipse at 18% 10%,rgba(53,211,232,.12),transparent 25%),radial-gradient(ellipse at 72% 8%,rgba(124,109,240,.10),transparent 28%),linear-gradient(145deg,#0d1724 0%,#0a1320 100%);--t:#eef8ff;--t2:#b8cce0;--t3:#7890aa;--chromeBg:linear-gradient(110deg,#18324a,#151f35 55%,#1b2840);--railBg:linear-gradient(180deg,#13283d,#0c1726);--contentBg:linear-gradient(180deg,#0d1724,#0e1a2a);--panelBg:linear-gradient(180deg,#152234,#0e1928);--themeLine:rgba(53,211,232,.24);--tabActive:linear-gradient(180deg,rgba(53,211,232,.16),rgba(124,109,240,.06))}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:100vh;width:100vw;overflow:hidden;background:transparent}
 
 
 /* LOGIN OVERLAY */
-.login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);z-index:10000;display:flex;justify-content:center;align-items:center}
-.login-card{background:rgba(22,27,34,0.97);border:1px solid rgba(29,158,117,0.4);border-radius:28px;padding:36px 32px;width:440px;max-width:94%;text-align:center;box-shadow:0 25px 45px rgba(0,0,0,0.7)}
+.login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--loginBg);background-size:var(--wallSize);backdrop-filter:blur(8px);z-index:10000;display:flex;justify-content:center;align-items:center}
+.login-card{background:var(--loginCardBg);border:1px solid var(--themeLine);border-radius:20px;padding:36px 32px;width:440px;max-width:94%;text-align:center;box-shadow:var(--panelShadow)}
 .login-logo{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--t);margin-bottom:4px}
 .login-logo span{color:var(--a)}
 .login-sub{font-size:13px;color:var(--t2);margin-bottom:28px}
-.login-input{width:100%;margin-bottom:14px;padding:12px 18px;background:rgba(13,17,23,.9);border:1px solid var(--br);border-radius:40px;color:var(--t);font-size:14px;outline:none;transition:border-color .2s;font-family:inherit}
+.login-input{width:100%;margin-bottom:14px;padding:12px 18px;background:var(--bg);border:1px solid var(--br);border-radius:40px;color:var(--t);font-size:14px;outline:none;transition:border-color .2s;font-family:inherit}
 .login-input:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(29,158,117,.15)}
 .login-btn{width:100%;background:linear-gradient(90deg,var(--a),var(--ad));border:none;padding:13px;border-radius:40px;font-weight:700;font-size:15px;color:#fff;cursor:pointer;transition:all .2s;margin-bottom:12px}
 .login-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(29,158,117,.3)}
@@ -453,6 +464,15 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 .landing-card:nth-child(4){animation-delay:1.2s}
 .landing-card:nth-child(5){animation-delay:1.6s}
 .landing-card:nth-child(6){animation-delay:2s}
+#landingOverlay{background:radial-gradient(circle at 18% 18%,color-mix(in srgb,var(--a) 20%,transparent),transparent 28%),radial-gradient(circle at 84% 74%,color-mix(in srgb,var(--bl) 16%,transparent),transparent 30%),var(--wall)!important;background-size:auto,auto,var(--wallSize)!important}
+#landingOverlay::before{content:'';position:fixed;inset:0;pointer-events:none;background:linear-gradient(90deg,color-mix(in srgb,var(--a) 18%,transparent) 1px,transparent 1px),linear-gradient(color-mix(in srgb,var(--a) 14%,transparent) 1px,transparent 1px),linear-gradient(135deg,transparent 48%,color-mix(in srgb,var(--a) 16%,transparent) 49%,transparent 51%);background-size:42px 42px,42px 42px,120px 120px;mask-image:linear-gradient(180deg,rgba(0,0,0,.95),rgba(0,0,0,.40));opacity:.9}
+#landingOverlay::after{content:'FGT-HQ-01 # get system performance status\A CPU states: 3% user 1% system 96% idle\A diagnose firewall iprope lookup 10.10.10.5 8.8.8.8 443 tcp\A policy id: 42  route: sdwan-zone\A get vpn ipsec tunnel summary\A SITE-B-VPN selectors(total,up): 2/2\A diagnose debug flow trace start 20';white-space:pre;position:fixed;right:26px;bottom:24px;width:min(520px,45vw);font-family:var(--mono);font-size:11px;line-height:1.9;color:color-mix(in srgb,var(--a) 70%,var(--t));pointer-events:none;text-align:left;opacity:.34;background:color-mix(in srgb,var(--bg) 72%,transparent);border:1px solid color-mix(in srgb,var(--a) 28%,transparent);border-radius:12px;padding:14px 16px;box-shadow:0 18px 48px rgba(0,0,0,.28)}
+#landingOverlay>div{position:relative;z-index:1}
+#loginOverlay .login-card [style*="rgba(255,255,255,.3)"]{color:var(--t3)!important}
+#loginOverlay .login-card [style*="rgba(255,255,255,.07)"]{border-color:var(--br)!important}
+.landing-card{background:color-mix(in srgb,var(--b2) 94%,var(--a))!important;border:1px solid color-mix(in srgb,var(--a) 28%,var(--br))!important;border-radius:12px!important;box-shadow:0 12px 28px rgba(0,0,0,.18);animation:lcPulse 3.5s ease-in-out infinite!important;position:relative;overflow:hidden}
+.landing-card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--a);opacity:.72}
+.landing-card:hover{animation:none!important;transform:translateY(-4px)!important;border-color:var(--a)!important;background:color-mix(in srgb,var(--b2) 88%,var(--a))!important;box-shadow:0 18px 36px rgba(0,0,0,.24),0 0 22px color-mix(in srgb,var(--a) 18%,transparent)!important}
 @media(max-width:480px){#landingOverlay .grid-2col,#landingOverlay>div>div:nth-child(2){grid-template-columns:1fr!important}}
 
 /* Final mobile polish layer - desktop rules above stay unchanged */
@@ -551,8 +571,8 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 <div id="landingOverlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:800;overflow-y:auto">
   <div style="max-width:680px;margin:0 auto;padding:40px 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
     <div style="text-align:center;margin-bottom:36px">
-      <div style="font-size:48px;margin-bottom:12px;animation:lcFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 12px rgba(29,158,117,.6))">&#x1F43A;</div>
-      <h1 style="font-size:26px;font-weight:800;color:var(--t);margin-bottom:8px">Welcome to <span style="color:var(--a);text-shadow:0 0 20px rgba(29,158,117,.5)">NetWolf</span></h1>
+      <div style="font-size:48px;margin-bottom:12px;animation:lcFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 12px var(--a))">&#x1F43A;</div>
+      <h1 style="font-size:26px;font-weight:800;color:var(--t);margin-bottom:8px">Welcome to <span style="color:var(--a);text-shadow:0 0 20px color-mix(in srgb,var(--a) 45%,transparent)">NetWolf</span></h1>
       <p id="landing-greeting" style="font-size:14px;color:var(--t2)">FortiGate Pro Toolkit &mdash; ready when you are.</p>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
@@ -576,7 +596,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
         <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">PS Script Maker</div>
         <div style="font-size:11px;color:var(--t3);line-height:1.5">AI-powered PowerShell scripts with READ/WRITE annotations</div>
       </button>
-      <button onclick="window.landingGo('subnetCalc')" class="landing-card">
+      <button onclick="window.landingGo('subnetcalc')" class="landing-card">
         <div style="font-size:24px;margin-bottom:8px">&#x1F9EE;</div>
         <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">Subnet Calculator</div>
         <div style="font-size:11px;color:var(--t3);line-height:1.5">Full binary breakdown with network/host bit visualization</div>
@@ -587,7 +607,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
         <div style="font-size:11px;color:var(--t3);line-height:1.5">Debug generator &middot; Packet walk &middot; Traceroute analyzer</div>
       </button>
     </div>
-    <button onclick="window.landingEnter()" style="width:100%;padding:14px;background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;box-shadow:0 0 20px rgba(29,158,117,.4);animation:lcPulse 2s ease-in-out infinite;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 0 36px rgba(29,158,117,.7)'" onmouseout="this.style.transform='scale(1)'">&#x1F680; Open Full Toolkit &rarr;</button>
+    <button onclick="window.landingEnter()" style="width:100%;padding:14px;background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;box-shadow:0 0 20px color-mix(in srgb,var(--a) 30%,transparent);animation:lcPulse 2.8s ease-in-out infinite;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 0 34px color-mix(in srgb,var(--a) 45%,transparent)'" onmouseout="this.style.transform='scale(1)'">&#x1F680; Open Full Toolkit &rarr;</button>
     <p style="text-align:center;font-size:11px;color:var(--t3)">Or click any tool above to jump straight in</p>
   </div>
 </div>
@@ -864,6 +884,7 @@ const NW_CHANGELOG=[
 firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
 const fbDB=firebase.database();
+try{loadSavedTheme();}catch(e){}
 
 /* ══ AUTH STATE — show login or toolkit ══ */
 // Login overlay is hidden by default; shown by onAuthStateChanged if no session
@@ -886,6 +907,7 @@ const fbDB=firebase.database();
   setInterval(checkIdle, 60000);
 })();
 fbAuth.onAuthStateChanged(function(user){
+  try{loadSavedTheme();}catch(e){}
   if(user){
     document.getElementById('loginOverlay').style.display='none';
     document.getElementById('toolkitContainer').style.display='block';
@@ -1988,22 +2010,22 @@ function renderCLISim(el){
   if(!document.getElementById('cliSimCSS')){
     var simStyle=document.createElement('style');simStyle.id='cliSimCSS';
     simStyle.textContent=`
-      .sim-shell{display:grid;grid-template-columns:320px minmax(0,1fr);gap:14px;align-items:start}
-      .sim-ref-card{border:1px solid var(--br);border-radius:8px;background:var(--b2);overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+      .sim-shell{display:grid;grid-template-columns:320px minmax(0,1fr);gap:14px;align-items:stretch}
+      .sim-ref-card{border:1px solid var(--br);border-radius:8px;background:var(--b2);overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,.12);height:680px;display:flex;flex-direction:column}
       .sim-ref-head{padding:11px 13px;border-bottom:1px solid var(--br);background:linear-gradient(180deg,var(--b2),var(--shape3))}
       .sim-ref-title{font-size:13px;font-weight:800;color:var(--t)}
       .sim-ref-sub{font-size:10.5px;color:var(--t2);line-height:1.45;margin-top:3px}
-      .sim-ref-body{overflow-y:auto;max-height:620px;padding:8px}
+      .sim-ref-body{overflow-y:auto;max-height:none;min-height:0;flex:1;padding:8px}
       .sim-ref-cat{border:1px solid var(--br);border-radius:8px;margin-bottom:8px;background:var(--bg);overflow:hidden}
       .sim-ref-cat-h{padding:8px 10px;font-size:10px;font-weight:800;color:var(--t2);letter-spacing:.08em;background:var(--b2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
       .sim-ref-row{padding:8px 10px;border-top:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .12s,border-color .12s}
       .sim-ref-row:hover{background:rgba(29,158,117,.07)}
-      .sim-term-card{border:1px solid #30363d;border-radius:8px;background:#0a0e14;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.22)}
-      .sim-terminal{min-height:460px;max-height:620px;overflow-y:auto;padding:15px 17px;font-family:"Courier New",monospace;font-size:13px;line-height:1.8;background:#0a0e14;scroll-behavior:smooth}
+      .sim-term-card{border:1px solid #30363d;border-radius:8px;background:#0a0e14;overflow:hidden;box-shadow:0 12px 26px rgba(0,0,0,.22);height:680px;display:flex;flex-direction:column}
+      .sim-terminal{flex:1;min-height:0;max-height:none;overflow-y:auto;padding:15px 17px;font-family:"Courier New",monospace;font-size:13px;line-height:1.8;background:#0a0e14;scroll-behavior:smooth}
       .sim-input-row{display:flex;align-items:center;padding:10px 16px;border-top:1px solid #30363d;background:#0d1117}
       .sim-helpbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:14px}
       .sim-helpitem{background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--t2);line-height:1.45}
-      @media(max-width:900px){.sim-shell{grid-template-columns:1fr}.sim-ref-panel{position:relative!important;top:0!important}.sim-ref-body{max-height:340px}}
+      @media(max-width:900px){.sim-shell{grid-template-columns:1fr}.sim-ref-panel{position:relative!important;top:0!important}.sim-ref-card{height:360px}.sim-term-card{height:560px}.sim-ref-body{max-height:none}}
     `;
     document.head.appendChild(simStyle);
   }
@@ -3611,8 +3633,10 @@ window.doLogin=function doLogin(){
 
 /* ══ LOGOUT ══ */
 window.doLogout=function doLogout(){
+  const savedTheme=localStorage.getItem('nw_theme')||'dark';
   fbAuth.signOut().then(()=>{
     sessionStorage.clear();
+    localStorage.setItem('nw_theme',savedTheme);
     window.location.reload();
   });
 }
@@ -4574,6 +4598,10 @@ function renderMultiVendorTab(el){
       .mv-cmd-left{flex:1;min-width:0}
       .mv-cmd-code{font-family:var(--mono);font-size:12px;font-weight:700;margin-bottom:5px;line-height:1.55;word-break:break-word}
       .mv-cmd-exp{font-size:11.5px;color:var(--t2);line-height:1.55}
+      .mv-undo{margin-top:8px;border:1px solid rgba(88,166,255,.18);border-radius:7px;background:rgba(88,166,255,.055);padding:8px 10px}
+      .mv-undo-label{font-size:9px;font-weight:800;color:var(--bl);letter-spacing:.08em;text-transform:uppercase;font-family:var(--mono);margin-bottom:4px}
+      .mv-undo-code{font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--bl);word-break:break-word}
+      .mv-undo-note{font-size:10.5px;color:var(--t3);line-height:1.45;margin-top:4px}
       .mv-cmd-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
       .mv-badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;font-family:var(--mono);white-space:nowrap}
       .mv-badge.ro{background:rgba(63,185,80,.1);color:#3fb950;border:1px solid rgba(63,185,80,.2)}
@@ -5683,19 +5711,40 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
     return h;
   }
 
+  function mvEsc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function mvUndoCmd(vid,cat,cmd){
+    const c=cmd.trim();
+    const low=c.toLowerCase();
+    if(!cat.toLowerCase().includes('config')) return '';
+    if(/^(show|display|get|diagnose|execute|ping|traceroute|tracert|copy|write|save|commit|return|quit|end|exit|configure terminal|conf t|system-view)$/.test(low)) return '';
+    if(low.startsWith('no ')||low.startsWith('undo ')||low.startsWith('delete ')) return c.replace(/^(no|undo|delete)\s+/i,'');
+    if(vid==='huawei') return 'undo '+c;
+    if(vid==='juniper') return 'delete '+c.replace(/^set\s+/i,'');
+    if(vid==='fortigate'){
+      if(low.startsWith('set ')) return 'unset '+c.slice(4);
+      if(low.startsWith('edit ')) return 'delete '+c.slice(5);
+      if(low.startsWith('config ')) return 'end';
+    }
+    return 'no '+c;
+  }
+
   function cmdsHTML(vid, cat){
     const cmds=MV_DATA[vid].cats[cat]||[];
     let h=`<div class="mv-cat-hdr"><span>${cat}</span><span class="mv-count">${cmds.length} commands</span></div>`;
     for(const [cmd,exp,safety] of cmds){
       const col=safety==='ro'?'var(--g)':safety==='caution'?'var(--y)':'var(--r)';
+      const undo=safety!=='ro'?mvUndoCmd(vid,cat,cmd):'';
+      const undoHTML=undo?`<div class="mv-undo"><div class="mv-undo-label">Undo / rollback command</div><div class="mv-undo-code">${mvEsc(undo)}</div><div class="mv-undo-note">Use after confirming the context and current config. Some platforms may require saving or committing after the rollback.</div></div>`:'';
       h+=`<div class="mv-cmd-row">
         <div class="mv-cmd-left">
-          <div class="mv-cmd-code" style="color:${col}">${cmd}</div>
-          <div class="mv-cmd-exp">${exp}</div>
+          <div class="mv-cmd-code" style="color:${col}">${mvEsc(cmd)}</div>
+          <div class="mv-cmd-exp">${mvEsc(exp)}</div>
+          ${undoHTML}
         </div>
         <div class="mv-cmd-right">
           <span class="mv-badge ${safety}">${safety==='ro'?'safe':safety}</span>
-          <button class="mv-copy" onclick="mvCopy(this,'${cmd.replace(/'/g,"\'")}')">Copy</button>
+          <button class="mv-copy" onclick="mvCopy(this,decodeURIComponent('${encodeURIComponent(cmd)}'))">Copy</button>
+          ${undo?`<button class="mv-copy" onclick="mvCopy(this,decodeURIComponent('${encodeURIComponent(undo)}'))">Undo</button>`:''}
         </div>
       </div>`;
     }
@@ -5838,11 +5887,17 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
       const lines=String(code).split('\n');
       return lines.map((ln,i)=>promptLine(v,ln,lines[i-1]||'')).join('\n');
     }
+    function undoSessionHTML(v,code){
+      const lines=String(code).split('\n').map(x=>x.trim()).filter(Boolean);
+      const undo=lines.map(line=>mvUndoCmd(v,'Config',line)).filter(Boolean).reverse();
+      return undo.length?sessionHTML(v,undo.join('\n')):'';
+    }
     let h=`<div class="mv-learn"><div class="mv-learn-head"><div><div class="mv-learn-title">🎓 ${p.name} learning: ${mvTrack==='router'?'Router / Layer 3 setup':'Switch setup'} from start to finish</div><div class="mv-learn-sub">Follow these steps in order. Green rows are verification/save, yellow rows change configuration, red rows are destructive or disruptive.</div></div><div class="mv-track-tabs"><button class="mv-track-tab ${mvTrack==='switch'?'active':''}" onclick="mvSetTrack('switch')">Switch setup</button><button class="mv-track-tab ${mvTrack==='router'?'active':''}" onclick="mvSetTrack('router')">Router / L3 setup</button></div></div>`;
     steps.forEach((s,i)=>{
       const col=s[3]==='ro'?'var(--g)':s[3]==='danger'?'var(--r)':'var(--y)';
       const badge=s[3]==='ro'?'safe':s[3];
-      h+=`<div class="mv-step"><div class="mv-step-num">${i+1}</div><div><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><div class="mv-step-title">${s[0]}</div><span class="mv-badge ${s[3]}">${badge}</span></div><div class="mv-step-exp">${s[1]}</div><div class="mv-step-code" style="color:${col}">${sessionHTML(vid,s[2])}</div></div></div>`;
+      const undoBlock=s[3]!=='ro'?undoSessionHTML(vid,s[2]):'';
+      h+=`<div class="mv-step"><div class="mv-step-num">${i+1}</div><div><div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><div class="mv-step-title">${s[0]}</div><span class="mv-badge ${s[3]}">${badge}</span></div><div class="mv-step-exp">${s[1]}</div><div class="mv-step-code" style="color:${col}">${sessionHTML(vid,s[2])}</div>${undoBlock?`<div class="mv-undo"><div class="mv-undo-label">Undo example for this step</div><div class="mv-step-code" style="color:var(--bl);border:none;background:transparent;padding:0">${undoBlock}</div><div class="mv-undo-note">Run only inside the correct mode/context, then verify and save or commit as your platform requires.</div></div>`:''}</div></div>`;
     });
     h+='</div>';
     return h;
