@@ -118,7 +118,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .cb .ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
 .main{display:flex;flex-direction:column;overflow:hidden;flex:1;min-height:0}
 .tabs{display:flex;gap:10px;border-bottom:1px solid var(--themeLine);padding:9px 12px 10px;background:var(--chromeBg);overflow-x:auto;flex-shrink:0;scrollbar-width:thin;scrollbar-color:var(--themeLine) transparent;-webkit-overflow-scrolling:touch;align-items:stretch;box-shadow:inset 0 -1px 0 rgba(255,255,255,.04)}
-.tab{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 10px;font-size:11px;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--t2);border-radius:6px;white-space:nowrap;transition:background .16s,color .16s,border-color .16s,box-shadow .16s;flex-shrink:0;font-family:var(--mono);letter-spacing:0;min-width:auto;min-height:32px}
+.tab{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 10px;font-size:11px;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--t2);border-radius:6px;white-space:nowrap;transition:background .16s,color .16s,border-color .16s,box-shadow .16s;flex-shrink:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:0;min-width:auto;min-height:32px}
 .tab:hover{color:var(--t);background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.08)}
 .tab.active{color:var(--t);background:var(--tabActive);border-color:var(--themeLine);font-weight:700;box-shadow:0 0 0 1px color-mix(in srgb,var(--a) 18%,transparent),0 8px 18px rgba(0,0,0,.22)}
 .tab-group{display:flex;flex-direction:column;flex-shrink:0;gap:5px;padding:6px 7px 7px;background:color-mix(in srgb,var(--shape3) 78%,transparent);border:1px solid color-mix(in srgb,var(--a) 22%,var(--br));border-radius:8px}
@@ -127,7 +127,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .tab-divider{width:0;margin:0;flex-shrink:0}
 .tab-icon{font-size:14px;line-height:1;transition:transform .16s;filter:saturate(.95)}
 .tab.active .tab-icon{transform:scale(1.08);filter:saturate(1.15)}
-.tab-lbl{font-size:10px;color:inherit;font-family:var(--mono);letter-spacing:0}
+.tab-lbl{font-size:10px;color:inherit;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:0}
 .tab.active .tab-lbl{color:var(--t)}
 .content{flex:1;overflow-y:auto;padding:16px;min-height:0;background:var(--contentBg);background-size:var(--wallSize)}
 .sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
@@ -845,6 +845,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             </button>
             <button class="tab" onclick="stab('emailgen')" id="tab-emailgen" title="Customer Email Generator">
               <span class="tab-icon">📝</span><span class="tab-lbl">Email</span>
+            </button>
+            <button class="tab" onclick="stab('swcfg')" id="tab-swcfg" title="Switch & Router Config Generator">
+              <span class="tab-icon">🔧</span><span class="tab-lbl">SW/Router Cfg</span>
             </button>
 
           </div>
@@ -4230,7 +4233,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -11144,6 +11147,826 @@ function renderDevices(el){
   buildSectionFilters();buildGrid();
 }
 
+function renderSwCfg(el){
+  el.innerHTML=`
+  <div class="sh"><span class="stitle">🔧 Switch & Router Config Generator</span><span class="sev info">Fill form → get ready-to-paste CLI</span></div>
+  <p style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6">
+    Generate a complete baseline configuration for a new switch or router from scratch. Select vendor, device type and fill in your details.
+  </p>
+
+  <!-- Vendor + Device type row -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:5px">🏢 Vendor</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="swVendorBtns">
+        <button class="sbtn swv-btn active" data-v="cisco" onclick="swSetVendor('cisco',this)">🔵 Cisco IOS</button>
+        <button class="sbtn swv-btn" data-v="aruba" onclick="swSetVendor('aruba',this)" style="background:var(--b3)">🟢 HP/Aruba CX</button>
+        <button class="sbtn swv-btn" data-v="juniper" onclick="swSetVendor('juniper',this)" style="background:var(--b3)">🟣 Juniper EX</button>
+        <button class="sbtn swv-btn" data-v="fortiswitch" onclick="swSetVendor('fortiswitch',this)" style="background:var(--b3)">🛡️ FortiSwitch</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:5px">📦 Device Type</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="swTypeBtns">
+        <button class="sbtn swt-btn active" data-t="switch" onclick="swSetType('switch',this)">🔌 Access Switch</button>
+        <button class="sbtn swt-btn" data-t="router" onclick="swSetType('router',this)" style="background:var(--b3)">🌐 Router</button>
+        <button class="sbtn swt-btn" data-t="core" onclick="swSetType('core',this)" style="background:var(--b3)">🏗️ Core / Distribution</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Config type tabs -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="swCfgTypeBtns">
+    <button class="sbtn swc-btn active" data-c="full" onclick="swSetCfg('full',this)">🚀 Full Setup</button>
+    <button class="sbtn swc-btn" data-c="vlan" onclick="swSetCfg('vlan',this)" style="background:var(--b3)">💾 VLANs</button>
+    <button class="sbtn swc-btn" data-c="routing" onclick="swSetCfg('routing',this)" style="background:var(--b3)">🔀 Routing</button>
+    <button class="sbtn swc-btn" data-c="security" onclick="swSetCfg('security',this)" style="background:var(--b3)">🛡️ Security</button>
+    <button class="sbtn swc-btn" data-c="mgmt" onclick="swSetCfg('mgmt',this)" style="background:var(--b3)">🖥️ Management</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <div id="swCfgForm" style="background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:16px;max-height:600px;overflow-y:auto"></div>
+      <button class="sbtn" onclick="swGenerate()" style="margin-top:10px;width:100%;padding:10px;font-size:14px">⚡ Generate Config</button>
+      <button class="sbtn" onclick="swCopy()" style="margin-top:6px;width:100%;padding:10px;font-size:14px;background:#15803D">📋 Copy Config</button>
+      <button class="sbtn" onclick="swDownload()" style="margin-top:6px;width:100%;padding:10px;font-size:14px;background:#1d4ed8">⬇️ Download File</button>
+      <div id="swDownloadHint" style="font-size:10.5px;color:var(--t3);margin-top:5px;text-align:center">
+        💡 Cisco → <code>.ios</code> &nbsp;·&nbsp; Juniper → <code>.conf</code> &nbsp;·&nbsp; Aruba/FortiSwitch → <code>.cfg</code>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:6px;font-family:var(--mono)">▸ GENERATED CLI OUTPUT</div>
+      <pre id="swCfgOutput" style="background:#010409;border:1px solid var(--br);border-radius:8px;padding:14px;font-family:var(--mono);font-size:11.5px;color:#7ee787;white-space:pre-wrap;overflow-x:auto;min-height:400px;max-height:620px;overflow-y:auto">— Fill the form and click Generate —</pre>
+    </div>
+  </div>`;
+
+  let swVendor='cisco', swType='switch', swCfgType='full';
+
+  function inp(id,label,ph,val='',hint=''){
+    return `<div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:3px">${label}</label>
+      ${hint?`<div style="font-size:10.5px;color:var(--t3);margin-bottom:4px;line-height:1.5">💡 ${hint}</div>`:''}
+      <input type="text" id="sw_${id}" placeholder="${ph}" value="${val}"
+        style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none;box-sizing:border-box">
+    </div>`;
+  }
+  function sel(id,label,opts,def='',hint=''){
+    return `<div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:3px">${label}</label>
+      ${hint?`<div style="font-size:10.5px;color:var(--t3);margin-bottom:4px;line-height:1.5">💡 ${hint}</div>`:''}
+      <select id="sw_${id}" style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
+        ${opts.map(o=>`<option value="${o.v}" ${o.v===def?'selected':''}>${o.l}</option>`).join('')}
+      </select>
+    </div>`;
+  }
+  function txt(id,label,ph,val='',hint='',rows=3){
+    return `<div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:3px">${label}</label>
+      ${hint?`<div style="font-size:10.5px;color:var(--t3);margin-bottom:4px;line-height:1.5">💡 ${hint}</div>`:''}
+      <textarea id="sw_${id}" rows="${rows}" placeholder="${ph}"
+        style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none;box-sizing:border-box;resize:vertical;line-height:1.5">${val}</textarea>
+    </div>`;
+  }
+  function sec(title,desc=''){
+    return `<div style="margin:16px 0 10px">
+      <div style="font-size:11px;font-weight:800;color:var(--a);text-transform:uppercase;letter-spacing:.08em;padding-bottom:5px;border-bottom:1px solid var(--br)">${title}</div>
+      ${desc?`<div style="font-size:11px;color:var(--t3);margin-top:5px;line-height:1.6;background:rgba(29,158,117,.05);border-left:3px solid rgba(29,158,117,.3);padding:6px 10px;border-radius:0 5px 5px 0">${desc}</div>`:''}
+    </div>`;
+  }
+  function gv(id){const e=document.getElementById('sw_'+id);return e?e.value.trim():'';}
+
+  function buildForm(){
+    const form=document.getElementById('swCfgForm');
+    if(!form) return;
+    let h='';
+
+    // Vendor/type lookup tables
+    const portFmt={cisco:'e.g. GigabitEthernet1/0/1-24',aruba:'e.g. 1/1/1-1/1/24',juniper:'e.g. ge-0/0/0',fortiswitch:'e.g. port1'};
+    const trunkFmt={cisco:'e.g. GigabitEthernet1/0/25',aruba:'e.g. 1/1/25',juniper:'e.g. ge-0/0/24',fortiswitch:'e.g. port25'};
+    const wanFmt={cisco:'e.g. GigabitEthernet0/0/0',aruba:'e.g. 1/1/1',juniper:'e.g. ge-0/0/0',fortiswitch:'e.g. port1'};
+    const portDef={cisco:'GigabitEthernet1/0/1-24',aruba:'1/1/1-1/1/24',juniper:'ge-0/0/0',fortiswitch:'port1'};
+    const trunkDef={cisco:'GigabitEthernet1/0/25',aruba:'1/1/25',juniper:'ge-0/0/24',fortiswitch:'port25'};
+    const wanDef={cisco:'GigabitEthernet0/0/0',aruba:'1/1/1',juniper:'ge-0/0/0',fortiswitch:'port1'};
+    const lanDef={cisco:'GigabitEthernet0/0/1',aruba:'1/1/2',juniper:'ge-0/0/1',fortiswitch:'port2'};
+    const stackLabel={cisco:'Stacking — Cisco StackWise',aruba:'Stacking — Aruba VSF',juniper:'Stacking — Juniper Virtual Chassis',fortiswitch:'FortiSwitch Stack'};
+    const stackHint={
+      cisco:'StackWise connects up to 8 switches into one logical unit. All share one IP and appear as a single device.',
+      aruba:'VSF connects up to 8 CX switches. One becomes master, others standby. Single management IP.',
+      juniper:'Virtual Chassis connects up to 10 EX switches. The lowest-priority member becomes the routing engine.',
+      fortiswitch:'FortiSwitch stacking is managed via FortiLink from FortiGate. Standalone stacking is limited.',
+    };
+
+    // ── TYPE BADGE ──────────────────────────────────────────
+    const typeDescriptions={
+      switch:`<div style="background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:11.5px;color:var(--t2);line-height:1.6">
+        <strong style="color:var(--a)">🔌 Access Switch</strong> — Connects end devices (PCs, phones, APs) to the network. Operates at Layer 2 (no routing between VLANs). 
+        Sends traffic to a core switch or router for inter-VLAN routing. Fields below focus on: VLANs, access/trunk ports, STP, security, PoE.
+      </div>`,
+      core:`<div style="background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:11.5px;color:var(--t2);line-height:1.6">
+        <strong style="color:var(--bl)">🏗️ Core / Distribution Switch</strong> — Aggregates access switches and routes traffic between VLANs. Operates at Layer 3. 
+        Acts as the default gateway for all VLANs. Fields below include: inter-VLAN routing, STP root bridge priority, uplinks to access layer, routing protocols.
+      </div>`,
+      router:`<div style="background:rgba(210,153,34,.1);border:1px solid rgba(210,153,34,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:11.5px;color:var(--t2);line-height:1.6">
+        <strong style="color:var(--y)">🌐 Router</strong> — Connects different networks together (WAN to LAN, internet edge, branch to HQ). Operates at Layer 3. 
+        Has a WAN interface (public/ISP) and one or more LAN interfaces. May use subinterfaces for router-on-a-stick (routing between VLANs via one trunk link). Fields below include: WAN/LAN interfaces, NAT, routing protocols.
+      </div>`,
+    };
+    h+=typeDescriptions[swType]||'';
+
+    // ── BASIC IDENTITY (all types) ───────────────────────────
+    const hostnameDef={
+      switch:{cisco:'SW-FLOOR1-01',aruba:'SW-FLOOR1-01',juniper:'ex-floor1-01',fortiswitch:'FortiSwitch-01'},
+      core:{cisco:'SW-CORE-01',aruba:'SW-CORE-01',juniper:'ex-core-01',fortiswitch:'FortiSwitch-Core'},
+      router:{cisco:'RTR-EDGE-01',aruba:'RTR-EDGE-01',juniper:'mx-edge-01',fortiswitch:'FortiSwitch-GW'},
+    };
+    const hn=(hostnameDef[swType]||hostnameDef.switch)[swVendor]||'DEVICE-01';
+
+    h+=sec('🖥️ Basic Identity','Hostname appears in CLI prompts, logs and SNMP. Choose a clear naming convention — e.g. type, location, number.');
+    h+=inp('hostname','Hostname',hn,hn,{
+      switch:'Use a convention like SW-[BUILDING]-[FLOOR]-[NUMBER]. Example: SW-HQ-2F-01',
+      core:'Use a convention like SW-CORE-[LOCATION]-[NUMBER]. Example: SW-CORE-DC-01',
+      router:'Use a convention like RTR-[LOCATION]-[NUMBER]. Example: RTR-EDGE-HQ-01',
+    }[swType]);
+    h+=inp('domain','Domain Name','company.local','company.local','Used for SSH key generation and DNS. Match your Active Directory domain.');
+    h+=inp('enable_pass',{cisco:'Enable Secret Password',aruba:'Admin Password',juniper:'Root Password',fortiswitch:'Admin Password'}[swVendor],'StrongPass123!','',{
+      cisco:'The "enable secret" password. Required to enter privileged mode and make config changes. This is the most critical password on a Cisco device.',
+      aruba:'AOS-CX uses role-based access — no enable mode. This is the administrator account password.',
+      juniper:'Root (superuser) password for the device. Junos requires this before committing any config.',
+      fortiswitch:'Admin account password for GUI and CLI access.',
+    }[swVendor]);
+    h+=inp('ssh_user','Admin Username','admin','admin','Local admin account for SSH access.');
+    h+=inp('ssh_pass','Admin Password','StrongPass123!','','Minimum 12 characters. Use mixed case, numbers and symbols. In production also configure RADIUS/TACACS+ for centralised auth.');
+
+    // ── MANAGEMENT (all types) ───────────────────────────────
+    const mgmtDesc={
+      switch:'A dedicated management VLAN keeps SSH/SNMP traffic separate from user traffic. Never use VLAN 1 for management.',
+      core:'The core switch is often the default gateway — its management IP is on the management SVI. Keep management on a separate VLAN.',
+      router:'Routers use a dedicated management interface or a loopback address for management. A loopback is preferred as it stays up even if one physical interface fails.',
+    };
+    h+=sec('🌐 Management',mgmtDesc[swType]);
+    if(swType==='router'){
+      h+=inp('mgmt_ip','Management / Loopback IP Address','10.0.0.1','','Assign a loopback interface (Lo0) for management. Loopback is always up as long as the router is running. Used as router-id for OSPF/BGP too.');
+      h+=inp('mgmt_mask','Loopback Mask','255.255.255.255','255.255.255.255','For a loopback used only for management, /32 (255.255.255.255) is standard — one IP, not a subnet.');
+    } else {
+      h+=inp('mgmt_vlan','Management VLAN ID','10','10','Dedicated VLAN for device management. Best practice: never VLAN 1. Common: VLAN 10, 99 or 100.');
+      h+=inp('mgmt_ip','Management IP Address','192.168.10.2','','IP of the management SVI. Must be unique. Your team SSHes to this address to manage the switch.');
+      h+=inp('mgmt_mask','Subnet Mask','255.255.255.0','255.255.255.0',{cisco:'Dotted decimal — e.g. 255.255.255.0 for /24',aruba:'AOS-CX also accepts CIDR — /24 will be used',juniper:'Junos uses CIDR automatically',fortiswitch:'Dotted decimal required'}[swVendor]);
+    }
+    h+=inp('mgmt_gw','Default Gateway',{switch:'192.168.10.1',core:'192.168.10.1',router:'203.0.113.1'}[swType],'',{
+      switch:'The core switch or firewall IP that this access switch uses to reach the management network.',
+      core:'The upstream firewall or router IP. Core switch management traffic leaves via this gateway.',
+      router:'Your ISP next-hop IP or upstream router. Used as the default route (0.0.0.0/0) for the router itself.',
+    }[swType]);
+    h+=inp('ntp','NTP Server IP','10.0.0.1','','Critical for log timestamps, certificate validity and debugging. Use a domain controller or internal NTP server.');
+    h+=inp('syslog','Syslog Server IP (optional)','10.0.0.5','','Centralises logs from all devices. Examples: Graylog, Splunk, Syslog-NG, PRTG. Essential for incident response.');
+
+    // ── ROUTER-SPECIFIC: WAN/LAN INTERFACES ─────────────────
+    if(swType==='router'){
+      if(swCfgType==='full'||swCfgType==='vlan'){
+        h+=sec('🔌 WAN & LAN Interfaces','Routers have distinct WAN (towards ISP/internet) and LAN (towards internal network) interfaces. Unlike switches, router ports are routed — each has its own IP in a different subnet.');
+        h+=inp('wan_interface','WAN Interface (towards ISP/internet)',wanFmt[swVendor],wanDef[swVendor],{
+          cisco:'The physical interface connected to your ISP or upstream router. Usually Gi0/0/0 or Se0/0/0 for serial WAN.',
+          aruba:'Physical port towards ISP. AOS-CX routed port: needs "routing" mode.',
+          juniper:'Physical interface towards ISP. In Junos: ge-0/0/0 (GigabitEthernet slot 0, module 0, port 0).',
+          fortiswitch:'WAN port. FortiSwitch in router mode is uncommon — typically FortiGate handles WAN.',
+        }[swVendor]);
+        h+=inp('wan_ip','WAN IP Address (from ISP)','203.0.113.2','','The public IP your ISP assigned to this interface. If using DHCP from ISP leave blank and the config will use dhcp.');
+        h+=inp('wan_mask','WAN Subnet Mask','255.255.255.252','255.255.255.252','/30 (255.255.255.252) is standard for point-to-point WAN links — gives 2 usable IPs. /29 if ISP assigns a small block.');
+        h+=inp('wan_gw','WAN Gateway (ISP next-hop)','203.0.113.1','','Your ISP router IP. This becomes the default route next-hop (ip route 0.0.0.0 0.0.0.0 <this IP>).');
+        h+=inp('lan_interface','LAN Interface (towards internal network)',lanDef[swVendor],lanDef[swVendor],'The interface connected to your internal switch or firewall. Gets your internal LAN IP.');
+        h+=inp('lan_ip','LAN IP Address','192.168.1.1','','The router IP on the LAN side. This becomes the default gateway for all LAN devices.');
+        h+=inp('lan_mask','LAN Subnet Mask','255.255.255.0','255.255.255.0','/24 (255.255.255.0) is the most common LAN subnet — 254 usable hosts.');
+        h+=sel('nat','NAT / PAT (Network Address Translation)',[
+          {v:'yes',l:'Yes — enable NAT overload (PAT) — LAN devices share the WAN IP'},
+          {v:'no',l:'No — pure routing only (both sides have routable IPs)'},
+        ],'yes','NAT (specifically PAT/overload) allows many internal devices to share one public IP. Every home router uses this. Required if your ISP gives you one IP but you have many internal devices. Without NAT, all LAN devices need public IPs.');
+        h+=sel('router_on_stick','Router-on-a-Stick (VLAN routing via trunk)',[
+          {v:'no',l:'No — separate physical LAN interfaces per subnet'},
+          {v:'yes',l:'Yes — one trunk port with subinterfaces per VLAN'},
+        ],'no','Router-on-a-stick uses ONE physical port carrying multiple VLANs (trunk). The router creates a virtual subinterface per VLAN — each subinterface acts as the default gateway for that VLAN. More common with legacy routers. Core switches are preferred for inter-VLAN routing today.');
+        h+=inp('vlan_list','VLANs for subinterfaces (if router-on-stick)','10:Management,20:Users,30:Servers','10:Management,20:Users,30:Servers','Only used if router-on-a-stick is enabled above. Format: ID:Name. Each VLAN gets a subinterface (e.g. Gi0/0/1.20) with its own IP.');
+      }
+    }
+
+    // ── CORE SWITCH-SPECIFIC: UPLINKS & STP ROOT ────────────
+    if(swType==='core'){
+      if(swCfgType==='full'||swCfgType==='vlan'){
+        h+=sec('🏗️ Core / Distribution — Uplinks & Inter-VLAN Routing','The core switch acts as the L3 hub. It connects to access switches via trunk ports and routes between all VLANs. It should also be the STP root bridge to control topology.');
+        h+=inp('vlan_list','VLANs (ID:Name, comma separated)','10:Management,20:Users,30:Servers,40:Voice','10:Management,20:Users,30:Servers,40:Voice','All VLANs that exist in your network should be defined on the core switch. Each gets an SVI with an IP — that IP is the default gateway for devices in that VLAN.');
+        h+=inp('vlan_gateways','VLAN Gateways (VLANID:GatewayIP, comma separated)','10:192.168.10.1,20:192.168.20.1,30:192.168.30.1','10:192.168.10.1,20:192.168.20.1,30:192.168.30.1','Each VLAN SVI gets an IP that acts as the default gateway for devices in that VLAN. Example: VLAN 20 users set their default gateway to 192.168.20.1.');
+        h+=inp('trunk_ports','Uplink Trunk Ports (to access switches / firewall)',trunkFmt[swVendor],trunkDef[swVendor],'Ports that connect to access switches and to the upstream firewall/router. All carry multiple VLANs via 802.1Q trunking.');
+        h+=inp('trunk_allowed','Allowed VLANs on all trunks','10,20,30,40','10,20,30,40','Which VLANs traverse these trunk links. List all VLANs that need to reach access switches.');
+        h+=sel('stp_root','Make this switch the STP Root Bridge',[
+          {v:'yes',l:'Yes — set bridge priority to 4096 (lowest = root)'},
+          {v:'no',l:'No — leave default priority (32768)'},
+        ],'yes','The STP root bridge is the reference point for all spanning tree calculations — all other switches choose their best path towards the root. The core switch should ALWAYS be the root. If a random access switch becomes root, suboptimal paths can cause traffic loops or slowdowns. Setting priority to 4096 (or using "spanning-tree vlan X root primary") makes this switch the root.');
+        h+=inp('stp_vlans','VLANs to set as STP root','10,20,30,40','10,20,30,40','List of VLANs for which this switch should be root bridge. Usually all VLANs.');
+      }
+    }
+
+    // ── ACCESS SWITCH-SPECIFIC: PORTS ───────────────────────
+    if(swType==='switch'){
+      if(swCfgType==='full'||swCfgType==='vlan'){
+        h+=sec('💾 VLANs & Ports','Access switches segment end-device traffic into VLANs and send it upstream via a trunk port to the core switch or firewall.');
+        h+=inp('vlan_list','VLANs to create on this switch','10:Management,20:Users,30:Servers,40:Voice','10:Management,20:Users,30:Servers,40:Voice','VLANs that will be used on this access switch. Should match the core switch VLAN database.');
+        h+=inp('access_ports','Access Port Range (end-device ports)',portFmt[swVendor],portDef[swVendor],'Ports connected to PCs, IP phones, printers, APs. Each carries ONE VLAN only. '+portFmt[swVendor]);
+        h+=inp('access_vlan','Default user VLAN for access ports','20','20','VLAN assigned to all access ports above. Typically your users/staff VLAN.');
+        h+=inp('voice_vlan','Voice VLAN (for IP phones, optional)','40','','If you have IP phones, they use a separate voice VLAN for QoS. The phone and PC share one port — phone tags its traffic, PC is untagged. Leave blank if no IP phones.');
+        h+=inp('trunk_ports','Uplink / Trunk Port (to core switch)',trunkFmt[swVendor],trunkDef[swVendor],'The port connected to the core switch or distribution layer. Carries ALL VLANs via 802.1Q tags.');
+        h+=inp('trunk_allowed','VLANs allowed on trunk','10,20,30,40','10,20,30,40','Must include the management VLAN and all user VLANs. Should match what the core switch allows on its end.');
+        h+=inp('native_vlan','Native VLAN on trunk','1','1','Sent untagged on the trunk. Change from VLAN 1 to an unused VLAN (e.g. 999) to prevent VLAN hopping attacks.');
+      }
+    }
+
+    // ── ROUTING (router and core only, always show for router) ──
+    if(swType==='router'||(swType==='core'&&(swCfgType==='full'||swCfgType==='routing'))){
+      const routeDesc={
+        router:'Routing is the core function of a router — it decides where to forward each packet based on destination IP. Every router needs at least a default route pointing to the ISP.',
+        core:'The core switch routes between VLANs and also needs to know how to reach external networks (internet, WAN). Enable "ip routing" to activate L3 routing.',
+      };
+      h+=sec('🔀 Routing',routeDesc[swType]);
+      if(swType==='core'||swType==='router'){
+        const routingOpts=[
+          {v:'static',l:'Static routes only — manual, no auto failover'},
+          {v:'ospf',l:'OSPF — Open Shortest Path First (most common, all vendors)'},
+          ...(swVendor==='cisco'?[{v:'eigrp',l:'EIGRP — Cisco only, very fast convergence'}]:[]),
+          {v:'bgp',l:'BGP — Border Gateway Protocol (internet/inter-AS)'},
+          {v:'rip',l:'RIPv2 — legacy, avoid in new networks'},
+        ];
+        h+=sel('routing_proto','Routing Protocol',routingOpts,'static',
+          'Static: you manually type every route — simple, predictable, no overhead. OSPF: routers auto-discover each other and share routes, handles failures automatically. '+(swVendor==='cisco'?'EIGRP: Cisco-only, faster than OSPF, simpler config. ':'')+'BGP: for internet routing or connecting to another organisation\'s network. RIP: 1988 protocol, 15-hop limit, not recommended.');
+        if(swType!=='router') h+=inp('default_route','Default Route Next-Hop (upstream firewall/router)','192.168.1.1','','Where to send traffic that has no more specific route. For a core switch this is typically your firewall\'s internal IP.');
+        h+=inp('ospf_id','OSPF Process ID','1','1','A local number (1-65535) identifying this OSPF process. Does not need to match other devices. Usually just use 1.');
+        h+=inp('ospf_area','OSPF Area','0','0','Area 0 is the backbone. For simple networks use area 0 for everything. Multi-area design is for large networks with hundreds of routers.');
+        h+=inp('ospf_nets','OSPF Networks to advertise (CIDR, comma sep)','192.168.10.0/24,192.168.20.0/24','','Subnets this device will share with OSPF neighbours. Typically all your VLAN subnets and any connected networks.');
+        h+=inp('bgp_asn','Local BGP AS Number','65001','','Private AS range: 64512-65534. Public AS: assigned by RIPE/ARIN. Need a real ASN for internet peering.');
+        h+=inp('bgp_peer','BGP Peer IP:RemoteASN','203.0.113.1:65000','','Your BGP neighbour. Format: IP:ASN. Example: 203.0.113.1:65000 (ISP router IP : ISP ASN).');
+      }
+    }
+
+    // ── SECURITY (all types, but content varies) ─────────────
+    if(swCfgType==='full'||swCfgType==='security'){
+      h+=sec('🛡️ Security','Security hardening varies by device type. Access switches focus on port-level attacks; routers focus on WAN-side threats; core switches focus on STP and routing security.');
+      if(swType==='switch'){
+        h+=sel('portfast','STP PortFast + BPDUGuard on access ports',[
+          {v:'yes',l:'Yes — enable PortFast + BPDUGuard (recommended for access ports)'},
+          {v:'no',l:'No — standard STP delay on all ports'},
+        ],'yes','PortFast: skips the 30-second STP listening/learning delay so PCs connect immediately. BPDUGuard: shuts port if a switch BPDU is received — prevents someone plugging in a rogue switch. Only safe on ports connected to end devices.');
+      }
+      if(swType==='core'){
+        h+=sel('portfast','STP PortFast on core uplinks',[
+          {v:'no',l:'No — never enable PortFast on trunk/uplink ports (default)'},
+          {v:'yes',l:'Yes — only if these ports go to servers/firewalls (not switches)'},
+        ],'no','PortFast should NOT be enabled on trunk ports between switches — it bypasses STP which could cause loops. Only enable on ports going to firewalls, servers or routers that will never connect to another switch.');
+      }
+      if(swVendor==='cisco'){
+        if(swType==='switch'){
+          h+=sel('dot1x','802.1X Port Authentication',[
+            {v:'no',l:'No — open access'},
+            {v:'yes',l:'Yes — require RADIUS authentication before granting access'},
+          ],'no','802.1X: before a device gets network access, it must authenticate via a RADIUS server (username/password or certificate). Prevents any unauthorised device from just plugging in. Requires RADIUS server (Cisco ISE, Windows NPS, FreeRADIUS).');
+          h+=inp('radius_ip','RADIUS Server IP','10.0.0.10','','Your RADIUS server IP. Used for 802.1X authentication and AAA login to the switch itself.');
+          h+=inp('radius_key','RADIUS Shared Secret','RadiusSecret123','','Password shared between switch and RADIUS server. Must match on both sides exactly.');
+          h+=sel('dhcp_snoop','DHCP Snooping',[
+            {v:'yes',l:'Yes — block rogue DHCP servers on access ports'},
+            {v:'no',l:'No'},
+          ],'yes','Prevents anyone from plugging in a rogue DHCP server that could hand out wrong IPs or redirect traffic. Only the trunk/uplink port is trusted for DHCP. Essential on access switches.');
+          h+=sel('dai','Dynamic ARP Inspection (DAI)',[
+            {v:'yes',l:'Yes — prevent ARP spoofing attacks'},
+            {v:'no',l:'No'},
+          ],'yes','ARP spoofing lets an attacker intercept traffic by claiming to be the default gateway. DAI validates ARP packets against the DHCP snooping table — if the MAC/IP pair doesn\'t match, the ARP is dropped. Requires DHCP Snooping enabled first.');
+        }
+        if(swType==='router'){
+          h+=sel('acl_wan','Apply inbound ACL on WAN interface',[
+            {v:'yes',l:'Yes — deny unsolicited inbound traffic from WAN'},
+            {v:'no',l:'No ACL on WAN'},
+          ],'yes','An inbound ACL on the WAN interface blocks unsolicited traffic from the internet before it reaches the router. Permits established connections (return traffic) but drops new connections from outside. Basic but important perimeter protection.');
+        }
+      }
+      h+=sel('ssh_only','Remote access: SSH only or allow Telnet',[
+        {v:'yes',l:'SSH only — Telnet disabled (required for production)'},
+        {v:'no',l:'SSH + Telnet — lab only, never in production'},
+      ],'yes','Telnet sends everything including passwords in plain text. Anyone sniffing the network segment can read your credentials. SSH encrypts the entire session with strong cryptography. Always disable Telnet.');
+      h+=sel('banner','Login Banner',[
+        {v:'yes',l:'Yes — display legal warning before login'},
+        {v:'no',l:'No banner'},
+      ],'yes','A legal notice displayed before the login prompt. Required by ISO 27001, PCI-DSS and many other frameworks. Courts have ruled that a warning banner strengthens legal standing against intruders — and that "Welcome" messages can weaken it.');
+      h+=txt('banner_text','Banner Message',
+        'AUTHORIZED ACCESS ONLY\nUnauthorized access is prohibited.',
+        'AUTHORIZED ACCESS ONLY\nThis system is the property of [Your Company].\nUnauthorized access is strictly prohibited and will be prosecuted.\nAll activity on this system is monitored and logged.',
+        'Customize with your company name. Avoid "Welcome" — use warning language. Some organizations include a specific legal reference (e.g. Computer Misuse Act 1990).',4);
+    }
+
+    // ── OPTIONAL FEATURES (switches only) ───────────────────
+    if((swCfgType==='full'||swCfgType==='mgmt') && swType!=='router'){
+      h+=sec('📊 Optional Features');
+      if(swType==='switch'){
+        h+=sel('poe','Power over Ethernet (PoE)',[
+          {v:'no',l:'No — not a PoE switch'},
+          {v:'yes',l:'Yes — add PoE per-port config'},
+        ],'no','PoE delivers power over Ethernet to APs, IP phones, cameras. Requires a PoE-capable model (look for -P, -POE, -PWR in the model name). '+{cisco:'Cisco: power inline auto per port.',aruba:'Aruba: managed per-port.',juniper:'Juniper: poe interface command.',fortiswitch:'Configured in FortiGate PoE settings.'}[swVendor]);
+      }
+      h+=sel('stacking',stackLabel[swVendor],[
+        {v:'no',l:'No — standalone device'},
+        {v:'yes',l:'Yes — part of a stack'},
+      ],'no',stackHint[swVendor]);
+      h+=inp('stack_id','Stack Member ID','1','1','Unique ID for this unit in the stack. Use 1 for master/primary. Each member must have a unique ID.');
+      h+=sel('lldp','LLDP — Link Layer Discovery Protocol',[
+        {v:'yes',l:'Yes (recommended)'},
+        {v:'no',l:'No'},
+      ],'yes','IEEE 802.1AB standard. Devices announce themselves to neighbours — used by NMS for topology maps and by IP phones to learn VLAN assignment. '+{cisco:'Also enable CDP for Cisco-to-Cisco discovery.',aruba:'LLDP-MED extends it for VoIP.',juniper:'Standard on all Junos.',fortiswitch:'Default on FortiSwitch.'}[swVendor]);
+      h+=sel('snmp','SNMP v2c Monitoring',[
+        {v:'yes',l:'Yes — enable for NMS polling'},
+        {v:'no',l:'No'},
+      ],'yes','Allows PRTG, Zabbix, LibreNMS, SolarWinds to monitor interface stats, CPU, memory and receive alerts. SNMPv2c uses a community string as password. SNMPv3 (more secure) is recommended for production.');
+      h+=inp('snmp_community','SNMP Community String (Read-Only)','NetWolf-RO','NetWolf-RO','Read-only password for your NMS. Never use "public" or "private". Keep consistent across all devices.');
+      h+=inp('snmp_manager','NMS Server IP','10.0.0.5','','Only this IP can poll SNMP. Your monitoring server — PRTG, Zabbix, LibreNMS, SolarWinds.');
+    }
+
+    form.innerHTML=h;
+  }
+
+  function swGenerate(){
+    const out=document.getElementById('swCfgOutput');
+    if(!out) return;
+    const v=gv, hostname=v('hostname')||'SW-01', domain=v('domain')||'company.local';
+    const mgmtVlan=v('mgmt_vlan')||'10', mgmtIp=v('mgmt_ip'), mgmtMask=v('mgmt_mask')||'255.255.255.0', mgmtGw=v('mgmt_gw');
+    const ntp=v('ntp'), syslog=v('syslog'), enablePass=v('enable_pass')||'ChangeMe123!', sshUser=v('ssh_user')||'admin', sshPass=v('ssh_pass')||'ChangeMe123!';
+    const vlanList=v('vlan_list')||'10:Management,20:Users,30:Servers', accessPorts=v('access_ports'), accessVlan=v('access_vlan')||'20';
+    const trunkPorts=v('trunk_ports'), trunkAllowed=v('trunk_allowed')||'10,20,30', nativeVlan=v('native_vlan')||'1';
+    const defRoute=v('default_route'), routingProto=v('routing_proto')||'static';
+    const ospfId=v('ospf_id')||'1', ospfArea=v('ospf_area')||'0', ospfNets=v('ospf_nets');
+    const bgpAsn=v('bgp_asn'), bgpPeer=v('bgp_peer');
+    const portfast=v('portfast')||'yes', dot1x=v('dot1x')||'no', radiusIp=v('radius_ip'), radiusKey=v('radius_key');
+    const dhcpSnoop=v('dhcp_snoop')||'yes', dai=v('dai')||'yes', sshOnly=v('ssh_only')||'yes', banner=v('banner')||'yes';
+    const bannerText=v('banner_text')||'AUTHORIZED ACCESS ONLY\nThis system is monitored. Unauthorized access is prohibited.';
+    const poe=v('poe')||'no', stacking=v('stacking')||'no', stackId=v('stack_id')||'1';
+    const lldp=v('lldp')||'yes', snmp=v('snmp')||'yes', snmpComm=v('snmp_community')||'NetWolf-RO', snmpMgr=v('snmp_manager');
+    // Router-specific fields
+    const wanInterface=v('wan_interface'), wanIp=v('wan_ip'), wanMask=v('wan_mask')||'255.255.255.252', wanGw=v('wan_gw');
+    const lanInterface=v('lan_interface'), lanIp=v('lan_ip'), lanMask=v('lan_mask')||'255.255.255.0';
+    const nat=v('nat')||'yes', routerOnStick=v('router_on_stick')||'no';
+    const aclWan=v('acl_wan')||'yes';
+    // Core-specific fields
+    const vlanGateways=v('vlan_gateways'), stpRoot=v('stp_root')||'yes', stpVlans=v('stp_vlans')||'10,20,30,40';
+    // Voice VLAN (access switch)
+    const voiceVlan=v('voice_vlan');
+
+    // Parse VLANs — sanitize names for CLI compatibility
+    const vlans=(vlanList||'').split(',').map(s=>{
+      const parts=(s.trim()).split(':');
+      const id=(parts[0]||'').trim();
+      const name=(parts[1]||id||'').trim().replace(/[^a-zA-Z0-9_-]/g,'-');
+      return {id,name};
+    }).filter(vl=>vl.id&&/^\d+$/.test(vl.id)&&parseInt(vl.id)>=1&&parseInt(vl.id)<=4094);
+
+    let cfg='';
+
+    if(swVendor==='cisco'){
+      cfg+=`! ═══════════════════════════════════════════════
+! Cisco IOS/IOS-XE — Generated by NetWolf
+! Device: ${hostname} | Type: ${swType==='switch'?'Access Switch':swType==='core'?'Core/Distribution Switch':'Router'}
+! ═══════════════════════════════════════════════
+
+! ── GLOBAL SETTINGS ──────────────────────────
+hostname ${hostname}
+ip domain-name ${domain}
+service password-encryption
+service timestamps log datetime msec
+service timestamps debug datetime msec
+no ip http server
+no ip http secure-server
+${banner==='yes'?`banner motd ^
+${bannerText}
+^`:''}
+
+! ── LOCAL USER & AUTHENTICATION ──────────────
+username ${sshUser||'admin'} privilege 15 secret 0 ${sshPass||'ChangeMe123!'}
+enable secret 0 ${enablePass||'ChangeMe123!'}
+aaa new-model
+aaa authentication login default local
+aaa authorization exec default local
+`;
+
+      if(swCfgType==='full'||swCfgType==='vlan'){
+        if(swType==='router'){
+          // Router: WAN + LAN physical interfaces
+          cfg+=`\n! ── WAN INTERFACE ────────────────────────────\n`;
+          if(wanInterface){
+            cfg+=`interface ${wanInterface}\n description WAN-TO-ISP\n`;
+            if(wanIp) cfg+=` ip address ${wanIp} ${wanMask}\n`;
+            else cfg+=` ip address dhcp\n`;
+            if(nat==='yes') cfg+=` ip nat outside\n`;
+            cfg+=` no shutdown\n!\n`;
+          }
+          cfg+=`\n! ── LAN INTERFACE ────────────────────────────\n`;
+          if(lanInterface&&routerOnStick!=='yes'){
+            cfg+=`interface ${lanInterface}\n description LAN-TO-SWITCH\n ip address ${lanIp||'192.168.1.1'} ${lanMask}\n`;
+            if(nat==='yes') cfg+=` ip nat inside\n`;
+            cfg+=` no shutdown\n!\n`;
+          } else if(lanInterface&&routerOnStick==='yes'){
+            // Router-on-a-stick subinterfaces
+            cfg+=`interface ${lanInterface}\n description TRUNK-TO-SWITCH\n no shutdown\n!\n`;
+            vlans.forEach(vl=>{
+              cfg+=`interface ${lanInterface}.${vl.id}\n description ${vl.name.toUpperCase()}-SUBINT\n encapsulation dot1Q ${vl.id}${vl.id===mgmtVlan?' native':''}\n ip address <IP_FOR_VLAN_${vl.id}> ${lanMask}\n`;
+              if(nat==='yes') cfg+=` ip nat inside\n`;
+              cfg+=` no shutdown\n!\n`;
+            });
+          }
+          // NAT/PAT
+          if(nat==='yes'&&wanInterface){
+            cfg+=`\n! ── NAT (PAT/OVERLOAD) ───────────────────────\nip nat inside source list NAT-ACL interface ${wanInterface} overload\n!\nip access-list standard NAT-ACL\n permit ${lanIp?lanIp.split('.').slice(0,3).join('.')+'.0':'192.168.1.0'} 0.0.0.255\n!\n`;
+          }
+          // WAN ACL
+          if(aclWan==='yes'&&wanInterface){
+            cfg+=`\n! ── WAN INBOUND ACL ──────────────────────────\nip access-list extended WAN-IN\n permit icmp any any echo-reply\n permit tcp any any established\n deny   ip any any log\n!\ninterface ${wanInterface}\n ip access-group WAN-IN in\n!\n`;
+          }
+        } else if(swType==='core'){
+          // Core: VLANs with individual gateway IPs
+          cfg+=`\n! ── VLANs ────────────────────────────────────\n`;
+          vlans.forEach(vl=>{cfg+=`vlan ${vl.id}\n name ${vl.name}\n!\n`;});
+          // Parse VLAN gateways
+          const gwMap={};
+          (vlanGateways||'').split(',').forEach(s=>{
+            const [id,ip]=(s.trim()).split(':');
+            if(id&&ip) gwMap[id.trim()]=ip.trim();
+          });
+          cfg+=`\n! ── VLAN INTERFACES (Inter-VLAN routing) ────\nip routing\n`;
+          vlans.forEach(vl=>{
+            const ip=gwMap[vl.id]||(vl.id===mgmtVlan?mgmtIp:null);
+            cfg+=`interface vlan ${vl.id}\n description ${vl.name.toUpperCase()}-GW\n${ip?` ip address ${ip} ${mgmtMask}`:'! ip address <GW_IP_FOR_VLAN_'+vl.id+'> <MASK>'}\n no shutdown\n!\n`;
+          });
+          // Uplinks to access switches
+          if(trunkPorts){
+            cfg+=`\n! ── UPLINK TRUNKS (to access switches) ──────\ninterface ${trunkPorts}\n description UPLINK-TO-ACCESS\n switchport mode trunk\n switchport trunk encapsulation dot1q\n switchport trunk allowed vlan ${trunkAllowed||'10,20,30,40'}\n no shutdown\n!\n`;
+          }
+          // STP root
+          if(stpRoot==='yes'){
+            cfg+=`\n! ── STP ROOT BRIDGE ──────────────────────────\n`;
+            (stpVlans||'10,20,30,40').split(',').forEach(vid=>{
+              cfg+=`spanning-tree vlan ${vid.trim()} root primary\n`;
+            });
+            cfg+=`! Or manually: spanning-tree vlan <ID> priority 4096\n!\n`;
+          }
+        } else {
+          // Access switch
+          cfg+=`\n! ── VLANs ────────────────────────────────────\n`;
+          vlans.forEach(vl=>{cfg+=`vlan ${vl.id}\n name ${vl.name}\n!\n`;});
+          if(accessPorts){
+            cfg+=`\n! ── ACCESS PORTS ─────────────────────────────\ninterface range ${accessPorts}\n description ACCESS-VLAN${accessVlan}-USERS\n switchport mode access\n switchport access vlan ${accessVlan}\n`;
+            if(voiceVlan) cfg+=` switchport voice vlan ${voiceVlan}\n`;
+            cfg+=` switchport nonegotiate\n`;
+            if(portfast==='yes') cfg+=` spanning-tree portfast\n spanning-tree bpduguard enable\n`;
+            if(poe==='yes') cfg+=` power inline auto\n`;
+            cfg+=` no shutdown\n!\n`;
+          }
+          if(trunkPorts){
+            cfg+=`\n! ── TRUNK PORT (uplink to core) ──────────────\ninterface ${trunkPorts}\n description UPLINK-TO-CORE\n switchport mode trunk\n switchport trunk encapsulation dot1q\n switchport trunk allowed vlan ${trunkAllowed||'10,20,30,40'}\n switchport trunk native vlan ${nativeVlan}\n switchport nonegotiate\n no shutdown\n!\n`;
+          }
+          // Management SVI
+          cfg+=`\n! ── MANAGEMENT SVI ───────────────────────────\ninterface vlan ${mgmtVlan}\n description MANAGEMENT\n${mgmtIp?` ip address ${mgmtIp} ${mgmtMask}`:'! ip address <MGMT_IP> <MASK>'}\n no shutdown\n!\n`;
+          if(defRoute) cfg+=`ip default-gateway ${defRoute}\n`;
+        }
+      }
+
+      if(swCfgType==='full'||swCfgType==='routing'){
+        if(swType==='router'||swType==='core'){
+          if(swType==='router') cfg+=`\n! ── ROUTING ──────────────────────────────────\nip routing\n`;
+          // Default route
+          const dr=swType==='router'?wanGw:defRoute;
+          if(dr) cfg+=`ip route 0.0.0.0 0.0.0.0 ${dr}\n`;
+          if(routingProto==='ospf'){
+            cfg+=`router ospf ${ospfId}\n router-id ${mgmtIp||'10.0.0.1'}\n`;
+            (ospfNets||'').split(',').forEach(n=>{
+              const [net,prefix]=(n.trim()).split('/');
+              const wild=prefix?cidrToWild(parseInt(prefix)):'0.0.0.255';
+              cfg+=` network ${net||'192.168.0.0'} ${wild} area ${ospfArea}\n`;
+            });
+            cfg+=` passive-interface default\n no passive-interface ${trunkPorts||wanInterface||'GigabitEthernet0/1'}\n auto-cost reference-bandwidth 10000\n!\n`;
+          }
+          if(routingProto==='eigrp'){
+            cfg+=`router eigrp 100\n router-id ${mgmtIp||'10.0.0.1'}\n`;
+            (ospfNets||'').split(',').forEach(n=>{
+              const [net]=n.trim().split('/');
+              cfg+=` network ${net||'192.168.0.0'} 0.0.0.255\n`;
+            });
+            cfg+=` no auto-summary\n!\n`;
+          }
+          if(routingProto==='bgp'&&bgpAsn){
+            const [peerIp,peerAsn]=(bgpPeer||'203.0.113.1:65000').split(':');
+            cfg+=`router bgp ${bgpAsn}\n bgp router-id ${mgmtIp||'10.0.0.1'}\n bgp log-neighbor-changes\n neighbor ${peerIp} remote-as ${peerAsn||'65000'}\n!\n`;
+          }
+          if(routingProto==='rip'){
+            cfg+=`router rip\n version 2\n no auto-summary\n`;
+            (ospfNets||'').split(',').forEach(n=>{cfg+=` network ${(n.trim().split('/')[0])||'192.168.0.0'}\n`;});
+            cfg+=`!\n`;
+          }
+        }
+      }
+
+      if(swCfgType==='full'||swCfgType==='security'){
+        cfg+=`
+! ── SECURITY ─────────────────────────────────
+no cdp run
+`;
+        if(dhcpSnoop==='yes'){
+          cfg+=`ip dhcp snooping\n`;
+          vlans.filter(vl=>vl.id!==mgmtVlan).forEach(vl=>cfg+=`ip dhcp snooping vlan ${vl.id}\n`);
+          if(trunkPorts) cfg+=`interface ${trunkPorts}\n ip dhcp snooping trust\n!\n`;
+        }
+        if(dai==='yes'){
+          vlans.filter(vl=>vl.id!==mgmtVlan).forEach(vl=>cfg+=`ip arp inspection vlan ${vl.id}\n`);
+          if(trunkPorts) cfg+=`interface ${trunkPorts}\n ip arp inspection trust\n!\n`;
+        }
+        if(dot1x==='yes'&&radiusIp){
+          cfg+=`\naaa authentication dot1x default group radius local
+dot1x system-auth-control
+radius server RADIUS-SRV
+ address ipv4 ${radiusIp} auth-port 1812 acct-port 1813
+ key ${radiusKey||'secret'}
+!\n`;
+          if(accessPorts) cfg+=`interface range ${accessPorts}\n authentication port-control auto\n dot1x pae authenticator\n!\n`;
+        }
+      }
+
+      if(swCfgType==='full'||swCfgType==='mgmt'){
+        cfg+=`
+! ── MANAGEMENT ACCESS ────────────────────────
+crypto key generate rsa modulus 2048
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 3
+!\nline vty 0 15\n login authentication default\n${sshOnly==='yes'?' transport input ssh':' transport input ssh telnet'}\n exec-timeout 15 0\n logging synchronous\n!\nline console 0\n login authentication default\n exec-timeout 15 0\n logging synchronous\n!\n`;
+
+        if(ntp) cfg+=`\nntp server ${ntp}\n`;
+        if(syslog) cfg+=`logging host ${syslog}\nlogging trap informational\n`;
+
+        if(snmp==='yes'){
+          cfg+=`\nsnmp-server community ${snmpComm} RO\n`;
+          if(snmpMgr) cfg+=`snmp-server host ${snmpMgr} traps version 2c ${snmpComm}\n`;
+          cfg+=`snmp-server enable traps\n`;
+        }
+        if(lldp==='yes') cfg+=`\nlldp run\n`;
+
+        if(stacking==='yes'){
+          cfg+=`\n! ── STACKING (StackWise) ─────────────────────\n! Replace <MODEL> with your actual model (e.g. C9300-48P, C9300-24P)\nswitch ${stackId} provision <MODEL>\n! After stacking cable connected, verify with: show switch\n`;
+        }
+      }
+
+      cfg+=`\n! ── SAVE ─────────────────────────────────────\n! Run: write memory  (or: copy running-config startup-config)\n! ═══════════════════════════════════════════════\n! End of config — ${hostname}\n! Generated by NetWolf SW/Router Config Generator\n! ═══════════════════════════════════════════════\n`;
+
+    } else if(swVendor==='aruba'){
+      cfg+=`# ═══════════════════════════════════════════════
+# Aruba AOS-CX — Generated by NetWolf
+# Device: ${hostname} | Type: ${swType==='switch'?'Access Switch':swType==='core'?'Core/Distribution':'Router'}
+# ═══════════════════════════════════════════════
+
+hostname ${hostname}
+`;
+      if(banner==='yes') cfg+=`\nbanner motd "${bannerText}"\n`;
+
+      cfg+=`\n# ── LOCAL USER ────────────────────────────────\nuser ${sshUser||'admin'} password plaintext ${sshPass||'ChangeMe123!'} role administrators\n`;
+
+      if(swCfgType==='full'||swCfgType==='vlan'){
+        cfg+=`\n# ── VLANs ─────────────────────────────────────\n`;
+        vlans.forEach(vl=>{cfg+=`vlan ${vl.id}\n name ${vl.name}\n!\n`;});
+        if(swType!=='router'&&accessPorts){
+          cfg+=`\n# ── ACCESS PORTS ──────────────────────────────\ninterface ${accessPorts}\n no routing\n vlan access ${accessVlan}\n${portfast==='yes'?' spanning-tree bpdu-guard\n spanning-tree port-type admin-edge\n':''} ${poe==='yes'?'power-over-ethernet\n':''} no shutdown\n!\n`;
+        }
+        if(swType!=='router'&&trunkPorts){
+          cfg+=`\n# ── TRUNK PORTS ───────────────────────────────\ninterface ${trunkPorts}\n no routing\n vlan trunk native ${nativeVlan}\n vlan trunk allowed ${trunkAllowed||'10,20,30,40'}\n no shutdown\n!\n`;
+        }
+        cfg+=`\n# ── VLAN INTERFACES (SVIs) ────────────────────\n`;
+        vlans.forEach(vl=>{
+          cfg+=`interface vlan ${vl.id}\n description ${vl.name.toUpperCase()}\n${vl.id===mgmtVlan&&mgmtIp?` ip address ${mgmtIp}/${maskToCidr(mgmtMask)}`:'! ip address <IP/PREFIX>'}\n no shutdown\n!\n`;
+        });
+      }
+      if((swCfgType==='full'||swCfgType==='routing')&&(swType==='router'||swType==='core')){
+        cfg+=`\n# ── ROUTING ───────────────────────────────────\nip routing\n`;
+        if(defRoute) cfg+=`ip route 0.0.0.0/0 ${defRoute}\n`;
+        if(routingProto==='ospf'){
+          cfg+=`\nrouter ospf ${ospfId}\n router-id ${mgmtIp||'10.0.0.1'}\n`;
+          (ospfNets||'').split(',').forEach(n=>{
+            const [net,prefix]=(n.trim()).split('/');
+            cfg+=` network ${net||'192.168.0.0'}/${prefix||'24'} area ${ospfArea}\n`;
+          });
+          cfg+=`!\n`;
+        }
+        if(routingProto==='bgp'&&bgpAsn){
+          const [peerIp,peerAsn]=(bgpPeer||'203.0.113.1:65000').split(':');
+          cfg+=`\nrouter bgp ${bgpAsn}\n bgp router-id ${mgmtIp||'10.0.0.1'}\n neighbor ${peerIp} remote-as ${peerAsn||'65000'}\n!\n`;
+        }
+      } else if(swType==='switch'&&defRoute){
+        cfg+=`\n# Default gateway for management\nip route 0.0.0.0/0 ${defRoute}\n`;
+      }
+      if(swCfgType==='full'||swCfgType==='mgmt'){
+        cfg+=`\n# ── SSH & MANAGEMENT ──────────────────────────\nssh server-keygen\nssh max-auth-retries 3\n`;
+        if(ntp) cfg+=`ntp server ${ntp} prefer\n`;
+        if(syslog) cfg+=`logging ${syslog} severity informational\n`;
+        if(snmp==='yes'){
+          cfg+=`\nsnmp-server community ${snmpComm}\n`;
+          if(snmpMgr) cfg+=`snmp-server host ${snmpMgr} community ${snmpComm}\n`;
+        }
+        if(lldp==='yes') cfg+=`\nlldp enable\n`;
+        if(stacking==='yes') cfg+=`\n# ── STACKING (VSF) ────────────────────────────\nvsf member ${stackId}\n vsf member ${stackId} description "Stack-Member-${stackId}"\n!\n`;
+      }
+      cfg+=`\n# ── SAVE ──────────────────────────────────────\n# Run: write memory\n# ═══════════════════════════════════════════════\n# End of config — ${hostname}\n# Generated by NetWolf SW/Router Config Generator\n# ═══════════════════════════════════════════════\n`;
+
+    } else if(swVendor==='juniper'){
+      cfg+=`# ═══════════════════════════════════════════════
+# Juniper EX/QFX Junos (set format) — Generated by NetWolf
+# Device: ${hostname} | Type: ${swType}
+# Apply with: load set terminal  then paste, then: commit confirmed 5
+# ═══════════════════════════════════════════════
+set system host-name ${hostname}
+set system domain-name ${domain}
+set system root-authentication plain-text-password-value ${enablePass||'ChangeMe123!'}
+set system login user ${sshUser||'admin'} class super-user
+set system login user ${sshUser||'admin'} authentication plain-text-password-value ${sshPass||'ChangeMe123!'}
+set system services ssh protocol-version v2
+set system services ssh max-sessions-per-connection 4
+set system services netconf ssh
+`;
+      if(ntp) cfg+=`set system ntp server ${ntp}\n`;
+      if(syslog) cfg+=`set system syslog host ${syslog} any info\nset system syslog host ${syslog} log-prefix ${hostname}\n`;
+      cfg+=`set system syslog file messages any notice\n`;
+      if(banner==='yes') cfg+=`set system login message "${bannerText.replace(/\n/g,'\\n')}"\n`;
+
+      if(swCfgType==='full'||swCfgType==='vlan'){
+        cfg+=`\n# ── VLANs ─────────────────────────────────────\n`;
+        vlans.forEach(vl=>{
+          cfg+=`set vlans ${vl.name.replace(/\s+/g,'-')} vlan-id ${vl.id}\n`;
+          if(vl.id===mgmtVlan&&mgmtIp){
+            cfg+=`set vlans ${vl.name.replace(/\s+/g,'-')} l3-interface irb.${vl.id}\n`;
+            cfg+=`set interfaces irb unit ${vl.id} description ${vl.name.replace(/\s+/g,'-')}\n`;
+            cfg+=`set interfaces irb unit ${vl.id} family inet address ${mgmtIp}/${maskToCidr(mgmtMask)}\n`;
+          }
+        });
+        if(swType!=='router'&&accessPorts){
+          cfg+=`\n# ── ACCESS PORTS ──────────────────────────────\n`;
+          cfg+=`set interfaces ${accessPorts} unit 0 family ethernet-switching interface-mode access\n`;
+          cfg+=`set interfaces ${accessPorts} unit 0 family ethernet-switching vlan members ${accessVlan}\n`;
+          if(portfast==='yes'){
+            cfg+=`set protocols rstp interface ${accessPorts} edge\n`;
+            cfg+=`set protocols rstp interface ${accessPorts} no-root-port\n`;
+          }
+        }
+        if(swType!=='router'&&trunkPorts){
+          cfg+=`\n# ── TRUNK PORTS ───────────────────────────────\n`;
+          cfg+=`set interfaces ${trunkPorts} unit 0 family ethernet-switching interface-mode trunk\n`;
+          cfg+=`set interfaces ${trunkPorts} unit 0 family ethernet-switching vlan members [${(trunkAllowed||'10 20 30 40').replace(/,/g,' ')}]\n`;
+        }
+      }
+      if((swCfgType==='full'||swCfgType==='routing')&&(swType==='router'||swType==='core')){
+        cfg+=`\n# ── ROUTING ───────────────────────────────────\n`;
+        if(defRoute) cfg+=`set routing-options static route 0.0.0.0/0 next-hop ${defRoute}\n`;
+        if(routingProto==='ospf'){
+          if(mgmtIp) cfg+=`set routing-options router-id ${mgmtIp}\n`;
+          // Add all OSPF networks
+          (ospfNets||'').split(',').forEach(n=>{
+            const net=n.trim();
+            if(net) cfg+=`set protocols ospf area ${ospfArea} interface irb.${net.split('/')[0].split('.').slice(0,3).join('.')}\n`;
+          });
+          // Also add the management irb
+          cfg+=`set protocols ospf area ${ospfArea} interface irb.${mgmtVlan}\n`;
+        }
+        if(routingProto==='bgp'&&bgpAsn){
+          const [peerIp,peerAsn]=(bgpPeer||'203.0.113.1:65000').split(':');
+          cfg+=`set routing-options autonomous-system ${bgpAsn}\n`;
+          cfg+=`set protocols bgp group EBGP type external\n`;
+          cfg+=`set protocols bgp group EBGP neighbor ${peerIp} peer-as ${peerAsn||'65000'}\n`;
+          cfg+=`set protocols bgp group EBGP export EXPORT-POLICY\n`;
+        }
+      } else if(swType==='switch'&&defRoute){
+        cfg+=`\nset routing-options static route 0.0.0.0/0 next-hop ${defRoute}\n`;
+      }
+      if(swCfgType==='full'||swCfgType==='mgmt'){
+        if(snmp==='yes'){
+          cfg+=`\n# ── SNMP ──────────────────────────────────────\n`;
+          cfg+=`set snmp community ${snmpComm} authorization read-only\n`;
+          if(snmpMgr) cfg+=`set snmp trap-group MONITORS targets ${snmpMgr}\nset snmp trap-group MONITORS categories chassis\nset snmp trap-group MONITORS categories routing\n`;
+        }
+        if(lldp==='yes') cfg+=`\nset protocols lldp interface all\nset protocols lldp-med interface all\n`;
+        if(stacking==='yes'){
+          cfg+=`\n# ── VIRTUAL CHASSIS ───────────────────────────\nset virtual-chassis member ${stackId} role routing-engine\nset virtual-chassis member ${stackId} mastership-priority 128\n`;
+        }
+      }
+      cfg+=`\n# ── SAVE ──────────────────────────────────────\n# Run: commit confirmed 5  (gives 5 min to type: commit)\n# Or: commit  (permanent, make sure SSH still works first)\n# ═══════════════════════════════════════════════\n# End of config — ${hostname}\n# Generated by NetWolf SW/Router Config Generator\n# ═══════════════════════════════════════════════\n`;
+
+    } else if(swVendor==='fortiswitch'){
+      cfg+=`# ═══════════════════════════════════════════════
+# FortiSwitch CLI — Generated by NetWolf
+# Device: ${hostname}
+# NOTE: FortiSwitch is primarily managed via FortiLink (FortiGate GUI).
+# Use these CLI commands for standalone mode or initial setup only.
+# ═══════════════════════════════════════════════
+
+config system global
+  set hostname "${hostname}"
+  set admintimeout 30
+  set admin-ssh-port 22
+end
+
+# ── ADMIN ACCOUNT ─────────────────────────────
+config system admin
+  edit "${sshUser||'admin'}"
+    set password ${sshPass||'ChangeMe123!'}
+    set accprofile "super_admin"
+    set ssh-public-key1 ""
+  next
+end
+`;
+      if(banner==='yes') cfg+=`\nconfig system replacemsg admin "pre_admin-disclaimer"\n  set buffer "${bannerText.replace(/\n/g,'\\n')}"\nend\n`;
+
+      if(swCfgType==='full'||swCfgType==='vlan'){
+        cfg+=`\n# ── VLANs ─────────────────────────────────────\nconfig switch vlan\n`;
+        vlans.forEach(vl=>{cfg+=`  edit ${vl.id}\n    set name "${vl.name}"\n    set description "${vl.name}"\n  next\n`;});
+        cfg+=`end\n`;
+        if(accessPorts){
+          cfg+=`\n# ── PORT CONFIG ───────────────────────────────\nconfig switch interface\n  edit "${accessPorts}"\n    set native-vlan ${accessVlan}\n    set allowed-vlans ${trunkAllowed||accessVlan}\n    set stp-state enabled\n    set edge-port enabled\n`;
+          if(poe==='yes') cfg+=`    set poe-status enable\n    set poe-pre-standard-detect disable\n`;
+          cfg+=`  next\nend\n`;
+        }
+        if(trunkPorts){
+          cfg+=`\nconfig switch interface\n  edit "${trunkPorts}"\n    set native-vlan ${nativeVlan}\n    set allowed-vlans ${trunkAllowed||'10,20,30,40'}\n    set stp-state enabled\n    set description "TRUNK-UPLINK"\n  next\nend\n`;
+        }
+      }
+      if(swCfgType==='full'||swCfgType==='mgmt'){
+        cfg+=`\n# ── MANAGEMENT INTERFACE ──────────────────────\nconfig system interface\n  edit "mgmt"\n    set ip ${mgmtIp||'192.168.1.99'} ${mgmtMask}\n    set allowaccess https ssh ping\n    set description "Management"\n  next\nend\n`;
+        if(mgmtGw) cfg+=`\nconfig router static\n  edit 1\n    set dst 0.0.0.0 0.0.0.0\n    set gateway ${mgmtGw}\n    set device "mgmt"\n  next\nend\n`;
+        if(ntp) cfg+=`\nconfig system ntp\n  set ntpsync enable\n  set type custom\n  config ntpserver\n    edit 1\n      set server "${ntp}"\n    next\n  end\nend\n`;
+        if(syslog) cfg+=`\nconfig log syslogd setting\n  set status enable\n  set server "${syslog}"\n  set port 514\n  set facility local0\nend\n`;
+        if(snmp==='yes'){
+          cfg+=`\nconfig system snmp sysinfo\n  set status enable\n  set description "${hostname}"\nend\nconfig system snmp community\n  edit 1\n    set name "${snmpComm}"\n    config hosts\n      edit 1\n        set ip ${snmpMgr||'0.0.0.0'}\n      next\n    end\n  next\nend\n`;
+        }
+      }
+      if(swCfgType==='full'||swCfgType==='security'){
+        cfg+=`\n# ── SECURITY ──────────────────────────────────\nconfig switch security-feature\n  set macflood-thresh 2000\n  set arp-inspection enable\n  set dhcp-snooping enable\nend\n`;
+        if(dhcpSnoop==='yes'){
+          cfg+=`\n# Enable DHCP snooping per VLAN\nconfig switch vlan\n`;
+          vlans.filter(vl=>vl.id!==mgmtVlan).forEach(vl=>cfg+=`  edit ${vl.id}\n    set dhcp-snooping enable\n    set igmp-snooping enable\n  next\n`);
+          cfg+=`end\n`;
+        }
+      }
+      cfg+=`\n# ── SAVE ──────────────────────────────────────\n# Run: execute cfg save\n# ═══════════════════════════════════════════════\n# End of config — ${hostname}\n# Generated by NetWolf SW/Router Config Generator\n# ═══════════════════════════════════════════════\n`;
+    }
+
+    out.textContent=cfg;
+  }
+
+  function cidrToWild(prefix){
+    const mask=0xFFFFFFFF<<(32-prefix)>>>0;
+    const wild=~mask>>>0;
+    return [(wild>>>24)&0xFF,(wild>>>16)&0xFF,(wild>>>8)&0xFF,wild&0xFF].join('.');
+  }
+  function maskToCidr(mask){
+    if(!mask) return '24';
+    return mask.split('.').reduce((a,o)=>a+parseInt(o).toString(2).split('1').length-1,0);
+  }
+
+  window.swSetVendor=function(v,btn){
+    swVendor=v;
+    document.querySelectorAll('.swv-btn').forEach(b=>{b.style.background=b.dataset.v===v?'var(--a)':'var(--b3)';b.classList.toggle('active',b.dataset.v===v);});
+    buildForm();
+    document.getElementById('swCfgOutput').textContent='— Fill the form and click Generate —';
+    // Update download hint
+    const hint=document.getElementById('swDownloadHint');
+    const extMap={cisco:'<code>.ios</code> — Cisco IOS text config',aruba:'<code>.cfg</code> — Aruba AOS-CX config',juniper:'<code>.conf</code> — Junos set-format config',fortiswitch:'<code>.cfg</code> — FortiSwitch CLI config'};
+    if(hint) hint.innerHTML='💡 File format: '+extMap[v];
+  };
+  window.swSetType=function(t,btn){
+    swType=t;
+    document.querySelectorAll('.swt-btn').forEach(b=>{b.style.background=b.dataset.t===t?'var(--a)':'var(--b3)';b.classList.toggle('active',b.dataset.t===t);});
+    buildForm();document.getElementById('swCfgOutput').textContent='— Fill the form and click Generate —';
+  };
+  window.swSetCfg=function(c,btn){
+    swCfgType=c;
+    document.querySelectorAll('.swc-btn').forEach(b=>{b.style.background=b.dataset.c===c?'var(--a)':'var(--b3)';b.classList.toggle('active',b.dataset.c===c);});
+    buildForm();document.getElementById('swCfgOutput').textContent='— Fill the form and click Generate —';
+  };
+  window.swGenerate=swGenerate;
+  window.swCopy=function(){
+    const t=document.getElementById('swCfgOutput');
+    if(t) navigator.clipboard.writeText(t.textContent).then(()=>showToast('✅ Config copied to clipboard!'));
+  };
+  window.swDownload=function(){
+    const t=document.getElementById('swCfgOutput');
+    if(!t||t.textContent.startsWith('—')) return showToast('⚠️ Generate a config first');
+    const hostname=document.getElementById('sw_hostname')?.value||'device';
+    // File extension by vendor + type
+    const ext={cisco:{switch:'.ios',router:'.ios',core:'.ios'},aruba:{switch:'.cfg',router:'.cfg',core:'.cfg'},juniper:{switch:'.conf',router:'.conf',core:'.conf'},fortiswitch:{switch:'.cfg',router:'.cfg',core:'.cfg'}};
+    const vendorExt=(ext[swVendor]||ext.cisco)[swType]||'.txt';
+    const filename=`${hostname}_${swVendor}_${swType}${vendorExt}`;
+    const blob=new Blob([t.textContent],{type:'text/plain'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=filename;a.click();
+    URL.revokeObjectURL(url);
+    showToast(`✅ Downloaded: ${filename}`);
+  };
+
+  buildForm();
+}
+
 function initSidebar(){
   let sidebar=document.querySelector('.sidebar');
   let categories=[
@@ -11156,7 +11979,7 @@ function initSidebar(){
     {section:"AI Tools",items:["freeai","ai","claudechat"]},
     {section:"Cloud Learning",items:["azure"]},
     {section:"Reference",items:["ref","multivendor","hwref","devices"]},
-    {section:"Builders & Utilities",items:["psmaker","topology","cfggen","cfgmigrate","labsetup","security","liveconnect","emailgen"]},
+    {section:"Builders & Utilities",items:["psmaker","topology","cfggen","swcfg","cfgmigrate","labsetup","security","liveconnect","emailgen"]},
     {section:"Config Guides",items:["cfg-init","cfg-vdom","cfg-ipsec","cfg-sslvpn","cfg-sdwan","cfg-ha","cfg-intervdom","cfg-portfwd","cfg-ospfbgp","cfg-sec","cfg-fortiswitch","cfg-ztna","cfg-netflow"]}
   ];
   let labelMap={
@@ -11181,7 +12004,7 @@ function initSidebar(){
     masking:"🕶️ IP Masking",bulkAnon:"🧹 Bulk Anonymizer",freeai:"✨ AI Analyzer",
     ai:"💬 AI Assistant",claudechat:"🧠 Claude Chat",ref:"📚 Quick Reference",multivendor:"🔁 Multi-Vendor CLI",
     hwref:"🧱 Hardware Reference",devices:"🖥️ Device Catalog",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
-    cfggen:"🧩 Config Generator",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
+    cfggen:"🧩 Config Generator",swcfg:"🔧 SW/Router Config",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
     security:"🛡️ Security & Privacy",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
     azure:"☁️ Azure Scripting"
   };
