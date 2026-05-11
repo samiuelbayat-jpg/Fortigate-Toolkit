@@ -129,7 +129,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .tab.active .tab-icon{transform:scale(1.08);filter:saturate(1.15)}
 .tab-lbl{font-size:10px;color:inherit;font-family:var(--mono);letter-spacing:0}
 .tab.active .tab-lbl{color:var(--t)}
-.content{flex:1;overflow-y:auto;padding:16px;min-height:0;background:var(--contentBg);background-size:var(--wallSize);display:flex;flex-direction:column}
+.content{flex:1;overflow-y:auto;padding:16px;min-height:0;background:var(--contentBg);background-size:var(--wallSize)}
 .sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .stitle{font-size:15px;font-weight:700;color:var(--t)}
 .sev{font-size:11px;padding:3px 9px;border-radius:4px;font-weight:600}
@@ -157,7 +157,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .cbadge.caution{background:rgba(210,153,34,.15);color:#d29922;border:1px solid rgba(210,153,34,.3)}
 .copybtn{font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;border:1px solid var(--br);background:var(--b3);color:var(--t2);transition:all .1s}
 .copybtn:hover{border-color:var(--a);color:var(--a)}
-.messages{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;height:0}
+.messages{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;height:calc(100vh - 320px);min-height:200px}
 .msg{display:flex;gap:10px;align-items:flex-start}
 .msg.user{flex-direction:row-reverse}
 .av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
@@ -310,7 +310,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 
   /* Content — full width */
   .main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
-  .content{flex:1;overflow-y:auto;padding:12px;min-height:0;display:flex;flex-direction:column}
+  .content{flex:1;overflow-y:auto;padding:12px;min-height:0}
 
   /* Steps — full width */
   .cblock{margin-bottom:8px}
@@ -4412,7 +4412,7 @@ function renderAI(el){
 
   const placeholder = aiChatMode==='free' ? 'Ask anything — networking, Linux, Windows, general IT...' : 'Ask about FortiGate or '+((D[cur]&&D[cur].t)||'current category')+'...';
 
-  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;height:100%">'+provSelector+modeNotice+privBanner+ipWarn+'<div class="messages" id="chatm">'+msgs+'</div>'+'<div class="irow"><input type="text" id="chi" placeholder="'+placeholder+'" /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div></div>';
+  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">'+provSelector+modeNotice+privBanner+ipWarn+'<div class="messages" id="chatm">'+msgs+'</div>'+'<div class="irow"><input type="text" id="chi" placeholder="'+placeholder+'" /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div></div>';
 
   // Wire input events cleanly — no inline handlers
   const chiEl=document.getElementById('chi');
@@ -4475,7 +4475,7 @@ function renderClaudeChat(el){
     +'<span>⚠️</span><span>Messages sent to <strong>Anthropic Claude API</strong>. Avoid real IPs or credentials — use '
     +'<span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'bulkAnon\')">📋 Bulk Anonymizer</span> first.</span></div>';
 
-  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;height:100%">'
+  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">'
     +modelPill+privBanner
     +'<div class="messages" id="cchatm">'+msgs+'</div>'
     +'<div class="irow"><input type="text" id="cci" placeholder="Ask Claude anything..." '+(claudeChatLoading?'disabled':'')+'/>'
