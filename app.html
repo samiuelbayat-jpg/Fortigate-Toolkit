@@ -849,6 +849,16 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 
           </div>
         </div>
+
+        <div class="tab-group">
+          <div class="tab-group-label">Devices</div>
+          <div class="tab-group-btns">
+            <button class="tab" onclick="stab('devices')" id="tab-devices" title="Network Device Catalog">
+              <span class="tab-icon">🖥️</span><span class="tab-lbl">Catalog</span>
+            </button>
+          </div>
+        </div>
+
       </div>
       <div class="content" id="mc"></div>
     </div>
@@ -4220,7 +4230,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -10734,9 +10744,9 @@ function renderHWRef(el){
       .hw-tier-hdr{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px 10px 0 0;font-size:13px;font-weight:700}
       .hw-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;padding:12px 0}
       .hw-card{background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;transition:all .2s;cursor:default}
-      .hw-card:hover{border-color:rgba(29,158,117,.4);transform:translateY(-2px)}
-      .hw-img{width:100%;height:130px;object-fit:contain;background:#010409;padding:12px;border-bottom:1px solid var(--br)}
-      .hw-img-ph{width:100%;height:130px;background:linear-gradient(135deg,#0a1628,#0d1f3c);border-bottom:1px solid var(--br);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px}
+      .hw-card:hover{border-color:rgba(29,158,117,.4);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.2)}
+      .hw-img{width:100%;height:140px;object-fit:contain;background:#010409;padding:12px;border-bottom:1px solid var(--br)}
+      .hw-img-ph{width:100%;height:140px;background:linear-gradient(135deg,#0a1628,#0d1f3c);border-bottom:1px solid var(--br);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px}
       .hw-body{padding:12px 14px}
       .hw-model{font-size:14px;font-weight:700;color:var(--t);font-family:var(--mono);margin-bottom:2px}
       .hw-nickname{font-size:11px;color:var(--a);margin-bottom:8px;font-weight:600}
@@ -10747,88 +10757,116 @@ function renderHWRef(el){
       .hw-spec-val{font-family:var(--mono);font-size:11px;color:var(--t);font-weight:600}
       .hw-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
       .hw-tag{font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.18);font-family:var(--mono)}
-      .hw-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+      .hw-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
       .hw-fbtn{font-size:11px;padding:5px 14px;border-radius:20px;border:1px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;transition:all .15s;font-family:var(--mono)}
       .hw-fbtn:hover,.hw-fbtn.active{background:var(--a);border-color:var(--a);color:#fff}
       .hw-search{flex:1;min-width:160px;background:var(--bg);border:1px solid var(--br);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--t);outline:none;font-family:var(--mono)}
       .hw-search:focus{border-color:var(--a)}
+      .hw-vendor-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+      .hw-vbtn{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:10px;border:2px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;font-size:12px;font-weight:600;transition:all .15s}
+      .hw-vbtn:hover{border-color:var(--a);color:var(--t)}
+      .hw-vbtn.active{border-color:var(--a);background:rgba(29,158,117,.1);color:var(--t)}
+      .hw-vbtn .vlogo{width:22px;height:22px;object-fit:contain;border-radius:3px}
     `;
     document.head.appendChild(s);
   }
 
-  const TIERS=[
-    {
-      id:'soho',label:'🏠 SOHO & Small Office',color:'rgba(88,166,255,.15)',border:'rgba(88,166,255,.3)',
-      desc:'Desktop form factor · Up to 25 users · Basic SD-WAN and security',
-      models:[
-        {model:'FortiGate 40F',nick:'The Branch Starter',fw:'5 Gbps',tp:'1 Gbps',ssl:'490 Mbps',ports:'5x GE RJ45',users:'Up to 25',form:'Desktop',npu:'SoC4',desc:'Entry-level desktop firewall ideal for small retail, home offices and micro-branches. Includes built-in SD-WAN, firewall, VPN and basic UTM in a compact fanless design.',tags:['Fanless','SD-WAN','SSL VPN','Desktop'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-40f.png'},
-        {model:'FortiGate 60F',nick:'The SMB Workhorse',fw:'10 Gbps',tp:'1.5 Gbps',ssl:'700 Mbps',ports:'10x GE RJ45 + 2x SFP',users:'Up to 50',form:'Desktop',npu:'SoC4',desc:'The most popular small business FortiGate. Combines firewall, SD-WAN, VPN and UTM in a single desktop unit. WiFi variant (61F) adds 802.11ac wireless.',tags:['Most popular SMB','WiFi option','SD-WAN','UTM'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-60f.png'},
-        {model:'FortiGate 80F',nick:'The Power Desktop',fw:'10 Gbps',tp:'1.5 Gbps',ssl:'1 Gbps',ports:'8x GE RJ45 + 2x SFP + 2x SFP bypass',users:'Up to 75',form:'Desktop',npu:'SoC4',desc:'Step up from the 60F with bypass interfaces for inline deployment. Adds hardware bypass for fail-open scenarios — ideal for ISP edge or inline security.',tags:['Bypass ports','Inline deployment','Desktop','SD-WAN'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-80f.png'},
-        {model:'FortiGate 90G',nick:'The New Generation',fw:'22 Gbps',tp:'2.2 Gbps',ssl:'2 Gbps',ports:'10x GE RJ45 + 2x SFP + 2x SFP bypass',users:'Up to 100',form:'Desktop',npu:'SoC5',desc:'Latest G-series replacing the 80F/90E. Uses new SoC5 chip for significantly higher threat protection throughput. Includes built-in 4G/5G readiness.',tags:['G-series','SoC5','5G ready','New model'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-90g.png'},
-      ]
-    },
-    {
-      id:'smb',label:'🏢 SMB & Branch Office',color:'rgba(29,158,117,.12)',border:'rgba(29,158,117,.3)',
-      desc:'1U rackmount · 50–500 users · Full UTM, HA support, 10GbE',
-      models:[
-        {model:'FortiGate 100F',nick:'The Rack Entry',fw:'20 Gbps',tp:'1.6 Gbps',ssl:'1 Gbps',ports:'22x GE RJ45 + 4x SFP + 2x SFP+',users:'Up to 200',form:'1U Rack',npu:'NP6lite',desc:'First rackmount model in the lineup. Suited for medium offices needing structured rack deployment with HA pair capability and 10GbE uplinks.',tags:['1U Rack','HA support','10GbE','NP6lite'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-100f.png'},
-        {model:'FortiGate 120G',nick:'The G-Series Branch',fw:'25 Gbps',tp:'3 Gbps',ssl:'2.5 Gbps',ports:'18x GE RJ45 + 4x SFP + 4x SFP+',users:'Up to 300',form:'1U Rack',npu:'NP7lite',desc:'New G-series branch model with NP7lite processor. Delivers significantly better threat protection throughput than the 100F at similar price point.',tags:['G-series','NP7lite','New model','HA'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-120g.png'},
-        {model:'FortiGate 200F',nick:'The Regional Office',fw:'27 Gbps',tp:'3 Gbps',ssl:'2 Gbps',ports:'18x GE RJ45 + 8x SFP + 4x SFP+',users:'Up to 500',form:'1U Rack',npu:'NP6',desc:'Popular mid-range model for regional offices and distributed enterprise branches. Full NP6 NPU offloading, dual power supply option, and high port density.',tags:['NP6','Dual PSU option','Regional office','High port density'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-200f.png'},
-        {model:'FortiGate 400F',nick:'The Campus Edge',fw:'65 Gbps',tp:'9.5 Gbps',ssl:'7.5 Gbps',ports:'16x GE RJ45 + 16x SFP + 4x SFP+ + 2x QSFP28',users:'Up to 1000',form:'1U Rack',npu:'NP7',desc:'High-performance model for campus edges and larger enterprises. NP7 NPU delivers carrier-grade throughput. First model with 100GbE QSFP28 uplinks.',tags:['NP7','100GbE','Campus edge','High throughput'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-400f.png'},
-      ]
-    },
-    {
-      id:'enterprise',label:'🏗️ Enterprise & Data Centre',color:'rgba(210,153,34,.1)',border:'rgba(210,153,34,.3)',
-      desc:'1U/2U rackmount · 1000+ users · Redundant PSU, 25/40/100GbE, VDOM',
-      models:[
-        {model:'FortiGate 600F',nick:'The Enterprise Firewall',fw:'125 Gbps',tp:'15 Gbps',ssl:'12 Gbps',ports:'18x GE RJ45 + 16x SFP + 4x SFP28 + 2x QSFP28',users:'Up to 2000',form:'1U Rack',npu:'NP7',desc:'Full enterprise-grade firewall with 25GbE SFP28 interfaces and 100GbE QSFP28 uplinks. Redundant PSU standard. Suited for large campus cores and internet edges.',tags:['25GbE','100GbE','Redundant PSU','NP7'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-600f.png'},
-        {model:'FortiGate 1000F',nick:'The DC Edge',fw:'400 Gbps',tp:'80 Gbps',ssl:'35 Gbps',ports:'16x 25GbE SFP28 + 4x 100GbE QSFP28 + management',users:'5000+',form:'2U Rack',npu:'NP7',desc:'Data centre edge firewall. Ultra-high throughput with NP7 hardware acceleration. Full VDOM support for multi-tenant environments. Dual redundant PSU standard.',tags:['Data Centre','400 Gbps','VDOM','Dual PSU'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-1000f.png'},
-        {model:'FortiGate 1800F',nick:'The Core Firewall',fw:'660 Gbps',tp:'200 Gbps',ssl:'50 Gbps',ports:'16x 25GbE SFP28 + 4x 100GbE QSFP28 + 2x 400GbE',users:'10000+',form:'2U Rack',npu:'NP7',desc:'High-end data centre core firewall. First model with 400GbE interfaces. Suited for large enterprise cores and carrier-grade deployments requiring maximum throughput.',tags:['400GbE','Core DC','NP7','Carrier grade'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-1800f.png'},
-        {model:'FortiGate 2600F',nick:'The Hyperscale',fw:'3 Tbps',tp:'500 Gbps',ssl:'100 Gbps',ports:'24x 100GbE QSFP28 + 2x 400GbE QSFP-DD',users:'50000+',form:'3U Rack',npu:'NP7',desc:'Hyperscale firewall for the largest enterprise and service provider environments. Terabit-scale throughput with NP7 acceleration. Built for carrier-grade internet edge.',tags:['3 Tbps','Hyperscale','Service provider','QSFP-DD'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-2600f.png'},
-      ]
-    },
-    {
-      id:'chassis',label:'🏭 Chassis & Ultra-Scale',color:'rgba(248,81,73,.1)',border:'rgba(248,81,73,.3)',
-      desc:'Multi-slot chassis · Carrier grade · Terabit throughput · Service provider',
-      models:[
-        {model:'FortiGate 3000F',nick:'The Service Provider Core',fw:'1.2 Tbps',tp:'300 Gbps',ssl:'100 Gbps',ports:'8x 100GbE QSFP28 + 4x 400GbE QSFP-DD',users:'100000+',form:'3U Rack',npu:'NP7',desc:'Top fixed-form-factor FortiGate. Used by large ISPs, cloud providers and mega-enterprise data centres. Built for internet transit and carrier-grade NAT at massive scale.',tags:['1.2 Tbps','Carrier NAT','CGNAT','Service provider'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-3000f.png'},
-        {model:'FortiGate 7121F',nick:'The Chassis King',fw:'2 Tbps+',tp:'400 Gbps+',ssl:'N/A',ports:'Up to 288x 100GbE per chassis',users:'Unlimited',form:'12-slot Chassis',npu:'NP7 blades',desc:'Largest chassis-based FortiGate. 12 slots for line cards and security processing blades. Used by tier-1 carriers, hyperscalers and national backbone networks. Modular and fully redundant.',tags:['Chassis','12-slot','Tier-1 ISP','Modular'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-7121f.png'},
-        {model:'FortiGate VM',nick:'The Cloud Firewall',fw:'Variable',tp:'Variable',ssl:'Variable',ports:'Up to 10 vNIC',users:'Variable',form:'Virtual Machine',npu:'Software',desc:'Software FortiGate for VMware, KVM, Hyper-V, AWS, Azure, GCP and OCI. Same FortiOS as hardware. Licensed by throughput (VM01 to VM32). Used for cloud security and lab environments.',tags:['VMware','AWS','Azure','GCP','Lab'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fortigate-vm.png'},
-      ]
-    },
+  /* ── FORTINET DATA ── */
+  const FORTI_TIERS=[
+    {id:'soho',label:'🏠 SOHO & Small Office',color:'rgba(88,166,255,.15)',border:'rgba(88,166,255,.3)',desc:'Desktop · Up to 50 users · Basic SD-WAN and UTM',models:[
+      {model:'FortiGate 40F',nick:'The Branch Starter',specs:{Firewall:'5 Gbps','Threat Prot.':'600 Mbps','SSL Insp.':'490 Mbps',Ports:'5x GE RJ45',Users:'Up to 25',Form:'Desktop',NPU:'SoC4'},desc:'Entry-level fanless desktop firewall for small retail and home offices. Built-in SD-WAN, VPN and basic UTM.',tags:['Fanless','SD-WAN','SSL VPN'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-40f.png'},
+      {model:'FortiGate 60F',nick:'The SMB Workhorse',specs:{Firewall:'10 Gbps','Threat Prot.':'1 Gbps','SSL Insp.':'700 Mbps',Ports:'10x GE + 2x SFP',Users:'Up to 50',Form:'Desktop',NPU:'SoC4'},desc:'Most popular small-business FortiGate. Single desktop unit with firewall, SD-WAN, VPN and UTM. WiFi variant available (61F).',tags:['Most popular','WiFi option','SD-WAN'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-60f.png'},
+      {model:'FortiGate 90G',nick:'The New Generation',specs:{Firewall:'22 Gbps','Threat Prot.':'2.2 Gbps','SSL Insp.':'2 Gbps',Ports:'10x GE + 2x SFP bypass',Users:'Up to 100',Form:'Desktop',NPU:'SoC5'},desc:'Latest G-series with SoC5 chip. Significantly higher threat protection throughput. 5G modem ready.',tags:['G-series','SoC5','5G ready'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-90g.png'},
+    ]},
+    {id:'smb',label:'🏢 SMB & Branch',color:'rgba(29,158,117,.12)',border:'rgba(29,158,117,.3)',desc:'1U rack · 50–500 users · Full UTM, HA, 10GbE',models:[
+      {model:'FortiGate 100F',nick:'The Rack Entry',specs:{Firewall:'20 Gbps','Threat Prot.':'1.6 Gbps','SSL Insp.':'1 Gbps',Ports:'22x GE + 4x SFP + 2x SFP+',Users:'Up to 200',Form:'1U Rack',NPU:'NP6lite'},desc:'First rackmount model. Medium offices with HA capability and 10GbE uplinks.',tags:['1U Rack','HA','10GbE','NP6lite'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-100f.png'},
+      {model:'FortiGate 200F',nick:'The Regional Office',specs:{Firewall:'27 Gbps','Threat Prot.':'3 Gbps','SSL Insp.':'2 Gbps',Ports:'18x GE + 8x SFP + 4x SFP+',Users:'Up to 500',Form:'1U Rack',NPU:'NP6'},desc:'Popular mid-range for regional offices. Full NP6 NPU offload, dual PSU option, high port density.',tags:['NP6','Dual PSU','High ports'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-200f.png'},
+      {model:'FortiGate 400F',nick:'The Campus Edge',specs:{Firewall:'65 Gbps','Threat Prot.':'9.5 Gbps','SSL Insp.':'7.5 Gbps',Ports:'16x GE + 16x SFP + 4x SFP+ + 2x QSFP28',Users:'Up to 1000',Form:'1U Rack',NPU:'NP7'},desc:'High-performance campus edge. NP7 NPU with 100GbE QSFP28 uplinks. First NP7 in mid-range.',tags:['NP7','100GbE','Campus edge'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-400f.png'},
+    ]},
+    {id:'enterprise',label:'🏗️ Enterprise & DC',color:'rgba(210,153,34,.1)',border:'rgba(210,153,34,.3)',desc:'1U/2U rack · 1000+ users · Redundant PSU, 25/100GbE',models:[
+      {model:'FortiGate 600F',nick:'The Enterprise Firewall',specs:{Firewall:'125 Gbps','Threat Prot.':'15 Gbps','SSL Insp.':'12 Gbps',Ports:'18x GE + 16x SFP + 4x SFP28 + 2x QSFP28',Users:'Up to 2000',Form:'1U Rack',NPU:'NP7'},desc:'Full enterprise firewall with 25GbE SFP28 and 100GbE uplinks. Redundant PSU standard. Large campus cores.',tags:['25GbE','100GbE','Redundant PSU'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-600f.png'},
+      {model:'FortiGate 1000F',nick:'The DC Edge',specs:{Firewall:'400 Gbps','Threat Prot.':'80 Gbps','SSL Insp.':'35 Gbps',Ports:'16x 25GbE + 4x 100GbE + mgmt',Users:'5000+',Form:'2U Rack',NPU:'NP7'},desc:'Data centre edge firewall. Ultra-high throughput with NP7. Full VDOM multi-tenancy. Dual PSU standard.',tags:['Data Centre','400 Gbps','VDOM'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-1000f.png'},
+      {model:'FortiGate VM',nick:'The Cloud Firewall',specs:{Firewall:'Variable','Threat Prot.':'Variable','SSL Insp.':'Variable',Ports:'Up to 10 vNIC',Users:'Variable',Form:'Virtual Machine',NPU:'Software'},desc:'Same FortiOS as hardware. Runs on VMware, KVM, Hyper-V, AWS, Azure, GCP and OCI. Licensed by throughput.',tags:['VMware','AWS','Azure','Lab'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fortigate-vm.png'},
+    ]},
   ];
 
-  const NAMING={
-    'E':'Previous generation (2016-2019)',
-    'F':'Current generation (2020-2023) — NP6/NP7 NPU',
-    'G':'Latest generation (2023+) — NP7/SoC5 NPU',
-    'W':'WiFi integrated',
-    'D':'PoE switch ports included',
-    'P':'PoE power sourcing',
+  /* ── CISCO DATA ── */
+  const CISCO_TIERS=[
+    {id:'access',label:'🔌 Access Layer Switches',color:'rgba(14,118,188,.15)',border:'rgba(14,118,188,.35)',desc:'Layer 2/3 · PoE · Stackable · Wiring closet deployments',models:[
+      {model:'Catalyst 9200L',nick:'The Entry Access',specs:{Ports:'24 or 48x GbE',Uplinks:'4x SFP+',PoE:'Up to 740W',Stacking:'DNA Center',Form:'1U Rack',Layer:'L2/L3'},desc:'Entry-level Catalyst 9K access switch. Fixed configuration, PoE+ support, VLAN, QoS, 802.1X. Managed via Cisco DNA Center or CLI.',tags:['PoE+','802.1X','DNA Center','Access'],img:'https://www.cisco.com/c/dam/en/us/products/collateral/switches/catalyst-9200-series-switches/nb-06-cat9200l-ser-data-sheet-cte-en.docx/_jcr_content/renditions/nb-06-cat9200l-ser-data-sheet-cte-en-600.jpg'},
+      {model:'Catalyst 9300',nick:'The Stackable Workhorse',specs:{Ports:'24 or 48x GbE',Uplinks:'4x SFP+',PoE:'Up to 1440W UPOE',Stacking:'StackWise-480 (480Gbps)',Form:'1U Rack',Layer:'L2/L3'},desc:'Most deployed access switch in enterprise. Full StackWise stacking, UPOE for 802.3bt, MACsec encryption, VXLAN support. The backbone of most enterprise access layers.',tags:['StackWise','UPOE','MACsec','Most popular'],img:'https://www.cisco.com/c/dam/en/us/products/switches/catalyst-9300-series-switches/index/01-cat9300-data-sheet-cte-en.pdf/_jcr_content/renditions/01-cat9300-data-sheet-cte-en-500.jpg'},
+      {model:'Catalyst 9400',nick:'The Modular Access',specs:{Ports:'Up to 96x GbE per module',Uplinks:'Modular supervisor',PoE:'Up to 3600W',Stacking:'VSS / StackWise Virtual',Form:'7-slot Chassis',Layer:'L2/L3'},desc:'Modular chassis access switch for large wiring closets. Hot-swappable modules, redundant supervisors, very high PoE budget for dense AP/phone deployments.',tags:['Chassis','Modular','PoE','Redundant Sup'],img:'https://www.cisco.com/c/dam/en/us/products/switches/catalyst-9400-series-switches/index/01-cat9400-series-data-sheet-cte-en.pdf/_jcr_content/renditions/01-cat9400-series-data-sheet-cte-en-500.jpg'},
+    ]},
+    {id:'distribution',label:'🔀 Distribution & Core Switches',color:'rgba(14,118,188,.1)',border:'rgba(14,118,188,.25)',desc:'Layer 3 · High throughput · OSPF/BGP · Campus aggregation',models:[
+      {model:'Catalyst 9500',nick:'The Campus Core',specs:{Ports:'24 or 48x 25GbE',Uplinks:'4x 100GbE QSFP28',Throughput:'Up to 6.4 Tbps',Stacking:'StackWise-480',Form:'1U Rack',Layer:'L3'},desc:'High-performance fixed campus core/distribution switch. 25GbE downlinks, 100GbE uplinks, full L3 routing, MPLS, VxLAN. Often used as collapsed core.',tags:['25GbE','100GbE','Campus core','VXLAN'],img:'https://www.cisco.com/c/dam/en/us/products/switches/catalyst-9500-series-switches/index/01-cat9500-data-sheet-cte-en.pdf/_jcr_content/renditions/01-cat9500-data-sheet-cte-en-500.jpg'},
+      {model:'Nexus 9300-FX',nick:'The DC Top of Rack',specs:{Ports:'48x 25GbE SFP28',Uplinks:'6x 100GbE QSFP28',Throughput:'3.6 Tbps',VXLAN:'Full EVPN',Form:'1U Rack',Layer:'L2/L3'},desc:'Data centre top-of-rack switch. Cisco ACI or standalone NX-OS. Full VXLAN/EVPN fabric support. Used in spine-leaf DC architectures.',tags:['Data Centre','VXLAN','EVPN','ACI','NX-OS'],img:'https://www.cisco.com/c/dam/en/us/products/collateral/switches/nexus-9000-series-switches/datasheet-c78-736967.pdf/_jcr_content/renditions/datasheet-c78-736967-600.jpg'},
+      {model:'Catalyst 9600',nick:'The Modular Core',specs:{Ports:'Up to 400x 10GbE or 100x 100GbE',Uplinks:'Modular line cards',Throughput:'Up to 25.6 Tbps',Redundancy:'Dual Supervisor',Form:'10-slot Chassis',Layer:'L3'},desc:'Enterprise modular core switch. Fully redundant supervisors, hot-swappable line cards, sub-second failover. Scales to meet the largest campus cores.',tags:['Chassis','Modular','Redundant','Core'],img:'https://www.cisco.com/c/dam/en/us/products/switches/catalyst-9600-series-switches/index/01-cat9600-series-data-sheet-cte-en.pdf/_jcr_content/renditions/01-cat9600-series-data-sheet-cte-en-500.jpg'},
+    ]},
+    {id:'routers',label:'🌐 Cisco Routers',color:'rgba(14,118,188,.08)',border:'rgba(14,118,188,.2)',desc:'WAN edge · SD-WAN · Branch CPE · Internet edge',models:[
+      {model:'ISR 1100',nick:'The Branch CPE',specs:{WAN:'1x GbE or LTE',LAN:'4x GbE',Throughput:'Up to 400 Mbps','SD-WAN':'Viptela / Meraki',Form:'Desktop',OS:'IOS XE'},desc:'Entry-level integrated services router for small branches. Built-in Wi-Fi option, 4G/LTE WAN, SD-WAN support. The most common branch CPE in enterprise.',tags:['Branch CPE','LTE','SD-WAN','Desktop'],img:'https://www.cisco.com/c/dam/en/us/products/routers/1100-series-integrated-services-routers/index/01-isr-1100-series-data-sheet-cte-en.pdf/_jcr_content/renditions/01-isr-1100-series-data-sheet-cte-en-500.jpg'},
+      {model:'ISR 4451-X',nick:'The Mid Branch Router',specs:{WAN:'4x GbE WAN',LAN:'Modular NIM slots',Throughput:'Up to 2 Gbps','SD-WAN':'Viptela',Form:'1U Rack',OS:'IOS XE'},desc:'Mid-range branch router with NIM expansion slots for WAN interfaces (T1/E1, DSL, serial). SD-WAN, MPLS, BGP, QoS, security service modules.',tags:['NIM slots','MPLS','SD-WAN','1U'],img:'https://www.cisco.com/c/dam/en/us/products/routers/4000-series-integrated-services-routers/datasheet-c78-732460.pdf/_jcr_content/renditions/datasheet-c78-732460-600.jpg'},
+      {model:'ASR 1001-X',nick:'The WAN Edge',specs:{Throughput:'Up to 20 Gbps',Interfaces:'6x GbE + 2x SFP+',NAT:'Up to 4M sessions',HA:'Redundant PSU/fans',Form:'1U Rack',OS:'IOS XE'},desc:'Aggregation services router for WAN edge and internet edge. Hardware crypto acceleration, stateful NAT, MPLS, BGP, high-availability PSU/fans.',tags:['WAN Edge','NAT','MPLS','BGP','HA'],img:'https://www.cisco.com/c/dam/en/us/products/routers/asr-1000-series-aggregation-services-routers/datasheet-c78-731930.pdf/_jcr_content/renditions/datasheet-c78-731930-600.jpg'},
+    ]},
+  ];
+
+  /* ── HP/ARUBA DATA ── */
+  const ARUBA_TIERS=[
+    {id:'access',label:'🔌 Aruba Access Switches',color:'rgba(1,164,130,.15)',border:'rgba(1,164,130,.35)',desc:'CX series · AOS-CX · HPE ProCurve · Wiring closet',models:[
+      {model:'Aruba CX 6100',nick:'The Smart Access',specs:{Ports:'24 or 48x GbE',Uplinks:'4x SFP+',PoE:'Up to 740W',Management:'Central / CLI',Form:'1U Rack',Layer:'L2/L3'},desc:'Entry AOS-CX access switch. Python automation, REST API, VLAN, QoS, 802.1X. Managed via Aruba Central cloud or on-prem.',tags:['AOS-CX','802.1X','PoE+','Aruba Central'],img:'https://h20195.www2.hpe.com/v2/getpdf.aspx/a00112137enw.pdf'},
+      {model:'Aruba CX 6300',nick:'The Stackable Branch',specs:{Ports:'24 or 48x GbE',Uplinks:'4x 25GbE SFP28',PoE:'Up to 1440W',Stacking:'VSF (Virtual Switching Framework)',Form:'1U Rack',Layer:'L2/L3'},desc:'Mid-range enterprise access switch with VSF stacking (up to 8 units). 25GbE uplinks, MACsec, EVPN, VXLAN, Aruba Central management.',tags:['VSF stacking','25GbE','MACsec','VXLAN'],img:'https://h20195.www2.hpe.com/v2/getpdf.aspx/a00112139enw.pdf'},
+      {model:'Aruba CX 6400',nick:'The Modular Core',specs:{Ports:'Up to 96x GbE per module',Uplinks:'Up to 100GbE',PoE:'Up to 4200W',Redundancy:'Dual Management Module',Form:'5-slot Chassis',Layer:'L3'},desc:'Modular chassis for large wiring closets and distribution layer. Hot-swappable modules, redundant management, very high PoE budget for dense deployments.',tags:['Chassis','Modular','PoE','Redundant'],img:'https://h20195.www2.hpe.com/v2/getpdf.aspx/a00112140enw.pdf'},
+    ]},
+    {id:'core',label:'🏗️ Aruba Core / DC',color:'rgba(1,164,130,.1)',border:'rgba(1,164,130,.25)',desc:'Spine-leaf · EVPN · High throughput · Campus core',models:[
+      {model:'Aruba CX 8325',nick:'The Campus Core',specs:{Ports:'32x 100GbE QSFP28',Uplinks:'Integrated',Throughput:'6.4 Tbps',EVPN:'Full VXLAN/EVPN',Form:'1U Rack',Layer:'L3'},desc:'Top-of-rack and campus core switch. 100GbE density, full VXLAN/EVPN support for data centre fabric. Used as spine in Aruba CX fabric deployments.',tags:['100GbE','VXLAN','EVPN','Spine'],img:'https://h20195.www2.hpe.com/v2/getpdf.aspx/a00112142enw.pdf'},
+      {model:'Aruba CX 10000',nick:'The DC Distributed Services',specs:{Ports:'32x 400GbE QSFP-DD',Throughput:'25.6 Tbps',Routing:'Distributed stateful services',Form:'1U Rack',Layer:'L3'},desc:'The industry\'s first distributed services switch. Combines routing with stateful firewall services at 400GbE line rate. Powered by AMD Pensando DPU.',tags:['400GbE','DPU','Stateful FW','DC fabric'],img:'https://h20195.www2.hpe.com/v2/getpdf.aspx/a00124498enw.pdf'},
+    ]},
+  ];
+
+  /* ── JUNIPER DATA ── */
+  const JUNIPER_TIERS=[
+    {id:'access',label:'🔌 Juniper EX Series (Access)',color:'rgba(132,84,175,.15)',border:'rgba(132,84,175,.35)',desc:'EX series · Junos · Virtual Chassis stacking',models:[
+      {model:'EX2300',nick:'The Simple Access',specs:{Ports:'24 or 48x GbE',Uplinks:'4x SFP+',PoE:'Up to 740W',Stacking:'Virtual Chassis (4 units)',Form:'1U Rack',OS:'Junos'},desc:'Entry-level Junos access switch. Easy to deploy, Virtual Chassis stacking, PoE+, 802.1X, Juniper Mist AI management.',tags:['Virtual Chassis','Mist AI','802.1X','PoE+'],img:'https://www.juniper.net/assets/img/dm/EX2300-24P.png'},
+      {model:'EX4300',nick:'The Stackable Workhorse',specs:{Ports:'24 or 48x GbE',Uplinks:'4x 40GbE QSFP+',PoE:'Up to 1440W',Stacking:'Virtual Chassis (10 units)',Form:'1U Rack',OS:'Junos'},desc:'Most popular Juniper access switch. Virtual Chassis up to 10 units, 40GbE uplinks, MACsec, full L3 routing, widely used in enterprise environments.',tags:['Virtual Chassis','40GbE','MACsec','L3'],img:'https://www.juniper.net/assets/img/dm/EX4300-48MP.png'},
+      {model:'EX4650',nick:'The High-Density Access',specs:{Ports:'48x 25GbE SFP28',Uplinks:'8x 100GbE QSFP28',Throughput:'3.2 Tbps',Stacking:'Virtual Chassis',Form:'1U Rack',OS:'Junos'},desc:'High-performance access/aggregation switch with 25GbE downlinks and 100GbE uplinks. Suited for high-density server access or campus aggregation.',tags:['25GbE','100GbE','High density','Aggregation'],img:'https://www.juniper.net/assets/img/dm/EX4650-48Y-8C.png'},
+    ]},
+    {id:'core',label:'🌐 Juniper QFX / MX (Core & WAN)',color:'rgba(132,84,175,.1)',border:'rgba(132,84,175,.25)',desc:'QFX DC spine · MX WAN edge · EVPN · MPLS',models:[
+      {model:'QFX5120',nick:'The DC Spine/Leaf',specs:{Ports:'48x 25GbE or 32x 100GbE',Uplinks:'6x 100GbE QSFP28',Throughput:'3.2 Tbps',EVPN:'Full VXLAN/EVPN',Form:'1U Rack',OS:'Junos'},desc:'Data centre leaf/spine switch for IP fabric deployments. Full EVPN/VXLAN, MPLS, Juniper Apstra intent-based networking support.',tags:['DC fabric','EVPN','VXLAN','Apstra'],img:'https://www.juniper.net/assets/img/dm/QFX5120-48Y-8C.png'},
+      {model:'MX204',nick:'The Universal Edge',specs:{Throughput:'400 Gbps',Ports:'4x 100GbE + 8x 25GbE',MPLS:'Full label stack','BGP table':'Full Internet',Form:'1U Rack',OS:'Junos'},desc:'Universal routing platform for WAN edge, internet peering and carrier edge. Full BGP internet routing table, MPLS, segment routing. Used by ISPs and large enterprise WAN edges.',tags:['WAN Edge','MPLS','BGP','Segment Routing'],img:'https://www.juniper.net/assets/img/dm/MX204.png'},
+      {model:'MX480',nick:'The Service Provider Core',specs:{Throughput:'Up to 16 Tbps',Slots:'8x line card slots',MPLS:'Full','BGP table':'Full Internet',Form:'7U Chassis',OS:'Junos'},desc:'Mid-range MX chassis router. Used by ISPs for PE/P roles, carrier Ethernet, and large enterprise WAN. Modular line cards, redundant routing engines, hitless upgrades.',tags:['SP Core','Chassis','MPLS PE/P','Modular'],img:'https://www.juniper.net/assets/img/dm/MX480.png'},
+    ]},
+  ];
+
+  const VENDORS={
+    fortinet:{label:'🛡️ Fortinet',tiers:FORTI_TIERS,specKeys:['Firewall','Threat Prot.','SSL Insp.','Ports','Users','Form','NPU']},
+    cisco:{label:'🔵 Cisco',tiers:CISCO_TIERS,specKeys:['Ports','Uplinks','Throughput','Form','Layer','OS','PoE','SD-WAN','WAN','Stacking','Redundancy']},
+    aruba:{label:'🟢 HP/Aruba',tiers:ARUBA_TIERS,specKeys:['Ports','Uplinks','Throughput','Form','Layer','PoE','Stacking','Redundancy','Management']},
+    juniper:{label:'🟣 Juniper',tiers:JUNIPER_TIERS,specKeys:['Ports','Uplinks','Throughput','Form','OS','PoE','Stacking','EVPN','MPLS']},
   };
 
+  let activeVendor='fortinet';
   let activeTier='all';
   let searchTerm='';
 
-  function imgOrPlaceholder(model, imgUrl){
+  function imgCard(model,img,icon){
     return `<div class="hw-img-ph">
-      <span style="font-size:32px">🛡️</span>
-      <span style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.3)">${model}</span>
+      <span style="font-size:34px">${icon}</span>
+      <span style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.3)">${model}</span>
     </div>`;
-    // Using placeholder since external images may not load due to CORS
   }
 
   function buildCards(){
-    const cont = document.getElementById('hwCardContainer');
+    const cont=document.getElementById('hwCardContainer');
     if(!cont) return;
+    const v=VENDORS[activeVendor];
+    const icon={'fortinet':'🛡️','cisco':'🔵','aruba':'🟢','juniper':'🟣'}[activeVendor];
     let html='';
-    for(const tier of TIERS){
-      if(activeTier !== 'all' && activeTier !== tier.id) continue;
-      const models = tier.models.filter(m=>
-        !searchTerm ||
-        m.model.toLowerCase().includes(searchTerm) ||
-        m.nick.toLowerCase().includes(searchTerm) ||
-        m.desc.toLowerCase().includes(searchTerm) ||
+    for(const tier of v.tiers){
+      if(activeTier!=='all'&&activeTier!==tier.id) continue;
+      const models=tier.models.filter(m=>
+        !searchTerm||
+        m.model.toLowerCase().includes(searchTerm)||
+        m.nick.toLowerCase().includes(searchTerm)||
+        m.desc.toLowerCase().includes(searchTerm)||
         m.tags.some(t=>t.toLowerCase().includes(searchTerm))
       );
       if(!models.length) continue;
@@ -10840,18 +10878,15 @@ function renderHWRef(el){
         <div style="border:1px solid ${tier.border};border-top:none;border-radius:0 0 10px 10px;padding:12px">
           <div class="hw-cards">`;
       for(const m of models){
+        const specEntries=Object.entries(m.specs).slice(0,6);
         html+=`<div class="hw-card">
-          ${imgOrPlaceholder(m.model, m.img)}
+          ${imgCard(m.model,m.img,icon)}
           <div class="hw-body">
             <div class="hw-model">${m.model}</div>
             <div class="hw-nickname">${m.nick}</div>
             <div class="hw-desc">${m.desc}</div>
             <div class="hw-specs">
-              <div class="hw-spec"><span class="hw-spec-lbl">Firewall</span><span class="hw-spec-val">${m.fw}</span></div>
-              <div class="hw-spec"><span class="hw-spec-lbl">Threat Protection</span><span class="hw-spec-val">${m.tp}</span></div>
-              <div class="hw-spec"><span class="hw-spec-lbl">SSL Inspection</span><span class="hw-spec-val">${m.ssl}</span></div>
-              <div class="hw-spec"><span class="hw-spec-lbl">Form Factor</span><span class="hw-spec-val">${m.form}</span></div>
-              <div class="hw-spec" style="grid-column:1/-1"><span class="hw-spec-lbl">Interfaces</span><span class="hw-spec-val" style="font-size:10px">${m.ports}</span></div>
+              ${specEntries.map(([k,v])=>`<div class="hw-spec"><span class="hw-spec-lbl">${k}</span><span class="hw-spec-val" style="font-size:${v.length>12?'9.5px':'11px'}">${v}</span></div>`).join('')}
             </div>
             <div class="hw-tags">${m.tags.map(t=>`<span class="hw-tag">${t}</span>`).join('')}</div>
           </div>
@@ -10859,50 +10894,53 @@ function renderHWRef(el){
       }
       html+=`</div></div></div>`;
     }
-    cont.innerHTML = html || '<div style="color:var(--t3);text-align:center;padding:40px">No models match your search.</div>';
+    cont.innerHTML=html||'<div style="color:var(--t3);text-align:center;padding:40px">No models match your search.</div>';
+  }
+
+  function buildTierFilters(){
+    const bar=document.getElementById('hwTierBar');
+    if(!bar) return;
+    const v=VENDORS[activeVendor];
+    let html=`<button class="hw-fbtn ${activeTier==='all'?'active':''}" onclick="hwTier('all',this)">All</button>`;
+    for(const t of v.tiers){
+      html+=`<button class="hw-fbtn ${activeTier===t.id?'active':''}" onclick="hwTier('${t.id}',this)">${t.label.split(' ').slice(0,2).join(' ')}</button>`;
+    }
+    bar.innerHTML=html;
   }
 
   el.innerHTML=`
-  <div class="sh"><span class="stitle">🖥️ FortiGate Hardware Reference</span><span class="sev info">Small Office → Enterprise → Carrier</span></div>
+  <div class="sh"><span class="stitle">🖥️ Hardware Reference</span><span class="sev info">Switches · Routers · Firewalls</span></div>
 
-  <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6">
-    Complete overview of the FortiGate hardware lineup — from the compact desktop 40F to the 12-slot 7121F chassis.
-    All throughput figures are from official Fortinet datasheets.
-    <a href="https://www.fortinet.com/products/product-compare" target="_blank" rel="noopener noreferrer" style="color:var(--bl);font-size:11px;margin-left:6px">Official Fortinet comparison tool →</a>
+  <p style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6">
+    Hardware overview for major network vendors — specs, port counts, use cases and positioning. Select a vendor to explore their lineup.
   </p>
 
-  <!-- Model naming guide -->
-  <div class="cblock" style="margin-bottom:16px">
-    <div class="chdr"><div class="chdr-l">📖 Model Naming Guide — What do the letters mean?</div></div>
-    <div class="cbody">
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
-        ${Object.entries(NAMING).map(([k,v])=>`
-        <div style="display:flex;align-items:flex-start;gap:8px">
-          <span style="font-family:var(--mono);font-size:16px;font-weight:700;color:var(--a);flex-shrink:0;width:20px">${k}</span>
-          <span style="font-size:11.5px;color:var(--t2);line-height:1.5">${v}</span>
-        </div>`).join('')}
-      </div>
-      <div style="margin-top:10px;font-size:11.5px;color:var(--t2);line-height:1.6;background:rgba(29,158,117,.05);border-left:3px solid var(--a);padding:8px 12px;border-radius:0 6px 6px 0">
-        💡 Example: <span style="font-family:var(--mono);color:var(--g)">FortiGate 60F</span> = 60-series · F-generation · No WiFi &nbsp;|&nbsp;
-        <span style="font-family:var(--mono);color:var(--g)">FortiGate 61F</span> = same + WiFi &nbsp;|&nbsp;
-        <span style="font-family:var(--mono);color:var(--g)">FortiGate 90G</span> = 90-series · G-generation (latest)
-      </div>
-    </div>
+  <!-- Vendor selector -->
+  <div class="hw-vendor-bar" id="hwVendorBar">
+    <button class="hw-vbtn active" onclick="hwVendor('fortinet',this)">🛡️ Fortinet</button>
+    <button class="hw-vbtn" onclick="hwVendor('cisco',this)">🔵 Cisco</button>
+    <button class="hw-vbtn" onclick="hwVendor('aruba',this)">🟢 HP / Aruba</button>
+    <button class="hw-vbtn" onclick="hwVendor('juniper',this)">🟣 Juniper</button>
   </div>
 
-  <!-- Filters -->
+  <!-- Tier filters + search -->
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-    <input class="hw-search" id="hwSearch" placeholder="Search model, feature or use case..." oninput="hwFilter()">
-    <div class="hw-filter" id="hwFilters">
-      <button class="hw-fbtn active" onclick="hwTier('all',this)">All</button>
-      <button class="hw-fbtn" onclick="hwTier('soho',this)">🏠 SOHO</button>
-      <button class="hw-fbtn" onclick="hwTier('smb',this)">🏢 SMB</button>
-      <button class="hw-fbtn" onclick="hwTier('enterprise',this)">🏗️ Enterprise</button>
-      <button class="hw-fbtn" onclick="hwTier('chassis',this)">🏭 Chassis</button>
-    </div>
+    <input class="hw-search" id="hwSearch" placeholder="Search model, port, feature..." oninput="hwFilter()">
+    <div class="hw-filter" id="hwTierBar"></div>
   </div>
 
   <div id="hwCardContainer"></div>`;
+
+  window.hwVendor=function(vendor,btn){
+    activeVendor=vendor;
+    activeTier='all';
+    searchTerm='';
+    document.getElementById('hwSearch').value='';
+    document.querySelectorAll('.hw-vbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    buildTierFilters();
+    buildCards();
+  };
 
   window.hwTier=function(tier,btn){
     activeTier=tier;
@@ -10916,7 +10954,194 @@ function renderHWRef(el){
     buildCards();
   };
 
+  buildTierFilters();
   buildCards();
+}
+
+function renderDevices(el){
+  if(!document.getElementById('devCSS')){
+    const s=document.createElement('style');s.id='devCSS';
+    s.textContent=`
+      .dev-vendor-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+      .dev-vbtn{display:flex;align-items:center;gap:8px;padding:9px 18px;border-radius:10px;border:2px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;font-size:13px;font-weight:700;transition:all .18s;white-space:nowrap}
+      .dev-vbtn:hover{border-color:var(--a);color:var(--t)}
+      .dev-vbtn.active{border-color:var(--a);background:rgba(29,158,117,.1);color:var(--t)}
+      .dev-filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+      .dev-fbtn{font-size:11px;padding:4px 13px;border-radius:20px;border:1px solid var(--br);background:var(--b2);color:var(--t2);cursor:pointer;transition:all .15s;font-family:var(--mono)}
+      .dev-fbtn:hover,.dev-fbtn.active{background:var(--a);border-color:var(--a);color:#fff}
+      .dev-search{flex:1;min-width:160px;max-width:320px;background:var(--bg);border:1px solid var(--br);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--t);outline:none;font-family:var(--mono)}
+      .dev-search:focus{border-color:var(--a)}
+      .dev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-bottom:24px}
+      .dev-card{background:var(--b2);border:1px solid var(--br);border-radius:12px;overflow:hidden;transition:all .2s;display:flex;flex-direction:column}
+      .dev-card:hover{border-color:var(--a);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+      .dev-img-wrap{width:100%;height:150px;background:#070d17;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--br);overflow:hidden;position:relative}
+      .dev-img{width:100%;height:100%;object-fit:contain;padding:12px;position:relative;z-index:1}
+      .dev-img-err{display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%;width:100%;position:absolute;top:0;left:0;z-index:2}
+      .dev-body{padding:13px 15px;flex:1;display:flex;flex-direction:column;gap:8px}
+      .dev-model{font-size:14px;font-weight:800;color:var(--t);font-family:var(--mono)}
+      .dev-role{font-size:11px;font-weight:700;color:var(--a)}
+      .dev-desc{font-size:11.5px;color:var(--t2);line-height:1.6;flex:1}
+      .dev-specs{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+      .dev-spec{background:var(--b3);border-radius:6px;padding:5px 9px;display:flex;flex-direction:column;gap:1px}
+      .dev-spec-k{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;font-family:var(--mono)}
+      .dev-spec-v{font-size:11px;font-weight:700;color:var(--t);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .dev-tags{display:flex;flex-wrap:wrap;gap:4px}
+      .dev-tag{font-size:9px;padding:2px 8px;border-radius:10px;background:rgba(29,158,117,.1);color:var(--a);border:1px solid rgba(29,158,117,.18);font-family:var(--mono)}
+      .dev-sec-hdr{font-size:12px;font-weight:800;color:var(--t2);padding:10px 0 8px;margin-top:6px;border-bottom:1px solid var(--br);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    `;
+    document.head.appendChild(s);
+  }
+
+  const VENDORS={
+    cisco:{label:'🔵 Cisco',sections:[
+      {title:'🔌 Access Switches',id:'access',devices:[
+        {model:'Catalyst 9200L',role:'Entry Access Switch',desc:'Fixed-config access switch. PoE+, 802.1X, VLAN, QoS. Cisco DNA Center or CLI. Best entry point for Cisco access layer.',specs:{Ports:'24/48x GbE',Uplinks:'4x SFP+',PoE:'Up to 740W',Stacking:'DNA Stack',Form:'1U Rack'},tags:['PoE+','802.1X','DNA Center'],img:'https://www.cisco.com/c/dam/en/us/products/switches/catalyst-9200-series-switches/og-image.jpg'},
+        {model:'Catalyst 9300',role:'Stackable Access Switch',desc:'Enterprise flagship access switch. StackWise-480 stacking (8 units), UPOE 802.3bt, MACsec, VXLAN. Most deployed enterprise access switch in the world.',specs:{Ports:'24/48x GbE',Uplinks:'4x SFP+',PoE:'Up to 1440W UPOE',Stacking:'StackWise-480',Form:'1U Rack'},tags:['StackWise','UPOE','MACsec','Most popular'],img:'https://www.cisco.com/c/dam/en/us/products/switches/catalyst-9300-series-switches/og-image.jpg'},
+        {model:'Catalyst 9400',role:'Modular Chassis Access',desc:'Chassis access switch for large wiring closets. Hot-swap line cards, redundant supervisors, massive PoE budget for dense AP/phone deployments.',specs:{Ports:'Up to 96x GbE/slot',Uplinks:'Modular supervisor',PoE:'Up to 3600W',Stacking:'VSS/StackWise-V',Form:'7-slot Chassis'},tags:['Chassis','Modular','Redundant Sup','PoE'],img:'https://www.cisco.com/c/dam/en/us/products/switches/catalyst-9400-series-switches/og-image.jpg'},
+      ]},
+      {title:'🏗️ Distribution / Core',id:'core',devices:[
+        {model:'Catalyst 9500',role:'Campus Core Switch',desc:'High-performance fixed core. 25GbE downlinks, 100GbE QSFP28 uplinks, full L3, MPLS, VXLAN. Standard collapsed-core choice in enterprise.',specs:{Ports:'24/48x 25GbE SFP28',Uplinks:'4x 100GbE QSFP28',Throughput:'6.4 Tbps',Stacking:'StackWise-480',Form:'1U Rack'},tags:['25GbE','100GbE','Campus Core','VXLAN'],img:'https://www.cisco.com/c/dam/en/us/products/switches/catalyst-9500-series-switches/og-image.jpg'},
+        {model:'Nexus 9300-FX',role:'DC Top-of-Rack Switch',desc:'Data centre ToR switch for ACI fabric or NX-OS standalone. Full VXLAN/EVPN spine-leaf support. Standard in Cisco ACI deployments.',specs:{Ports:'48x 25GbE SFP28',Uplinks:'6x 100GbE QSFP28',Throughput:'3.6 Tbps',EVPN:'Full VXLAN/EVPN',Form:'1U Rack'},tags:['DC fabric','VXLAN','EVPN','ACI','NX-OS'],img:'https://www.cisco.com/c/dam/en/us/products/switches/nexus-9000-series-switches/og-image.jpg'},
+        {model:'Catalyst 9600',role:'Modular Core Switch',desc:'Enterprise modular core. Dual redundant supervisors, hot-swap line cards, sub-second failover. Scales to 400x 10GbE or 100x 100GbE per chassis.',specs:{Ports:'Up to 400x 10GbE',Uplinks:'Up to 100GbE',Throughput:'25.6 Tbps',Redundancy:'Dual Supervisor',Form:'10-slot Chassis'},tags:['Chassis','Redundant','Core','Hot-swap'],img:'https://www.cisco.com/c/dam/en/us/products/switches/catalyst-9600-series-switches/og-image.jpg'},
+      ]},
+      {title:'🌐 Routers',id:'routers',devices:[
+        {model:'ISR 1100',role:'Branch CPE Router',desc:'Integrated services router for small branches. Optional WiFi, 4G/LTE WAN, Cisco SD-WAN (Viptela). The most common branch CPE in enterprise networks worldwide.',specs:{WAN:'1x GbE or LTE','SD-WAN':'Viptela / Meraki',LAN:'4x GbE',Throughput:'Up to 400 Mbps',Form:'Desktop'},tags:['Branch CPE','LTE','SD-WAN','Desktop'],img:'https://www.cisco.com/c/dam/en/us/products/routers/1100-series-integrated-services-routers/og-image.jpg'},
+        {model:'ASR 1001-X',role:'WAN / Internet Edge Router',desc:'Aggregation services router for WAN and internet edge. Hardware crypto, stateful NAT up to 4M sessions, MPLS, BGP, redundant PSU and fans.',specs:{Throughput:'Up to 20 Gbps',Ports:'6x GbE + 2x SFP+',NAT:'Up to 4M sessions',HA:'Redundant PSU + fans',Form:'1U Rack'},tags:['WAN Edge','MPLS','BGP','NAT','HA'],img:'https://www.cisco.com/c/dam/en/us/products/routers/asr-1000-series-aggregation-services-routers/og-image.jpg'},
+      ]},
+    ]},
+    fortinet:{label:'🛡️ Fortinet',sections:[
+      {title:'🏠 Desktop / SOHO Firewalls',id:'soho',devices:[
+        {model:'FortiGate 40F',role:'SOHO Firewall',desc:'Fanless entry-level desktop firewall. Built-in SD-WAN, VPN, basic UTM. For retail branches, home offices and micro-sites.',specs:{Firewall:'5 Gbps','Threat Prot.':'600 Mbps','SSL Insp.':'490 Mbps',Ports:'5x GE RJ45',Form:'Desktop (fanless)'},tags:['Fanless','SD-WAN','SOHO','SoC4'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-40f.png'},
+        {model:'FortiGate 60F',role:'SMB Firewall',desc:'Most popular small-business FortiGate. Firewall, SD-WAN, UTM in one desktop unit. WiFi variant (61F) available. SoC4 NPU for fast throughput.',specs:{Firewall:'10 Gbps','Threat Prot.':'1 Gbps','SSL Insp.':'700 Mbps',Ports:'10x GE + 2x SFP',Form:'Desktop'},tags:['Most popular','WiFi option','SD-WAN','SoC4'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-60f.png'},
+        {model:'FortiGate 90G',role:'Next-Gen SOHO Firewall',desc:'Latest G-series with SoC5 NPU. Significantly higher threat protection vs 80F/90E. 5G modem ready. Bypass ports for inline deployment.',specs:{Firewall:'22 Gbps','Threat Prot.':'2.2 Gbps','SSL Insp.':'2 Gbps',Ports:'10x GE + 2x SFP bypass',Form:'Desktop'},tags:['G-series','SoC5','5G ready','Bypass'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-90g.png'},
+      ]},
+      {title:'🏢 Rackmount Firewalls',id:'rack',devices:[
+        {model:'FortiGate 100F',role:'Branch Rack Firewall',desc:'First rackmount FortiGate. HA pair support, 10GbE uplinks, NP6lite NPU. For medium offices moving from desktop to rack.',specs:{Firewall:'20 Gbps','Threat Prot.':'1.6 Gbps','SSL Insp.':'1 Gbps',Ports:'22x GE + 4x SFP + 2x SFP+',Form:'1U Rack'},tags:['1U Rack','HA','10GbE','NP6lite'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-100f.png'},
+        {model:'FortiGate 200F',role:'Mid-Range Firewall',desc:'Popular regional office firewall. Full NP6 NPU offload, dual PSU option, high port density. Used by mid-size enterprises.',specs:{Firewall:'27 Gbps','Threat Prot.':'3 Gbps','SSL Insp.':'2 Gbps',Ports:'18x GE + 8x SFP + 4x SFP+',Form:'1U Rack'},tags:['NP6','Dual PSU','Regional'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-200f.png'},
+        {model:'FortiGate 600F',role:'Enterprise Firewall',desc:'Full enterprise firewall with 25GbE SFP28 and 100GbE QSFP28 uplinks. Redundant PSU standard. Large campus cores and internet edges.',specs:{Firewall:'125 Gbps','Threat Prot.':'15 Gbps','SSL Insp.':'12 Gbps',Ports:'16x SFP + 4x SFP28 + 2x QSFP28',Form:'1U Rack'},tags:['25GbE','100GbE','Redundant PSU','NP7'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-600f.png'},
+        {model:'FortiGate 1000F',role:'Data Centre Edge Firewall',desc:'DC edge firewall with NP7 acceleration, VDOM multi-tenancy, dual redundant PSU. Ultra-high throughput for data centre perimeter.',specs:{Firewall:'400 Gbps','Threat Prot.':'80 Gbps','SSL Insp.':'35 Gbps',Ports:'16x 25GbE + 4x 100GbE',Form:'2U Rack'},tags:['Data Centre','VDOM','NP7','400 Gbps'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fg-1000f.png'},
+      ]},
+      {title:'🔀 FortiSwitch',id:'switches',devices:[
+        {model:'FortiSwitch 148F',role:'Managed Access Switch',desc:'FortiLink-managed access switch. Fully integrated into FortiGate dashboard. PoE+, 802.1X, VLAN. Zero-touch deployment via FortiGate.',specs:{Ports:'48x GbE RJ45',Uplinks:'4x SFP+',PoE:'Up to 740W',Management:'FortiLink / GUI',Form:'1U Rack'},tags:['FortiLink','PoE+','802.1X','Zero-touch'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fs-148f.png'},
+        {model:'FortiSwitch 448E',role:'PoE Distribution Switch',desc:'High-density PoE switch. FortiLink management, 10GbE uplinks. Ideal for large floors with many APs and IP phones.',specs:{Ports:'48x GbE PoE+',Uplinks:'4x SFP+',PoE:'Up to 740W',Management:'FortiLink',Form:'1U Rack'},tags:['High density','PoE+','FortiLink','10GbE up'],img:'https://www.fortinet.com/content/dam/fortinet/images/product-diagrams/diagram-fs-448e.png'},
+      ]},
+    ]},
+    aruba:{label:'🟢 HP / Aruba',sections:[
+      {title:'🔌 Access Switches (AOS-CX)',id:'access',devices:[
+        {model:'Aruba CX 6100',role:'Entry Access Switch',desc:'Entry AOS-CX switch with Python scripting and REST API. Aruba Central cloud management or CLI. VLAN, QoS, 802.1X.',specs:{Ports:'24/48x GbE',Uplinks:'4x SFP+',PoE:'Up to 740W',Management:'Aruba Central / CLI',Form:'1U Rack'},tags:['AOS-CX','REST API','802.1X','Cloud'],img:'https://www.arubanetworks.com/wp-content/uploads/Aruba-CX-6100-Switch-Series.jpg'},
+        {model:'Aruba CX 6300',role:'Stackable Access Switch',desc:'Mid-range enterprise access. VSF stacking up to 8 units, 25GbE uplinks, MACsec, EVPN, VXLAN. Aruba Central or on-prem management.',specs:{Ports:'24/48x GbE',Uplinks:'4x 25GbE SFP28',PoE:'Up to 1440W',Stacking:'VSF (up to 8)',Form:'1U Rack'},tags:['VSF stacking','25GbE','MACsec','VXLAN'],img:'https://www.arubanetworks.com/wp-content/uploads/Aruba-CX-6300-Switch-Series.jpg'},
+        {model:'Aruba CX 6400',role:'Modular Chassis Switch',desc:'Chassis switch for large wiring closets and distribution. Hot-swap modules, dual management modules, very high PoE budget.',specs:{Ports:'Up to 96x GbE/slot',PoE:'Up to 4200W',Uplinks:'Up to 100GbE',Redundancy:'Dual Mgmt Module',Form:'5-slot Chassis'},tags:['Chassis','Modular','High PoE','Redundant'],img:'https://www.arubanetworks.com/wp-content/uploads/Aruba-CX-6400-Switch-Series.jpg'},
+      ]},
+      {title:'🏗️ Core / Data Centre',id:'core',devices:[
+        {model:'Aruba CX 8325',role:'Campus Core / Spine Switch',desc:'Core and spine switch with 32x 100GbE QSFP28, full VXLAN/EVPN, 6.4 Tbps fabric. Spine in Aruba CX fabric deployments.',specs:{Ports:'32x 100GbE QSFP28',Throughput:'6.4 Tbps',EVPN:'Full VXLAN/EVPN',Stacking:'VSF',Form:'1U Rack'},tags:['100GbE','VXLAN','EVPN','Spine','Core'],img:'https://www.arubanetworks.com/wp-content/uploads/Aruba-CX-8325-Switch-Series.jpg'},
+        {model:'Aruba CX 10000',role:'Distributed Services Switch',desc:'Industry-first switch combining routing + stateful firewall at 400GbE line rate. AMD Pensando DPU. Eliminates separate firewall at DC scale.',specs:{Ports:'32x 400GbE QSFP-DD',Throughput:'25.6 Tbps',Services:'Stateful FW + routing',DPU:'AMD Pensando',Form:'1U Rack'},tags:['400GbE','DPU','Stateful FW','DC fabric'],img:'https://www.arubanetworks.com/wp-content/uploads/Aruba-CX-10000-Switch-Series.jpg'},
+      ]},
+    ]},
+    juniper:{label:'🟣 Juniper',sections:[
+      {title:'🔌 EX Series (Access)',id:'access',devices:[
+        {model:'EX2300',role:'Entry Access Switch',desc:'Compact Junos access switch. Virtual Chassis stacking up to 4 units, PoE+, 802.1X, Juniper Mist AI cloud management.',specs:{Ports:'24/48x GbE',Uplinks:'4x SFP+',PoE:'Up to 740W',Stacking:'Virtual Chassis (4)',OS:'Junos'},tags:['Virtual Chassis','Mist AI','Junos','PoE+'],img:'https://www.juniper.net/us/en/products/switches/ex-series/ex2300/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
+        {model:'EX4300',role:'Stackable Access Switch',desc:'Most popular Juniper access switch. Virtual Chassis up to 10 units, 40GbE uplinks, MACsec, full L3 routing. Widely used in enterprise access layers.',specs:{Ports:'24/48x GbE',Uplinks:'4x 40GbE QSFP+',PoE:'Up to 1440W',Stacking:'Virtual Chassis (10)',OS:'Junos'},tags:['Virtual Chassis','40GbE','MACsec','L3'],img:'https://www.juniper.net/us/en/products/switches/ex-series/ex4300/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
+        {model:'EX4650',role:'High-Density Access',desc:'High-performance access/aggregation. 25GbE downlinks and 100GbE uplinks. For high-density server access or campus aggregation.',specs:{Ports:'48x 25GbE SFP28',Uplinks:'8x 100GbE QSFP28',Throughput:'3.2 Tbps',Stacking:'Virtual Chassis',OS:'Junos'},tags:['25GbE','100GbE','High-density','Aggregation'],img:'https://www.juniper.net/us/en/products/switches/ex-series/ex4650/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
+      ]},
+      {title:'🔀 QFX Data Centre + MX WAN Routers',id:'dc',devices:[
+        {model:'QFX5120',role:'DC Leaf / Spine Switch',desc:'Data centre leaf/spine for IP fabric. Full EVPN/VXLAN, MPLS, Juniper Apstra intent-based networking. Available in 48x25GbE or 32x100GbE.',specs:{Ports:'48x 25GbE or 32x 100GbE',Uplinks:'6x 100GbE QSFP28',Throughput:'3.2 Tbps',EVPN:'Full VXLAN/EVPN',OS:'Junos / Apstra'},tags:['DC fabric','EVPN','VXLAN','Apstra'],img:'https://www.juniper.net/us/en/products/switches/qfx-series/qfx5120/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
+        {model:'MX204',role:'WAN / Internet Edge Router',desc:'Universal routing platform for WAN and internet peering. Full BGP table, MPLS, segment routing. Used by ISPs and large enterprise WAN edges.',specs:{Throughput:'400 Gbps',Ports:'4x 100GbE + 8x 25GbE',MPLS:'Full label stack',BGP:'Full internet table',OS:'Junos'},tags:['WAN Edge','MPLS','BGP','Segment Routing'],img:'https://www.juniper.net/us/en/products/routers/mx-series/mx204/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
+        {model:'MX480',role:'Service Provider Core Router',desc:'Mid-range MX chassis router. Used by ISPs as PE/P router and large enterprise WAN. Modular line cards, redundant routing engines, hitless upgrades.',specs:{Throughput:'Up to 16 Tbps',Slots:'8x line card slots',MPLS:'Full',BGP:'Full internet table',OS:'Junos'},tags:['SP Core','Chassis','MPLS PE/P','Redundant RE'],img:'https://www.juniper.net/us/en/products/routers/mx-series/mx480/_jcr_content/Hero-content/image.img.jpg/1646688889001.jpg'},
+      ]},
+    ]},
+  };
+
+  let activeVendor='cisco';
+  let activeSection='all';
+  let searchTerm='';
+
+  function buildGrid(){
+    const cont=document.getElementById('devGrid');
+    if(!cont) return;
+    const v=VENDORS[activeVendor];
+    let html='';let count=0;
+    for(const sec of v.sections){
+      if(activeSection!=='all'&&activeSection!==sec.id) continue;
+      const devs=sec.devices.filter(d=>
+        !searchTerm||
+        d.model.toLowerCase().includes(searchTerm)||
+        d.role.toLowerCase().includes(searchTerm)||
+        d.desc.toLowerCase().includes(searchTerm)||
+        d.tags.some(t=>t.toLowerCase().includes(searchTerm))
+      );
+      if(!devs.length) continue;
+      count+=devs.length;
+      html+=`<div class="dev-sec-hdr">${sec.title} <span style="font-size:10px;color:var(--t3);font-weight:400">${devs.length} device${devs.length>1?'s':''}</span></div><div class="dev-grid">`;
+      for(const d of devs){
+        const specs=Object.entries(d.specs).slice(0,6);
+        html+=`<div class="dev-card">
+          <div class="dev-img-wrap">
+            <img class="dev-img" src="${d.img}" alt="${d.model}" loading="lazy"
+              onerror="this.style.display='none';this.parentElement.querySelector('.dev-img-err').style.display='flex'">
+            <div class="dev-img-err">
+              <span style="font-size:36px">🖥️</span>
+              <span style="font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.3)">${d.model}</span>
+            </div>
+          </div>
+          <div class="dev-body">
+            <div><div class="dev-model">${d.model}</div><div class="dev-role">${d.role}</div></div>
+            <div class="dev-desc">${d.desc}</div>
+            <div class="dev-specs">${specs.map(([k,v])=>`<div class="dev-spec"><span class="dev-spec-k">${k}</span><span class="dev-spec-v" title="${v}">${v}</span></div>`).join('')}</div>
+            <div class="dev-tags">${d.tags.map(t=>`<span class="dev-tag">${t}</span>`).join('')}</div>
+          </div>
+        </div>`;
+      }
+      html+='</div>';
+    }
+    cont.innerHTML=count?html:'<div style="text-align:center;padding:40px;color:var(--t3)">No devices match your search.</div>';
+  }
+
+  function buildSectionFilters(){
+    const bar=document.getElementById('devSectionBar');
+    if(!bar) return;
+    const v=VENDORS[activeVendor];
+    let html=`<button class="dev-fbtn ${activeSection==='all'?'active':''}" onclick="devSection('all',this)">All</button>`;
+    for(const s of v.sections){
+      html+=`<button class="dev-fbtn ${activeSection===s.id?'active':''}" onclick="devSection('${s.id}',this)">${s.title.split('(')[0].trim()}</button>`;
+    }
+    bar.innerHTML=html;
+  }
+
+  el.innerHTML=`
+  <div class="sh"><span class="stitle">🖥️ Device Catalog</span><span class="sev info">Switches · Routers · Firewalls — All Major Vendors</span></div>
+  <p style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6">
+    Real device photos with ports, throughput, PoE budget, stacking and form factor for each model.
+    Images load directly from vendor websites — an internet connection is required to see them.
+  </p>
+  <div class="dev-vendor-bar">
+    <button class="dev-vbtn active" onclick="devVendor('cisco',this)">🔵 Cisco</button>
+    <button class="dev-vbtn" onclick="devVendor('fortinet',this)">🛡️ Fortinet</button>
+    <button class="dev-vbtn" onclick="devVendor('aruba',this)">🟢 HP / Aruba</button>
+    <button class="dev-vbtn" onclick="devVendor('juniper',this)">🟣 Juniper</button>
+  </div>
+  <div class="dev-filter-bar">
+    <input class="dev-search" id="devSearch" placeholder="Search model, role or feature..." oninput="devSearch_(this.value)">
+    <div id="devSectionBar" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+  </div>
+  <div id="devGrid"></div>`;
+
+  window.devVendor=function(vendor,btn){
+    activeVendor=vendor;activeSection='all';searchTerm='';
+    document.getElementById('devSearch').value='';
+    document.querySelectorAll('.dev-vbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    buildSectionFilters();buildGrid();
+  };
+  window.devSection=function(sec,btn){
+    activeSection=sec;
+    document.querySelectorAll('.dev-fbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    buildGrid();
+  };
+  window.devSearch_=function(v){
+    searchTerm=v.toLowerCase().trim();buildGrid();
+  };
+  buildSectionFilters();buildGrid();
 }
 
 function initSidebar(){
@@ -10930,7 +11155,7 @@ function initSidebar(){
     {section:"Diagnostics Tools",items:["analyze","advdiag","mostused","pkttools","dhcpdiag","subnetcalc","masking","bulkAnon"]},
     {section:"AI Tools",items:["freeai","ai","claudechat"]},
     {section:"Cloud Learning",items:["azure"]},
-    {section:"Reference",items:["ref","multivendor","hwref"]},
+    {section:"Reference",items:["ref","multivendor","hwref","devices"]},
     {section:"Builders & Utilities",items:["psmaker","topology","cfggen","cfgmigrate","labsetup","security","liveconnect","emailgen"]},
     {section:"Config Guides",items:["cfg-init","cfg-vdom","cfg-ipsec","cfg-sslvpn","cfg-sdwan","cfg-ha","cfg-intervdom","cfg-portfwd","cfg-ospfbgp","cfg-sec","cfg-fortiswitch","cfg-ztna","cfg-netflow"]}
   ];
@@ -10955,7 +11180,7 @@ function initSidebar(){
     pkttools:"📡 Packet Tools",dhcpdiag:"📮 DHCP Diagnostics",subnetcalc:"🧮 Subnet Calculator",
     masking:"🕶️ IP Masking",bulkAnon:"🧹 Bulk Anonymizer",freeai:"✨ AI Analyzer",
     ai:"💬 AI Assistant",claudechat:"🧠 Claude Chat",ref:"📚 Quick Reference",multivendor:"🔁 Multi-Vendor CLI",
-    hwref:"🧱 Hardware Reference",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
+    hwref:"🧱 Hardware Reference",devices:"🖥️ Device Catalog",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
     cfggen:"🧩 Config Generator",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
     security:"🛡️ Security & Privacy",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
     azure:"☁️ Azure Scripting"
