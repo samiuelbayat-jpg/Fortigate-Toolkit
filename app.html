@@ -129,7 +129,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .tab.active .tab-icon{transform:scale(1.08);filter:saturate(1.15)}
 .tab-lbl{font-size:10px;color:inherit;font-family:var(--mono);letter-spacing:0}
 .tab.active .tab-lbl{color:var(--t)}
-.content{flex:1;overflow-y:auto;padding:16px;min-height:0;background:var(--contentBg);background-size:var(--wallSize)}
+.content{flex:1;overflow-y:auto;padding:16px;min-height:0;background:var(--contentBg);background-size:var(--wallSize);display:flex;flex-direction:column}
 .sh{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .stitle{font-size:15px;font-weight:700;color:var(--t)}
 .sev{font-size:11px;padding:3px 9px;border-radius:4px;font-weight:600}
@@ -157,7 +157,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .cbadge.caution{background:rgba(210,153,34,.15);color:#d29922;border:1px solid rgba(210,153,34,.3)}
 .copybtn{font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;border:1px solid var(--br);background:var(--b3);color:var(--t2);transition:all .1s}
 .copybtn:hover{border-color:var(--a);color:var(--a)}
-.messages{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;height:440px;max-height:55vh}
+.messages{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;height:0}
 .msg{display:flex;gap:10px;align-items:flex-start}
 .msg.user{flex-direction:row-reverse}
 .av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
@@ -310,7 +310,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 
   /* Content — full width */
   .main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
-  .content{flex:1;overflow-y:auto;padding:12px;min-height:0}
+  .content{flex:1;overflow-y:auto;padding:12px;min-height:0;display:flex;flex-direction:column}
 
   /* Steps — full width */
   .cblock{margin-bottom:8px}
@@ -524,7 +524,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   .chips,.button-group,.pill-group{gap:6px}
   .chip,.pill,.sbtn,.copybtn{min-height:32px}
 
-  .messages,.ai-messages{max-height:52dvh;height:auto}
+  .messages,.ai-messages{height:auto}
   .bubble{max-width:100%;font-size:12px}
   .ai-container{min-height:calc(100dvh - 170px)}
 
@@ -1235,7 +1235,7 @@ function renderPSMaker(el){
         var resp=await fetch('https://api.anthropic.com/v1/messages',{
           method:'POST',
           headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-          body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2500,system:sysPrompt,messages:psHistory})
+          body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:2500,system:sysPrompt,messages:psHistory})
         });
         if(!resp.ok) throw new Error('API error: '+resp.status);
         var data=await resp.json();
@@ -3616,7 +3616,7 @@ function renderPacketTools(el){
         var resp=await fetch('https://api.anthropic.com/v1/messages',{
           method:'POST',
           headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-          body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+          body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,messages:[{role:'user',content:prompt}]})
         });
         if(!resp.ok) throw new Error('API error '+resp.status);
         var data=await resp.json();
@@ -4400,7 +4400,7 @@ function renderAI(el){
   const privBanner='<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5"><span style="flex-shrink:0">⚠️</span><div><strong>Messages are sent to '+_activeProv+' API</strong> (third party). Avoid sharing real IPs or credentials.<br>Before sending CLI output: use <span class="ai-mask-link" style="color:var(--a);cursor:pointer;text-decoration:underline">🎭 IP Masking</span> to replace individual IPs, or <span class="ai-bulk-link" style="color:var(--a);cursor:pointer;text-decoration:underline">📋 Bulk Anonymizer</span> to anonymize a full CLI output at once (replaces all IPs, MACs, hostnames).</div></div>';
   const ipWarn='<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:#f87171;line-height:1.5"><span style="flex-shrink:0">🚨</span><div>Private IPs detected: <strong style="font-family:var(--mono);color:#fca5a5"></strong><br>Use <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'masking\')">🎭 IP Masking</span> for individual IPs or <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'bulkAnon\')">📋 Bulk Anonymizer</span> for full CLI output before sending.</div></div>';
 
-  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">'+provSelector+privBanner.replace('margin-bottom:8px','margin:6px 10px 0')+ipWarn.replace('margin-bottom:8px','margin:4px 10px 0')+'<div class="messages" id="chatm">'+msgs+'</div>'+'<div class="irow"><input type="text" id="chi" placeholder="Ask anything about FortiGate..." /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div></div>';
+  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;height:100%">'+provSelector+privBanner.replace('margin-bottom:8px','margin:6px 10px 0')+ipWarn.replace('margin-bottom:8px','margin:4px 10px 0')+'<div class="messages" id="chatm">'+msgs+'</div>'+'<div class="irow"><input type="text" id="chi" placeholder="Ask anything about FortiGate..." /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div></div>';
 
   // Wire input events cleanly — no inline handlers
   const chiEl=document.getElementById('chi');
@@ -4456,7 +4456,7 @@ function renderClaudeChat(el){
     +'<span>⚠️</span><span>Messages sent to <strong>Anthropic Claude API</strong>. Avoid real IPs or credentials — use '
     +'<span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'bulkAnon\')">📋 Bulk Anonymizer</span> first.</span></div>';
 
-  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">'
+  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;height:100%">'
     +modelPill+privBanner
     +'<div class="messages" id="cchatm">'+msgs+'</div>'
     +'<div class="irow"><input type="text" id="cci" placeholder="Ask Claude anything..." '+(claudeChatLoading?'disabled':'')+'/>'
@@ -4489,7 +4489,7 @@ async function sendClaudeMsg(){
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
+        model:'claude-sonnet-4-5',
         max_tokens:1500,
         system:'You are a senior FortiGate network engineer and general networking expert. Give concise, practical answers. Use backticks for CLI commands.',
         messages:claudeChat
@@ -4520,7 +4520,7 @@ async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loadi
     if(freeAIProvider==='groq'&&!groqApiKey&&!claudeApiKey)throw new Error('no-key');
     let reply='';
     if(useClaude){
-      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:sys,messages:chat.slice(0,-1).concat([{role:'user',content:text}])})});
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1200,system:sys,messages:chat.slice(0,-1).concat([{role:'user',content:text}])})});
       const data=await resp.json();
       if(data.error)throw new Error(data.error.message);
       reply=data.content[0].text;
@@ -4665,9 +4665,9 @@ function renderFreeAITab(el){
     <span style="font-size:12px;font-weight:600;color:var(--t2)">🧠 Model:</span>
     <select id="groqModelSelect" style="background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--t);outline:none;cursor:pointer">
       ${freeAIProvider==='claude'?`
-      <option value="claude-sonnet-4-20250514">Claude Sonnet 4 — Best balance (recommended)</option>
-      <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — Fastest</option>
-      <option value="claude-opus-4-20250514">Claude Opus 4 — Most powerful</option>
+      <option value="claude-sonnet-4-5">Claude Sonnet 4 — Best balance (recommended)</option>
+      <option value="claude-haiku-4-5">Claude Haiku 4.5 — Fastest</option>
+      <option value="claude-opus-4-5">Claude Opus 4 — Most powerful</option>
       `:`
       <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B — Most accurate (recommended)</option>
       <option value="mixtral-8x7b-32768">Mixtral 8x7B — Fast &amp; balanced</option>
