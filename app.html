@@ -7,7 +7,7 @@
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.groq.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app wss:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app wss:;">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="favicon.svg">
@@ -699,19 +699,32 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
       <button class="logout-btn" onclick="doLogout()">⏻ Logout</button>
     </div>
   </div>
-  <div class="kbar" id="kbarMain" style="justify-content:flex-end">
-    <span class="kst" id="kst" style="color:var(--t3);font-size:11px">🔑 Groq: not set</span>
-    <button onclick="kbarToggle()" id="kbarToggleBtn"
-      style="font-size:10px;padding:3px 10px;border-radius:20px;border:1px solid var(--br);background:var(--b3);color:var(--t2);cursor:pointer;font-family:var(--mono);white-space:nowrap">
-      Set Key
-    </button>
+  <div id="kbarMain" style="display:flex;align-items:center;gap:8px;padding:7px 14px;background:var(--b2);border-bottom:1px solid var(--br);flex-shrink:0;flex-wrap:wrap">
+    <!-- Groq pill -->
+    <div style="display:flex;align-items:center;gap:6px;background:var(--b3);border:1px solid var(--br);border-radius:20px;padding:4px 10px 4px 8px;cursor:pointer" onclick="kbarOpen('groq')" title="Set Groq API key">
+      <span style="font-size:13px">⚡</span>
+      <span style="font-size:11px;font-weight:600;color:var(--t2)">Groq</span>
+      <span id="kst-groq" style="font-size:10px;color:var(--t3)">not set</span>
+      <span id="kst-groq-dot" style="width:7px;height:7px;border-radius:50%;background:#f85149;display:inline-block"></span>
+    </div>
+    <!-- Claude pill -->
+    <div style="display:flex;align-items:center;gap:6px;background:var(--b3);border:1px solid var(--br);border-radius:20px;padding:4px 10px 4px 8px;cursor:pointer" onclick="kbarOpen('claude')" title="Set Claude API key">
+      <span style="font-size:13px">🧠</span>
+      <span style="font-size:11px;font-weight:600;color:var(--t2)">Claude</span>
+      <span id="kst-claude" style="font-size:10px;color:var(--t3)">not set</span>
+      <span id="kst-claude-dot" style="width:7px;height:7px;border-radius:50%;background:#f85149;display:inline-block"></span>
+    </div>
+    <span style="font-size:10px;color:var(--t3);margin-left:2px">← click to set API keys</span>
+    <span class="kst" id="kst" style="color:var(--t3);font-size:11px;margin-left:auto"></span>
   </div>
-  <div id="kbarExpanded" style="display:none;align-items:center;gap:8px;padding:6px 16px;background:var(--b2);border-bottom:1px solid var(--br);flex-shrink:0;flex-wrap:wrap">
-    <label style="font-size:11px;color:var(--t2);white-space:nowrap">🔑 Groq API Key:</label>
-    <input type="password" id="apikey" placeholder="gsk_..." 
-      style="flex:1;min-width:180px;max-width:360px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none"/>
-    <button class="sbtn" onclick="saveKey()" style="padding:5px 14px">Save</button>
-    <button onclick="kbarToggle()" style="font-size:11px;color:var(--t3);background:none;border:none;cursor:pointer;padding:0">✕</button>
+  <!-- Expanded key entry panel -->
+  <div id="kbarExpanded" style="display:none;align-items:center;gap:8px;padding:8px 16px;background:var(--shape);border-bottom:2px solid var(--a);flex-shrink:0;flex-wrap:wrap">
+    <span id="kbarProvLabel" style="font-size:12px;font-weight:700;color:var(--a);white-space:nowrap">⚡ Groq API Key</span>
+    <input type="password" id="apikey" placeholder="gsk_..."
+      style="flex:1;min-width:200px;max-width:380px;background:var(--bg);border:1px solid var(--a);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none;box-shadow:0 0 0 2px rgba(29,158,117,.1)"/>
+    <button class="sbtn" onclick="saveKey()" style="padding:6px 16px;font-weight:700">💾 Save</button>
+    <a id="kbarGetKeyLink" href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--bl);white-space:nowrap;text-decoration:none">Get key →</a>
+    <button onclick="kbarToggle()" style="font-size:13px;color:var(--t3);background:none;border:none;cursor:pointer;padding:0;margin-left:4px">✕</button>
   </div>
   <div class="layout">
     <div class="sidebar"></div>
@@ -753,8 +766,11 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('freeai')" id="tab-freeai" title="AI CLI Analyzer">
               <span class="tab-icon">✨</span><span class="tab-lbl">AI Analyzer</span>
             </button>
-            <button class="tab" onclick="stab('ai')" id="tab-ai" title="AI Assistant">
+            <button class="tab" onclick="stab('ai')" id="tab-ai" title="FortiGate AI Assistant (Groq)">
               <span class="tab-icon">💬</span><span class="tab-lbl">Assistant</span>
+            </button>
+            <button class="tab" onclick="stab('claudechat')" id="tab-claudechat" title="Claude Chat (Anthropic)">
+              <span class="tab-icon">🧠</span><span class="tab-lbl">Claude</span>
             </button>
           </div>
         </div>
@@ -985,9 +1001,9 @@ function renderPSMaker(el){
   /* Key */
   var kc=document.createElement('div');
   kc.className='cblock';
-  kc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F511; Groq Key</div></div>'
+  kc.innerHTML='<div class="chdr"><div class="chdr-l">&#x1F511; API Key</div></div>'
     +'<div class="cbody" style="padding:10px 12px">'
-    +'<input type="password" id="ps-key" placeholder="API key..." style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:11px;margin-bottom:6px">'
+    +'<input type="password" id="ps-key" placeholder="gsk_... or sk-ant-..." style="width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:11px;margin-bottom:6px">'
     +'<div style="display:flex;gap:6px">'
     +'<button class="sbtn" id="ps-save-btn" style="flex:1;font-size:11px;padding:5px">Save</button>'
     +'<button class="sbtn" id="ps-clear-btn" style="flex:1;font-size:11px;padding:5px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">Clear</button>'
@@ -1044,7 +1060,7 @@ function renderPSMaker(el){
   window._psCopies=window._psCopies||{};
 
   /* ── Restore key ── */
-  var sk=localStorage.getItem('groq_key');
+  var sk=localStorage.getItem('claude_key')||localStorage.getItem('groq_key');
   if(sk){
     document.getElementById('ps-key').value=sk;
     document.getElementById('ps-key-st').textContent='Key loaded';
@@ -1055,13 +1071,14 @@ function renderPSMaker(el){
   document.getElementById('ps-save-btn').onclick=function(){
     var k=document.getElementById('ps-key').value.trim();
     if(!k){showToast('Enter a key first');return;}
-    localStorage.setItem('groq_key',k);
+    if(k.startsWith('sk-ant-')){localStorage.setItem('claude_key',k);claudeApiKey=k;claudeApiKeyFree=k;}
+    else{localStorage.setItem('groq_key',k);groqApiKey=k;groqApiKeyFree=k;}
     document.getElementById('ps-key-st').textContent='Key saved';
     document.getElementById('ps-key-st').style.color='var(--g)';
     showToast('Key saved!');
   };
   document.getElementById('ps-clear-btn').onclick=function(){
-    localStorage.removeItem('groq_key');
+    localStorage.removeItem('groq_key');localStorage.removeItem('claude_key');
     document.getElementById('ps-key').value='';
     document.getElementById('ps-key-st').textContent='Key cleared';
   };
@@ -1182,8 +1199,9 @@ function renderPSMaker(el){
 
   /* ── Send message ── */
   window.psSend=async function(){
-    var key=localStorage.getItem('groq_key')||document.getElementById('ps-key').value.trim();
-    if(!key){showToast('Enter your Groq API key first');return;}
+    var key=localStorage.getItem('claude_key')||localStorage.getItem('groq_key')||document.getElementById('ps-key').value.trim();
+    var isClaude=key.startsWith('sk-ant-');
+    if(!key){showToast('Enter your API key first (Groq or Claude)');return;}
     var inp=document.getElementById('ps-input');
     var msg=inp.value.trim();
     if(!msg) return;
@@ -1212,19 +1230,32 @@ function renderPSMaker(el){
       +'\n- Max 5 words per option';
 
     try{
-      var resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-        method:'POST',
-        headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
-        body:JSON.stringify({
-          model:'llama-3.3-70b-versatile',
-          max_tokens:2500,
-          messages:[{role:'system',content:sysPrompt}].concat(psHistory)
-        })
-      });
-      if(!resp.ok) throw new Error('API error: '+resp.status);
-      var data=await resp.json();
-      if(data.error) throw new Error(data.error.message);
-      var reply=data.choices[0].message.content;
+      var reply='';
+      if(isClaude){
+        var resp=await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+          body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2500,system:sysPrompt,messages:psHistory})
+        });
+        if(!resp.ok) throw new Error('API error: '+resp.status);
+        var data=await resp.json();
+        if(data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+        reply=data.content[0].text;
+      } else {
+        var resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+          method:'POST',
+          headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
+          body:JSON.stringify({
+            model:'llama-3.3-70b-versatile',
+            max_tokens:2500,
+            messages:[{role:'system',content:sysPrompt}].concat(psHistory)
+          })
+        });
+        if(!resp.ok) throw new Error('API error: '+resp.status);
+        var data=await resp.json();
+        if(data.error) throw new Error(data.error.message);
+        reply=data.choices[0].message.content;
+      }
       psHistory.push({role:'assistant',content:reply});
       typingEl.remove();
 
@@ -3555,8 +3586,9 @@ function renderPacketTools(el){
 
   /* Wire traceroute analyzer */
   document.getElementById('tr-analyze-btn').onclick=async function(){
-    var key=localStorage.getItem('groq_key');
-    if(!key){showToast('⚠️ Enter your Groq API key in the PS Maker tab first');return;}
+    var key=localStorage.getItem('claude_key')||localStorage.getItem('groq_key');
+    var isClaude=key&&key.startsWith('sk-ant-');
+    if(!key){showToast('⚠️ Enter your API key (Groq or Claude) in the PS Maker tab first');return;}
     var input=document.getElementById('tr-input').value.trim();
     if(!input){showToast('Paste traceroute output first');return;}
     var tool=document.getElementById('tr-tool').value;
@@ -3579,15 +3611,28 @@ function renderPacketTools(el){
       +'Keep it concise and practical for a network engineer.';
 
     try{
-      var resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-        method:'POST',
-        headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
-        body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1500,
-          messages:[{role:'user',content:prompt}]})
-      });
-      if(!resp.ok) throw new Error('API error '+resp.status);
-      var data=await resp.json();
-      var analysis=data.choices[0].message.content;
+      var analysis='';
+      if(isClaude){
+        var resp=await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+          body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+        });
+        if(!resp.ok) throw new Error('API error '+resp.status);
+        var data=await resp.json();
+        if(data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+        analysis=data.content[0].text;
+      } else {
+        var resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+          method:'POST',
+          headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
+          body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1500,
+            messages:[{role:'user',content:prompt}]})
+        });
+        if(!resp.ok) throw new Error('API error '+resp.status);
+        var data=await resp.json();
+        analysis=data.choices[0].message.content;
+      }
 
       var out=document.getElementById('tr-output');
       out.style.display='block';
@@ -3670,8 +3715,59 @@ function hasCaution(cmds){return cmds.some(c=>cmdSafety(c)==='caution');}
 let cur='vpn',tab='guide',chat=[],loading=false;
 let freeAIPrompt='',freeAIHistory=[];
 let groqApiKey=localStorage.getItem('groq_key')||'';
-function saveKey(){const v=document.getElementById('apikey').value.trim();if(!v)return;groqApiKey=v;localStorage.setItem('groq_key',v);document.getElementById('apikey').value='';setKst('✓ saved','#3fb950');}
-window.addEventListener('load',()=>{if(groqApiKey)setKst('✓ key loaded','#3fb950');});
+let claudeApiKey=localStorage.getItem('claude_key')||'';
+let _kbarActiveProv='groq';
+function kbarUpdatePills(){
+  const gDot=document.getElementById('kst-groq-dot');
+  const cDot=document.getElementById('kst-claude-dot');
+  const gLbl=document.getElementById('kst-groq');
+  const cLbl=document.getElementById('kst-claude');
+  if(gDot&&gLbl){
+    if(groqApiKey){gDot.style.background='#3fb950';gLbl.style.color='#3fb950';gLbl.textContent='ready';}
+    else{gDot.style.background='#f85149';gLbl.style.color='var(--t3)';gLbl.textContent='not set';}
+  }
+  if(cDot&&cLbl){
+    if(claudeApiKey){cDot.style.background='#3fb950';cLbl.style.color='#3fb950';cLbl.textContent='ready';}
+    else{cDot.style.background='#f85149';cLbl.style.color='var(--t3)';cLbl.textContent='not set';}
+  }
+}
+function kbarOpen(prov){
+  _kbarActiveProv=prov;
+  const exp=document.getElementById('kbarExpanded');
+  const lbl=document.getElementById('kbarProvLabel');
+  const inp=document.getElementById('apikey');
+  const link=document.getElementById('kbarGetKeyLink');
+  if(prov==='claude'){
+    if(lbl) lbl.textContent='🧠 Claude API Key (sk-ant-...)';
+    if(inp){inp.placeholder='sk-ant-...';inp.value='';}
+    if(link){link.href='https://console.anthropic.com/keys';link.textContent='Get Claude key →';}
+  } else {
+    if(lbl) lbl.textContent='⚡ Groq API Key (gsk_...)';
+    if(inp){inp.placeholder='gsk_...';inp.value='';}
+    if(link){link.href='https://console.groq.com/keys';link.textContent='Get Groq key (free) →';}
+  }
+  if(exp) exp.style.display='flex';
+  if(inp) setTimeout(()=>inp.focus(),50);
+}
+function kbarToggle(){
+  const exp=document.getElementById('kbarExpanded');
+  if(exp) exp.style.display=exp.style.display==='flex'?'none':'flex';
+}
+function kbarProviderChange(){}
+function saveKey(){
+  const v=document.getElementById('apikey').value.trim();if(!v)return;
+  if(_kbarActiveProv==='claude'){claudeApiKey=v;claudeApiKeyFree=v;localStorage.setItem('claude_key',v);setKst('✓ Claude key saved','#3fb950');}
+  else{groqApiKey=v;groqApiKeyFree=v;localStorage.setItem('groq_key',v);setKst('✓ Groq key saved','#3fb950');}
+  document.getElementById('apikey').value='';
+  document.getElementById('kbarExpanded').style.display='none';
+  kbarUpdatePills();
+}
+window.addEventListener('load',()=>{
+  kbarUpdatePills();
+  if(groqApiKey&&claudeApiKey)setKst('Groq + Claude ready','#3fb950');
+  else if(claudeApiKey)setKst('Claude ready','#3fb950');
+  else if(groqApiKey)setKst('Groq ready','#3fb950');
+});
 function setKst(t,c){const el=document.getElementById('kst');el.textContent=t;el.style.color=c;}
 function sel(c){
   cur=c;localStorage.setItem('nw_cur',c);
@@ -4124,7 +4220,7 @@ function render(){const el=document.getElementById('mc');if(tab==='guide'){
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+cur+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -4278,9 +4374,11 @@ function copyAzureBlock(btn,idx){navigator.clipboard.writeText((window.AZURE_BLO
 function azureJump(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
 
 function renderAI(el){
+  const _activeProv = freeAIProvider==='claude' ? 'Claude (Anthropic)' : 'Groq';
+  const _hasKey = freeAIProvider==='claude' ? !!claudeApiKey : !!groqApiKey;
   let msgs='';
   if(!chat.length){
-    msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about FortiGate.<br><br>Tip: click any chip to auto-fill a question.<br><br>✨ Powered by Groq (free tier)</div>';
+    msgs='<div class="empty"><div style="font-size:28px;margin-bottom:10px;">🛠️</div>Ask anything about FortiGate.<br><br>Tip: click any chip to auto-fill a question.<br><br>✨ Powered by '+_activeProv+(_hasKey?'':' <span style="color:var(--r);font-size:11px">(no key set)</span>')+'</div>';
   } else {
     chat.forEach(m=>{
       const u=m.role==='user';
@@ -4289,10 +4387,20 @@ function renderAI(el){
     if(loading) msgs+='<div class="msg"><div class="av ai">FG</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>';
   }
 
-  const privBanner='<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5"><span style="flex-shrink:0">⚠️</span><div><strong>Messages are sent to Groq API</strong> (third party). Avoid sharing real IPs or credentials.<br>Before sending CLI output: use <span class="ai-mask-link" style="color:var(--a);cursor:pointer;text-decoration:underline">🎭 IP Masking</span> to replace individual IPs, or <span class="ai-bulk-link" style="color:var(--a);cursor:pointer;text-decoration:underline">📋 Bulk Anonymizer</span> to anonymize a full CLI output at once (replaces all IPs, MACs, hostnames).</div></div>';
+  const provSelector='<div style="display:flex;align-items:center;gap:10px;margin:10px 10px 0;padding:8px 12px;background:var(--b3);border-radius:8px;font-size:11px;flex-wrap:wrap">'
+    +'<span style="color:var(--t2);font-weight:600">🤖 Provider:</span>'
+    +'<label style="display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--t)">'
+    +'<input type="radio" name="aiChatProv" value="groq" '+(freeAIProvider==='groq'?'checked':'')+' onchange="aiChatProvChange(\'groq\')" style="accent-color:var(--a)"> Groq'
+    +(groqApiKey?' <span style="color:var(--g);font-size:10px">✓</span>':' <span style="color:var(--r);font-size:10px">(no key)</span>')+'</label>'
+    +'<label style="display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--t)">'
+    +'<input type="radio" name="aiChatProv" value="claude" '+(freeAIProvider==='claude'?'checked':'')+' onchange="aiChatProvChange(\'claude\')" style="accent-color:var(--a)"> Claude'
+    +(claudeApiKey?' <span style="color:var(--g);font-size:10px">✓</span>':' <span style="color:var(--r);font-size:10px">(no key)</span>')+'</label>'
+    +(!_hasKey?'<span style="color:var(--r);font-size:10px">— Enter key via <strong>Set Key</strong> above</span>':'')
+    +'</div>';
+  const privBanner='<div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:var(--y);line-height:1.5"><span style="flex-shrink:0">⚠️</span><div><strong>Messages are sent to '+_activeProv+' API</strong> (third party). Avoid sharing real IPs or credentials.<br>Before sending CLI output: use <span class="ai-mask-link" style="color:var(--a);cursor:pointer;text-decoration:underline">🎭 IP Masking</span> to replace individual IPs, or <span class="ai-bulk-link" style="color:var(--a);cursor:pointer;text-decoration:underline">📋 Bulk Anonymizer</span> to anonymize a full CLI output at once (replaces all IPs, MACs, hostnames).</div></div>';
   const ipWarn='<div id="aiPrivWarn" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:9px 13px;margin-bottom:8px;font-size:11px;color:#f87171;line-height:1.5"><span style="flex-shrink:0">🚨</span><div>Private IPs detected: <strong style="font-family:var(--mono);color:#fca5a5"></strong><br>Use <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'masking\')">🎭 IP Masking</span> for individual IPs or <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'bulkAnon\')">📋 Bulk Anonymizer</span> for full CLI output before sending.</div></div>';
 
-  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">'+privBanner.replace('margin-bottom:8px','margin:10px 10px 0')+ipWarn.replace('margin-bottom:8px','margin:6px 10px 0')+'<div class="messages" id="chatm">'+msgs+'</div>'+'<div class="irow"><input type="text" id="chi" placeholder="Ask anything about FortiGate..." /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div></div>';
+  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">'+provSelector+privBanner.replace('margin-bottom:8px','margin:6px 10px 0')+ipWarn.replace('margin-bottom:8px','margin:4px 10px 0')+'<div class="messages" id="chatm">'+msgs+'</div>'+'<div class="irow"><input type="text" id="chi" placeholder="Ask anything about FortiGate..." /><button class="ibtn" '+(loading?'disabled':'')+'>Send ↗</button></div></div>';
 
   // Wire input events cleanly — no inline handlers
   const chiEl=document.getElementById('chi');
@@ -4310,13 +4418,124 @@ function renderAI(el){
   if(cm) cm.scrollTop=cm.scrollHeight;
 }
 
+function aiChatProvChange(prov){
+  freeAIProvider=prov;
+  localStorage.setItem('freeai_provider',prov);
+  render(); // re-render the current tab so banners/header update
+}
+
+/* ══ CLAUDE CHAT TAB ══ */
+let claudeChat=[],claudeChatLoading=false;
+function renderClaudeChat(el){
+  const hasKey=!!claudeApiKey;
+  let msgs='';
+  if(!claudeChat.length){
+    msgs='<div class="empty"><div style="font-size:32px;margin-bottom:10px;">🧠</div>'
+      +(hasKey
+        ? '<strong style="color:var(--t)">Claude is ready.</strong><br><br>Ask anything — FortiGate CLI, troubleshooting, configs, or general networking questions.'
+        : '<strong style="color:var(--r)">No Claude API key set.</strong><br><br>Enter your Claude key (<code style="font-size:11px;color:var(--g)">sk-ant-...</code>) via the <strong>Set Key</strong> button at the top of the page.<br><br><a href="https://console.anthropic.com/keys" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">Get a key at console.anthropic.com →</a>')
+      +'</div>';
+  } else {
+    claudeChat.forEach(m=>{
+      const u=m.role==='user';
+      msgs+='<div class="msg '+(u?'user':'')+'"><div class="av '+(u?'usr':'ai')+'">'+(u?'U':'🧠')+'</div><div class="bubble">'+fmt(m.content)+'</div></div>';
+    });
+    if(claudeChatLoading) msgs+='<div class="msg"><div class="av ai">🧠</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>';
+  }
+
+  const modelPill='<div style="display:flex;align-items:center;gap:8px;margin:10px 10px 0;padding:7px 12px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.22);border-radius:8px;font-size:11px;flex-wrap:wrap">'
+    +'<span style="color:#a5b4fc;font-weight:700">🧠 Claude Sonnet 4</span>'
+    +'<span style="color:var(--t3)">·</span>'
+    +(hasKey
+      ? '<span style="color:var(--g)">✓ Key loaded</span>'
+      : '<span style="color:var(--r)">No key — enter via Set Key above</span>')
+    +'<span style="margin-left:auto"><button onclick="claudeChat=[];claudeChatLoading=false;render()" style="font-size:10px;color:var(--t3);background:none;border:none;cursor:pointer;font-family:var(--mono)">🗑 Clear</button></span>'
+    +'</div>';
+
+  const privBanner='<div style="display:flex;align-items:flex-start;gap:8px;background:rgba(234,179,8,.06);border:1px solid rgba(234,179,8,.2);border-radius:7px;padding:8px 12px;margin:6px 10px 0;font-size:11px;color:var(--y);line-height:1.5">'
+    +'<span>⚠️</span><span>Messages sent to <strong>Anthropic Claude API</strong>. Avoid real IPs or credentials — use '
+    +'<span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab(\'bulkAnon\')">📋 Bulk Anonymizer</span> first.</span></div>';
+
+  el.innerHTML='<div style="background:var(--b2);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">'
+    +modelPill+privBanner
+    +'<div class="messages" id="cchatm">'+msgs+'</div>'
+    +'<div class="irow"><input type="text" id="cci" placeholder="Ask Claude anything..." '+(claudeChatLoading?'disabled':'')+'/>'
+    +'<button class="ibtn" id="ccbtn" '+(claudeChatLoading?'disabled':'')+'>Send ↗</button></div></div>';
+
+  const inp=document.getElementById('cci');
+  const btn=document.getElementById('ccbtn');
+  if(inp) inp.addEventListener('keydown',e=>{ if(e.key==='Enter') sendClaudeMsg(); });
+  if(btn) btn.addEventListener('click', sendClaudeMsg);
+
+  const cm=document.getElementById('cchatm');
+  if(cm) cm.scrollTop=cm.scrollHeight;
+}
+
+async function sendClaudeMsg(){
+  const inp=document.getElementById('cci');
+  if(!inp||claudeChatLoading) return;
+  const text=inp.value.trim();
+  if(!text) return;
+  if(!claudeApiKey){
+    alert('No Claude API key set. Enter your key (sk-ant-...) via the Set Key button at the top.');
+    return;
+  }
+  inp.value='';
+  claudeChat.push({role:'user',content:text});
+  claudeChatLoading=true;
+  render();
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1500,
+        system:'You are a senior FortiGate network engineer and general networking expert. Give concise, practical answers. Use backticks for CLI commands.',
+        messages:claudeChat
+      })
+    });
+    const data=await resp.json();
+    if(data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+    claudeChat.push({role:'assistant',content:data.content[0].text});
+  }catch(e){
+    claudeChat.push({role:'assistant',content:'❌ Error: '+e.message+'\n\nCheck your Claude API key is valid and has credits.'});
+  }
+  claudeChatLoading=false;
+  render();
+}
+
 async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loading)return;const text=inp.value.trim();if(!text)return;
   const _ip=/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g;
   const _pr=[/^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[01])\./, /^100\.64\./];
   const _ips=[...new Set(text.match(_ip)||[])].filter(ip=>_pr.some(r=>r.test(ip)));
   const _aw=document.getElementById('aiPrivWarn');
   if(_ips.length>0&&_aw){_aw.style.display='flex';_aw.querySelector('strong').textContent=_ips.slice(0,4).join(', ')+(_ips.length>4?' …':'');}
-  inp.value='';chat.push({role:'user',content:text});loading=true;render();const sys='You are a senior FortiGate engineer. Current category: "'+D[cur].t+'". Give concise, practical FortiGate CLI. Use backticks.';try{if(!groqApiKey)throw new Error('no-key');const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sys},...chat]})});const data=await resp.json();if(data.error)throw new Error(data.error.message);chat.push({role:'assistant',content:data.choices[0].message.content});}catch(e){chat.push({role:'assistant',content:e.message==='no-key'?'No Groq API key set. Enter your key at the top.':'Error: '+e.message});}loading=false;render();}
+  inp.value='';chat.push({role:'user',content:text});loading=true;render();
+  const sys='You are a senior FortiGate engineer. Current category: "'+D[cur].t+'". Give concise, practical FortiGate CLI. Use backticks.';
+  try{
+    const useClaude = freeAIProvider==='claude' ? !!claudeApiKey : (!groqApiKey && !!claudeApiKey);
+    if(!groqApiKey&&!claudeApiKey)throw new Error('no-key');
+    if(freeAIProvider==='claude'&&!claudeApiKey)throw new Error('no-claude-key');
+    if(freeAIProvider==='groq'&&!groqApiKey&&!claudeApiKey)throw new Error('no-key');
+    let reply='';
+    if(useClaude){
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:sys,messages:chat.slice(0,-1).concat([{role:'user',content:text}])})});
+      const data=await resp.json();
+      if(data.error)throw new Error(data.error.message);
+      reply=data.content[0].text;
+    } else {
+      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sys},...chat]})});
+      const data=await resp.json();
+      if(data.error)throw new Error(data.error.message);
+      reply=data.choices[0].message.content;
+    }
+    chat.push({role:'assistant',content:reply});
+  }catch(e){
+    const msg=e.message==='no-key'?'No API key set. Enter your Groq or Claude key via the Set Key button at the top.':e.message==='no-claude-key'?'Claude selected but no Claude key found. Enter your Claude key (sk-ant-...) via Set Key.':'Error: '+e.message;
+    chat.push({role:'assistant',content:msg});
+  }
+  loading=false;render();}
 
 function renderAnalyze(el){el.innerHTML='<div style="margin-bottom:10px;"><div style="font-size:15px;font-weight:700;">Paste CLI output for AI analysis</div><div style="font-size:12px;color:var(--t2);">Mask IPs before sending.</div></div><div style="display:flex;gap:8px;margin-bottom:8px;"><select id="acat" style="font-size:12px;padding:6px;background:var(--b2);"><option value="">-- Context --</option>'+Object.keys(D).map(k=>'<option value="'+k+'">'+D[k].t+'</option>').join('')+'</select><input type="text" id="acmd" placeholder="Command you ran" style="flex:1;font-size:12px;padding:6px;background:var(--bg);"/></div><textarea id="aout" placeholder="Paste raw FortiGate CLI output..." style="width:100%;height:160px;font-family:var(--mono);font-size:12px;padding:12px;background:var(--bg);color:var(--g);border:1px solid var(--br);border-radius:8px;"></textarea><div id="ares" style="margin-top:12px;"></div>';}
 
@@ -4335,18 +4554,57 @@ function renderMaskingTab(el){el.innerHTML=`<div class="card" style="background:
   document.getElementById("exportMaskStandalone")?.addEventListener('click',()=>{let content="# NetWolf IP Masking Report\n\n";ipMappings.forEach(m=>{content+=`${m.real} → ${m.fake} (${m.desc||''})\n`;});let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:"text/plain"}));a.download=`netwolf_mask_${Date.now()}.txt`;a.click();});document.getElementById("applyMaskStandalone")?.addEventListener('click',()=>{let raw=document.getElementById("rawTextMask").value;document.getElementById("maskedPreviewStandalone").innerText=maskTextStandalone(raw)||"(nothing to mask)";});}
 
 let groqApiKeyFree=localStorage.getItem('groq_key')||'';
+let claudeApiKeyFree=localStorage.getItem('claude_key')||'';
+let freeAIProvider=localStorage.getItem('freeai_provider')||'groq';
 function renderFreeAITab(el){
-  const hasKey = !!groqApiKeyFree;
+  const hasGroq = !!groqApiKeyFree;
+  const hasClaude = !!claudeApiKeyFree;
+  const hasKey = freeAIProvider==='claude' ? hasClaude : hasGroq;
   el.innerHTML=`
-  <div class="sh"><span class="stitle">🧠 AI CLI Analyzer</span><span class="sev info">Powered by Groq — Free</span></div>
+  <div class="sh"><span class="stitle">🧠 AI CLI Analyzer</span><span class="sev info">Powered by Groq or Claude</span></div>
 
-  <!-- Setup guide — only shown when no key is set -->
+  <!-- Provider selector -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:10px 14px">
+    <span style="font-size:12px;font-weight:700;color:var(--t2)">🤖 AI Provider:</span>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--t)">
+      <input type="radio" name="freeAIProvider" value="groq" ${freeAIProvider==='groq'?'checked':''} onchange="freeAIProviderChange('groq')" style="accent-color:var(--a)">
+      <span>Groq <span style="color:var(--g);font-size:10px">${hasGroq?'✓ key saved':'(no key)'}</span></span>
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--t)">
+      <input type="radio" name="freeAIProvider" value="claude" ${freeAIProvider==='claude'?'checked':''} onchange="freeAIProviderChange('claude')" style="accent-color:var(--a)">
+      <span>Claude (Anthropic) <span style="color:var(--g);font-size:10px">${hasClaude?'✓ key saved':'(no key)'}</span></span>
+    </label>
+  </div>
+
+  <!-- Setup guide — only shown when no key for current provider -->
   ${!hasKey ? `
   <div style="background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.2);border-radius:12px;padding:20px 22px;margin-bottom:16px">
     <div style="font-size:13px;font-weight:700;color:var(--bl);margin-bottom:14px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:16px">🔑</span> First-time setup — get your free Groq API key
+      <span style="font-size:16px">🔑</span> ${freeAIProvider==='claude'?'Set up your Claude (Anthropic) API key':'First-time setup — get your free Groq API key'}
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px">
+      ${freeAIProvider==='claude'?`
+      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">1</div>
+          <span style="font-size:12px;font-weight:700;color:var(--t)">Open console.anthropic.com</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Go to <a href="https://console.anthropic.com/keys" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">console.anthropic.com/keys</a> and sign in.</div>
+      </div>
+      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">2</div>
+          <span style="font-size:12px;font-weight:700;color:var(--t)">Create API key</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Click <strong style="color:var(--t)">Create Key</strong>. Copy the key starting with <span style="font-family:var(--mono);color:var(--g);font-size:10.5px">sk-ant-...</span></div>
+      </div>
+      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">3</div>
+          <span style="font-size:12px;font-weight:700;color:var(--t)">Paste it below</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Enter your key in the field below and click <strong style="color:var(--t)">Save</strong>. Stored locally only.</div>
+      </div>`:`
       <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
           <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">1</div>
@@ -4367,10 +4625,10 @@ function renderFreeAITab(el){
           <span style="font-size:12px;font-weight:700;color:var(--t)">Paste it below</span>
         </div>
         <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Enter your key in the field below and click <strong style="color:var(--t)">Save</strong>. It's stored locally — never sent to our servers.</div>
-      </div>
+      </div>`}
     </div>
     <div style="background:rgba(29,158,117,.05);border-left:3px solid var(--a);padding:8px 12px;border-radius:0 6px 6px 0;font-size:11.5px;color:var(--t2);line-height:1.6">
-      💡 <strong style="color:var(--t)">Completely free</strong> — Groq offers a generous free tier with no credit card required. Your key is saved in your browser and persists between sessions.
+      ${freeAIProvider==='claude'?'💡 <strong style="color:var(--t)">Claude API</strong> — powerful models by Anthropic. Requires an account with available credits. Key stored in your browser only.':'💡 <strong style="color:var(--t)">Completely free</strong> — Groq offers a generous free tier with no credit card required. Your key is saved in your browser and persists between sessions.'}
     </div>
   </div>` : ''}
 
@@ -4378,24 +4636,24 @@ function renderFreeAITab(el){
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
     ${hasKey
       ? `<div style="display:flex;align-items:center;gap:8px;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:20px;padding:5px 14px">
-           <span style="font-size:11px;color:var(--g)">✓ Groq key saved</span>
+           <span style="font-size:11px;color:var(--g)">✓ ${freeAIProvider==='claude'?'Claude':'Groq'} key saved</span>
            <button id="groqToggleBtn" onclick="groqToggleKey()" style="font-size:10px;color:var(--bl);background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono)">Change</button>
          </div>`
       : `<button id="groqToggleBtn" onclick="groqToggleKey()"
            style="display:inline-flex;align-items:center;gap:6px;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--bl);cursor:pointer;font-family:var(--mono)">
-           🔑 Add Groq API Key
+           🔑 Add ${freeAIProvider==='claude'?'Claude':'Groq'} API Key
          </button>`
     }
-    <button onclick="showGroqGuide()" style="font-size:11px;color:var(--bl);background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:20px;padding:4px 12px;cursor:pointer;white-space:nowrap">❓ How to get a free key</button>
+    ${freeAIProvider==='groq'?`<button onclick="showGroqGuide()" style="font-size:11px;color:var(--bl);background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:20px;padding:4px 12px;cursor:pointer;white-space:nowrap">❓ How to get a free key</button>`:''}
   </div>
   <div id="groqKeyPanel" style="display:none;flex-direction:column;gap:8px;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:12px 14px;margin-bottom:12px">
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      <span style="font-size:11px;font-weight:600;color:var(--t2);white-space:nowrap">🔑 API Key</span>
-      <input type="password" id="groqApiKeyInput" placeholder="gsk_..." value="${escapeHtml(groqApiKeyFree)}"
+      <span style="font-size:11px;font-weight:600;color:var(--t2);white-space:nowrap">🔑 ${freeAIProvider==='claude'?'Claude':'Groq'} Key</span>
+      <input type="password" id="groqApiKeyInput" placeholder="${freeAIProvider==='claude'?'sk-ant-...':'gsk_...'}" value="${escapeHtml(freeAIProvider==='claude'?claudeApiKeyFree:groqApiKeyFree)}"
         style="flex:1;min-width:160px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
       <button class="sbtn" id="saveGroqKeyBtn" style="white-space:nowrap;padding:6px 14px">💾 Save</button>
       <button class="sbtn" id="clearGroqKeyBtn" style="white-space:nowrap;padding:6px 14px;background:#B91C1C">🗑️ Clear Key</button>
-      <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--bl);white-space:nowrap">Get key →</a>
+      <a href="${freeAIProvider==='claude'?'https://console.anthropic.com/keys':'https://console.groq.com/keys'}" target="_blank" rel="noopener noreferrer" style="font-size:11px;color:var(--bl);white-space:nowrap">Get key →</a>
     </div>
     <div style="font-size:11px;color:var(--t3);line-height:1.5;border-top:1px solid var(--br);padding-top:8px;">
       🔒 Your key is stored locally in <strong style="color:var(--t2)">your browser only</strong> — never sent to NetWolf servers. On a shared computer, click <strong style="color:var(--r)">Clear Key</strong> before closing.
@@ -4404,21 +4662,27 @@ function renderFreeAITab(el){
 
   <!-- Model selector -->
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-    <span style="font-size:12px;font-weight:600;color:var(--t2)">🤖 Model:</span>
+    <span style="font-size:12px;font-weight:600;color:var(--t2)">🧠 Model:</span>
     <select id="groqModelSelect" style="background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--t);outline:none;cursor:pointer">
+      ${freeAIProvider==='claude'?`
+      <option value="claude-sonnet-4-20250514">Claude Sonnet 4 — Best balance (recommended)</option>
+      <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — Fastest</option>
+      <option value="claude-opus-4-20250514">Claude Opus 4 — Most powerful</option>
+      `:`
       <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B — Most accurate (recommended)</option>
       <option value="mixtral-8x7b-32768">Mixtral 8x7B — Fast &amp; balanced</option>
       <option value="llama-3.1-8b-instant">LLaMA 3.1 8B — Fastest response</option>
+      `}
     </select>
-    <span style="font-size:11px;color:var(--t3)">All models free via Groq API</span>
+    <span style="font-size:11px;color:var(--t3)">${freeAIProvider==='claude'?'Claude API — requires Anthropic account':'All models free via Groq API'}</span>
   </div>
 
-  <!-- FIX 1: Privacy warning banner -->
+  <!-- Privacy warning banner -->
   <div style="display:flex;align-items:flex-start;gap:10px;background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11.5px;color:var(--y);line-height:1.6;">
     <span style="font-size:15px;flex-shrink:0;">⚠️</span>
-    <span>Text you paste here is sent to <strong>Groq's API</strong> (a third party). <strong>Do not paste real IPs, hostnames, credentials, or customer data.</strong><br>Use <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">🎭 IP Masking</span> for individual IPs, or <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('bulkAnon')">📋 Bulk Anonymizer</span> to anonymize a full CLI output at once.</span>
+    <span>Text you paste here is sent to <strong>${freeAIProvider==='claude'?"Anthropic's Claude API":"Groq's API"}</strong> (a third party). <strong>Do not paste real IPs, hostnames, credentials, or customer data.</strong><br>Use <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('masking')">🎭 IP Masking</span> for individual IPs, or <span style="color:var(--a);cursor:pointer;text-decoration:underline" onclick="stab('bulkAnon')">📋 Bulk Anonymizer</span> to anonymize a full CLI output at once.</span>
   </div>
-  <!-- FIX 2: IP detection warning -->
+  <!-- IP detection warning -->
   <div id="groqIpWarning" style="display:none;align-items:flex-start;gap:10px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:11.5px;color:#f87171;line-height:1.6;">
     <span style="font-size:15px;flex-shrink:0;">🚨</span>
     <span>Private IP addresses detected: <strong id="groqIpList" style="font-family:var(--mono);color:#fca5a5"></strong><br>
@@ -4478,22 +4742,32 @@ function renderFreeAITab(el){
   }
 
   document.getElementById('clearGroqKeyBtn').onclick=()=>{
-    if(!confirm('Clear your saved Groq API key from this browser?')) return;
-    localStorage.removeItem('groq_key');
-    groqApiKeyFree=''; groqApiKey='';
-    showToast('🗑️ Groq API key cleared from browser.');
+    const prov=freeAIProvider;
+    if(!confirm(`Clear your saved ${prov==='claude'?'Claude':'Groq'} API key from this browser?`)) return;
+    if(prov==='claude'){localStorage.removeItem('claude_key');claudeApiKeyFree='';claudeApiKey='';}
+    else{localStorage.removeItem('groq_key');groqApiKeyFree='';groqApiKey='';}
+    showToast(`🗑️ ${prov==='claude'?'Claude':'Groq'} API key cleared from browser.`);
     renderFreeAITab(el);
   };
 
   document.getElementById('saveGroqKeyBtn').onclick=()=>{
     const k=document.getElementById('groqApiKeyInput').value.trim();
-    if(!k){ showToast('⚠️ Please enter your Groq API key first.'); return; }
-    if(!k.startsWith('gsk_')){ showToast('⚠️ Key should start with gsk_'); return; }
-    localStorage.setItem('groq_key',k);
-    groqApiKeyFree=k; groqApiKey=k;
-    showToast('✅ Groq API key saved!');
+    const prov=freeAIProvider;
+    if(!k){ showToast('⚠️ Please enter your API key first.'); return; }
+    if(prov==='claude'){
+      if(!k.startsWith('sk-ant-')){ showToast('⚠️ Claude key should start with sk-ant-'); return; }
+      localStorage.setItem('claude_key',k);
+      claudeApiKeyFree=k; claudeApiKey=k;
+      showToast('✅ Claude API key saved!');
+    } else {
+      if(!k.startsWith('gsk_')){ showToast('⚠️ Groq key should start with gsk_'); return; }
+      localStorage.setItem('groq_key',k);
+      groqApiKeyFree=k; groqApiKey=k;
+      showToast('✅ Groq API key saved!');
+    }
     document.getElementById('groqApiKeyInput').value=k.slice(0,8)+'••••••••••••••••••••';
     const kp=document.getElementById('groqKeyPanel'); if(kp) kp.style.display='none';
+    kbarUpdatePills();
     renderFreeAITab(el);
   };
 
@@ -4521,8 +4795,10 @@ Npu-flag      : 00`;
     const prompt=document.getElementById('groqPrompt').value.trim();
     const respDiv=document.getElementById('groqResponse');
     if(!prompt){ respDiv.innerHTML='<span style="color:var(--r)">⚠️ Paste some CLI output first.</span>'; return; }
-    if(!groqApiKeyFree){
-      respDiv.innerHTML='<span style="color:var(--r)">⚠️ No API key set. Enter your Groq key above and click Save.</span>';
+    const prov=freeAIProvider;
+    const activeKey=prov==='claude'?claudeApiKeyFree:groqApiKeyFree;
+    if(!activeKey){
+      respDiv.innerHTML=`<span style="color:var(--r)">⚠️ No ${prov==='claude'?'Claude':'Groq'} API key set. Enter your key above and click Save.</span>`;
       return;
     }
     const ipPattern=/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g;
@@ -4532,24 +4808,32 @@ Npu-flag      : 00`;
     if(sensitiveIPs.length>0){
       if(warnDiv){warnDiv.style.display='flex';document.getElementById('groqIpList').textContent=sensitiveIPs.slice(0,6).join(', ')+(sensitiveIPs.length>6?' …':'');}
     } else { if(warnDiv) warnDiv.style.display='none'; }
-    respDiv.innerHTML='<div class="typing"><span></span><span></span><span></span></div>&nbsp; Analyzing with '+document.getElementById('groqModelSelect').options[document.getElementById('groqModelSelect').selectedIndex].text.split('—')[0]+'...';
+    const selModel=document.getElementById('groqModelSelect');
+    const modelLabel=selModel.options[selModel.selectedIndex].text.split('—')[0];
+    respDiv.innerHTML='<div class="typing"><span></span><span></span><span></span></div>&nbsp; Analyzing with '+modelLabel+'...';
     try{
-      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKeyFree}`},
-        body:JSON.stringify({
-          model:document.getElementById('groqModelSelect').value,
-          messages:[
-            {role:'system',content:'You are a senior FortiGate network engineer. Analyze the CLI output or question and provide: 1) Root cause or direct answer, 2) Recommended CLI fix commands in code blocks, 3) Brief explanation. Be concise and practical.'},
-            {role:'user',content:prompt}
-          ],
-          temperature:0.3,
-          max_tokens:1500
-        })
-      });
-      const data=await resp.json();
-      if(data.error) throw new Error(data.error.message);
-      const _rt = data.choices[0].message.content;
+      let _rt='';
+      const sysmsg='You are a senior FortiGate network engineer. Analyze the CLI output or question and provide: 1) Root cause or direct answer, 2) Recommended CLI fix commands in code blocks, 3) Brief explanation. Be concise and practical.';
+      const chosenModel=selModel.value;
+      if(prov==='claude'){
+        const resp=await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':claudeApiKeyFree,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+          body:JSON.stringify({model:chosenModel,max_tokens:1500,system:sysmsg,messages:[{role:'user',content:prompt}]})
+        });
+        const data=await resp.json();
+        if(data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+        _rt=data.content[0].text;
+      } else {
+        const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKeyFree}`},
+          body:JSON.stringify({model:chosenModel,messages:[{role:'system',content:sysmsg},{role:'user',content:prompt}],temperature:0.3,max_tokens:1500})
+        });
+        const data=await resp.json();
+        if(data.error) throw new Error(data.error.message);
+        _rt=data.choices[0].message.content;
+      }
         respDiv.innerHTML=fmt(_rt);
         // Save to persistent history
         const _ts = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
@@ -4571,6 +4855,13 @@ Npu-flag      : 00`;
       respDiv.innerHTML=`<span style="color:var(--r)">❌ ${err.message}</span><br><span style="font-size:11px;color:var(--t3)">Check your API key is correct and has not expired.</span>`;
     }
   };
+}
+
+function freeAIProviderChange(prov){
+  freeAIProvider=prov;
+  localStorage.setItem('freeai_provider',prov);
+  const mc=document.getElementById('mc');
+  if(mc) renderFreeAITab(mc);
 }
 
 function renderMultiVendorTab(el){
@@ -10701,6 +10992,7 @@ function globalSearchFn(query){
     {id:'bulkAnon',title:'Bulk Anonymizer',match:'Tool: Bulk anonymize IPs and hostnames'},
     {id:'freeai',title:'AI CLI Analyzer',match:'Tool: AI-powered CLI analysis'},
     {id:'ai',title:'AI Assistant',match:'Tool: FortiGate assistant chat'},
+    {id:'claudechat',title:'Claude Chat',match:'Tool: Claude Anthropic chat assistant'},
     {id:'ref',title:'Quick Reference',match:'Reference: Common CLI commands'},
     {id:'multivendor',title:'Multi-Vendor CLI',match:'Reference: Cisco, Aruba, Huawei, Juniper, Palo Alto'},
     {id:'hwref',title:'Hardware Reference',match:'Reference: FortiGate hardware lookup'},
@@ -10799,14 +11091,6 @@ document.addEventListener('click', function(e){
   }
 });
 
-function kbarToggle(){
-  const exp = document.getElementById('kbarExpanded');
-  const btn = document.getElementById('kbarToggleBtn');
-  if(!exp) return;
-  const isOpen = exp.style.display === 'flex';
-  exp.style.display = isOpen ? 'none' : 'flex';
-  if(btn) btn.textContent = isOpen ? 'Set Key' : '✕ Close';
-}
 
 function toggleSidebar(){
   const sidebar = document.querySelector('.sidebar');
