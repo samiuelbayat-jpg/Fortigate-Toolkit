@@ -3222,7 +3222,7 @@ function renderPacketTools(el){
   /* ── Header ── */
   var hdr=document.createElement('div');
   hdr.className='sh';
-  hdr.innerHTML='<span class="stitle">📦 Packet Tools</span><span class="sev info">Debug Generator &middot; Packet Walk Simulator &middot; Traceroute Analyzer</span>';
+  hdr.innerHTML='<span class="stitle">📦 Packet Tools</span><span class="sev info">Debug Generator &middot; Packet Walk Simulator &middot; Traceroute Analyzer &middot; Wireshark Helper</span>';
   el.appendChild(hdr);
 
   /* ── Sub-tabs ── */
@@ -3232,6 +3232,7 @@ function renderPacketTools(el){
     {id:'t-debug', label:'⚙️ 1. FortiGate Debug Generator'},
     {id:'t-walk',  label:'🚶 2. Packet Walk Simulator'},
     {id:'t-trace', label:'📡 3. Traceroute Analyzer (AI)'},
+    {id:'t-wireshark', label:'🦈 4. Wireshark Helper'},
   ];
   tabs.forEach(function(t,i){
     var b=document.createElement('button');
@@ -3696,6 +3697,102 @@ function renderPacketTools(el){
     }
     document.getElementById('tr-loading').style.display='none';
     document.getElementById('tr-analyze-btn').disabled=false;
+  };
+
+  /* ══════════════════════════════════════════════════════════
+     PANEL 4 — Wireshark Helper
+  ══════════════════════════════════════════════════════════ */
+  var p3=document.createElement('div');
+  p3.id='panel-3';
+  p3.className='pt-panel';
+  p3.innerHTML=
+    '<div style="padding:10px 14px;background:rgba(63,185,80,.07);border:1px solid rgba(63,185,80,.25);border-radius:8px;margin-bottom:14px;font-size:12px;color:var(--t2);line-height:1.7">'
+    +'<strong style="color:#3fb950">✅ License note:</strong> Wireshark is free/open-source software under the GNU GPL. You can use it with this toolkit as an external packet analyzer. This page does not bundle or modify Wireshark, so it avoids GPL redistribution obligations. '
+    +'<a href="https://www.wireshark.org/" target="_blank" rel="noopener noreferrer" style="color:var(--a)">Official Wireshark site</a>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:14px">'
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">🟢 Best Safe Use</div></div><div class="cbody" style="font-size:12px;line-height:1.8;color:var(--t2)">'
+    +'<strong style="color:var(--t)">Use Wireshark to read packet captures, not to attack networks.</strong><br>'
+    +'Capture only on networks you own or are allowed to troubleshoot. Remove public/customer IPs before sharing captures. Prefer short captures with a tight filter.'
+    +'</div></div>'
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">🟡 FortiGate Capture Options</div></div><div class="cbody" style="font-size:12px;line-height:1.8;color:var(--t2)">'
+    +'GUI: <strong>Network → Diagnostics → Packet Capture</strong>, set interface/filter, then download the PCAP and open it in Wireshark.<br>'
+    +'CLI: use sniffer text output for quick checks; use GUI packet capture when you need a real PCAP file.'
+    +'</div></div>'
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">🔴 Be Careful</div></div><div class="cbody" style="font-size:12px;line-height:1.8;color:var(--t2)">'
+    +'Full captures can include passwords, tokens, DNS names, usernames, internal IPs, and customer traffic. Do not capture broad traffic on production unless you have approval.'
+    +'</div></div>'
+    +'</div>'
+
+    +'<div class="cblock" style="margin-bottom:14px"><div class="chdr"><div class="chdr-l">🦈 Wireshark Capture Planner</div><span style="font-size:10px;color:var(--t3)">Build FortiGate filters and Wireshark display filters</span></div><div class="cbody">'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:12px">'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Interface</label><input id="ws-intf" placeholder="any / port1 / wan1" value="any" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Source IP</label><input id="ws-src" placeholder="192.168.1.100" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Destination IP</label><input id="ws-dst" placeholder="8.8.8.8" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Port</label><input id="ws-port" placeholder="443" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-family:var(--mono);font-size:12px"></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Protocol</label><select id="ws-proto" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="tcp">TCP</option><option value="udp">UDP</option><option value="icmp">ICMP</option><option value="any">Any</option></select></div>'
+    +'<div><label style="font-size:11px;color:var(--t3);display:block;margin-bottom:4px">Packet count</label><select id="ws-count" style="width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);font-size:12px"><option value="50">50</option><option value="100" selected>100</option><option value="500">500</option><option value="0">Unlimited - stop manually</option></select></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="sbtn" id="ws-build-btn" style="padding:10px 20px;font-size:13px;font-weight:700">🦈 Build Wireshark Commands</button><button class="sbtn" id="ws-copy-btn" style="background:var(--b3);border:1px solid var(--br);color:var(--t2);padding:10px 20px;font-size:12px">📋 Copy Output</button></div>'
+    +'</div></div>'
+    +'<div id="ws-output" style="display:none"></div>';
+  el.appendChild(p3);
+
+  document.getElementById('ws-build-btn').onclick=function(){
+    var intf=(document.getElementById('ws-intf').value.trim()||'any');
+    var src=document.getElementById('ws-src').value.trim();
+    var dst=document.getElementById('ws-dst').value.trim();
+    var port=document.getElementById('ws-port').value.trim();
+    var proto=document.getElementById('ws-proto').value;
+    var count=document.getElementById('ws-count').value;
+    var parts=[];
+    if(src&&dst) parts.push('host '+src+' and host '+dst);
+    else if(src) parts.push('host '+src);
+    else if(dst) parts.push('host '+dst);
+    if(proto!=='any'&&proto!=='icmp') parts.push(proto);
+    if(proto==='icmp') parts.push('icmp');
+    if(port&&proto!=='icmp') parts.push('port '+port);
+    var bpf=parts.length?parts.join(' and '):'host <IP> or port <PORT>';
+    var display=[];
+    if(src&&dst) display.push('(ip.addr == '+src+' && ip.addr == '+dst+')');
+    else if(src) display.push('ip.addr == '+src);
+    else if(dst) display.push('ip.addr == '+dst);
+    if(proto!=='any') display.push(proto);
+    if(port&&proto!=='icmp') display.push('(tcp.port == '+port+' || udp.port == '+port+')');
+    var wsFilter=display.length?display.join(' && '):'ip.addr == <IP> || tcp.port == <PORT>';
+    var lines=[
+      '# Wireshark workflow for FortiGate',
+      '',
+      '# GREEN - safest method for a real PCAP:',
+      '# FortiGate GUI: Network > Diagnostics > Packet Capture',
+      '# Interface: '+intf,
+      '# Capture filter: '+bpf,
+      '# Download the PCAP, then open it in Wireshark.',
+      '',
+      '# YELLOW - quick CLI text capture on FortiGate:',
+      'diagnose sniffer packet '+intf+' "'+bpf+'" 4 '+count+' l',
+      '',
+      '# Wireshark display filters:',
+      wsFilter,
+      'tcp.analysis.retransmission || tcp.analysis.duplicate_ack || tcp.analysis.lost_segment',
+      'dns || tls || http || icmp',
+      '',
+      '# What to check in Wireshark:',
+      '# 1. Is the SYN leaving and is SYN/ACK returning?',
+      '# 2. Are there retransmissions, resets, or ICMP unreachable messages?',
+      '# 3. Does NAT change the source/destination as expected?',
+      '# 4. Does DNS resolve before the connection attempt?',
+      '# 5. Are packets missing on one side of the firewall?'
+    ];
+    var out=document.getElementById('ws-output');
+    out.style.display='block';
+    out.innerHTML='<div class="cblock"><div class="chdr"><div class="chdr-l" style="color:var(--a)">🦈 Generated Wireshark Helper Output</div></div><pre id="ws-out-pre" style="background:#0a0e14;color:#c9d1d9;font-family:\'Courier New\',monospace;font-size:12px;padding:16px;border-radius:0 0 10px 10px;white-space:pre-wrap;overflow-x:auto;line-height:1.9;margin:0"></pre></div>';
+    document.getElementById('ws-out-pre').textContent=lines.join('\n');
+  };
+  document.getElementById('ws-copy-btn').onclick=function(){
+    var pre=document.getElementById('ws-out-pre');
+    if(!pre){showToast('Build Wireshark output first');return;}
+    navigator.clipboard.writeText(pre.textContent).then(function(){showToast('Copied!');});
   };
 
   function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -12215,7 +12312,8 @@ function globalSearchFn(query){
     {id:'analyze',title:'Analyze Output',match:'Tool: Paste CLI output for analysis'},
     {id:'advdiag',title:'Advanced Diagnostics',match:'Tool: Expert diagnostics commands'},
     {id:'mostused',title:'Most Used Tools',match:'Tool: Common daily troubleshooting generators'},
-    {id:'pkttools',title:'Packet Tools',match:'Tool: Packet debug, packet walk, traceroute analyzer'},
+    {id:'pkttools',title:'Packet Tools',match:'Tool: Packet debug, packet walk, traceroute analyzer, Wireshark helper, PCAP capture filters'},
+    {id:'pkttools:wireshark',title:'Wireshark Helper',match:'Tool: FortiGate packet capture, PCAP workflow, Wireshark display filters, sniffer commands'},
     {id:'dhcpdiag',title:'DHCP Diagnostics',match:'Tool: DHCP lease, conflict, and rogue server checks'},
     {id:'subnetcalc',title:'Subnet Calculator',match:'Tool: IPv4 subnet calculator'},
     {id:'masking',title:'IP Masking',match:'Tool: Mask individual IP addresses'},
@@ -12309,7 +12407,14 @@ function globalSearchSelect(id){
   const searchBox = document.getElementById('globalSearch');
   if(resultsDiv) resultsDiv.style.display='none';
   if(searchBox) searchBox.value='';
-  nav(id);
+  const parts=String(id).split(':');
+  nav(parts[0]);
+  if(parts[1]){
+    setTimeout(function(){
+      const sub=document.getElementById('t-'+parts[1]);
+      if(sub) sub.click();
+    },0);
+  }
 }
 
 // Close search results when clicking outside
