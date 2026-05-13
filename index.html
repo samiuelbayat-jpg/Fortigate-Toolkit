@@ -12,6 +12,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-functions-compat.js"></script>
 <style>
 :root{
@@ -1411,6 +1412,7 @@ window.addEventListener('resize', init);
 const firebaseConfig={apiKey:"AIzaSyBU2ojtAtH2PvvrNJgG4vH3mbPdAPAGhzk",authDomain:"netwolf-ccd3d.firebaseapp.com",projectId:"netwolf-ccd3d",storageBucket:"netwolf-ccd3d.firebasestorage.app",messagingSenderId:"942931607129",appId:"1:942931607129:web:5f644a2625931c70d6bb48",measurementId:"G-W0G3X4T0EW"};
 firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
+const fbDB=firebase.database('https://netwolf-ccd3d-default-rtdb.europe-west1.firebasedatabase.app');
 const fbFunctions=firebase.app().functions('europe-west1');
 
 /* ── PLAN SELECTION ── */
@@ -1474,6 +1476,12 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
   try{
     const result=await fbAuth.createUserWithEmailAndPassword(email,password);
     await result.user.updateProfile({displayName:username});
+    await fbDB.ref('users/'+result.user.uid).update({
+      terms_accepted:true,
+      signupPlan:selectedPlan,
+      signupEmail:email,
+      signupAt:firebase.database.ServerValue.TIMESTAMP
+    });
   }catch(firebaseErr){
     if(firebaseErr.code==='auth/email-already-in-use')showErr('This email already has an account. Log in at app.html instead.');
     else if(firebaseErr.code==='auth/weak-password')showErr('Password is too weak. Please use at least 8 characters.');

@@ -1143,21 +1143,29 @@ fbAuth.onAuthStateChanged(function(user){
       document.getElementById('toolkitContainer').style.display='block';
       const displayName=user.displayName||user.email.split('@')[0];
       document.getElementById('loggedInUser').textContent='👤 '+displayName;
-      // Check terms acceptance in Firebase — follows user across all devices
-      const _termsRef=fbDB.ref('users/'+user.uid+'/terms_accepted');
-      _termsRef.once('value').then(snap=>{
-        if(snap.val()===true){
-          // Already accepted on another device — go straight to toolkit
+      // Terms accepted during signup/payment are stored in Firebase.
+      // Paid active users also skip this modal to avoid asking twice after checkout.
+      const _userRef=fbDB.ref('users/'+user.uid);
+      Promise.all([
+        _userRef.child('terms_accepted').once('value'),
+        _userRef.child('subscription/status').once('value')
+      ]).then(([termsSnap,statusSnap])=>{
+        const hasAcceptedTerms=termsSnap.val()===true;
+        const subscriptionStatus=String(statusSnap.val()||'').toLowerCase();
+        const hasActiveSubscription=['active','trialing'].includes(subscriptionStatus);
+        if(hasAcceptedTerms||hasActiveSubscription){
+          if(!hasAcceptedTerms&&hasActiveSubscription){
+            _userRef.child('terms_accepted').set(true).catch(()=>{});
+          }
           showLandingThenInit();
         } else {
           showTermsModal(()=>{
-            // Save acceptance to Firebase so all devices see it
-            _termsRef.set(true).catch(()=>{});
+            _userRef.child('terms_accepted').set(true).catch(()=>{});
             showLandingThenInit();
           });
         }
       }).catch(()=>{
-        // Firebase DB unavailable — fall back to localStorage
+        // Firebase DB unavailable: fall back to localStorage.
         const _tk='forti_terms_'+user.uid;
         if(!localStorage.getItem(_tk)){
           showTermsModal(()=>{localStorage.setItem(_tk,'true');initAndRender();});
