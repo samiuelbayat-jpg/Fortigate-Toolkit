@@ -12,6 +12,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-functions-compat.js"></script>
 <style>
 :root{
   --a:#1D9E75;--ad:#0F6E56;--a2:#52d6b0;
@@ -813,8 +814,8 @@ footer a:hover{color:var(--a)}
     <div class="feat-card">
       <div class="feat-icon"><svg class="ic"><use href="#i-paintbrush"/></svg></div>
       <div class="feat-title">Built for Daily Use</div>
-      <div class="feat-desc">Works in any browser — no install needed. 5 colour themes so it fits your setup. One-click copy on every command. Version changelog so you always know what's new. Built to be open all day alongside your terminal.</div>
-      <div class="feat-tags"><span class="feat-tag">5 themes</span><span class="feat-tag">one-click copy</span><span class="feat-tag">any browser</span><span class="feat-tag">changelog</span></div>
+      <div class="feat-desc">Works in any browser — no install needed. 10 colour themes so it fits your setup. One-click copy on every command. Version changelog so you always know what's new. Built to be open all day alongside your terminal.</div>
+      <div class="feat-tags"><span class="feat-tag">10 themes</span><span class="feat-tag">one-click copy</span><span class="feat-tag">any browser</span><span class="feat-tag">changelog</span></div>
     </div>
   </div>
 
@@ -1173,9 +1174,10 @@ footer a:hover{color:var(--a)}
           <li><svg class="ic"><use href="#i-check"/></svg>Config Generator &amp; Smart Config Migrator</li>
           <li><svg class="ic"><use href="#i-check"/></svg>Advanced diagnostics &amp; kernel commands</li>
           <li><svg class="ic"><use href="#i-check"/></svg>EVE-NG Lab Setup Guide + PDF</li>
-          <li><svg class="ic"><use href="#i-check"/></svg>5 colour themes</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>10 colour themes</li>
           <li><svg class="ic"><use href="#i-check"/></svg>Personal Firebase-secured login</li>
-          <li><svg class="ic"><use href="#i-check"/></svg>Any browser · any device · instant access</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>2 registered devices included</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>Any browser on the same device counts as 1 device</li>
         </ul>
         <a href="#order" class="btn-ghost" style="display:flex;justify-content:center;text-decoration:none;margin-top:20px" onclick="setPlan('monthly')">Subscribe Monthly <svg class="ic"><use href="#i-arrow-right"/></svg></a>
         <div class="price-note">Cancel anytime · No commitment</div>
@@ -1188,6 +1190,7 @@ footer a:hover{color:var(--a)}
         <ul class="price-feats" style="margin-top:16px">
           <li><svg class="ic"><use href="#i-check"/></svg>Everything in the Monthly plan</li>
           <li><svg class="ic"><use href="#i-check"/></svg>2 months free vs monthly billing</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>5 registered devices included</li>
           <li><svg class="ic"><use href="#i-check"/></svg>Priority email support — 24h response</li>
           <li><svg class="ic"><use href="#i-check"/></svg>New content added throughout the year</li>
           <li><svg class="ic"><use href="#i-check"/></svg>Single annual payment — no monthly hassle</li>
@@ -1195,7 +1198,7 @@ footer a:hover{color:var(--a)}
         <a href="#order" class="btn-primary" style="display:flex;justify-content:center;text-decoration:none;margin-top:20px" onclick="setPlan('yearly')">Subscribe Yearly — Best Value <svg class="ic"><use href="#i-arrow-right"/></svg></a>
         <div class="price-note">One payment · 12 months access · Priority support</div>
         <div style="margin-top:12px;background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:9px;padding:10px 12px;font-size:11.5px;color:var(--t2);text-align:center;line-height:1.6;display:flex;align-items:center;justify-content:center;gap:6px">
-          <svg class="ic" style="color:var(--a)"><use href="#i-rocket"/></svg> <strong style="color:var(--a)">Going live soon</strong> — automatic billing coming when we launch out of beta
+          <svg class="ic" style="color:var(--a)"><use href="#i-rocket"/></svg> <strong style="color:var(--a)">Automatic billing</strong> — Stripe activates your plan and device allowance after payment
         </div>
       </div>
     </div>
@@ -1207,13 +1210,13 @@ footer a:hover{color:var(--a)}
   <div class="order-inner">
     <div class="section-label-wrap" style="justify-content:flex-start"><div class="section-label" style="text-align:left">Subscribe</div></div>
     <h2 class="section-title" style="text-align:left;margin-bottom:8px">Create your account</h2>
-    <p style="color:var(--t2);font-size:14px;margin-bottom:28px;line-height:1.7">Fill in your details below and choose your plan. Once the form is complete click <strong style="color:var(--t)">Subscribe &amp; Create Account</strong> — you will be taken to Stripe's secure checkout to complete payment. Questions? Email <a href="/cdn-cgi/l/email-protection#bfcccacfcfd0cdcbffd1dacbc8d0d3d9d9d0cdcbd6d8decbda91dcd0d2" style="color:var(--a)"><span class="__cf_email__" data-cfemail="b9caccc9c9d6cbcdf9d7dccdced6d5dfdfd6cbcdd0ded8cddc97dad6d4">[email&#160;protected]</span></a></p>
+    <p style="color:var(--t2);font-size:14px;margin-bottom:28px;line-height:1.7">Fill in your details below and choose your plan. Once the form is complete click <strong style="color:var(--t)">Create Account &amp; Continue to Payment</strong> — you will be taken to Stripe's secure checkout to complete payment. Questions? Email <a href="/cdn-cgi/l/email-protection#bfcccacfcfd0cdcbffd1dacbc8d0d3d9d9d0cdcbd6d8decbda91dcd0d2" style="color:var(--a)"><span class="__cf_email__" data-cfemail="b9caccc9c9d6cbcdf9d7dccdced6d5dfdfd6cbcdd0ded8cddc97dad6d4">[email&#160;protected]</span></a></p>
 
     <div class="beta-notice">
       <svg class="ic"><use href="#i-construction"/></svg>
       <div>
-        <div class="title">Beta Launch — Manual Verification Active</div>
-        <div class="text">NetWolf Pro is currently in beta. After subscribing your account will be <strong style="color:var(--t)">manually verified</strong> before toolkit access is granted. You will receive a confirmation email within 24 hours once verified. Payment is currently processed in <strong style="color:var(--t)">test mode</strong> — no real charges will be made during this period.</div>
+        <div class="title">Beta Launch — Automated Subscription Access</div>
+        <div class="text">NetWolf Pro is currently in beta. After payment, Stripe updates your Firebase account automatically and your selected device allowance is applied. Payment is currently processed in <strong style="color:var(--t)">test mode</strong> — no real charges will be made during this period.</div>
       </div>
     </div>
 
@@ -1222,9 +1225,9 @@ footer a:hover{color:var(--a)}
         <strong>How it works (Beta):</strong>
         <ol>
           <li>Fill in all your details below</li>
-          <li>Click Subscribe — Stripe secure checkout opens</li>
-          <li>Your account is created and sent for manual verification</li>
-          <li>You receive confirmation at your email within 24 hours</li>
+          <li>Click Create Account — Stripe secure checkout opens</li>
+          <li>After payment, your subscription is activated automatically</li>
+          <li>Your device allowance is applied to your account</li>
           <li>Log in at <a href="https://netwolffortigate.com/app.html" style="color:var(--a)">netwolffortigate.com/app.html</a></li>
         </ol>
       </div>
@@ -1276,34 +1279,32 @@ footer a:hover{color:var(--a)}
             <div class="plan-display-mark"><svg class="ic"><use href="#i-wolf"/></svg></div>
             <div>
               <div id="selectedPlanName" class="plan-display-name">NetWolf Pro — Monthly</div>
-              <div id="selectedPlanPrice" class="plan-display-price">€10 / month · billed monthly · cancel anytime</div>
+              <div id="selectedPlanPrice" class="plan-display-price">€10 / month · 2 devices · billed monthly</div>
             </div>
           </div>
           <a href="#pricing" class="plan-change">← Change plan</a>
         </div>
 
-        <div class="form-divider">Payment — secured by Stripe</div>
+        <div class="form-divider">Payment — secured by Stripe Checkout</div>
         <div class="cc-logos"><span class="cc-logo">VISA</span><span class="cc-logo">MC</span><span class="cc-logo">AMEX</span><span class="cc-logo">iDEAL</span></div>
-        <div class="security-note"><svg class="ic"><use href="#i-lock"/></svg> Card details go directly to Stripe's encrypted servers. NetWolf never sees or stores your card number.</div>
-        <div class="form-group"><label>Cardholder name *</label><input type="text" name="cardName" id="inp_cardName" placeholder="Name as printed on card" required></div>
-        <div class="form-group"><label>Card details *</label><div id="stripe-card-element"></div><div id="card-errors"></div></div>
+        <div class="security-note"><svg class="ic"><use href="#i-lock"/></svg> After your account is created, Stripe Checkout opens securely. NetWolf never sees or stores your card number.</div>
 
         <div class="form-divider">Anything else?</div>
         <div class="form-group"><label>Message / notes</label><textarea name="message" rows="2" placeholder="Invoice requirements, team size, questions..."></textarea></div>
         <div class="form-group" style="flex-direction:row;align-items:flex-start;gap:9px;margin-top:4px">
           <input type="checkbox" id="terms" style="margin-top:3px;width:auto;flex-shrink:0" required>
-          <label for="terms" style="font-size:12.5px;color:var(--t2);cursor:pointer;line-height:1.6">I agree to the <a href="#" onclick="openTos(event)" style="color:var(--a)">Terms of Service</a> and authorise the selected subscription charge to my card until cancelled.</label>
+          <label for="terms" style="font-size:12.5px;color:var(--t2);cursor:pointer;line-height:1.6">I agree to the <a href="#" onclick="openTos(event)" style="color:var(--a)">Terms of Service</a> and authorise the selected subscription to start through Stripe Checkout until cancelled.</label>
         </div>
         <div class="form-err" id="formError"></div>
-        <button type="submit" class="btn-submit" id="submitBtn"><svg class="ic"><use href="#i-lock"/></svg>Subscribe &amp; Request Access</button>
+        <button type="submit" class="btn-submit" id="submitBtn"><svg class="ic"><use href="#i-lock"/></svg>Create Account &amp; Continue to Payment</button>
         <div class="stripe-powered">Payments secured by <strong style="color:var(--t2)">Stripe</strong></div>
       </form>
 
       <div class="success-msg" id="successMsg">
         <div class="success-check"><svg class="ic"><use href="#i-check"/></svg></div>
-        <h3>Request received!</h3>
-        <p>Your subscription request has been received. Your account has been created and is pending manual verification.</p>
-        <p style="margin-top:8px">You will receive a confirmation email at your registered address within <strong>24 hours</strong> once your access is activated. Questions? Email <a href="/cdn-cgi/l/email-protection#27545257574855536749425350484b41414855534e404653420944484a" style="color:var(--a)"><span class="__cf_email__" data-cfemail="e5969095958a9791a58b8091928a8983838a97918c82849180cb868a88">[email&#160;protected]</span></a></p>
+        <h3>Account created!</h3>
+        <p>Your account is ready. We are opening Stripe Checkout so you can activate your subscription securely.</p>
+        <p style="margin-top:8px">After payment, your NetWolf access and device allowance will update automatically.</p>
         <div class="success-creds">
           <div>Username: <span id="showUsername">—</span></div>
           <div>Password: <span id="showPassword">—</span></div>
@@ -1410,32 +1411,33 @@ window.addEventListener('resize', init);
 const firebaseConfig={apiKey:"AIzaSyBU2ojtAtH2PvvrNJgG4vH3mbPdAPAGhzk",authDomain:"netwolf-ccd3d.firebaseapp.com",projectId:"netwolf-ccd3d",storageBucket:"netwolf-ccd3d.firebasestorage.app",messagingSenderId:"942931607129",appId:"1:942931607129:web:5f644a2625931c70d6bb48",measurementId:"G-W0G3X4T0EW"};
 firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
+const fbFunctions=firebase.app().functions('europe-west1');
 
 /* ── PLAN SELECTION ── */
 let selectedPlan = 'monthly';
-const STRIPE_LINKS = {
-  monthly: 'https://buy.stripe.com/test_14A9AS8bfdsA7UabZCgrS00',
-  yearly:  'https://buy.stripe.com/test_bJebJ0ajn2NWdeuaVygrS01'
-};
 function setPlan(plan){
   selectedPlan = plan;
   const nameEl = document.getElementById('selectedPlanName');
   const priceEl = document.getElementById('selectedPlanPrice');
   if(nameEl) nameEl.textContent = plan==='monthly' ? 'NetWolf Pro — Monthly' : 'NetWolf Pro — Yearly';
-  if(priceEl) priceEl.textContent = plan==='monthly' ? '€10 / month · billed monthly' : '€100 / year · save €20';
+  if(priceEl) priceEl.textContent = plan==='monthly' ? '€10 / month · 2 devices · billed monthly' : '€100 / year · 5 devices · save €20';
   const formCard = document.getElementById('formCard');
   if(formCard) formCard.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-/* ── STRIPE ── */
-let stripe,cardEl;
-try{
-  stripe=Stripe('pk_test_51TSFD7Bqf1D7wxWnqqjK2SdGEZ2rFZeU0MbfcWlJXrbRQNRIG4W3bRJqz8sIHTIuuWIy0rxdiYRpfwwoJenMgffS00hbta37GW');
-  const els=stripe.elements();
-  cardEl=els.create('card',{style:{base:{color:'#e8eef5',fontFamily:"'JetBrains Mono','Courier New',monospace",fontSize:'13px','::placeholder':{color:'#525c6b'}},invalid:{color:'#f85149'}}});
-  cardEl.mount('#stripe-card-element');
-  cardEl.on('change',e=>{document.getElementById('card-errors').textContent=e.error?e.error.message:'';});
-}catch(e){document.getElementById('stripe-card-element').innerHTML='<div style="color:var(--y);font-size:12px;padding:8px 0;">Add your Stripe publishable key to enable card payments.</div>';}
+/* ── STRIPE CHECKOUT ── */
+function getAppReturnUrl(){
+  if(location.protocol === 'http:' || location.protocol === 'https:'){
+    return new URL('app.html', location.href).href;
+  }
+  return 'https://netwolffortigate.com/app.html';
+}
+async function createStripeCheckout(plan){
+  const createCheckoutSession=fbFunctions.httpsCallable('createCheckoutSession');
+  const result=await createCheckoutSession({plan,baseUrl:getAppReturnUrl()});
+  if(!result.data||!result.data.url)throw new Error('Stripe checkout did not return a payment page.');
+  return result.data.url;
+}
 
 /* ── TOAST ── */
 function showToast(m){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4200);}
@@ -1481,13 +1483,20 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
   try{
     await fetch('https://formspree.io/f/xykoyrda',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({_subject:`New NetWolf subscriber: ${username}`,_replyto:email,username,firstName,lastName,email,company:g('company')||'—',country,plan:selectedPlan,message:g('message')||'—'})});
   }catch(ex){}
-  btn.textContent='Redirecting to payment…';
-  showToast('Account created! Redirecting to Stripe...');
-  document.getElementById('orderForm').style.display='none';
-  document.getElementById('successMsg').style.display='block';
-  document.getElementById('showUsername').textContent=username;
-  document.getElementById('showPassword').textContent='•'.repeat(password.length);
-  setTimeout(()=>{window.open(STRIPE_LINKS[selectedPlan],'_blank');}, 2000);
+  btn.textContent='Opening secure payment…';
+  showToast('Account created! Opening Stripe Checkout...');
+  try{
+    const checkoutUrl=await createStripeCheckout(selectedPlan);
+    document.getElementById('orderForm').style.display='none';
+    document.getElementById('successMsg').style.display='block';
+    document.getElementById('showUsername').textContent=username;
+    document.getElementById('showPassword').textContent='•'.repeat(password.length);
+    window.location.href=checkoutUrl;
+  }catch(checkoutErr){
+    btn.textContent='Continue to Payment';
+    showErr('Your account was created, but the payment page could not open yet. Please try again in a moment or contact support.');
+    console.error(checkoutErr);
+  }
 });
 
 /* ── TERMS ── */

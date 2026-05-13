@@ -80,6 +80,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .login-footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--br);font-size:12px;color:var(--t3)}
 .login-footer a{color:var(--a);text-decoration:none;font-weight:600}
 .login-footer a:hover{text-decoration:underline}
+.device-limit-overlay{position:fixed;inset:0;z-index:10001;display:none;align-items:center;justify-content:center;background:var(--loginBg);background-size:var(--wallSize);padding:18px}
+.device-limit-card{width:520px;max-width:96vw;background:var(--loginCardBg);border:1px solid var(--themeLine);border-radius:18px;box-shadow:var(--panelShadow);padding:26px;text-align:left}
+.device-limit-title{font-size:18px;font-weight:900;color:var(--t);margin-bottom:8px}
+.device-limit-copy{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:16px}
+.device-limit-meta{background:var(--bg);border:1px solid var(--br);border-radius:10px;padding:12px 14px;font-family:var(--mono);font-size:11px;color:var(--t2);line-height:1.8;margin-bottom:16px}
+.device-list{display:grid;gap:8px;margin:12px 0 16px}
+.device-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--br);border-radius:10px;padding:10px 12px}
+.device-row-title{font-size:12px;font-weight:800;color:var(--t);margin-bottom:3px}
+.device-row-meta{font-size:10px;color:var(--t3);font-family:var(--mono);line-height:1.5;word-break:break-word}
+.device-remove-btn{background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.28);color:var(--r);border-radius:8px;padding:7px 10px;font-size:11px;font-weight:800;cursor:pointer}
+.device-upgrade{background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.22);border-radius:10px;padding:10px 12px;color:var(--t2);font-size:12px;line-height:1.6;margin-bottom:14px}
+.device-upgrade strong{color:var(--bl)}
+.device-limit-actions{display:flex;gap:10px;flex-wrap:wrap}
+.device-limit-actions button{border:none;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:800;cursor:pointer}
+.device-limit-primary{background:linear-gradient(90deg,var(--a),var(--ad));color:#fff}
+.device-limit-secondary{background:var(--b3);color:var(--t);border:1px solid var(--br)!important}
 
 /* TERMS OVERLAY */
 .terms-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);z-index:10000;display:flex;justify-content:center;align-items:center}
@@ -659,6 +675,28 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   </div>
 </div>
 
+<div id="deviceLimitOverlay" class="device-limit-overlay">
+  <div class="device-limit-card">
+    <div class="device-limit-title">Device limit reached</div>
+    <div class="device-limit-copy" id="deviceLimitText">
+      This subscription has already used all allowed registered devices.
+    </div>
+    <div class="device-limit-meta" id="deviceLimitMeta"></div>
+    <div class="device-limit-copy">
+      A device means one physical computer/browser environment identified by NetWolf. Chrome and Edge on the same laptop should normally count as one device.
+    </div>
+    <div class="device-upgrade" id="deviceUpgradeHint">
+      Need more devices? <strong>Upgrade to the yearly plan</strong> to allow up to 5 registered devices.
+    </div>
+    <div id="deviceList" class="device-list"></div>
+    <div class="device-limit-actions">
+      <button class="device-limit-primary" onclick="window.location.reload()">Check Again</button>
+      <button class="device-limit-secondary" onclick="doLogout()">Logout</button>
+      <button class="device-limit-secondary" onclick="location.href='mailto:support@netwolffortigate.com?subject=NetWolf%20device%20limit%20request'">Contact Support</button>
+    </div>
+  </div>
+</div>
+
 <!-- SCREENSAVER -->
 <div id="nwScreensaver" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;cursor:pointer;background:#0d1117;" onclick="nwDismiss()">
   <canvas id="nwCanvas" style="position:absolute;top:0;left:0;"></canvas>
@@ -936,6 +974,144 @@ const fbAuth=firebase.auth();
 const fbDB=firebase.database();
 try{loadSavedTheme();}catch(e){}
 
+const NW_PLAN_LIMITS={monthly:2,month:2,pro_monthly:2,yearly:5,annual:5,year:5,pro_yearly:5};
+let NW_DEVICE_LIMIT_CONTEXT=null;
+function nwSafeKey(s){return String(s||'').replace(/[.#$\[\]/]/g,'_');}
+function nwNow(){return firebase.database.ServerValue.TIMESTAMP;}
+function nwBrowserId(){
+  let id=localStorage.getItem('nw_browser_id');
+  if(!id){
+    id=(crypto&&crypto.randomUUID)?crypto.randomUUID():'nw-'+Date.now()+'-'+Math.random().toString(16).slice(2);
+    localStorage.setItem('nw_browser_id',id);
+  }
+  return id;
+}
+async function nwSha256(text){
+  const data=new TextEncoder().encode(text);
+  const hash=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function nwDeviceLabel(){
+  const ua=navigator.userAgent||'';
+  const os=/Windows/i.test(ua)?'Windows':/Mac/i.test(ua)?'macOS':/Linux/i.test(ua)?'Linux':/Android/i.test(ua)?'Android':/iPhone|iPad/i.test(ua)?'iOS':'Device';
+  return os+' · '+screen.width+'x'+screen.height+' · '+(Intl.DateTimeFormat().resolvedOptions().timeZone||'local');
+}
+async function nwDeviceFingerprint(){
+  const parts=[
+    navigator.platform||'',
+    screen.width+'x'+screen.height,
+    screen.colorDepth||'',
+    window.devicePixelRatio||'',
+    navigator.language||'',
+    (navigator.languages||[]).join(','),
+    Intl.DateTimeFormat().resolvedOptions().timeZone||'',
+    navigator.hardwareConcurrency||'',
+    navigator.deviceMemory||'',
+    ('ontouchstart' in window)?'touch':'no-touch'
+  ];
+  return nwSafeKey(await nwSha256(parts.join('|')));
+}
+async function nwSubscriptionInfo(uid){
+  const snap=await fbDB.ref('users/'+uid+'/subscription').once('value');
+  const sub=snap.val()||{};
+  const plan=String(sub.plan||sub.type||'monthly').toLowerCase();
+  const status=String(sub.status||'active').toLowerCase();
+  const limit=Number(sub.deviceLimit||sub.devices||NW_PLAN_LIMITS[plan]||2);
+  return {plan,status,limit};
+}
+function nwFormatTime(v){
+  if(!v) return 'unknown';
+  try{return new Date(v).toLocaleString();}catch(e){return String(v);}
+}
+async function nwRenderDeviceList(info){
+  const box=document.getElementById('deviceList');
+  if(!box||!info.uid) return;
+  box.innerHTML='<div class="device-row"><div><div class="device-row-title">Loading registered devices...</div></div></div>';
+  try{
+    const snap=await fbDB.ref('users/'+info.uid+'/devices').once('value');
+    const devices=snap.val()||{};
+    const rows=Object.entries(devices).filter(([_,d])=>d&&d.active!==false);
+    if(!rows.length){box.innerHTML='<div class="device-row"><div><div class="device-row-title">No active devices found</div><div class="device-row-meta">Refresh and try again.</div></div></div>';return;}
+    box.innerHTML=rows.map(([fp,d])=>{
+      const isThis=fp===info.fingerprint;
+      return `<div class="device-row">
+        <div>
+          <div class="device-row-title">${d.label||'Registered device'} ${isThis?'<span style="color:var(--a);font-size:10px">(this device)</span>':''}</div>
+          <div class="device-row-meta">First seen: ${nwFormatTime(d.firstSeen)}<br>Last seen: ${nwFormatTime(d.lastSeen)}<br>ID: ${fp.slice(0,14)}...</div>
+        </div>
+        <button class="device-remove-btn" ${isThis?'disabled style="opacity:.45;cursor:not-allowed"':''} onclick="nwRemoveRegisteredDevice('${fp}')">${isThis?'Current':'Remove'}</button>
+      </div>`;
+    }).join('');
+  }catch(err){
+    box.innerHTML='<div class="device-row"><div><div class="device-row-title">Could not load devices</div><div class="device-row-meta">Please contact support if this continues.</div></div></div>';
+  }
+}
+window.nwRemoveRegisteredDevice=async function(fp){
+  if(!NW_DEVICE_LIMIT_CONTEXT||!NW_DEVICE_LIMIT_CONTEXT.uid) return;
+  if(fp===NW_DEVICE_LIMIT_CONTEXT.fingerprint) return;
+  if(!confirm('Remove this registered device? That device will need to register again on next login.')) return;
+  await fbDB.ref('users/'+NW_DEVICE_LIMIT_CONTEXT.uid+'/devices/'+fp).update({active:false,revokedAt:nwNow()});
+  await nwRenderDeviceList(NW_DEVICE_LIMIT_CONTEXT);
+};
+function nwShowDeviceLimit(info){
+  NW_DEVICE_LIMIT_CONTEXT=info;
+  const overlay=document.getElementById('deviceLimitOverlay');
+  const txt=document.getElementById('deviceLimitText');
+  const meta=document.getElementById('deviceLimitMeta');
+  document.getElementById('toolkitContainer').style.display='none';
+  document.getElementById('loginOverlay').style.display='none';
+  if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
+  if(meta) meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();
+  if(overlay) overlay.style.display='flex';
+  nwRenderDeviceList(info);
+}
+async function nwEnsureDeviceAllowed(user){
+  const info=await nwSubscriptionInfo(user.uid);
+  if(info.status && !['active','trialing','paid','manual'].includes(info.status)){
+    return {allowed:false,reason:'subscription',...info,activeCount:0};
+  }
+  const fp=await nwDeviceFingerprint();
+  const browserId=nwSafeKey(nwBrowserId());
+  const devicesRef=fbDB.ref('users/'+user.uid+'/devices');
+  const existing=await devicesRef.child(fp).once('value');
+  const browserData={name:navigator.userAgent||'browser',lastSeen:nwNow()};
+  if(existing.exists() && existing.val() && existing.val().active!==false){
+    await devicesRef.child(fp).update({label:nwDeviceLabel(),fingerprint:fp,active:true,lastSeen:nwNow(),['browsers/'+browserId]:browserData});
+    return {allowed:true,...info,fingerprint:fp,uid:user.uid};
+  }
+  let committed=false, activeCount=0;
+  const result=await devicesRef.transaction(devices=>{
+    devices=devices||{};
+    activeCount=Object.values(devices).filter(d=>d&&d.active!==false).length;
+    if(activeCount>=info.limit) return;
+    devices[fp]={
+      label:nwDeviceLabel(),
+      fingerprint:fp,
+      active:true,
+      firstSeen:firebase.database.ServerValue.TIMESTAMP,
+      lastSeen:firebase.database.ServerValue.TIMESTAMP,
+      browsers:{[browserId]:browserData}
+    };
+    return devices;
+  });
+  committed=!!result.committed;
+  if(!committed) return {allowed:false,reason:'limit',...info,activeCount,fingerprint:fp,uid:user.uid};
+  return {allowed:true,...info,fingerprint:fp,uid:user.uid};
+}
+async function nwGateUserDevice(user,onAllowed){
+  try{
+    const gate=await nwEnsureDeviceAllowed(user);
+    if(!gate.allowed){nwShowDeviceLimit(gate);return;}
+    onAllowed();
+  }catch(err){
+    console.error('Device allowance check failed',err);
+    document.getElementById('toolkitContainer').style.display='none';
+    document.getElementById('loginOverlay').style.display='flex';
+    const e=document.getElementById('loginError');
+    if(e){e.style.color='var(--r)';e.textContent='Could not verify device allowance. Please try again or contact support.';}
+  }
+}
+
 /* ══ AUTH STATE — show login or toolkit ══ */
 // Login overlay is hidden by default; shown by onAuthStateChanged if no session
 // Session idle timeout — 8 hours
@@ -958,32 +1134,37 @@ try{loadSavedTheme();}catch(e){}
 })();
 fbAuth.onAuthStateChanged(function(user){
   try{loadSavedTheme();}catch(e){}
+  const deviceOverlay=document.getElementById('deviceLimitOverlay');
+  if(deviceOverlay) deviceOverlay.style.display='none';
   if(user){
     document.getElementById('loginOverlay').style.display='none';
-    document.getElementById('toolkitContainer').style.display='block';
-    const displayName=user.displayName||user.email.split('@')[0];
-    document.getElementById('loggedInUser').textContent='👤 '+displayName;
-    // Check terms acceptance in Firebase — follows user across all devices
-    const _termsRef=fbDB.ref('users/'+user.uid+'/terms_accepted');
-    _termsRef.once('value').then(snap=>{
-      if(snap.val()===true){
-        // Already accepted on another device — go straight to toolkit
-        showLandingThenInit();
-      } else {
-        showTermsModal(()=>{
-          // Save acceptance to Firebase so all devices see it
-          _termsRef.set(true).catch(()=>{});
+    document.getElementById('toolkitContainer').style.display='none';
+    nwGateUserDevice(user,()=>{
+      document.getElementById('toolkitContainer').style.display='block';
+      const displayName=user.displayName||user.email.split('@')[0];
+      document.getElementById('loggedInUser').textContent='👤 '+displayName;
+      // Check terms acceptance in Firebase — follows user across all devices
+      const _termsRef=fbDB.ref('users/'+user.uid+'/terms_accepted');
+      _termsRef.once('value').then(snap=>{
+        if(snap.val()===true){
+          // Already accepted on another device — go straight to toolkit
           showLandingThenInit();
-        });
-      }
-    }).catch(()=>{
-      // Firebase DB unavailable — fall back to localStorage
-      const _tk='forti_terms_'+user.uid;
-      if(!localStorage.getItem(_tk)){
-        showTermsModal(()=>{localStorage.setItem(_tk,'true');initAndRender();});
-      } else {
-        initAndRender();
-      }
+        } else {
+          showTermsModal(()=>{
+            // Save acceptance to Firebase so all devices see it
+            _termsRef.set(true).catch(()=>{});
+            showLandingThenInit();
+          });
+        }
+      }).catch(()=>{
+        // Firebase DB unavailable — fall back to localStorage
+        const _tk='forti_terms_'+user.uid;
+        if(!localStorage.getItem(_tk)){
+          showTermsModal(()=>{localStorage.setItem(_tk,'true');initAndRender();});
+        } else {
+          initAndRender();
+        }
+      });
     });
   } else {
     document.getElementById('toolkitContainer').style.display='none';
