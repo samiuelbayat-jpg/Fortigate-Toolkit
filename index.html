@@ -109,6 +109,44 @@ h1 .accent{background:linear-gradient(120deg,var(--a),#7fe5c2);-webkit-backgroun
 .terminal-body{font-family:var(--mono);font-size:11px;line-height:1.85;color:#3fb950;padding:12px 14px;min-height:140px}
 .term-warn{color:#d29922}.term-red{color:#f85149}.term-blue{color:#58a6ff}.term-dim{color:rgba(255,255,255,.32)}
 
+.firewall-preview{min-height:520px}
+.fw-scene{position:relative;min-height:520px;overflow:hidden;background:radial-gradient(circle at 50% 48%,rgba(29,158,117,.16),transparent 24%),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),#05080d;background-size:auto,34px 34px,34px 34px,auto}
+.fw-scene::before{content:'';position:absolute;inset:-45%;background:conic-gradient(from 0deg,transparent 0 58%,rgba(29,158,117,.14),transparent 70%);animation:fwRadar 9s linear infinite;opacity:.85}
+.fw-grid-bg{position:absolute;inset:0;background:radial-gradient(circle at 18% 48%,rgba(88,166,255,.14),transparent 20%),radial-gradient(circle at 78% 28%,rgba(63,185,80,.12),transparent 18%),linear-gradient(180deg,transparent,rgba(2,5,8,.78));pointer-events:none}
+.fw-zone{position:absolute;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:108px;height:74px;border:1px solid rgba(255,255,255,.11);border-radius:13px;background:rgba(10,15,21,.88);box-shadow:0 16px 36px rgba(0,0,0,.36),0 0 0 1px rgba(29,158,117,.05)}
+.fw-zone .ic{font-size:18px;color:var(--a)}
+.fw-zone strong{font-family:var(--mono);font-size:10.5px;color:var(--t);letter-spacing:.04em}
+.fw-zone span{font-family:var(--mono);font-size:8.5px;color:var(--t2)}
+.fw-outside{left:22px;top:210px;border-color:rgba(88,166,255,.22)}
+.fw-lan{right:28px;top:110px}.fw-dmz{right:28px;top:226px}.fw-vpn{right:28px;top:342px}
+.fw-link{position:absolute;z-index:1;height:2px;background:linear-gradient(90deg,transparent,rgba(29,158,117,.62),transparent);box-shadow:0 0 16px rgba(29,158,117,.18);opacity:.82;transform-origin:left center}
+.fw-link-in{left:130px;top:248px;width:190px}.fw-link-lan{left:306px;top:238px;width:210px;transform:rotate(-24deg)}.fw-link-dmz{left:306px;top:256px;width:210px}.fw-link-vpn{left:306px;top:274px;width:212px;transform:rotate(24deg)}
+.fw-block-wall{position:absolute;z-index:4;left:266px;top:166px;width:48px;height:88px;border-radius:10px;border:1px solid rgba(248,81,73,.45);background:repeating-linear-gradient(135deg,rgba(248,81,73,.24) 0 7px,rgba(248,81,73,.08) 7px 14px);box-shadow:0 0 24px rgba(248,81,73,.22);animation:fwBlockPulse 2s ease-in-out infinite}
+.fw-block-wall span{position:absolute;left:50%;top:-18px;transform:translateX(-50%);font-family:var(--mono);font-size:9px;color:#ff8b86;background:rgba(0,0,0,.5);border:1px solid rgba(248,81,73,.28);border-radius:999px;padding:2px 7px}
+.fw-appliance{position:absolute;z-index:6;left:50%;top:50%;width:132px;height:132px;transform:translate(-50%,-50%)}
+.fw-halo{position:absolute;inset:-26px;border-radius:50%;background:radial-gradient(circle,rgba(29,158,117,.22),transparent 64%);animation:fwHalo 2.2s ease-in-out infinite}
+.fw-box{position:absolute;inset:12px;border-radius:18px;background:linear-gradient(180deg,#15221e,#07100d);border:1px solid rgba(29,158,117,.55);box-shadow:0 0 38px rgba(29,158,117,.22),0 22px 50px rgba(0,0,0,.46);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.fw-box .ic{font-size:26px;color:#bfffe9}.fw-box strong{font-family:var(--mono);font-size:11px;color:var(--t)}.fw-box span{font-family:var(--mono);font-size:8.5px;color:var(--t2)}
+.fw-ports{position:absolute;top:10px;display:flex;gap:5px}.fw-ports i{width:10px;height:5px;border-radius:2px;background:#23d49a;box-shadow:0 0 9px #23d49a;animation:fwPort 1.3s infinite}.fw-ports i:nth-child(2){animation-delay:.25s}.fw-ports i:nth-child(3){animation-delay:.5s}.fw-ports i:nth-child(4){animation-delay:.75s}
+.fw-scan-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(29,158,117,.22);animation:fwScan 2.8s infinite}.fw-scan-ring.r2{animation-delay:1.4s}
+.fw-packet{position:absolute;z-index:5;min-width:34px;height:18px;border-radius:999px;background:#52d6b0;color:#03120d;font-family:var(--mono);font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(82,214,176,.75)}
+.fw-packet.bad{background:#ff6b64;color:#220200;box-shadow:0 0 18px rgba(248,81,73,.72)}
+.fw-p1{animation:fwAllowedDmz 4.6s linear infinite}.fw-p2{animation:fwAllowedLan 5.2s linear infinite;animation-delay:1s}.fw-p3{animation:fwAllowedVpn 5.8s linear infinite;animation-delay:2s}.fw-p4{animation:fwDenied 4.8s linear infinite;animation-delay:1.5s}.fw-p5{animation:fwAllowedLan 4.9s linear infinite;animation-delay:3s}
+.fw-verdict{position:absolute;z-index:7;display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;border-radius:999px;padding:6px 10px;background:rgba(0,0,0,.58);backdrop-filter:blur(8px);opacity:0;animation:fwVerdict 4.8s infinite}.fw-verdict .ic{font-size:12px}.fw-allow{left:330px;top:154px;color:#3fb950;border:1px solid rgba(63,185,80,.28)}.fw-deny{left:174px;top:148px;color:#f85149;border:1px solid rgba(248,81,73,.32);animation-delay:1.5s}
+.fw-log-panel{position:absolute;z-index:8;left:18px;right:18px;bottom:16px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(2,5,8,.72);backdrop-filter:blur(12px);padding:10px 12px;font-family:var(--mono);box-shadow:0 18px 44px rgba(0,0,0,.38)}
+.fw-log-head{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em}.fw-log-head span{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g);animation:pulse 1.4s infinite}
+.fw-log-line{font-size:10px;line-height:1.7;opacity:0;animation:consoleReveal 7s infinite}.fw-log-line:nth-child(3){animation-delay:.7s}.fw-log-line:nth-child(4){animation-delay:1.4s}.fw-log-line:nth-child(5){animation-delay:2.1s}.fw-log-line.ok{color:#3fb950}.fw-log-line.warn{color:#d29922}.fw-log-line.bad{color:#f85149}
+@keyframes fwRadar{to{transform:rotate(360deg)}}
+@keyframes fwHalo{0%,100%{opacity:.6;transform:scale(.95)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes fwScan{0%{opacity:.8;transform:scale(.7)}100%{opacity:0;transform:scale(1.35)}}
+@keyframes fwPort{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes fwBlockPulse{0%,100%{opacity:.65}50%{opacity:1}}
+@keyframes fwVerdict{0%,22%{opacity:0;transform:translateY(6px)}30%,58%{opacity:1;transform:translateY(0)}72%,100%{opacity:0;transform:translateY(-5px)}}
+@keyframes fwAllowedDmz{0%{left:58px;top:238px;opacity:0}8%{opacity:1}42%{left:262px;top:238px}64%{left:374px;top:238px}92%{left:520px;top:252px;opacity:1}100%{left:548px;top:252px;opacity:0}}
+@keyframes fwAllowedLan{0%{left:58px;top:238px;opacity:0}10%{opacity:1}44%{left:262px;top:238px}66%{left:376px;top:210px}92%{left:518px;top:136px;opacity:1}100%{left:548px;top:128px;opacity:0}}
+@keyframes fwAllowedVpn{0%{left:58px;top:238px;opacity:0}10%{opacity:1}44%{left:262px;top:238px}66%{left:376px;top:286px}92%{left:518px;top:370px;opacity:1}100%{left:548px;top:378px;opacity:0}}
+@keyframes fwDenied{0%{left:58px;top:238px;opacity:0}10%{opacity:1}48%{left:244px;top:200px;opacity:1}58%,72%{left:250px;top:200px;opacity:1}100%{left:250px;top:200px;opacity:0}}
+@media(max-width:620px){.firewall-preview{min-height:430px}.fw-scene{min-height:430px}.fw-zone{width:88px;height:62px}.fw-zone span{display:none}.fw-outside{left:12px;top:184px}.fw-lan{right:12px;top:84px}.fw-dmz{right:12px;top:188px}.fw-vpn{right:12px;top:292px}.fw-appliance{width:112px;height:112px}.fw-log-panel{left:10px;right:10px}.fw-log-line{font-size:9px}.fw-block-wall{left:42%;top:138px}.fw-verdict{display:none}}
 .floating-card{position:absolute;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(11,15,20,.85);backdrop-filter:blur(18px);box-shadow:0 24px 50px rgba(0,0,0,.4);padding:14px 16px}
 .floating-card.one{left:-28px;top:62px;width:200px}
 .floating-card.two{right:-16px;bottom:36px;width:216px}
@@ -232,6 +270,45 @@ h1 .accent{background:linear-gradient(120deg,var(--a),#7fe5c2);-webkit-backgroun
 @keyframes packetMove{0%{left:50%;top:40%;opacity:0}12%{opacity:1}45%{left:14%;top:20%}65%{left:86%;top:20%}88%{left:50%;top:72%;opacity:1}100%{left:50%;top:40%;opacity:0}}
 @keyframes consoleReveal{0%,8%{opacity:0;transform:translateY(8px)}14%,72%{opacity:1;transform:translateY(0)}86%,100%{opacity:0;transform:translateY(-6px)}}
 
+.wireshark-demo{align-items:stretch}
+.wire-stage{position:relative;min-height:360px;border:1px solid rgba(29,158,117,.18);border-radius:16px;background:linear-gradient(90deg,rgba(88,166,255,.05) 0 25%,rgba(29,158,117,.06) 25% 54%,rgba(124,106,247,.05) 54% 76%,rgba(63,185,80,.05) 76% 100%),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),#05080d;background-size:auto,28px 28px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.48)}
+.wire-stage::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 0 58%,rgba(3,6,8,.86) 76%);pointer-events:none}
+.wire-lane{position:absolute;top:0;bottom:0;border-right:1px solid rgba(255,255,255,.06);z-index:1}.wire-lane span{position:absolute;top:12px;left:12px;font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.34);letter-spacing:.1em;text-transform:uppercase}.lane-wan{left:0;width:25%}.lane-fgt{left:25%;width:29%}.lane-vpn{left:54%;width:22%}.lane-branch{left:76%;width:24%;border-right:0}
+.wire-device{position:absolute;z-index:4;width:112px;height:74px;border-radius:13px;border:1px solid rgba(255,255,255,.12);background:rgba(12,17,24,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 18px 42px rgba(0,0,0,.36)}
+.wire-device .ic{font-size:18px;color:var(--a)}.wire-device strong{font-family:var(--mono);font-size:10px;color:var(--t)}.wire-device span{font-family:var(--mono);font-size:8.5px;color:var(--t2)}
+.wire-device.src{left:26px;top:112px;border-color:rgba(88,166,255,.22)}.wire-device.fgt{left:38%;top:104px;border-color:rgba(29,158,117,.45);box-shadow:0 0 34px rgba(29,158,117,.18),0 18px 42px rgba(0,0,0,.38)}.wire-device.branch{right:26px;top:112px;border-color:rgba(63,185,80,.22)}
+.wire-path{position:absolute;z-index:2;height:2px;background:linear-gradient(90deg,transparent,rgba(29,158,117,.65),transparent);box-shadow:0 0 16px rgba(29,158,117,.18)}.path-a{left:138px;right:54%;top:150px}.path-b{left:50%;right:138px;top:150px}.path-return{left:138px;right:138px;top:198px;background:linear-gradient(90deg,transparent,rgba(88,166,255,.6),transparent)}
+.wire-packet{position:absolute;z-index:5;height:18px;min-width:42px;border-radius:999px;background:#52d6b0;color:#03120d;font-family:var(--mono);font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(82,214,176,.68)}.wire-packet.pkt-drop{background:#ff6b64;color:#220200;box-shadow:0 0 18px rgba(248,81,73,.72)}
+.pkt-syn{animation:wireSyn 4.8s linear infinite}.pkt-ack{animation:wireAck 4.8s linear infinite;animation-delay:1.35s}.pkt-tls{animation:wireSyn 4.8s linear infinite;animation-delay:2.4s}.pkt-drop{animation:wireDrop 4.8s linear infinite;animation-delay:1.1s}
+.capture-table{position:absolute;z-index:6;left:14px;right:14px;bottom:14px;border:1px solid rgba(255,255,255,.08);border-radius:11px;overflow:hidden;background:rgba(2,5,8,.78);backdrop-filter:blur(12px);font-family:var(--mono);font-size:9.5px}.cap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:linear-gradient(90deg,rgba(29,158,117,.14),rgba(88,166,255,.08));border-bottom:1px solid rgba(255,255,255,.07)}.cap-toolbar strong{font-size:10px;color:#dffcf0;letter-spacing:.04em}.cap-toolbar span{font-size:9px;color:rgba(255,255,255,.45);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cap-head,.cap-row{display:grid;grid-template-columns:40px 54px 1fr 1fr 54px 1.35fr;gap:8px;align-items:center;padding:7px 10px}.cap-head{background:rgba(255,255,255,.05);color:rgba(255,255,255,.42);text-transform:uppercase;letter-spacing:.06em}.cap-row{color:var(--t2);border-top:1px solid rgba(255,255,255,.045);animation:capPulse 6s infinite}.cap-row.active{color:#dffcf0;background:rgba(29,158,117,.08);box-shadow:inset 3px 0 0 var(--a)}.cap-row.good{color:#9ee6b4;box-shadow:inset 3px 0 0 #3fb950}.cap-row.bad{color:#ff8b86;background:rgba(248,81,73,.06);box-shadow:inset 3px 0 0 #f85149}
+.wire-panel{border:1px solid rgba(255,255,255,.08);border-radius:16px;background:linear-gradient(180deg,rgba(17,22,29,.86),rgba(5,9,13,.92));overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.38)}.wire-flow-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 14px;background:rgba(29,158,117,.045);border-bottom:1px solid rgba(29,158,117,.11)}.wire-flow-summary div{border:1px solid rgba(255,255,255,.07);border-radius:9px;background:rgba(0,0,0,.18);padding:9px 10px}.wire-flow-summary b{display:block;font-size:9px;color:rgba(255,255,255,.34);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em}.wire-flow-summary span{display:block;margin-top:5px;font-family:var(--mono);font-size:12px;color:var(--a);font-weight:800}.wire-follow{padding:13px 14px;background:#030608;display:grid;gap:7px}.follow-line{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;font-family:var(--mono);font-size:10.5px;color:var(--t2);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:8px 9px;background:rgba(255,255,255,.025);opacity:0;animation:consoleReveal 8s infinite}.follow-line:nth-child(2){animation-delay:.7s}.follow-line:nth-child(3){animation-delay:1.4s}.follow-line:nth-child(4){animation-delay:2.1s}.follow-line:nth-child(5){animation-delay:2.8s}.follow-line:nth-child(6){animation-delay:3.5s}.follow-line b{display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(29,158,117,.12);color:var(--a)}.follow-line span{display:block;color:rgba(255,255,255,.36);font-size:9px;margin-top:3px}.follow-line.ok{color:#3fb950}.follow-line.blue{color:#58a6ff}.follow-line.warn{color:#d29922}.follow-line.bad{color:#f85149}.follow-line.bad b{background:rgba(248,81,73,.12);color:#f85149}
+@keyframes wireSyn{0%{left:58px;top:141px;opacity:0}8%{opacity:1}42%{left:41%;top:141px}62%{left:54%;top:141px}92%{left:78%;top:141px;opacity:1}100%{left:84%;top:141px;opacity:0}}
+@keyframes wireAck{0%{left:84%;top:190px;opacity:0}8%{opacity:1}44%{left:54%;top:190px}64%{left:41%;top:190px}92%{left:82px;top:190px;opacity:1}100%{left:58px;top:190px;opacity:0}}
+@keyframes wireDrop{0%{left:58px;top:96px;opacity:0}10%{opacity:1}46%{left:35%;top:96px}62%,76%{left:39%;top:96px;opacity:1}100%{left:39%;top:96px;opacity:0}}
+@keyframes capPulse{0%,100%{filter:none}50%{filter:brightness(1.18)}}
+@media(max-width:700px){.wire-stage{min-height:330px}.wire-device{width:86px;height:60px}.wire-device span{display:none}.wire-device.src{left:12px}.wire-device.fgt{left:36%}.wire-device.branch{right:12px}.capture-table{font-size:8px}.cap-head,.cap-row{grid-template-columns:32px 42px 1fr 1fr 42px;gap:5px}.cap-head span:nth-child(6),.cap-row span:nth-child(6){display:none}}
+.capture-workbench{grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);align-items:stretch}
+.shark-window{border:1px solid rgba(90,118,142,.34);border-radius:14px;background:#071018;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.48)}
+.shark-topbar{height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;background:linear-gradient(180deg,#142130,#0c151f);border-bottom:1px solid rgba(255,255,255,.08)}
+.shark-title{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:#d8e8f3}.shark-title .ic{font-size:13px;color:#58a6ff}.shark-status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:#3fb950}.shark-status span{width:7px;height:7px;border-radius:50%;background:#3fb950;box-shadow:0 0 12px #3fb950;animation:pulse 1.3s infinite}
+.shark-filter{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#0b1620;border-bottom:1px solid rgba(255,255,255,.07);font-family:var(--mono)}.shark-filter b{font-size:9px;color:rgba(255,255,255,.42);text-transform:uppercase;letter-spacing:.08em}.shark-filter code{flex:1;border:1px solid rgba(63,185,80,.22);background:rgba(63,185,80,.08);border-radius:7px;padding:6px 9px;color:#9ee6b4;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shark-table{font-family:var(--mono);font-size:9.5px;background:#06101a}.shark-row{display:grid;grid-template-columns:42px 64px 1fr 1fr 62px 48px 1.7fr;gap:8px;align-items:center;min-height:26px;padding:4px 10px;border-bottom:1px solid rgba(255,255,255,.045);color:#c7d2dc}.shark-head{min-height:28px;background:#172231;color:#8ea4b5;text-transform:uppercase;letter-spacing:.06em;font-size:8.5px;position:sticky;top:0}.shark-row.selected{background:#1f4060;color:#eaf6ff;box-shadow:inset 3px 0 0 #58a6ff}.shark-row.nat{background:rgba(29,158,117,.09);color:#bfffe7}.shark-row.esp{background:rgba(124,106,247,.10);color:#d7d0ff}.shark-row.reply{background:rgba(63,185,80,.09);color:#c8f5d5}.shark-row.tls{background:rgba(88,166,255,.08);color:#d6ecff}.shark-row.drop{background:rgba(248,81,73,.12);color:#ffb7b3;box-shadow:inset 3px 0 0 #f85149}.shark-row:not(.shark-head){animation:sharkRows 6s ease-in-out infinite}.shark-row:nth-child(3){animation-delay:.5s}.shark-row:nth-child(4){animation-delay:1s}.shark-row:nth-child(5){animation-delay:1.5s}.shark-row:nth-child(6){animation-delay:2s}.shark-row:nth-child(7){animation-delay:2.5s}
+.shark-bottom{display:grid;grid-template-columns:1fr 1fr;min-height:178px;border-top:1px solid rgba(255,255,255,.08)}.decode-pane,.bytes-pane{padding:11px 12px;background:#071018}.decode-pane{border-right:1px solid rgba(255,255,255,.07)}.pane-title{font-family:var(--mono);font-size:9px;color:#8ea4b5;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}.decode-line{font-family:var(--mono);font-size:10px;line-height:1.65;color:#d8e8f3}.decode-line.policy{color:#52d6b0}.decode-child{font-family:var(--mono);font-size:9.5px;line-height:1.55;color:#8ea4b5;padding-left:15px}.decode-child.good{color:#9ee6b4}.bytes-pane pre{margin:0;font-family:var(--mono);font-size:9px;line-height:1.7;color:#9fb3c3;white-space:pre-wrap}
+.stream-panel{border:1px solid rgba(255,255,255,.08);border-radius:16px;background:linear-gradient(180deg,rgba(17,22,29,.90),rgba(5,9,13,.96));overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.38)}.stream-ladder{padding:14px 16px;background:#030608}.ladder-head{display:grid;grid-template-columns:1fr 1fr 1fr;font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}.ladder-line{position:relative;height:28px;margin:8px 0}.ladder-line i{position:absolute;top:13px;height:2px;background:linear-gradient(90deg,transparent,#52d6b0,transparent);box-shadow:0 0 12px rgba(82,214,176,.35)}.ladder-line b{position:absolute;top:2px;font-family:var(--mono);font-size:9px;color:#dffcf0;background:rgba(0,0,0,.55);border:1px solid rgba(82,214,176,.25);border-radius:999px;padding:3px 8px}.ladder-line.c-f i{left:3%;right:50%}.ladder-line.c-f b{left:25%}.ladder-line.f-b i{left:36%;right:6%;background:linear-gradient(90deg,transparent,#a78bfa,transparent)}.ladder-line.f-b b{left:60%}.ladder-line.b-f i{left:8%;right:36%;background:linear-gradient(270deg,transparent,#58a6ff,transparent)}.ladder-line.b-f b{left:38%}.ladder-line.bad i{left:4%;right:52%;background:linear-gradient(90deg,transparent,#f85149,transparent)}.ladder-line.bad b{left:18%;color:#ffb7b3;border-color:rgba(248,81,73,.35)}.ladder-note{font-family:var(--mono);font-size:10px;color:#d29922;background:rgba(210,153,34,.07);border:1px solid rgba(210,153,34,.16);border-radius:8px;padding:7px 9px;margin:4px 0 8px}.ladder-note.good{color:#3fb950;background:rgba(63,185,80,.07);border-color:rgba(63,185,80,.16)}.ladder-note.bad{color:#f85149;background:rgba(248,81,73,.07);border-color:rgba(248,81,73,.16)}
+.trace-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 14px;background:rgba(29,158,117,.045);border-top:1px solid rgba(29,158,117,.10)}.trace-summary div{border:1px solid rgba(255,255,255,.07);border-radius:9px;background:rgba(0,0,0,.18);padding:9px}.trace-summary b{display:block;font-family:var(--mono);font-size:8.5px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.08em}.trace-summary span{display:block;margin-top:5px;font-family:var(--mono);font-size:11px;color:var(--a);font-weight:800}
+@keyframes sharkRows{0%,100%{filter:none}50%{filter:brightness(1.16)}}
+@media(max-width:760px){.capture-workbench{grid-template-columns:1fr}.shark-row{grid-template-columns:36px 54px 1fr 1fr 54px}.shark-row span:nth-child(6),.shark-row span:nth-child(7){display:none}.shark-bottom{grid-template-columns:1fr}.decode-pane{border-right:0;border-bottom:1px solid rgba(255,255,255,.07)}}
+.forti-grafana{grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);align-items:stretch}
+.fg-board,.fg-side{border:1px solid rgba(255,255,255,.08);border-radius:14px;background:#0b0f14;box-shadow:0 24px 70px rgba(0,0,0,.45);overflow:hidden}
+.fg-board-head{height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;background:#0f141b;border-bottom:1px solid rgba(255,255,255,.07);font-family:var(--mono);font-size:11px;color:#dce8f2}.fg-board-head div{display:flex;align-items:center;gap:7px}.fg-board-head .ic{font-size:13px;color:#f97316}.fg-board-head span{font-size:10px;color:#7da0bd;border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:4px 8px;background:rgba(255,255,255,.03)}
+.fg-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;padding:12px 12px 8px}.fg-kpi{min-height:84px;padding:15px 14px;border-radius:4px;color:#fff;background:linear-gradient(135deg,#1f3b8a,#3766b5);position:relative;overflow:hidden}.fg-kpi::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(-100%);animation:fgSweep 5s infinite}.fg-kpi.green{background:linear-gradient(135deg,#225f2c,#4b8f3d)}.fg-kpi.amber{background:linear-gradient(135deg,#9a4100,#d75b00)}.fg-kpi.purple{background:linear-gradient(135deg,#5e1b84,#8728b2)}.fg-kpi.red{background:linear-gradient(135deg,#7f1d1d,#dc2626)}.fg-kpi span{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.fg-kpi b{font-family:var(--mono);font-size:28px;line-height:1}.fg-kpi em{font-style:normal;font-size:12px;margin-left:4px;color:rgba(255,255,255,.9)}
+.fg-main-grid{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px;padding:8px 12px 12px}.fg-panel{border:1px solid rgba(255,255,255,.08);border-radius:4px;background:#11161d;min-height:155px;position:relative;overflow:hidden}.fg-title{text-align:center;font-size:11px;color:#dce8f2;font-weight:700;padding:8px 8px 0}.fg-panel.chart svg{position:absolute;left:10px;right:10px;bottom:28px;width:calc(100% - 20px);height:108px}.fg-chart-lines{position:absolute;left:14px;right:14px;top:40px;bottom:34px;background:linear-gradient(rgba(255,255,255,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.10) 1px,transparent 1px);background-size:100% 25%,25% 100%;opacity:.75}.fg-panel .line{fill:none;stroke-width:3}.fg-panel .area{opacity:.25}.fg-panel .green{stroke:#7eb26d;fill:#7eb26d}.fg-panel .amber{stroke:#f2c96d}.fg-panel .blue{stroke:#6ed0e0}.fg-legend{position:absolute;left:12px;right:12px;bottom:8px;display:flex;gap:14px;font-family:var(--mono);font-size:9px}.fg-legend span::before{content:'';display:inline-block;width:12px;height:2px;margin-right:6px;vertical-align:middle}.fg-legend .g{color:#7eb26d}.fg-legend .g::before{background:#7eb26d}.fg-legend .y{color:#f2c96d}.fg-legend .y::before{background:#f2c96d}.fg-legend .b{color:#6ed0e0}.fg-legend .b::before{background:#6ed0e0}
+.fg-panel.heat{grid-row:span 2}.fg-heatmap{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:14px}.fg-heatmap div{min-height:58px;border-radius:4px;background:linear-gradient(180deg,#214e21,#102b18);border:1px solid rgba(63,185,80,.14);display:flex;flex-direction:column;align-items:center;justify-content:center}.fg-heatmap .warn{background:linear-gradient(180deg,#84520d,#2c1d08);border-color:rgba(245,158,11,.3)}.fg-heatmap .hot{background:linear-gradient(180deg,#8a1f1f,#2d0909);border-color:rgba(248,81,73,.35)}.fg-heatmap b{font-family:var(--mono);font-size:20px;color:#55b947}.fg-heatmap .warn b{color:#f59e0b}.fg-heatmap .hot b{color:#ff6b64}.fg-heatmap span{font-size:9px;color:#b6c2ce;margin-top:3px;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fg-panel.gauges{grid-column:span 2}.fg-gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:18px 18px 12px}.fg-gauge{position:relative;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}.fg-gauge span{position:absolute;top:8px;width:112px;height:56px;border-radius:112px 112px 0 0;background:conic-gradient(from 270deg,#3fb950 calc(var(--p)*.5%),#ff8a00 0 40%,#2a2f36 0);mask:radial-gradient(circle at 50% 100%,transparent 0 38px,#000 39px)}.fg-gauge.danger span{background:conic-gradient(from 270deg,#ff7a00 calc(var(--p)*.5%),#e11d48 0 45%,#2a2f36 0)}.fg-gauge b{font-family:var(--mono);font-size:21px;color:#3fb950;z-index:1}.fg-gauge.danger b{color:#ff7a00}.fg-gauge em{font-style:normal;font-size:10px;color:#b6c2ce;margin-top:3px;z-index:1}
+.fg-side-head{display:flex;align-items:center;gap:7px;padding:12px 14px;background:#0f141b;border-bottom:1px solid rgba(255,255,255,.07);font-family:var(--mono);font-size:11px;color:#dce8f2}.fg-side-head .ic{font-size:13px;color:var(--a)}.fg-check{margin:10px 12px;border:1px solid rgba(255,255,255,.07);border-left:3px solid #3fb950;border-radius:6px;background:rgba(255,255,255,.025);padding:10px}.fg-check b{display:block;font-family:var(--mono);font-size:10px;color:#dce8f2;margin-bottom:5px}.fg-check span{font-size:10.5px;color:#9fb0bf}.fg-check.warn{border-left-color:#f59e0b}.fg-check.bad{border-left-color:#f85149}.fg-mini-table{display:grid;gap:6px;margin:12px}.fg-mini-table div{display:flex;justify-content:space-between;border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:8px 10px;background:rgba(0,0,0,.18);font-family:var(--mono);font-size:10px}.fg-mini-table span{color:#8ea4b5}.fg-mini-table b{color:var(--a)}
+.fg-panel.chart{min-height:176px;padding-left:36px;padding-bottom:26px}.fg-panel.chart svg{left:44px;right:12px;bottom:34px;width:calc(100% - 56px);height:112px}.fg-chart-lines{left:44px!important;right:12px!important;top:40px!important;bottom:34px!important;background:linear-gradient(rgba(255,255,255,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px)!important;background-size:100% 25%,20% 100%!important;opacity:.55!important}.fg-axis{position:absolute;font-family:var(--mono);font-size:8.5px;color:rgba(220,232,242,.58);z-index:2}.fg-axis.y{left:8px;top:37px;bottom:32px;display:flex;flex-direction:column;justify-content:space-between;text-align:right;width:30px}.fg-axis.x{left:44px;right:12px;bottom:16px;display:flex;justify-content:space-between}.fg-panel .line{stroke-width:2!important;filter:drop-shadow(0 0 3px rgba(0,0,0,.35))}.fg-panel .area{opacity:.18!important}.fg-panel .blue{stroke:#6ed0e0;fill:#6ed0e0}.fg-legend{left:44px!important;right:12px!important;bottom:3px!important}`r`n@keyframes fgSweep{0%,72%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+@media(max-width:900px){.forti-grafana{grid-template-columns:1fr}.fg-kpis{grid-template-columns:repeat(2,1fr)}.fg-main-grid{grid-template-columns:1fr}.fg-panel.heat,.fg-panel.gauges{grid-column:auto;grid-row:auto}.fg-gauges{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:560px){.fg-kpis{grid-template-columns:1fr}.fg-gauges{grid-template-columns:1fr}.fg-main-grid{padding:8px}.fg-heatmap{grid-template-columns:1fr 1fr}}
 .demo-shell{background:#050709;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;margin-top:14px;box-shadow:0 40px 120px rgba(0,0,0,.8),0 0 0 1px rgba(29,158,117,.06)}
 .demo-tbar{display:flex;align-items:center;gap:8px;padding:11px 16px;background:rgba(17,22,29,.85);border-bottom:1px solid rgba(255,255,255,.05)}
 .dot2{width:11px;height:11px;border-radius:50%}.dot2.r{background:#ff5f57}.dot2.y{background:#ffbd2e}.dot2.g{background:#28c840}
@@ -655,75 +732,54 @@ footer a:hover{color:var(--a)}
       </div>
     </div>
 
-    <div class="hero-visual" aria-label="NetWolf toolkit preview">
-      <div class="floating-card one">
-        <div class="float-head">
-          <svg class="ic"><use href="#i-cloud"/></svg>
-          <div class="float-title">Cloud scripting</div>
-        </div>
-        <div class="float-text">Read-only discovery, caution previews and write commands clearly colour coded.</div>
-        <div class="risk-row">
-          <span class="risk-pill g"><svg class="ic"><use href="#i-eye"/></svg> read</span>
-          <span class="risk-pill y"><svg class="ic"><use href="#i-alert"/></svg> caution</span>
-          <span class="risk-pill r"><svg class="ic"><use href="#i-zap"/></svg> write</span>
-        </div>
-      </div>
-      <div class="product-screen">
+    <div class="hero-visual" aria-label="NetWolf firewall traffic inspection preview">
+      <div class="product-screen firewall-preview">
         <div class="screen-top">
           <span class="screen-dot r"></span><span class="screen-dot y"></span><span class="screen-dot g"></span>
-          <span class="screen-title"><svg class="ic"><use href="#i-gauge"/></svg> NetWolf Advanced Diagnostics</span>
+          <span class="screen-title"><svg class="ic"><use href="#i-shield-lock"/></svg> NetWolf Live Firewall Path Analysis</span>
         </div>
-        <div class="screen-body">
-          <div class="screen-side">
-            <div class="side-item active"><svg class="ic"><use href="#i-shield"/></svg> Firewall</div>
-            <div class="side-item"><svg class="ic"><use href="#i-cloud"/></svg> Cloud</div>
-            <div class="side-item"><svg class="ic"><use href="#i-repeat"/></svg> Vendors</div>
-            <div class="side-item"><svg class="ic"><use href="#i-keyboard"/></svg> CLI Lab</div>
-            <div class="side-item"><svg class="ic"><use href="#i-puzzle"/></svg> Config</div>
-            <div class="side-item"><svg class="ic"><use href="#i-lock"/></svg> Security</div>
+        <div class="fw-scene">
+          <div class="fw-grid-bg"></div>
+          <div class="fw-zone fw-outside"><svg class="ic"><use href="#i-globe"/></svg><strong>Internet</strong><span>untrusted WAN</span></div>
+          <div class="fw-zone fw-lan"><svg class="ic"><use href="#i-network"/></svg><strong>LAN</strong><span>10.10.20.0/24</span></div>
+          <div class="fw-zone fw-dmz"><svg class="ic"><use href="#i-cloud"/></svg><strong>DMZ</strong><span>web service</span></div>
+          <div class="fw-zone fw-vpn"><svg class="ic"><use href="#i-lock"/></svg><strong>VPN</strong><span>site-to-site</span></div>
+
+          <div class="fw-link fw-link-in"></div>
+          <div class="fw-link fw-link-lan"></div>
+          <div class="fw-link fw-link-dmz"></div>
+          <div class="fw-link fw-link-vpn"></div>
+          <div class="fw-block-wall"><span>DROP</span></div>
+
+          <div class="fw-packet fw-p1"><span>SYN</span></div>
+          <div class="fw-packet fw-p2"><span>HTTPS</span></div>
+          <div class="fw-packet fw-p3"><span>IPsec</span></div>
+          <div class="fw-packet fw-p4 bad"><span>SCAN</span></div>
+          <div class="fw-packet fw-p5"><span>DNS</span></div>
+
+          <div class="fw-appliance">
+            <div class="fw-halo"></div>
+            <div class="fw-box">
+              <div class="fw-ports"><i></i><i></i><i></i><i></i></div>
+              <svg class="ic"><use href="#i-shield-check"/></svg>
+              <strong>FG-EDGE-01</strong>
+              <span>policy + IPS + NAT</span>
+            </div>
+            <div class="fw-scan-ring r1"></div>
+            <div class="fw-scan-ring r2"></div>
           </div>
-          <div class="screen-main">
-            <div class="screen-tabs">
-              <div class="screen-tab active">Guide</div>
-              <div class="screen-tab">VPN</div>
-              <div class="screen-tab">Cloud</div>
-              <div class="screen-tab">Vendors</div>
-              <div class="screen-tab">AI</div>
-            </div>
-            <div class="dash-grid">
-              <div class="dash-card">
-                <div class="dash-label"><svg class="ic"><use href="#i-layers"/></svg> Workspace coverage</div>
-                <div class="dash-value">71</div>
-                <div class="dash-note">tabs and guided tools grouped into clear categories.</div>
-              </div>
-              <div class="dash-card">
-                <div class="dash-label"><svg class="ic"><use href="#i-workflow"/></svg> Learning paths</div>
-                <div class="dash-value">Cloud + CLI</div>
-                <div class="dash-note">Cloud, firewall and switch/router practice in one place.</div>
-              </div>
-            </div>
-            <div class="terminal-card">
-              <div class="terminal-head">
-                <div class="left"><svg class="ic"><use href="#i-terminal"/></svg><span>CLI Simulator</span></div>
-                <span>practice-only</span>
-              </div>
-              <div class="terminal-body">
-<span class="term-blue">Switch#</span> configure terminal<br>
-<span class="term-blue">Switch(config)#</span> interface gi1/0/10<br>
-<span class="term-blue">Switch(config-if)#</span> switchport access vlan 20<br>
-<span class="term-warn">Cloud:</span> New-ResourceGroupDeployment -WhatIf<br>
-<span class="term-red">Write command:</span> review before production
-              </div>
-            </div>
+
+          <div class="fw-verdict fw-allow"><svg class="ic"><use href="#i-check"/></svg>ALLOW policy 14</div>
+          <div class="fw-verdict fw-deny"><svg class="ic"><use href="#i-alert"/></svg>DENY policy 0</div>
+
+          <div class="fw-log-panel">
+            <div class="fw-log-head"><span></span> live policy trace</div>
+            <div class="fw-log-line ok">wan1 -> dmz  HTTPS  dst-nat  allowed</div>
+            <div class="fw-log-line warn">wan1 -> local  TCP/23  geo/ip-reputation</div>
+            <div class="fw-log-line bad">drop: port scan signature matched</div>
+            <div class="fw-log-line ok">ipsec0 -> lan  ICMP  route lookup OK</div>
           </div>
         </div>
-      </div>
-      <div class="floating-card two">
-        <div class="float-head">
-          <svg class="ic"><use href="#i-shield-check"/></svg>
-          <div class="float-title">Safer troubleshooting flow</div>
-        </div>
-        <div class="float-text">Anonymize output, test paths, generate configs, then document the customer update.</div>
       </div>
     </div>
   </div>
@@ -881,36 +937,34 @@ footer a:hover{color:var(--a)}
       </div>
     </div>
 
-    <div class="demo-cinematic">
-      <div class="cinema-stage">
-        <div class="cinema-link l1"></div><div class="cinema-link l2"></div><div class="cinema-link l3"></div><div class="cinema-link l4"></div>
-        <div class="packet p1"></div><div class="packet p2"></div><div class="packet p3"></div><div class="packet p4"></div>
-        <div class="cinema-node wan"><svg class="ic"><use href="#i-cloud"/></svg><strong>WAN</strong><span>198.51.100.5</span></div>
-        <div class="cinema-node branch"><svg class="ic"><use href="#i-router"/></svg><strong>BRANCH</strong><span>10.20.0.0/16</span></div>
-        <div class="cinema-node core"><svg class="ic"><use href="#i-shield-check"/></svg><strong>FW-HQ</strong><span>active</span></div>
-        <div class="cinema-node lan"><svg class="ic"><use href="#i-network"/></svg><strong>LAN</strong><span>172.16.0.0/20</span></div>
-        <div class="cinema-node soc"><svg class="ic"><use href="#i-eye"/></svg><strong>SOC</strong><span>logs live</span></div>
-        <div class="cinema-alert">
-          <div><b><svg class="ic"><use href="#i-lock"/></svg>VPN</b><span>Phase 2 selectors up</span></div>
-          <div><b><svg class="ic"><use href="#i-route"/></svg>Route</b><span>SD-WAN rule matched</span></div>
-          <div><b><svg class="ic"><use href="#i-alert"/></svg>Risk</b><span>1 caution command</span></div>
+    <div class="demo-cinematic forti-grafana">
+      <div class="fg-board">
+        <div class="fg-board-head">
+          <div><svg class="ic"><use href="#i-shield-check"/></svg> FortiGate / Edge Firewall - Overview</div>
+          <span>Last 6 hours</span>
+        </div>
+        <div class="fg-kpis">
+          <div class="fg-kpi blue"><span>Uptime</span><b>42.8</b><em>days</em></div>
+          <div class="fg-kpi green"><span>CPU Usage</span><b>18.4</b><em>%</em></div>
+          <div class="fg-kpi amber"><span>Memory Usage</span><b>63.7</b><em>%</em></div>
+          <div class="fg-kpi purple"><span>Sessions</span><b>128k</b><em>active</em></div>
+          <div class="fg-kpi purple"><span>VPN Tunnels</span><b>14</b><em>up</em></div>
+          <div class="fg-kpi red"><span>Threat Blocks</span><b>392</b><em>today</em></div>
+        </div>
+        <div class="fg-main-grid">
+          <div class="fg-panel chart cpu"><div class="fg-title">CPU / Memory Usage</div><div class="fg-axis y"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div><div class="fg-axis x"><span>16:00</span><span>17:00</span><span>18:00</span><span>19:00</span><span>20:00</span><span>21:00</span></div><div class="fg-chart-lines"></div><svg viewBox="0 0 360 130" preserveAspectRatio="none"><path class="area green" d="M0,100 L10,96 L20,97 L30,94 L40,99 L50,86 L60,92 L70,101 L80,98 L90,96 L100,88 L110,94 L120,99 L130,95 L140,97 L150,91 L160,98 L170,102 L180,97 L190,94 L200,96 L210,89 L220,95 L230,99 L240,97 L250,92 L260,96 L270,101 L280,95 L290,98 L300,91 L310,97 L320,100 L330,96 L340,94 L350,98 L360,95 L360,130 L0,130 Z"/><path class="line green" d="M0,100 L10,96 L20,97 L30,94 L40,99 L50,86 L60,92 L70,101 L80,98 L90,96 L100,88 L110,94 L120,99 L130,95 L140,97 L150,91 L160,98 L170,102 L180,97 L190,94 L200,96 L210,89 L220,95 L230,99 L240,97 L250,92 L260,96 L270,101 L280,95 L290,98 L300,91 L310,97 L320,100 L330,96 L340,94 L350,98 L360,95"/><path class="line amber" d="M0,49 L10,48 L20,48 L30,47 L40,49 L50,48 L60,47 L70,48 L80,49 L90,47 L100,48 L110,49 L120,47 L130,48 L140,48 L150,49 L160,47 L170,48 L180,48 L190,47 L200,49 L210,48 L220,47 L230,48 L240,49 L250,47 L260,48 L270,49 L280,48 L290,47 L300,48 L310,49 L320,48 L330,47 L340,48 L350,49 L360,48"/></svg><div class="fg-legend"><span class="g">CPU avg 18%</span><span class="y">Memory avg 64%</span></div></div>
+          <div class="fg-panel chart net"><div class="fg-title">Interface Throughput</div><div class="fg-axis y"><span>500M</span><span>375M</span><span>250M</span><span>125M</span><span>0</span></div><div class="fg-axis x"><span>16:00</span><span>17:00</span><span>18:00</span><span>19:00</span><span>20:00</span><span>21:00</span></div><div class="fg-chart-lines"></div><svg viewBox="0 0 360 130" preserveAspectRatio="none"><path class="area blue" d="M0,118 L10,111 L20,114 L30,105 L40,98 L50,64 L60,111 L70,116 L80,103 L90,98 L100,108 L110,114 L120,86 L130,118 L140,115 L150,116 L160,112 L170,96 L180,118 L190,116 L200,109 L210,104 L220,118 L230,113 L240,74 L250,111 L260,116 L270,119 L280,103 L290,98 L300,72 L310,113 L320,107 L330,115 L340,118 L350,112 L360,116 L360,130 L0,130 Z"/><path class="line blue" d="M0,118 L10,111 L20,114 L30,105 L40,98 L50,64 L60,111 L70,116 L80,103 L90,98 L100,108 L110,114 L120,86 L130,118 L140,115 L150,116 L160,112 L170,96 L180,118 L190,116 L200,109 L210,104 L220,118 L230,113 L240,74 L250,111 L260,116 L270,119 L280,103 L290,98 L300,72 L310,113 L320,107 L330,115 L340,118 L350,112 L360,116"/><path class="line amber" d="M0,122 L10,120 L20,121 L30,117 L40,116 L50,101 L60,119 L70,122 L80,116 L90,114 L100,118 L110,121 L120,108 L130,122 L140,121 L150,120 L160,119 L170,112 L180,122 L190,121 L200,117 L210,116 L220,122 L230,119 L240,106 L250,119 L260,121 L270,122 L280,116 L290,113 L300,105 L310,120 L320,118 L330,121 L340,122 L350,119 L360,121"/></svg><div class="fg-legend"><span class="b">wan1 avg 312 Mbps</span><span class="y">ipsec0 avg 84 Mbps</span></div></div>
+          <div class="fg-panel heat"><div class="fg-title">Policy Hits / Threat Blocks</div><div class="fg-heatmap"><div><b>14</b><span>HTTPS-BRANCH</span></div><div><b>22</b><span>SSLVPN-USERS</span></div><div class="hot"><b>0</b><span>implicit deny</span></div><div><b>31</b><span>SDWAN-OUT</span></div><div><b>7</b><span>DMZ-WEB</span></div><div class="warn"><b>45</b><span>IPS scan</span></div><div><b>18</b><span>DNS allow</span></div><div><b>28</b><span>ZTNA</span></div><div><b>4</b><span>Admin allow</span></div></div></div>
+          <div class="fg-panel gauges"><div class="fg-title">Tunnel / Fabric Health</div><div class="fg-gauges"><div class="fg-gauge" style="--p:86"><span></span><b>86%</b><em>IPsec SLA</em></div><div class="fg-gauge" style="--p:72"><span></span><b>72%</b><em>SD-WAN</em></div><div class="fg-gauge danger" style="--p:34"><span></span><b>34%</b><em>Blocked risk</em></div></div></div>
         </div>
       </div>
-      <div class="cinema-panel">
-        <div class="cinema-panel-head"><strong><svg class="ic"><use href="#i-sparkles"/></svg>AI diagnostic run</strong><span>live</span></div>
-        <div class="cinema-console">
-          <div class="cinema-line cinema-dim">$ paste vpn debug output</div>
-          <div class="cinema-line cinema-blue">Analyzing IKE negotiation...</div>
-          <div class="cinema-line cinema-warn">Detected: NO_PROPOSAL_CHOSEN</div>
-          <div class="cinema-line cinema-ok">Root cause: phase1 proposal mismatch</div>
-          <div class="cinema-line cinema-dim">Generating safe command path...</div>
-          <div class="cinema-line cinema-ok">show vpn ipsec phase1-interface SiteA-HQ</div>
-          <div class="cinema-line cinema-warn">diagnose debug application ike -1</div>
-        </div>
-        <div class="cinema-actions">
-          <div><b><svg class="ic"><use href="#i-eye"/></svg>Read commands</b><span>Green labels for checks that do not change config.</span></div>
-          <div><b><svg class="ic"><use href="#i-alert"/></svg>Caution steps</b><span>Yellow labels before debug or operational impact.</span></div>
-        </div>
+      <div class="fg-side">
+        <div class="fg-side-head"><svg class="ic"><use href="#i-terminal"/></svg> FortiGate live checks</div>
+        <div class="fg-check ok"><b>get system performance status</b><span>CPU normal, memory conserve mode: off</span></div>
+        <div class="fg-check ok"><b>get vpn ipsec tunnel summary</b><span>14/14 tunnels up, selectors matched</span></div>
+        <div class="fg-check warn"><b>diagnose sys session stat</b><span>session count rising on wan1</span></div>
+        <div class="fg-check bad"><b>diagnose ips anomaly list</b><span>port scan signature blocked 392 times</span></div>
+        <div class="fg-mini-table"><div><span>HA</span><b>primary</b></div><div><span>Firmware</span><b>v7.4.5</b></div><div><span>Logs/sec</span><b>1.8k</b></div></div>
       </div>
     </div>
 
@@ -1409,10 +1463,10 @@ setInterval(draw, 38);
 window.addEventListener('resize', init);
 
 /* ── FIREBASE ── */
-const firebaseConfig={apiKey:"AIzaSyBU2ojtAtH2PvvrNJgG4vH3mbPdAPAGhzk",authDomain:"netwolf-ccd3d.firebaseapp.com",projectId:"netwolf-ccd3d",storageBucket:"netwolf-ccd3d.firebasestorage.app",messagingSenderId:"942931607129",appId:"1:942931607129:web:5f644a2625931c70d6bb48",measurementId:"G-W0G3X4T0EW"};
+const firebaseConfig={apiKey:"AIzaSyBU2ojtAtH2PvvrNJgG4vH3mbPdAPAGhzk",authDomain:"netwolf-ccd3d.firebaseapp.com",databaseURL:"https://netwolf-ccd3d-default-rtdb.europe-west1.firebasedatabase.app",projectId:"netwolf-ccd3d",storageBucket:"netwolf-ccd3d.firebasestorage.app",messagingSenderId:"942931607129",appId:"1:942931607129:web:5f644a2625931c70d6bb48",measurementId:"G-W0G3X4T0EW"};
 firebase.initializeApp(firebaseConfig);
 const fbAuth=firebase.auth();
-const fbDB=firebase.database('https://netwolf-ccd3d-default-rtdb.europe-west1.firebasedatabase.app');
+const fbDB=firebase.database();
 const fbFunctions=firebase.app().functions('europe-west1');
 
 /* ── PLAN SELECTION ── */
@@ -1561,10 +1615,22 @@ async function runPSMakerScene(){showScene('ascene7');setTab(5);setSidebar(14);s
 async function runTopologyScene(){showScene('ascene8');setTab(6);setSidebar(15);setStatus('Topology Designer · Infinite canvas');await sleep(3500);}
 async function runCLISimScene(){showScene('ascene9');setTab(7);setSidebar(16);setStatus('CLI Simulator · Practice on 10 vendors');await sleep(3500);}
 const DEMO_SCENES=[runGuideScene,runAIScene,runAnonScene,runSubnetScene,runMostUsedScene,runPSMakerScene,runTopologyScene,runCLISimScene];
+const DEMO_SCENE_IDS=['ascene0','ascene2','ascene3','ascene4','ascene6','ascene7','ascene8','ascene9'];
+const DEMO_SIDEBAR_IDS=[0,null,10,11,13,14,15,16];
+const DEMO_STATUS=['IPsec VPN Troubleshooting - Step-by-step playbook','AI Analyzer - Paste any CLI output for instant diagnosis','IP Anonymizer - Replace real IPs with RFC 5737 safe addresses','Subnet Calculator - Full CIDR breakdown','Most Used - 13 diagnostic and operational tools','PS Maker - AI-powered PowerShell script generator','Topology Designer - Infinite canvas','CLI Simulator - Practice on 10 vendors'];
 let demoManualUntil=0;
-async function playDemoScene(i){demoManualUntil=Date.now()+12000;const runner=DEMO_SCENES[i];if(runner)await runner();}
-function bindDemoTabs(){DEMO_SCENES.forEach((_,i)=>{const tab=document.getElementById('dtab'+i);if(!tab)return;tab.setAttribute('role','button');tab.setAttribute('tabindex','0');tab.addEventListener('click',()=>playDemoScene(i));tab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();playDemoScene(i);}});});}
-async function runLoop(){while(true){for(const runner of DEMO_SCENES){if(Date.now()<demoManualUntil){await sleep(800);continue;}await runner();}}}
+let demoRunToken=0;
+function resetSceneEffects(i){
+  if(i===0){
+    document.querySelectorAll('.anim-step-card').forEach(c=>c.classList.add('show'));
+    STEPS.forEach((step,si)=>{const box=document.getElementById('acmds'+si);if(box)box.innerHTML=step.cmds.map(cmd=>'<span class="anim-cmd '+cmd.cl+'">'+cmd.t.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>').join('');});
+  }
+  if(i===1){const thinking=document.getElementById('aiThinking');const result=document.getElementById('aiResult');if(thinking)thinking.style.display='none';if(result)result.style.display='block';}
+  if(i===3){const cursor=document.getElementById('subCursor');const typing=document.getElementById('subTyping');if(typing)typing.textContent='172.16.0.0/20';if(cursor)cursor.style.display='none';document.querySelectorAll('#subCards .sub-card').forEach(c=>c.classList.add('show'));}
+}
+function showDemoSceneNow(i){demoManualUntil=Date.now()+30000;demoRunToken++;showScene(DEMO_SCENE_IDS[i]);setTab(i);setSidebar(DEMO_SIDEBAR_IDS[i]);setStatus(DEMO_STATUS[i]);resetSceneEffects(i);}
+function bindDemoTabs(){DEMO_SCENES.forEach((_,i)=>{const tab=document.getElementById('dtab'+i);if(!tab)return;tab.setAttribute('role','button');tab.setAttribute('tabindex','0');tab.addEventListener('click',()=>showDemoSceneNow(i));tab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showDemoSceneNow(i);}});});}
+async function runLoop(){while(true){for(let i=0;i<DEMO_SCENES.length;i++){if(Date.now()<demoManualUntil){await sleep(800);continue;}const token=++demoRunToken;await DEMO_SCENES[i]();if(token!==demoRunToken)break;}}}
 function startProgress(){const fill=document.getElementById('animProgress');if(!fill)return;const cycle=42000;const start=Date.now();function tick(){fill.style.width=((Date.now()-start)%cycle)/cycle*100+'%';requestAnimationFrame(tick);}requestAnimationFrame(tick);}
 if(document.getElementById('animatedDemo')){bindDemoTabs();runLoop();startProgress();}
 </script>
