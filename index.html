@@ -146,7 +146,7 @@ h1 .accent{background:linear-gradient(120deg,var(--a),#7fe5c2);-webkit-backgroun
 @keyframes fwAllowedLan{0%{left:58px;top:238px;opacity:0}10%{opacity:1}44%{left:262px;top:238px}66%{left:376px;top:210px}92%{left:518px;top:136px;opacity:1}100%{left:548px;top:128px;opacity:0}}
 @keyframes fwAllowedVpn{0%{left:58px;top:238px;opacity:0}10%{opacity:1}44%{left:262px;top:238px}66%{left:376px;top:286px}92%{left:518px;top:370px;opacity:1}100%{left:548px;top:378px;opacity:0}}
 @keyframes fwDenied{0%{left:58px;top:238px;opacity:0}10%{opacity:1}48%{left:244px;top:200px;opacity:1}58%,72%{left:250px;top:200px;opacity:1}100%{left:250px;top:200px;opacity:0}}
-@media(max-width:620px){.firewall-preview{min-height:430px}.fw-scene{min-height:430px}.fw-zone{width:88px;height:62px}.fw-zone span{display:none}.fw-outside{left:12px;top:184px}.fw-lan{right:12px;top:84px}.fw-dmz{right:12px;top:188px}.fw-vpn{right:12px;top:292px}.fw-appliance{width:112px;height:112px}.fw-log-panel{left:10px;right:10px}.fw-log-line{font-size:9px}.fw-block-wall{left:42%;top:138px}.fw-verdict{display:none}}
+@media(max-width:620px){.firewall-preview{min-height:380px}.fw-scene{min-height:380px}.fw-zone{width:80px;height:56px}.fw-zone span{display:none}.fw-outside{left:8px;top:162px}.fw-lan{right:8px;top:80px}.fw-dmz{right:8px;top:162px}.fw-vpn{right:8px;top:244px}.fw-appliance{width:100px;height:100px}.fw-log-panel{left:8px;right:8px;bottom:6px;max-height:70px;overflow:hidden}.fw-log-line{font-size:8.5px}.fw-block-wall{left:44%;top:130px;height:68px}.fw-verdict{display:none}}
 .floating-card{position:absolute;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(11,15,20,.85);backdrop-filter:blur(18px);box-shadow:0 24px 50px rgba(0,0,0,.4);padding:14px 16px}
 .floating-card.one{left:-28px;top:62px;width:200px}
 .floating-card.two{right:-16px;bottom:36px;width:216px}
@@ -593,21 +593,21 @@ footer a:hover{color:var(--a)}
   .fw-p1,.fw-p2,.fw-p3,.fw-p4,.fw-p5{display:none}
   .fw-verdict{display:none}
   /* Keep the scene itself but constrain height and reposition elements */
-  .fw-scene{min-height:340px!important;overflow:hidden}
-  .firewall-preview{min-height:340px!important}
-  /* Reposition zones — tighter vertical spacing for ~390px phones */
-  .fw-outside{left:8px;top:134px}
-  .fw-lan{right:8px;top:50px}
-  .fw-dmz{right:8px;top:134px}
-  .fw-vpn{right:8px;top:218px}
-  .fw-zone{width:82px;height:56px}
-  .fw-appliance{width:100px;height:100px}
-  /* Keep links but scale to fit */
-  .fw-link-in{left:90px;top:162px;width:calc(50% - 90px)}
-  .fw-link-lan{left:50%;top:148px;width:calc(48% - 8px)}
-  .fw-link-dmz{left:50%;top:162px;width:calc(48% - 8px)}
-  .fw-link-vpn{left:50%;top:176px;width:calc(48% - 8px)}
-  .fw-block-wall{left:44%;top:108px}
+  .fw-scene{min-height:380px!important;overflow:hidden}
+  .firewall-preview{min-height:380px!important}
+  /* Appliance stays centered via transform — zones spread around it */
+  .fw-zone{width:86px;height:58px}
+  .fw-outside{left:8px;top:161px}
+  .fw-lan{right:8px;top:68px}
+  .fw-dmz{right:8px;top:161px}
+  .fw-vpn{right:8px;top:254px}
+  .fw-appliance{width:106px;height:106px}
+  /* Links from appliance edge to zones */
+  .fw-link-in{left:94px;top:190px;width:calc(50% - 104px)}
+  .fw-link-lan{left:50%;top:175px;width:calc(48% - 8px)}
+  .fw-link-dmz{left:50%;top:190px;width:calc(48% - 8px)}
+  .fw-link-vpn{left:50%;top:205px;width:calc(48% - 8px)}
+  .fw-block-wall{left:43%;top:128px;height:72px}
   .fw-log-panel{left:8px;right:8px;bottom:10px}
 
   /* ── Wire capture: constrain stage, hide packet animations on tiny screens ── */
