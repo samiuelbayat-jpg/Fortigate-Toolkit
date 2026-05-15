@@ -1689,7 +1689,6 @@ function renderPSMaker(el){
 
 function renderTopology(el){
   el.innerHTML='';
-  // Make the topology fill the parent flex container
   el.style.cssText='display:flex;flex-direction:column;flex:1;min-height:0;padding:16px;box-sizing:border-box';
 
   // ── CSS ──
@@ -1751,11 +1750,41 @@ function renderTopology(el){
   function buildCanvas(){
     canvasPanel.innerHTML='';
 
-    // ── Device palette ──
+    // ── Detect compact mode (small height screens like 13" laptops) ──
     var isMobileTopo=window.innerWidth<=768;
+    var isCompact=window.innerHeight<=820;
+    var paletteCollapsed=isCompact;
+
+    // ── Palette wrapper ──
+    var paletteWrap=document.createElement('div');
+    paletteWrap.style.cssText='background:var(--b2);border:1px solid var(--br);border-radius:10px;margin-bottom:8px;overflow:hidden';
+
+    var paletteHdr=document.createElement('div');
+    paletteHdr.style.cssText='display:flex;align-items:center;gap:6px;padding:6px 10px;cursor:pointer;user-select:none';
+    paletteHdr.title='Click to collapse/expand device palette';
+
+    var paletteToggleArrow=document.createElement('span');
+    paletteToggleArrow.style.cssText='font-size:10px;color:var(--t3);transition:transform .2s;display:inline-block';
+    paletteToggleArrow.textContent='▶';
+
+    var paletteLbl=document.createElement('span');
+    paletteLbl.style.cssText='font-size:11px;color:var(--t3);font-weight:700;flex:1';
+    paletteLbl.textContent='ADD DEVICE';
+
+    var paletteHint=document.createElement('span');
+    paletteHint.id='topo-palette-hint';
+    paletteHint.style.cssText='font-size:10px;color:var(--a);font-family:var(--mono)';
+    paletteHint.textContent='click to expand';
+
+    paletteHdr.appendChild(paletteToggleArrow);
+    paletteHdr.appendChild(paletteLbl);
+    paletteHdr.appendChild(paletteHint);
+    paletteWrap.appendChild(paletteHdr);
+
     var palette=document.createElement('div');
-    palette.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding:12px;background:var(--b2);border:1px solid var(--br);border-radius:10px;align-items:center';
-    palette.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700;margin-right:4px;white-space:nowrap'+(isMobileTopo?';display:none':'')+'">ADD DEVICE:</span>';
+    palette.id='topo-palette-body';
+    palette.style.cssText='display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px 10px;align-items:center;border-top:1px solid var(--br)';
+
     var devices=[
       {icon:'🛡️',label:'FortiGate',color:'#1D9E75'},
       {icon:'🔥',label:'Firewall',color:'#f85149'},
@@ -1771,26 +1800,44 @@ function renderTopology(el){
     devices.forEach(function(d){
       var b=document.createElement('button');
       b.className='topo-icon-btn';
-      b.innerHTML=d.icon+'<span>'+d.label+'</span>';
+      b.title=d.label;
+      if(isCompact){
+        b.innerHTML='<span style="font-size:18px;line-height:1">'+d.icon+'</span><span style="font-size:9px">'+d.label+'</span>';
+        b.style.cssText='min-width:52px;padding:5px 4px;gap:2px';
+      } else {
+        b.innerHTML=d.icon+'<span>'+d.label+'</span>';
+      }
       b.onclick=(function(dev){return function(){addDevice(dev);};})(d);
       palette.appendChild(b);
     });
+    paletteWrap.appendChild(palette);
+
+    function updatePaletteState(){
+      if(paletteCollapsed){
+        palette.style.display='none';
+        paletteToggleArrow.style.transform='rotate(0deg)';
+        paletteHint.style.display='';
+      } else {
+        palette.style.display='flex';
+        paletteToggleArrow.style.transform='rotate(90deg)';
+        paletteHint.style.display='none';
+      }
+    }
+    paletteHdr.onclick=function(){paletteCollapsed=!paletteCollapsed;updatePaletteState();};
+    updatePaletteState();
 
     // ── Toolbar ──
     var toolbar=document.createElement('div');
-    toolbar.style.cssText='display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center';
+    toolbar.style.cssText='display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center';
 
-    // Edit modes
-    toolbar.innerHTML='<span style="font-size:11px;color:var(--t3);font-weight:700">MODE:</span>'
+    toolbar.innerHTML='<span style="font-size:10px;color:var(--t3);font-weight:700">MODE:</span>'
       +'<button class="topo-mode-btn active" id="mode-select">↖️ Select</button>'
       +'<button class="topo-mode-btn" id="mode-connect">🔗 Connect</button>'
       +'<button class="topo-mode-btn" id="mode-delete">🗑️ Delete</button>';
 
-    // Separator
     var s1=document.createElement('div');s1.className='topo-conn-btn';s1.style.cssText='border:none;background:var(--br);width:1px;padding:0;border-radius:0;cursor:default;align-self:stretch';toolbar.appendChild(s1);
 
-    // Link types
-    var ltLabel=document.createElement('span');ltLabel.style.cssText='font-size:11px;color:var(--t3);font-weight:700';ltLabel.textContent='LINK:';toolbar.appendChild(ltLabel);
+    var ltLabel=document.createElement('span');ltLabel.style.cssText='font-size:10px;color:var(--t3);font-weight:700';ltLabel.textContent='LINK:';toolbar.appendChild(ltLabel);
     var linkTypes=[
       {id:'LAN',label:'LAN',color:'#3fb950'},
       {id:'WAN',label:'WAN',color:'#d29922'},
@@ -1812,25 +1859,22 @@ function renderTopology(el){
       toolbar.appendChild(b);
     });
 
-    // Zoom controls
-    var s2=document.createElement('div');s2.style.cssText='width:1px;background:var(--br);align-self:stretch;margin:0 4px';toolbar.appendChild(s2);
-    var zlbl=document.createElement('span');zlbl.style.cssText='font-size:11px;color:var(--t3);font-weight:700';zlbl.textContent='ZOOM:';toolbar.appendChild(zlbl);
+    var s2=document.createElement('div');s2.style.cssText='width:1px;background:var(--br);align-self:stretch;margin:0 2px';toolbar.appendChild(s2);
+    var zlbl=document.createElement('span');zlbl.style.cssText='font-size:10px;color:var(--t3);font-weight:700';zlbl.textContent='ZOOM:';toolbar.appendChild(zlbl);
 
     var zOut=document.createElement('button');zOut.className='topo-mode-btn';zOut.textContent='−';zOut.title='Zoom out';toolbar.appendChild(zOut);
-    var zPct=document.createElement('span');zPct.id='topo-zpct';zPct.style.cssText='font-size:11px;color:var(--t2);min-width:42px;text-align:center;font-family:var(--mono)';zPct.textContent='100%';toolbar.appendChild(zPct);
+    var zPct=document.createElement('span');zPct.id='topo-zpct';zPct.style.cssText='font-size:11px;color:var(--t2);min-width:38px;text-align:center;font-family:var(--mono)';zPct.textContent='100%';toolbar.appendChild(zPct);
     var zIn=document.createElement('button');zIn.className='topo-mode-btn';zIn.textContent='+';zIn.title='Zoom in';toolbar.appendChild(zIn);
     var zRst=document.createElement('button');zRst.className='topo-mode-btn';zRst.textContent='⌖';zRst.title='Fit to screen / reset view';toolbar.appendChild(zRst);
 
-    // Actions
-    var s3=document.createElement('div');s3.style.cssText='width:1px;background:var(--br);align-self:stretch;margin:0 4px';toolbar.appendChild(s3);
-    var actDiv=document.createElement('div');actDiv.style.cssText='display:flex;gap:6px';
-    actDiv.innerHTML='<button class="sbtn" id="topo-clear" style="font-size:11px;padding:5px 12px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">🗑️ Clear</button>'
-      +'<button class="sbtn" id="topo-export" style="font-size:11px;padding:5px 12px">📥 PNG</button>'
-      +'<button class="sbtn" id="topo-example" style="font-size:11px;padding:5px 12px;background:var(--b3);border:1px solid var(--br);color:var(--t2)">⚡ Example</button>';
+    var s3=document.createElement('div');s3.style.cssText='width:1px;background:var(--br);align-self:stretch;margin:0 2px';toolbar.appendChild(s3);
+    var actDiv=document.createElement('div');actDiv.style.cssText='display:flex;gap:5px';
+    actDiv.innerHTML='<button class="sbtn" id="topo-clear" style="font-size:11px;padding:4px 10px;background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.2)">🗑️ Clear</button>'
+      +'<button class="sbtn" id="topo-export" style="font-size:11px;padding:4px 10px">📥 PNG</button>'
+      +'<button class="sbtn" id="topo-example" style="font-size:11px;padding:4px 10px;background:var(--b3);border:1px solid var(--br);color:var(--t2)">⚡ Example</button>';
     toolbar.appendChild(actDiv);
 
-    canvasPanel.appendChild(palette);
-
+    canvasPanel.appendChild(paletteWrap);
     canvasPanel.appendChild(toolbar);
 
     // ── Viewport (the clipping window) ──
@@ -1872,19 +1916,32 @@ function renderTopology(el){
 
     canvasPanel.appendChild(viewport);
 
-    // ── Tips ──
+    // ── Tips (collapsible) ──
     var tips=document.createElement('div');
-    tips.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px';
+    tips.style.cssText='margin-top:6px';
+    var tipsToggle=document.createElement('button');
+    tipsToggle.style.cssText='font-size:10px;color:var(--t3);background:none;border:none;cursor:pointer;padding:2px 0;display:flex;align-items:center;gap:4px';
+    tipsToggle.innerHTML='<span id="tips-arrow" style="font-size:9px">▶</span> Shortcuts & Tips';
+    var tipsGrid=document.createElement('div');
+    tipsGrid.style.cssText='display:none;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin-top:6px';
     [
       ['🖱️ Pan','Middle-click drag · Space+drag · Click empty area drag'],
       ['🔍 Zoom','Ctrl+scroll wheel · or use the − / + buttons'],
       ['✏️ Rename','Double-click any device to rename and set IP'],
       ['↔️ Resize device','Select a device → scroll wheel to grow/shrink'],
     ].forEach(function(t){
-      tips.innerHTML+='<div style="padding:8px 12px;background:var(--b2);border:1px solid var(--br);border-radius:6px;font-size:11px">'
+      tipsGrid.innerHTML+='<div style="padding:6px 10px;background:var(--b2);border:1px solid var(--br);border-radius:6px;font-size:10px">'
         +'<div style="color:var(--t);font-weight:600;margin-bottom:2px">'+t[0]+'</div>'
         +'<div style="color:var(--t3);line-height:1.5">'+t[1]+'</div></div>';
     });
+    var tipsOpen=false;
+    tipsToggle.onclick=function(){
+      tipsOpen=!tipsOpen;
+      tipsGrid.style.display=tipsOpen?'grid':'none';
+      document.getElementById('tips-arrow').textContent=tipsOpen?'▼':'▶';
+    };
+    tips.appendChild(tipsToggle);
+    tips.appendChild(tipsGrid);
     canvasPanel.appendChild(tips);
 
     // ══════════════════════════════════════
@@ -2284,10 +2341,10 @@ function renderTopology(el){
       var cx=e.clientX-vr.left, cy=e.clientY-vr.top;
       if(e.ctrlKey||e.metaKey){
         var delta=e.deltaY;
-        if(e.deltaMode===1) delta*=16; // line mode
-        if(e.deltaMode===2) delta*=400; // page mode
+        if(e.deltaMode===1) delta*=16;
+        if(e.deltaMode===2) delta*=400;
         var factor=Math.pow(1.0015,Math.abs(delta));
-        factor=Math.min(factor,1.08); // cap per event
+        factor=Math.min(factor,1.08);
         zoomAt(delta<0?factor:1/factor,cx,cy);
       } else {
         // Normal scroll = pan
@@ -2388,10 +2445,10 @@ function renderTopology(el){
       return;
     }
     var iframeWrap=document.createElement('div');
-    iframeWrap.style.cssText='border-radius:10px;overflow:hidden;border:1px solid var(--br)';
+    iframeWrap.style.cssText='border-radius:10px;overflow:hidden;border:1px solid var(--br);flex:1;min-height:0;display:flex;flex-direction:column';
     var iframe=document.createElement('iframe');
     iframe.src='https://embed.diagrams.net/?embed=1&ui=dark&spin=1&modified=unsavedChanges&proto=json&noSaveBtn=0&saveAndExit=0&noExitBtn=1&libraries=1';
-    iframe.style.cssText='width:100%;height:650px;border:none;display:block';
+    iframe.style.cssText='width:100%;flex:1;min-height:0;border:none;display:block';
     iframe.allow='clipboard-read; clipboard-write';
     iframeWrap.appendChild(iframe);
     drawioPanel.appendChild(iframeWrap);
@@ -4746,7 +4803,6 @@ function render(){const el=document.getElementById('mc');
   // Toggle chat-fill class so chat tabs fill the full content area
   const chatTabs=['ai','claudechat','masking','bulkAnon','topology'];
   el.classList.toggle('chat-fill', chatTabs.includes(tab));
-  // For topology: make el a flex column that fills the content area
   if(tab==='topology'){
     el.style.cssText='display:flex;flex-direction:column;padding:0;overflow:hidden';
   } else {
