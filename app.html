@@ -591,6 +591,118 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   .chdr{padding:8px 9px}
   .sim-terminal{min-height:300px}
 }
+
+/* ══ TAB-SPECIFIC MOBILE FIXES ══ */
+@media(max-width:768px){
+
+  /* ── Packet Tools: sub-tab bar scrollable, no wrap ── */
+  .pt-tab{font-size:10px;padding:6px 10px;white-space:nowrap;flex-shrink:0}
+  /* Make pt-tab bar scroll horizontally */
+  div[style*="border-bottom:1px solid var(--br)"][style*="flex-wrap:wrap"]{
+    overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap!important;
+    scrollbar-width:none;padding-bottom:2px
+  }
+
+  /* ── Packet Tools: traceroute hop grid — collapse to 2 cols ── */
+  .tr-hop{grid-template-columns:28px 1fr!important;gap:4px}
+  .tr-hop>*:nth-child(3){grid-column:1/-1;padding-left:32px}
+
+  /* ── Topology: toolbar buttons wrap cleanly ── */
+  .topo-icon-btn{min-width:54px!important;padding:6px!important;font-size:18px!important}
+  .topo-icon-btn span{font-size:9px!important}
+  #topo-mode-canvas,#topo-mode-drawio{font-size:10px!important;padding:5px 10px!important}
+
+  /* ── PS Maker: already handled by isMobile JS, ensure height fits ── */
+  #ps-layout{height:auto!important;min-height:0!important}
+
+  /* ── CLI Simulator: ref panel below terminal ── */
+  .sim-shell{grid-template-columns:1fr!important;height:auto!important}
+  .sim-ref-panel{position:static!important;height:auto!important}
+  .sim-ref-card{height:auto!important;max-height:280px}
+
+  /* ── Security tab: auto-fit cards already responsive, just ensure padding ── */
+  .cbody table{font-size:11px}
+  .cbody table td{padding:6px 8px!important;vertical-align:top}
+
+  /* ── DHCP Diag: input rows stack ── */
+  div[style*="display:flex"][style*="flex-wrap:wrap"][style*="align-items:flex-end"]{
+    flex-direction:column!important;align-items:stretch!important
+  }
+  div[style*="display:flex"][style*="flex-wrap:wrap"][style*="align-items:flex-end"] .sbtn{
+    width:100%!important;margin-top:4px
+  }
+
+  /* ── Multi-vendor learn track tabs ── */
+  .mv-track-tabs{grid-template-columns:1fr 1fr!important}
+
+  /* ── Config Gen / Migrator: input rows ── */
+  .mig-ip-row{flex-direction:column!important}
+  .mig-ip-row input,.mig-ip-row select{width:100%!important;min-width:0!important}
+
+  /* ── Most Used / inline flex rows with buttons ── */
+  .irow{flex-direction:column!important;gap:6px!important}
+  .irow input,.irow select{width:100%!important}
+  .irow .sbtn,.irow .ibtn{width:100%!important}
+
+  /* ── AI Chat: input area ── */
+  .ai-input-area{flex-direction:column!important;gap:6px!important}
+  .ai-input-area input,.ai-input-area textarea{width:100%!important}
+  .ai-input-area .sbtn{width:100%!important}
+
+  /* ── Switch/Router config gen: prevent horizontal scroll on forms ── */
+  .sw-form,.router-form{overflow-x:hidden}
+  .sw-form input,.sw-form select{width:100%!important;box-sizing:border-box}
+
+  /* ── Device catalog cards: ensure single column on small screens ── */
+  .dev-grid{grid-template-columns:1fr!important}
+
+  /* ── Hardware ref cards: already responsive but ensure spec grid ── */
+  .hw-specs{grid-template-columns:1fr 1fr!important}
+  .hw-card-inner{flex-direction:column}
+
+  /* ── Subnet calc: result grid compact ── */
+  .subnet-result-grid{grid-template-columns:1fr 1fr!important}
+
+  /* ── Mask / anonymiser rows ── */
+  .mask-input-group{flex-direction:column!important;gap:6px!important}
+  .mask-input-group input,.mask-input-group select,.mask-input-group .sbtn{width:100%!important}
+
+  /* ── IP mask table: scrollable ── */
+  .ip-mask-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:11px}
+
+  /* ── Bulk anon: textarea full width ── */
+  #bulkAnonInput,#bulkAnonOutput{width:100%!important;box-sizing:border-box;font-size:11px}
+
+  /* ── Lab Setup: progress bar and step grid ── */
+  .lab-two-col{grid-template-columns:1fr!important}
+  #labProgressBar{overflow-x:auto}
+
+  /* ── Most Used tab grid cards ── */
+  .mu-grid{grid-template-columns:1fr!important}
+  .mu-card{padding:10px!important}
+
+  /* ── Azure Learn: step content ── */
+  .az-step{flex-direction:column!important}
+  .az-step-num{flex-shrink:0}
+
+  /* ── General: any inline style 2-col grid collapses to 1 ── */
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:2fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:1fr 2fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:260px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:320px"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:220px"]{grid-template-columns:1fr!important}
+}
+
+@media(max-width:480px){
+  /* Extra-small: make sure no element causes horizontal scroll */
+  .content *{max-width:100%;box-sizing:border-box}
+  .code-block,.clines,.cbody pre{font-size:10.5px;word-break:break-all}
+  .tr-hop{font-size:10px}
+  .nwl-grid{grid-template-columns:1fr!important}
+  .hw-specs{grid-template-columns:1fr!important}
+  .subnet-result-grid{grid-template-columns:1fr!important}
+}
 </style>
 </head>
 <body oncontextmenu="return false">
