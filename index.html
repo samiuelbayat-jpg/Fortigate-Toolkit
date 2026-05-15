@@ -443,7 +443,7 @@ h1 .accent{background:linear-gradient(120deg,var(--a),#7fe5c2);-webkit-backgroun
 
 .plan-display{background:rgba(29,158,117,.06);border:2px solid rgba(29,158,117,.22);border-radius:11px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .plan-display-left{display:flex;align-items:center;gap:12px}
-.plan-display-mark{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--a),var(--ad));display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 14px rgba(29,158,117,.28)}
+.plan-display-mark{width:36px;height:36px;border-radius:9px;background:none;display:flex;align-items:center;justify-content:center;color:#fff}
 .plan-display-mark .ic{font-size:20px}
 .plan-display-name{font-size:15px;font-weight:700;color:var(--a)}
 .plan-display-price{font-size:12.5px;color:var(--t2);margin-top:2px}
@@ -593,20 +593,21 @@ footer a:hover{color:var(--a)}
   .fw-p1,.fw-p2,.fw-p3,.fw-p4,.fw-p5{display:none}
   .fw-verdict{display:none}
   /* Keep the scene itself but constrain height and reposition elements */
-  .fw-scene{min-height:360px!important;overflow:hidden}
-  .firewall-preview{min-height:360px!important}
-  /* Reposition zones for narrow screens */
-  .fw-outside{left:8px;top:156px}
-  .fw-lan{right:8px;top:72px}
-  .fw-dmz{right:8px;top:168px}
-  .fw-vpn{right:8px;top:264px}
-  .fw-appliance{width:108px;height:108px}
+  .fw-scene{min-height:340px!important;overflow:hidden}
+  .firewall-preview{min-height:340px!important}
+  /* Reposition zones — tighter vertical spacing for ~390px phones */
+  .fw-outside{left:8px;top:134px}
+  .fw-lan{right:8px;top:50px}
+  .fw-dmz{right:8px;top:134px}
+  .fw-vpn{right:8px;top:218px}
+  .fw-zone{width:82px;height:56px}
+  .fw-appliance{width:100px;height:100px}
   /* Keep links but scale to fit */
-  .fw-link-in{left:96px;width:calc(48% - 96px)}
-  .fw-link-lan{left:52%;width:calc(46% - 8px)}
-  .fw-link-dmz{left:52%;width:calc(46% - 8px)}
-  .fw-link-vpn{left:52%;width:calc(46% - 8px)}
-  .fw-block-wall{left:44%;top:128px}
+  .fw-link-in{left:90px;top:162px;width:calc(50% - 90px)}
+  .fw-link-lan{left:50%;top:148px;width:calc(48% - 8px)}
+  .fw-link-dmz{left:50%;top:162px;width:calc(48% - 8px)}
+  .fw-link-vpn{left:50%;top:176px;width:calc(48% - 8px)}
+  .fw-block-wall{left:44%;top:108px}
   .fw-log-panel{left:8px;right:8px;bottom:10px}
 
   /* ── Wire capture: constrain stage, hide packet animations on tiny screens ── */
