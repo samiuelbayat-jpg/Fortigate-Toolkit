@@ -598,48 +598,179 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 <!-- LOGIN OVERLAY -->
 <!-- LANDING PAGE OVERLAY -->
 <div id="landingOverlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:800;overflow-y:auto">
-  <div style="max-width:680px;margin:0 auto;padding:40px 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
-    <div style="text-align:center;margin-bottom:36px">
-      <div style="font-size:48px;margin-bottom:12px;animation:lcFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 12px var(--a))">&#x1F43A;</div>
-      <h1 style="font-size:26px;font-weight:800;color:var(--t);margin-bottom:8px">Welcome to <span style="color:var(--a);text-shadow:0 0 20px color-mix(in srgb,var(--a) 45%,transparent)">NetWolf</span></h1>
-      <p id="landing-greeting" style="font-size:14px;color:var(--t2)">FortiGate Pro Toolkit &mdash; ready when you are.</p>
+  <canvas id="nwLandingCanvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.45"></canvas>
+  <div class="nwl-wrap">
+
+    <!-- LEFT PANEL -->
+    <div class="nwl-left">
+      <div class="nwl-brand">
+        <div class="nwl-wolf">🐺</div>
+        <div>
+          <div class="nwl-title">Net<span>Wolf</span></div>
+          <div class="nwl-version">FortiGate Pro Toolkit &nbsp;·&nbsp; v1.2.0</div>
+        </div>
+      </div>
+      <p id="landing-greeting" class="nwl-greeting">Good morning — NetWolf is ready.</p>
+      <div class="nwl-stats">
+        <div class="nwl-stat"><span class="nwl-stat-n">10</span><span class="nwl-stat-l">Vendors</span></div>
+        <div class="nwl-stat-div"></div>
+        <div class="nwl-stat"><span class="nwl-stat-n">1,100+</span><span class="nwl-stat-l">CLI Commands</span></div>
+        <div class="nwl-stat-div"></div>
+        <div class="nwl-stat"><span class="nwl-stat-n">21</span><span class="nwl-stat-l">Tools</span></div>
+      </div>
+      <button onclick="window.landingEnter()" class="nwl-enter-btn">
+        <span>Open Full Toolkit</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p class="nwl-hint">or jump directly to any module →</p>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px">
-      <button onclick="window.landingGo('guide')" class="landing-card">
-        <div style="font-size:24px;margin-bottom:8px">&#x1F4CB;</div>
-        <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">Troubleshoot</div>
-        <div style="font-size:11px;color:var(--t3);line-height:1.5">Step-by-step playbooks for VPN, SSL, HA, Routing &amp; more</div>
-      </button>
-      <button onclick="window.landingGo('mostused')" class="landing-card">
-        <div style="font-size:24px;margin-bottom:8px">&#x26A1;</div>
-        <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">Most Used Tools</div>
-        <div style="font-size:11px;color:var(--t3);line-height:1.5">21 instant diagnostic &amp; operational command generators</div>
-      </button>
-      <button onclick="window.landingGo('multivendor')" class="landing-card">
-        <div style="font-size:24px;margin-bottom:8px">&#x1F310;</div>
-        <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">Multi-Vendor CLI</div>
-        <div style="font-size:11px;color:var(--t3);line-height:1.5">10 vendors &middot; 1,100+ commands + CLI Simulator</div>
-      </button>
-      <button onclick="window.landingGo('psmaker')" class="landing-card">
-        <div style="font-size:24px;margin-bottom:8px">&#x1FA9F;</div>
-        <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">PS Script Maker</div>
-        <div style="font-size:11px;color:var(--t3);line-height:1.5">AI-powered PowerShell scripts with READ/WRITE annotations</div>
-      </button>
-      <button onclick="window.landingGo('subnetcalc')" class="landing-card">
-        <div style="font-size:24px;margin-bottom:8px">&#x1F9EE;</div>
-        <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">Subnet Calculator</div>
-        <div style="font-size:11px;color:var(--t3);line-height:1.5">Full binary breakdown with network/host bit visualization</div>
-      </button>
-      <button onclick="window.landingGo('pkttools')" class="landing-card">
-        <div style="font-size:24px;margin-bottom:8px">&#x1F4E6;</div>
-        <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px">Packet Tools</div>
-        <div style="font-size:11px;color:var(--t3);line-height:1.5">Debug generator &middot; Packet walk &middot; Traceroute analyzer</div>
-      </button>
+
+    <!-- RIGHT PANEL -->
+    <div class="nwl-right">
+      <div class="nwl-section-label">QUICK ACCESS</div>
+      <div class="nwl-grid">
+        <button onclick="window.landingGo('guide')" class="nwl-card">
+          <div class="nwl-card-icon">📋</div>
+          <div class="nwl-card-body">
+            <div class="nwl-card-title">Troubleshoot</div>
+            <div class="nwl-card-desc">Step-by-step playbooks for VPN, SSL, HA, Routing &amp; more</div>
+          </div>
+          <div class="nwl-card-arrow">→</div>
+        </button>
+        <button onclick="window.landingGo('mostused')" class="nwl-card">
+          <div class="nwl-card-icon">⚡</div>
+          <div class="nwl-card-body">
+            <div class="nwl-card-title">Most Used Tools</div>
+            <div class="nwl-card-desc">21 instant diagnostic &amp; operational command generators</div>
+          </div>
+          <div class="nwl-card-arrow">→</div>
+        </button>
+        <button onclick="window.landingGo('multivendor')" class="nwl-card">
+          <div class="nwl-card-icon">🌐</div>
+          <div class="nwl-card-body">
+            <div class="nwl-card-title">Multi-Vendor CLI</div>
+            <div class="nwl-card-desc">10 vendors · 1,100+ commands + CLI Simulator</div>
+          </div>
+          <div class="nwl-card-arrow">→</div>
+        </button>
+        <button onclick="window.landingGo('psmaker')" class="nwl-card">
+          <div class="nwl-card-icon">🪛</div>
+          <div class="nwl-card-body">
+            <div class="nwl-card-title">PS Script Maker</div>
+            <div class="nwl-card-desc">AI-powered PowerShell with READ/WRITE annotations</div>
+          </div>
+          <div class="nwl-card-arrow">→</div>
+        </button>
+        <button onclick="window.landingGo('subnetcalc')" class="nwl-card">
+          <div class="nwl-card-icon">🧮</div>
+          <div class="nwl-card-body">
+            <div class="nwl-card-title">Subnet Calculator</div>
+            <div class="nwl-card-desc">Full binary breakdown with host bit visualization</div>
+          </div>
+          <div class="nwl-card-arrow">→</div>
+        </button>
+        <button onclick="window.landingGo('pkttools')" class="nwl-card">
+          <div class="nwl-card-icon">📦</div>
+          <div class="nwl-card-body">
+            <div class="nwl-card-title">Packet Tools</div>
+            <div class="nwl-card-desc">Debug generator · Packet walk · Traceroute analyzer</div>
+          </div>
+          <div class="nwl-card-arrow">→</div>
+        </button>
+      </div>
     </div>
-    <button onclick="window.landingEnter()" style="width:100%;padding:14px;background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;box-shadow:0 0 20px color-mix(in srgb,var(--a) 30%,transparent);animation:lcPulse 2.8s ease-in-out infinite;transition:transform .15s" onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 0 34px color-mix(in srgb,var(--a) 45%,transparent)'" onmouseout="this.style.transform='scale(1)'">&#x1F680; Open Full Toolkit &rarr;</button>
-    <p style="text-align:center;font-size:11px;color:var(--t3)">Or click any tool above to jump straight in</p>
+
   </div>
 </div>
+<style>
+/* ── LANDING REDESIGN ── */
+.nwl-wrap{position:relative;z-index:1;min-height:100vh;display:grid;grid-template-columns:340px 1fr;max-width:1100px;margin:0 auto;padding:40px 28px;gap:48px;align-items:center}
+.nwl-left{display:flex;flex-direction:column;gap:0}
+.nwl-brand{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.nwl-wolf{font-size:52px;filter:drop-shadow(0 0 18px color-mix(in srgb,var(--a) 55%,transparent));animation:lcFloat 3.2s ease-in-out infinite}
+.nwl-title{font-family:var(--mono);font-size:32px;font-weight:900;color:var(--t);letter-spacing:-.5px;line-height:1}
+.nwl-title span{color:var(--a);text-shadow:0 0 24px color-mix(in srgb,var(--a) 50%,transparent)}
+.nwl-version{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-top:5px}
+.nwl-greeting{font-size:15px;color:var(--t2);line-height:1.55;margin-bottom:28px;padding-left:2px}
+.nwl-stats{display:flex;align-items:center;gap:14px;margin-bottom:32px;padding:16px 18px;background:color-mix(in srgb,var(--b2) 80%,var(--a));border:1px solid color-mix(in srgb,var(--a) 22%,var(--br));border-radius:12px}
+.nwl-stat{display:flex;flex-direction:column;align-items:center;flex:1}
+.nwl-stat-n{font-family:var(--mono);font-size:18px;font-weight:900;color:var(--a);line-height:1}
+.nwl-stat-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;margin-top:3px}
+.nwl-stat-div{width:1px;height:32px;background:var(--br)}
+.nwl-enter-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px 20px;background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:.3px;box-shadow:0 0 28px color-mix(in srgb,var(--a) 32%,transparent),0 4px 14px rgba(0,0,0,.3);transition:transform .18s,box-shadow .18s;margin-bottom:12px}
+.nwl-enter-btn:hover{transform:translateY(-2px);box-shadow:0 0 40px color-mix(in srgb,var(--a) 50%,transparent),0 8px 20px rgba(0,0,0,.35)}
+.nwl-enter-btn:active{transform:translateY(0)}
+.nwl-hint{font-size:11px;color:var(--t3);text-align:center;letter-spacing:.3px}
+.nwl-right{display:flex;flex-direction:column}
+.nwl-section-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase;margin-bottom:14px;padding-left:2px}
+.nwl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nwl-card{display:flex;align-items:center;gap:12px;background:var(--b2);border:1px solid var(--br);border-radius:12px;padding:14px 14px;cursor:pointer;text-align:left;width:100%;transition:all .2s;position:relative;overflow:hidden}
+.nwl-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--a);opacity:0;transition:opacity .2s;border-radius:2px}
+.nwl-card:hover{border-color:color-mix(in srgb,var(--a) 60%,transparent);background:color-mix(in srgb,var(--b2) 85%,var(--a));transform:translateX(3px);box-shadow:0 4px 20px rgba(0,0,0,.25),-4px 0 20px color-mix(in srgb,var(--a) 12%,transparent)}
+.nwl-card:hover::before{opacity:1}
+.nwl-card:hover .nwl-card-arrow{color:var(--a);transform:translateX(3px)}
+.nwl-card-icon{font-size:22px;flex-shrink:0;width:36px;text-align:center;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--a) 30%,transparent))}
+.nwl-card-body{flex:1;min-width:0}
+.nwl-card-title{font-size:12px;font-weight:800;color:var(--t);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nwl-card-desc{font-size:10px;color:var(--t3);line-height:1.4}
+.nwl-card-arrow{font-size:14px;color:var(--t3);flex-shrink:0;transition:all .2s}
+/* entrance animation */
+@keyframes nwlSlideIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.nwl-left{animation:nwlSlideIn .5s ease both}
+.nwl-right{animation:nwlSlideIn .5s .12s ease both}
+.nwl-card:nth-child(1){animation:nwlSlideIn .4s .18s ease both}
+.nwl-card:nth-child(2){animation:nwlSlideIn .4s .24s ease both}
+.nwl-card:nth-child(3){animation:nwlSlideIn .4s .30s ease both}
+.nwl-card:nth-child(4){animation:nwlSlideIn .4s .36s ease both}
+.nwl-card:nth-child(5){animation:nwlSlideIn .4s .42s ease both}
+.nwl-card:nth-child(6){animation:nwlSlideIn .4s .48s ease both}
+/* vertical divider */
+.nwl-wrap::after{content:'';position:absolute;left:calc(340px + 28px + 24px);top:60px;bottom:60px;width:1px;background:linear-gradient(180deg,transparent,var(--br) 20%,var(--br) 80%,transparent);pointer-events:none}
+/* responsive */
+@media(max-width:800px){
+  .nwl-wrap{grid-template-columns:1fr;padding:32px 18px;gap:28px}
+  .nwl-wrap::after{display:none}
+  .nwl-brand{margin-bottom:14px}
+  .nwl-stats{gap:10px;padding:12px 14px}
+  .nwl-stat-n{font-size:15px}
+  .nwl-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .nwl-wolf{font-size:38px}
+  .nwl-title{font-size:26px}
+  .nwl-grid{grid-template-columns:1fr 1fr}
+  .nwl-card-desc{display:none}
+  .nwl-card{padding:12px 10px;gap:8px}
+  .nwl-card-icon{font-size:18px;width:26px}
+}
+</style>
+<script>
+(function(){
+  /* Animated network-dot background on the landing canvas */
+  function initLandingCanvas(){
+    var c=document.getElementById('nwLandingCanvas');
+    if(!c)return;
+    var ctx=c.getContext('2d');
+    var W,H,nodes=[];
+    function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;nodes=[];var n=Math.floor((W*H)/18000);for(var i=0;i<n;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.6+.8})}
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      var col=getComputedStyle(document.documentElement).getPropertyValue('--a').trim()||'#1D9E75';
+      nodes.forEach(function(n){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=col;ctx.globalAlpha=.55;ctx.fill()});
+      ctx.globalAlpha=1;
+      for(var i=0;i<nodes.length;i++){for(var j=i+1;j<nodes.length;j++){var dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.strokeStyle=col;ctx.globalAlpha=(1-dist/120)*.18;ctx.lineWidth=.8;ctx.stroke();ctx.globalAlpha=1}}}
+      requestAnimationFrame(draw)}
+    window.addEventListener('resize',resize);resize();draw();}
+  /* run when landing is shown */
+  var _orig=window.landingEnter;
+  document.addEventListener('DOMContentLoaded',function(){
+    var lo=document.getElementById('landingOverlay');
+    if(!lo)return;
+    var obs=new MutationObserver(function(muts){muts.forEach(function(m){if(m.attributeName==='style'&&lo.style.display!=='none')initLandingCanvas()})});
+    obs.observe(lo,{attributes:true});
+  });
+})();
+</script>
 
 <!-- CHANGELOG MODAL -->
 <div id="changelogModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center">
