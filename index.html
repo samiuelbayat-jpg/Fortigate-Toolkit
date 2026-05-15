@@ -1531,7 +1531,7 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
       signupAt:firebase.database.ServerValue.TIMESTAMP
     });
   }catch(firebaseErr){
-    if(firebaseErr.code==='auth/email-already-in-use')showErr('This email already has an account. Log in at app.html instead.');
+    if(firebaseErr.code==='auth/email-already-in-use')showErr('This email already has an account. <a href="https://netwolffortigate.com/app.html" style="color:var(--a);text-decoration:underline">Open Toolkit &amp; Login →</a>');
     else if(firebaseErr.code==='auth/weak-password')showErr('Password is too weak. Please use at least 8 characters.');
     else showErr('Account error: '+firebaseErr.message);
     return;
