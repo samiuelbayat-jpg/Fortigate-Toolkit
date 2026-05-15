@@ -468,7 +468,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   #ps-layout{grid-template-columns:1fr!important}
 
   /* Topology canvas */
-  .topo-viewport{height:400px!important}
+  .topo-viewport{min-height:300px!important}
 
   /* Lab setup */
   .lab-two-col{grid-template-columns:1fr!important}
@@ -1689,6 +1689,8 @@ function renderPSMaker(el){
 
 function renderTopology(el){
   el.innerHTML='';
+  // Make the topology fill the parent flex container
+  el.style.cssText='display:flex;flex-direction:column;flex:1;min-height:0;padding:16px;box-sizing:border-box';
 
   // ── CSS ──
   var css=document.createElement('style');
@@ -1700,7 +1702,7 @@ function renderTopology(el){
     +'.topo-mode-btn.active{background:var(--a);border-color:var(--a);color:#fff}'
     +'.topo-conn-btn{font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--br);background:var(--b3);color:var(--t2);cursor:pointer;transition:all .15s}'
     +'.topo-conn-btn.active,.topo-conn-btn:hover{background:rgba(29,158,117,.1);border-color:var(--a);color:var(--a)}'
-    +'.topo-viewport{overflow:hidden;position:relative;border-radius:10px;border:1px solid #30363d;background:#0d1117;width:100%;height:640px;cursor:default}'
+    +'.topo-viewport{overflow:hidden;position:relative;border-radius:10px;border:1px solid #30363d;background:#0d1117;width:100%;flex:1;min-height:0;cursor:default}'
     +'.topo-world{position:absolute;top:0;left:0;transform-origin:0 0}'
     +'.topo-minimap{position:absolute;bottom:12px;right:12px;background:rgba(13,17,23,.85);border:1px solid #30363d;border-radius:6px;z-index:10}';
   document.head.appendChild(css);
@@ -1721,24 +1723,25 @@ function renderTopology(el){
 
   var canvasPanel=document.createElement('div');
   canvasPanel.id='topo-canvas-panel';
+  canvasPanel.style.cssText='display:flex;flex-direction:column;flex:1;min-height:0';
   el.appendChild(canvasPanel);
 
   var drawioPanel=document.createElement('div');
   drawioPanel.id='topo-drawio-panel';
-  drawioPanel.style.display='none';
+  drawioPanel.style.cssText='display:none;flex-direction:column;flex:1;min-height:0';
   el.appendChild(drawioPanel);
 
   document.getElementById('topo-mode-canvas').onclick=function(){
     this.classList.add('active');
     document.getElementById('topo-mode-drawio').classList.remove('active');
-    canvasPanel.style.display='block';
+    canvasPanel.style.display='flex';
     drawioPanel.style.display='none';
   };
   document.getElementById('topo-mode-drawio').onclick=function(){
     this.classList.add('active');
     document.getElementById('topo-mode-canvas').classList.remove('active');
     canvasPanel.style.display='none';
-    drawioPanel.style.display='block';
+    drawioPanel.style.display='flex';
     buildDrawio();
   };
 
@@ -2280,7 +2283,12 @@ function renderTopology(el){
       var vr=viewport.getBoundingClientRect();
       var cx=e.clientX-vr.left, cy=e.clientY-vr.top;
       if(e.ctrlKey||e.metaKey){
-        zoomAt(e.deltaY<0?1.12:0.9,cx,cy);
+        var delta=e.deltaY;
+        if(e.deltaMode===1) delta*=16; // line mode
+        if(e.deltaMode===2) delta*=400; // page mode
+        var factor=Math.pow(1.0015,Math.abs(delta));
+        factor=Math.min(factor,1.08); // cap per event
+        zoomAt(delta<0?factor:1/factor,cx,cy);
       } else {
         // Normal scroll = pan
         viewX-=e.deltaX;
@@ -4736,8 +4744,14 @@ const QREF=[
 /* ══ RENDER FUNCTIONS ══ */
 function render(){const el=document.getElementById('mc');
   // Toggle chat-fill class so chat tabs fill the full content area
-  const chatTabs=['ai','claudechat','masking','bulkAnon'];
+  const chatTabs=['ai','claudechat','masking','bulkAnon','topology'];
   el.classList.toggle('chat-fill', chatTabs.includes(tab));
+  // For topology: make el a flex column that fills the content area
+  if(tab==='topology'){
+    el.style.cssText='display:flex;flex-direction:column;padding:0;overflow:hidden';
+  } else {
+    el.style.cssText='';
+  }
   if(tab==='guide'){
   const d=D[cur];
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+escapeHtml(cur)+'</div>';return;}
