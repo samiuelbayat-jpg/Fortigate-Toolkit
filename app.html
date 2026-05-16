@@ -5341,90 +5341,48 @@ function renderFreeAITab(el){
   const hasClaude = !!claudeApiKeyFree;
   const hasKey = freeAIProvider==='claude' ? hasClaude : hasGroq;
   el.innerHTML=`
-  <div class="sh"><span class="stitle">🧠 AI CLI Analyzer</span><span class="sev info">Powered by Groq or Claude</span></div>
-
-  <!-- Provider selector -->
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:10px 14px">
-    <span style="font-size:12px;font-weight:700;color:var(--t2)">🤖 AI Provider:</span>
-    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--t)">
+  <!-- Header + provider selector in one compact row -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:8px 14px">
+    <span class="stitle" style="font-size:13px;margin:0">🧠 AI CLI Analyzer</span>
+    <span style="font-size:10px;color:var(--t3);margin-right:4px">Powered by</span>
+    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--t)">
       <input type="radio" name="freeAIProvider" value="groq" ${freeAIProvider==='groq'?'checked':''} onchange="freeAIProviderChange('groq')" style="accent-color:var(--a)">
-      <span>Groq <span style="color:var(--g);font-size:10px">${hasGroq?'✓ key saved':'(no key)'}</span></span>
+      <span>Groq <span style="font-size:10px;color:${hasGroq?'var(--g)':'var(--t3)'}">${hasGroq?'✓':'(no key)'}</span></span>
     </label>
-    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--t)">
+    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--t)">
       <input type="radio" name="freeAIProvider" value="claude" ${freeAIProvider==='claude'?'checked':''} onchange="freeAIProviderChange('claude')" style="accent-color:var(--a)">
-      <span>Claude (Anthropic) <span style="color:var(--g);font-size:10px">${hasClaude?'✓ key saved':'(no key)'}</span></span>
+      <span>Claude <span style="font-size:10px;color:${hasClaude?'var(--g)':'var(--t3)'}">${hasClaude?'✓':'(no key)'}</span></span>
     </label>
+    ${!hasKey ? `<span style="margin-left:auto;font-size:10px;color:var(--t3)">→ <a href="${freeAIProvider==='claude'?'https://console.anthropic.com/keys':'https://console.groq.com/keys'}" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">${freeAIProvider==='claude'?'Get Claude key':'Get free Groq key'}</a> then paste below</span>` : ''}
   </div>
 
-  <!-- Setup guide — only shown when no key for current provider -->
-  ${!hasKey ? `
-  <div style="background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.2);border-radius:12px;padding:20px 22px;margin-bottom:16px">
-    <div style="font-size:13px;font-weight:700;color:var(--bl);margin-bottom:14px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:16px">🔑</span> ${freeAIProvider==='claude'?'Set up your Claude (Anthropic) API key':'First-time setup — get your free Groq API key'}
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px">
-      ${freeAIProvider==='claude'?`
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">1</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Open console.anthropic.com</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Go to <a href="https://console.anthropic.com/keys" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">console.anthropic.com/keys</a> and sign in.</div>
-      </div>
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">2</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Create API key</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Click <strong style="color:var(--t)">Create Key</strong>. Copy the key starting with <span style="font-family:var(--mono);color:var(--g);font-size:10.5px">sk-ant-...</span></div>
-      </div>
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">3</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Paste it below</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Enter your key in the field below and click <strong style="color:var(--t)">Save</strong>. Stored locally only.</div>
-      </div>`:`
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">1</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Create free account</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Go to <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">console.groq.com</a> and sign up for free — no credit card needed.</div>
-      </div>
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">2</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Generate API key</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">In the Groq console click <strong style="color:var(--t)">API Keys → Create API Key</strong>. Copy the key starting with <span style="font-family:var(--mono);color:var(--g);font-size:10.5px">gsk_...</span></div>
-      </div>
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">3</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Paste it below</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Enter your key in the field below and click <strong style="color:var(--t)">Save</strong>. It's stored locally — never sent to our servers.</div>
-      </div>`}
-    </div>
-    <div style="background:rgba(29,158,117,.05);border-left:3px solid var(--a);padding:8px 12px;border-radius:0 6px 6px 0;font-size:11.5px;color:var(--t2);line-height:1.6">
-      ${freeAIProvider==='claude'?'💡 <strong style="color:var(--t)">Claude API</strong> — powerful models by Anthropic. Requires an account with available credits. Key stored in your browser only.':'💡 <strong style="color:var(--t)">Completely free</strong> — Groq offers a generous free tier with no credit card required. Your key is saved in your browser and persists between sessions.'}
-    </div>
-  </div>` : ''}
-
-  <!-- Key input row — compact toggle -->
+  <!-- Key + Model — single compact row -->
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
     ${hasKey
-      ? `<div style="display:flex;align-items:center;gap:8px;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:20px;padding:5px 14px">
-           <span style="font-size:11px;color:var(--g)">✓ ${freeAIProvider==='claude'?'Claude':'Groq'} key saved</span>
+      ? `<div style="display:flex;align-items:center;gap:6px;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:20px;padding:4px 12px">
+           <span style="font-size:11px;color:var(--g)">✓ ${freeAIProvider==='claude'?'Claude':'Groq'} key</span>
            <button id="groqToggleBtn" onclick="groqToggleKey()" style="font-size:10px;color:var(--bl);background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono)">Change</button>
          </div>`
       : `<button id="groqToggleBtn" onclick="groqToggleKey()"
-           style="display:inline-flex;align-items:center;gap:6px;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--bl);cursor:pointer;font-family:var(--mono)">
+           style="display:inline-flex;align-items:center;gap:6px;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--bl);cursor:pointer;font-family:var(--mono)">
            🔑 Add ${freeAIProvider==='claude'?'Claude':'Groq'} API Key
          </button>`
     }
-    ${freeAIProvider==='groq'?`<button onclick="showGroqGuide()" style="font-size:11px;color:var(--bl);background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:20px;padding:4px 12px;cursor:pointer;white-space:nowrap">❓ How to get a free key</button>`:''}
+    ${freeAIProvider==='groq'?`<button onclick="showGroqGuide()" style="font-size:11px;color:var(--bl);background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:20px;padding:4px 10px;cursor:pointer;white-space:nowrap">❓ How to get a free key</button>`:''}
+    <span style="font-size:10px;color:var(--t3);padding:0 2px">|</span>
+    <span style="font-size:11px;color:var(--t2);white-space:nowrap">🧠</span>
+    <select id="groqModelSelect" style="background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--t);outline:none;cursor:pointer">
+      ${freeAIProvider==='claude'?`
+      <option value="claude-sonnet-4-5">Claude Sonnet 4 — Best balance (recommended)</option>
+      <option value="claude-haiku-4-5">Claude Haiku 4.5 — Fastest</option>
+      <option value="claude-opus-4-5">Claude Opus 4 — Most powerful</option>
+      `:`
+      <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B — Most accurate (recommended)</option>
+      <option value="mixtral-8x7b-32768">Mixtral 8x7B — Fast &amp; balanced</option>
+      <option value="llama-3.1-8b-instant">LLaMA 3.1 8B — Fastest response</option>
+      `}
+    </select>
+    <span style="font-size:10px;color:var(--t3)">${freeAIProvider==='claude'?'Anthropic API':'All free via Groq'}</span>
   </div>
   <div id="groqKeyPanel" style="display:none;flex-direction:column;gap:8px;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:12px 14px;margin-bottom:12px">
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -5438,23 +5396,6 @@ function renderFreeAITab(el){
     <div style="font-size:11px;color:var(--t3);line-height:1.5;border-top:1px solid var(--br);padding-top:8px;">
       🔒 Your key is stored locally in <strong style="color:var(--t2)">your browser only</strong> — never sent to NetWolf servers. On a shared computer, click <strong style="color:var(--r)">Clear Key</strong> before closing.
     </div>
-  </div>
-
-  <!-- Model selector -->
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-    <span style="font-size:12px;font-weight:600;color:var(--t2)">🧠 Model:</span>
-    <select id="groqModelSelect" style="background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--t);outline:none;cursor:pointer">
-      ${freeAIProvider==='claude'?`
-      <option value="claude-sonnet-4-5">Claude Sonnet 4 — Best balance (recommended)</option>
-      <option value="claude-haiku-4-5">Claude Haiku 4.5 — Fastest</option>
-      <option value="claude-opus-4-5">Claude Opus 4 — Most powerful</option>
-      `:`
-      <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B — Most accurate (recommended)</option>
-      <option value="mixtral-8x7b-32768">Mixtral 8x7B — Fast &amp; balanced</option>
-      <option value="llama-3.1-8b-instant">LLaMA 3.1 8B — Fastest response</option>
-      `}
-    </select>
-    <span style="font-size:11px;color:var(--t3)">${freeAIProvider==='claude'?'Claude API — requires Anthropic account':'All models free via Groq API'}</span>
   </div>
 
   <!-- Privacy warning banner -->
@@ -5471,17 +5412,93 @@ function renderFreeAITab(el){
   <!-- Input area -->
   <div style="margin-bottom:10px">
     <label style="font-size:12px;font-weight:600;color:var(--t2);display:block;margin-bottom:6px">📄 Paste CLI output or ask a question:</label>
-    <textarea id="groqPrompt" rows="8" oninput="freeAIPrompt=this.value"
+    <textarea id="groqPrompt" oninput="freeAIPrompt=this.value"
       placeholder="Paste any FortiGate CLI output here — e.g. get vpn ipsec tunnel summary, diagnose sys session list, debug flow output...&#10;&#10;Or ask a question like: How do I check if a policy is matching traffic?"
-      style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--t);resize:vertical;outline:none;line-height:1.7"></textarea>
+      style="width:100%;height:220px;min-height:120px;max-height:320px;background:var(--bg);border:1px solid var(--br);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--t);resize:vertical;outline:none;line-height:1.7;box-sizing:border-box"></textarea>
   </div>
 
   <!-- Action buttons -->
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
     <button class="sbtn" id="analyzeGroqBtn" style="padding:9px 20px;font-size:13px">🚀 Analyze</button>
-    <button class="sbtn" id="exampleGroqBtn" style="background:var(--b3)">📋 Load Example</button>
     <button class="sbtn" id="copyGroqResponseBtn" style="background:#15803D">📋 Copy Response</button>
     <button class="sbtn" id="clearGroqBtn" style="background:var(--b3)">🗑️ Clear</button>
+  </div>
+  <!-- Training scenario dropdown -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <select id="exampleScenarioSelect" style="flex:1;min-width:220px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);outline:none;font-family:var(--mono)">
+      <option value="">📋 Select a training scenario...</option>
+      <optgroup label="🔒 VPN — IPsec">
+        <option value="vpn_down">IPsec — Tunnel Partially Down (Phase 2 fail)</option>
+        <option value="vpn_no_proposal">IPsec — No Proposal Chosen (mismatch)</option>
+        <option value="vpn_dpd">IPsec — DPD Dead Peer Detection Triggering</option>
+        <option value="vpn_selector">IPsec — Phase 2 Selector Mismatch</option>
+        <option value="vpn_natt">IPsec — NAT-T UDP 4500 Traversal</option>
+        <option value="vpn_ikev1v2">IPsec — IKEv1 vs IKEv2 Negotiation Fail</option>
+      </optgroup>
+      <optgroup label="🕵️ VPN — SSL">
+        <option value="ssl_fail">SSL VPN — Cert Error / Login Failures</option>
+        <option value="ssl_geoip">SSL VPN — Geo-IP Block (foreign country)</option>
+        <option value="ssl_split">SSL VPN — Split Tunneling Issue</option>
+        <option value="ssl_pool">SSL VPN — IP Pool Exhausted</option>
+      </optgroup>
+      <optgroup label="📜 Firewall and Policy">
+        <option value="flow_denied">Debug Flow — Policy Denied (policy 0)</option>
+        <option value="policy_dnat">DNAT — Port Forward Not Working</option>
+        <option value="policy_implicit">Policy — Implicit Deny Zero Hit Counter</option>
+        <option value="policy_utm">UTM Profile — Blocking Legitimate Traffic</option>
+        <option value="policy_nat_missing">NAT — Missing set nat enable</option>
+        <option value="policy_order">Policy — Wrong Policy Matched (order issue)</option>
+        <option value="policy_asic">ASIC Offload — Bypass Needed for Inspection</option>
+      </optgroup>
+      <optgroup label="🌐 Routing">
+        <option value="ospf_stuck">OSPF — Neighbor Stuck at ExStart (MTU)</option>
+        <option value="ospf_dr">OSPF — DR/BDR Election Issue</option>
+        <option value="bgp_flap">BGP — Neighbor Flapping</option>
+        <option value="bgp_no_route">BGP — Route Not Being Advertised</option>
+        <option value="bgp_conflict">Routing — Static vs BGP Route Conflict</option>
+        <option value="route_missing">Routing — Default Route Missing</option>
+        <option value="sdwan_hc_fail">SD-WAN — Health Check Failing</option>
+        <option value="sdwan_wrong">SD-WAN — Wrong Member Selected</option>
+        <option value="pbr_conflict">PBR — Policy Route Conflict</option>
+      </optgroup>
+      <optgroup label="🩺 System Health">
+        <option value="high_cpu">High CPU + Conserve Mode Active</option>
+        <option value="disk_full">Disk Full — Log Disk 100%</option>
+        <option value="ntp_fail">NTP — Sync Failed</option>
+        <option value="fguard_fail">FortiGuard — Connectivity Failed</option>
+        <option value="crash_log">Crash Log — After Unexpected Reboot</option>
+        <option value="mem_leak">Memory Leak — WAD Process</option>
+        <option value="dns_fail">DNS — Resolution Failing</option>
+        <option value="conserve">Conserve Mode — Full Investigation</option>
+      </optgroup>
+      <optgroup label="🔑 Authentication">
+        <option value="ldap_locked">LDAP Auth — Account Locked Out</option>
+        <option value="radius_timeout">RADIUS — Timeout / Unreachable</option>
+        <option value="fsso_fail">FSSO — User Not Authenticated</option>
+        <option value="twofa_fail">Two-Factor Auth — Failure</option>
+        <option value="admin_locked">Admin — Account Lockout</option>
+      </optgroup>
+      <optgroup label="⚙️ HA / Cluster">
+        <option value="ha_mismatch">HA — Checksum Mismatch / Out of Sync</option>
+        <option value="ha_splitbrain">HA — Split Brain Scenario</option>
+        <option value="ha_secondary">HA — Secondary Not Joining</option>
+        <option value="ha_session">HA — Session Sync Failure</option>
+        <option value="ha_failover">HA — Manual Failover Output</option>
+      </optgroup>
+      <optgroup label="📡 Interface and Layer 2">
+        <option value="crc_errors">Interface — CRC Errors / Duplex Mismatch</option>
+        <option value="sfp_error">Interface — SFP Transceiver Error</option>
+        <option value="lacp_down">Interface — LACP Bond Member Down</option>
+        <option value="vlan_mismatch">Interface — VLAN Mismatch</option>
+        <option value="mtu_blackhole">Interface — MTU Black Hole</option>
+      </optgroup>
+      <optgroup label="📊 Sessions and NAT">
+        <option value="session_nat">Session Table — NAT Translation</option>
+        <option value="arp_conflict">ARP Table — IP Conflict Detected</option>
+        <option value="session_limit">Session — Table Full / Limit Reached</option>
+      </optgroup>
+    </select>
+    <button class="sbtn" id="exampleGroqBtn" style="white-space:nowrap">⚡ Load Example</button>
   </div>
 
   <!-- Response area -->
@@ -5551,14 +5568,1351 @@ function renderFreeAITab(el){
     renderFreeAITab(el);
   };
 
-  document.getElementById('exampleGroqBtn').onclick=()=>{
-    document.getElementById('groqPrompt').value=
+  // ── Training scenario examples ──
+  const TRAINING_EXAMPLES={
+    vpn_down:
 `get vpn ipsec tunnel summary
-Tunnel name   : SiteA-HQ
-Status        : down
-Local         : 203.0.113.1    Remote: 198.51.100.5
-Last error    : no proposal chosen
-Npu-flag      : 00`;
+'SITE-B-VPN'  203.0.113.5:0  selectors(total,up): 2/2  rx(pkt,err): 14523/0  tx(pkt,err): 13891/0
+'SITE-C-VPN'  198.51.100.10:0  selectors(total,up): 1/0  rx(pkt,err): 8234/0  tx(pkt,err): 0/0
+'SITE-D-VPN'  192.0.2.20:0  selectors(total,up): 1/1  rx(pkt,err): 421/0  tx(pkt,err): 398/0
+
+diagnose vpn tunnel list name SITE-C-VPN
+name=SITE-C-VPN ver=2 serial=3 203.0.113.1:500->198.51.100.10:500 tun_id=198.51.100.10
+bound_if=5 lgwy=203.0.113.1:500 tun_if_name=SITE-C-VPN
+proxyid_num=1 child_num=0 refcnt=5 ilast=12 olast=12
+stat: rxp=8234 txp=0 rxb=5823441 txb=0
+dpd: mode=on-idle on=1 idle=20000ms retry=3 count=0 seqno=124
+natt: mode=none draft=0 interval=0 remote_port=0
+last err: no proposal chosen`,
+
+    high_cpu:
+`get system performance status
+CPU states: 87% user 8% system 0% nice 5% idle
+CPU0 states: 91% user 7% system 0% nice 2% idle
+CPU1 states: 83% user 9% system 0% nice 8% idle
+Memory: 8192000k total, 7340032k used (89.6%), 851968k free (10.4%)
+Average network usage: 824 kbps in 1 minute, 756 kbps in 10 minutes
+Average sessions: 18420 sessions in 1 minute
+Virus detected last minute: 0
+Intrusions detected last minute: 3
+Conserve mode: enabled
+
+diagnose sys top 5 10
+Run Time:  23 days, 4 hours and 12 minutes
+0U, 0N, 87S, 5I; 7868T, 739F, 1608KF
+          newcli      48      R       1.3 S    0.5
+          proxyd     112      S      42.1 S   18.2
+          cmdbsvr    113      S       8.3 S    3.1
+          urlfilter  204      S       6.2 S    2.4
+          ipshelper  208      S       5.1 S    1.9`,
+
+    ospf_stuck:
+`get router info ospf neighbor
+OSPF process 0:
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.10.0.2         1   Full/DR           00:00:32   10.10.0.2       port2
+10.10.1.2         1   Full/BDR          00:00:38   10.10.1.2       port3
+172.16.10.1       1   ExStart/-         00:00:35   172.16.10.1     port4
+192.0.2.1         1   Down/-            -           192.0.2.1       port5
+
+get router info ospf interface port4
+ port4 is up, line protocol is up
+   Internet Address 172.16.10.2/30, Broadcast 172.16.10.3, Area 0.0.0.0
+   MTU mismatch detection: enabled
+   Router ID 10.0.0.1, Network Type BROADCAST, Cost: 10
+   Interface MTU: 1500
+   Neighbor MTU: 9000   <-- MTU mismatch causing ExStart loop`,
+
+    arp_conflict:
+`get system arp
+Address          Age(min)  Hardware Addr      Interface
+10.10.0.1        0         00:1a:2b:3c:4d:5e  port2
+10.10.0.2        1         00:1a:2b:3c:4d:6f  port2
+10.10.1.1        0         00:1a:2b:3c:4e:5e  port3
+10.10.1.100      3         00:1a:2b:3c:4e:6f  port3
+10.10.1.105      0         00:1a:2b:3c:4e:70  port3
+10.10.1.105      0         aa:bb:cc:dd:ee:ff  port3
+203.0.113.1      0         00:1a:2b:3c:4f:5e  port1
+
+diagnose ip arp list
+index=5 ifname=port3 ip=10.10.1.105 mac=00:1a:2b:3c:4e:70 state=00000004 retry=0 ref=1 use=12
+index=5 ifname=port3 ip=10.10.1.105 mac=aa:bb:cc:dd:ee:ff state=00000004 retry=0 ref=1 use=3`,
+
+    ldap_locked:
+`diagnose test authserver ldap CORP-LDAP jdoe Passw0rd!
+authenticate 'jdoe' against 'CORP-LDAP' succeeded!
+Group membership(s) - CN=VPN-USERS,OU=Groups,DC=corp,DC=local
+                    - CN=All-Staff,OU=Groups,DC=corp,DC=local
+
+diagnose test authserver ldap CORP-LDAP hacker WrongPass
+authenticate 'hacker' against 'CORP-LDAP' failed!
+Error: 49 (Invalid credentials)
+
+diagnose test authserver ldap CORP-LDAP svc-fgt ServicePass123
+authenticate 'svc-fgt' against 'CORP-LDAP' failed!
+Error: 775 (Account locked out)
+
+diagnose test authserver ldap CORP-LDAP bwilson Summer2024!
+authenticate 'bwilson' against 'CORP-LDAP' failed!
+Error: 532 (Password expired)`,
+
+    session_nat:
+`diagnose sys session list
+session info: proto=6 proto_state=01 duration=142 expire=3598 timeout=3600 flags=00000000 socktype=0 sockport=0 av_idx=0 use=3
+  origin-shaper=
+  reply-shaper=
+  per_ip_shaper=
+  class_id=0 ha_id=0 policy_dir=0 tunnel=/ vlan_cos=0/255
+  state=log may_dirty
+  statistic(bytes/packets/allow_err): org=18291/124/1 reply=21443/98/1 tuples=2
+  orgin->sink: org pre->post, reply pre->post dev=4->6/6->4 gwy=203.0.113.1/10.10.1.100
+  hook=post dir=org act=snat 10.10.1.100:54231->203.0.113.80:443(203.0.113.2:61024)
+  hook=pre dir=reply act=dnat 203.0.113.80:443->203.0.113.2:61024(10.10.1.100:54231)
+  src_mac=00:1a:2b:3c:4d:5e
+
+diagnose sys session stat
+session table: total 18420 tcp 12443 udp 5534 icmp 118 other 325
+expected session table: total 0
+npu session table total 16840`,
+
+    flow_denied:
+`diagnose debug flow trace start 20
+
+id=20085 trace_id=1 func=print_pkt_detail line=5844 msg="vd-root:0 received a packet(proto=6, 10.10.1.100:54231->203.0.113.80:443) tun_id=0.0.0.0 vlan_id=0"
+id=20085 trace_id=1 func=init_ip_session_common line=6091 msg="allocate a new session-01234567"
+id=20085 trace_id=1 func=vf_ip_route_input_common line=2605 msg="find a route: flag=04000000 gw=203.0.113.1 via root"
+id=20085 trace_id=1 func=fw_forward_handler line=822 msg="Allowed by Policy-id 42 on root"
+id=20085 trace_id=1 func=__ip_session_run_tuple line=3450 msg="SNAT 10.10.1.100->203.0.113.2:61024"
+id=20085 trace_id=1 func=npu_handle_session44 line=1160 msg="Offloaded to NPU"
+
+id=20085 trace_id=2 func=print_pkt_detail line=5844 msg="vd-root:0 received a packet(proto=6, 10.10.1.105:49821->10.20.0.50:22) tun_id=0.0.0.0 vlan_id=0"
+id=20085 trace_id=2 func=init_ip_session_common line=6091 msg="allocate a new session-01234568"
+id=20085 trace_id=2 func=vf_ip_route_input_common line=2605 msg="find a route: flag=04000000 gw=0.0.0.0 via SITE-B-VPN"
+id=20085 trace_id=2 func=fw_forward_handler line=789 msg="denied by forward policy check (policy 0)"
+id=20085 trace_id=2 func=ip_session_delete line=1023 msg="delete a ses SRC-10.10.1.105:49821 DST-10.20.0.50:22"
+
+id=20085 trace_id=3 func=print_pkt_detail line=5844 msg="vd-root:0 received a packet(proto=6, 10.10.1.200:12345->10.10.2.50:3389) tun_id=0.0.0.0"
+id=20085 trace_id=3 func=vf_ip_route_input_common line=2605 msg="reverse path check fail, drop"`,
+
+    ha_mismatch:
+`get system ha status
+HA information
+  Model: FortiGate-200F
+  Mode: Active-Passive
+  Group-ID: 1
+  Group-Name: HQ-CLUSTER
+  Debug: 0
+
+Primary information
+  Name: FGT-HQ-01
+  Serial number: FGT20F0000000001
+  Software version: v7.4.3
+  Uptime: 23 days 4 hours 12 minutes
+  Role: Primary
+
+Secondary information
+  Name: FGT-HQ-02
+  Serial number: FGT20F0000000002
+  Software version: v7.4.3
+  Uptime: 0 days 0 hours 3 minutes
+  Synchronization state: out-of-sync
+  Heartbeat state: OK (link: ha1, ha2)
+
+diagnose sys ha checksum show
+is_manage_master=1
+global:  3f2a1b4c  <-- mismatch
+root:    a1b2c3d4  <-- mismatch
+vdom checksum differs from primary — config sync required`,
+
+    crc_errors:
+`diagnose netlink interface list port3
+if=port3 family=00 type=1 index=5 mtu=1500 link=0 master=0
+ref=8 state=up flags=up broadcast multicast
+Qdisc=mq hw_addr=00:1a:2b:3c:4e:5e broadcast=ff:ff:ff:ff:ff:ff
+stat: rxp=1234567 txp=987654 rxb=892341234 txb=712893421
+      rxe=1847 txe=0 rxd=234 txd=0 mc=0 collision=0
+      rxl=12 rxo=0 rxc=1823 rxf=9 rxfi=0 rxm=0
+
+get hardware nic port3
+Name:           port3
+Driver:         igb
+Version:        5.4.0-k
+Bus:            0000:00:19.0
+Duplex:         half
+Speed:          100Mbps
+Link:           up
+
+diagnose netlink interface list port1
+stat: rxp=4823441 txp=3912847 rxb=3241887432 txb=2891234123
+      rxe=0 txe=0 rxd=0 txd=0 mc=0 collision=0`,
+
+    ssl_fail:
+`get vpn ssl monitor
+SSL VPN Login Users:
+Index   User      Group       Auth Type   Timeout   From
+0       jdoe      VPN-USERS   1(1)        28800     203.0.113.50
+1       asmith    VPN-USERS   1(1)        28800     198.51.100.12
+
+SSL VPN statistics:
+  SSL handshake failed        :          14
+  Login failed                :          23
+  Login timed out             :           5
+  Max session limit reached   :           0
+
+diagnose vpn ssl list
+name=SSLVPN-USERS, type=1, status=2
+  user=bwilson, src=192.0.2.55, dst=10.200.0.15, idx=2
+  last_error=peer certificate verify failed
+
+diagnose debug application sslvpn -1
+[336:root:14]SSL state:3 (192.0.2.55)
+[336:root:14]SSL_accept failed: error:14094416:SSL routines:ssl3_read_bytes:sslv3 alert certificate unknown
+[336:root:14]Error: SSL handshake failed for 192.0.2.55`,
+
+    vpn_no_proposal:
+`diagnose debug application ike -1
+diagnose debug enable
+
+ike 0: comes 203.0.113.5:500->203.0.113.1:500,ifindex=5....
+ike 0:SITE-C-VPN: created connection: 0x7f8a3c4b2d10 5 203.0.113.1->203.0.113.5.
+ike 0:SITE-C-VPN:4388: initiator: main mode is sending 1st message...
+ike 0:SITE-C-VPN:4388: out 203.0.113.1:500->203.0.113.5:500
+ike 0:SITE-C-VPN:4388: sent IKE msg (ident_i1send): 203.0.113.1:500->203.0.113.5:500
+ike 0:SITE-C-VPN:4388: recv IKE msg (ident_r1recv): 203.0.113.5:500->203.0.113.1:500
+ike 0:SITE-C-VPN:4388: received notify type NO_PROPOSAL_CHOSEN
+ike 0:SITE-C-VPN:4388: negotiation failure
+ike 0:SITE-C-VPN: delete phase1 203.0.113.5
+
+-- Analysis hint --
+Local proposal:  aes256-sha256, DH group 14
+Remote proposal: aes128-sha1,   DH group 5
+Result: NO_PROPOSAL_CHOSEN — proposals do not overlap`,
+
+    vpn_dpd:
+`diagnose vpn tunnel list name SITE-B-VPN
+name=SITE-B-VPN ver=2 serial=1 203.0.113.1:500->203.0.113.5:500
+bound_if=5 lgwy=203.0.113.1:500 tun_if_name=SITE-B-VPN
+proxyid_num=1 child_num=1 refcnt=5 ilast=25 olast=25
+stat: rxp=12441 txp=11832 rxb=8234441 txb=7123891
+dpd: mode=on-idle on=1 idle=20000ms retry=3 count=3 seqno=847
+natt: mode=none draft=0 interval=0 remote_port=0
+
+-- 30 seconds later --
+name=SITE-B-VPN ver=2 serial=1
+dpd: mode=on-idle on=1 idle=20000ms retry=3 count=3 seqno=848
+ike 0:SITE-B-VPN: DPD send request
+ike 0:SITE-B-VPN: DPD out 203.0.113.1->203.0.113.5
+ike 0:SITE-B-VPN: DPD no response — retry 1/3
+ike 0:SITE-B-VPN: DPD no response — retry 2/3
+ike 0:SITE-B-VPN: DPD no response — retry 3/3
+ike 0:SITE-B-VPN: DPD peer considered dead, deleting
+ike 0:SITE-B-VPN: connection expiring due to phase1 down`,
+
+    vpn_selector:
+`diagnose vpn tunnel list name SITE-B-VPN
+name=SITE-B-VPN ver=2 serial=1 203.0.113.1:500->203.0.113.5:500
+proxyid_num=2 child_num=1 refcnt=5
+  proxyid=SITE-B-VPN-P2 proto=0 sa=1 ref=2 serial=1
+    src: 0:10.10.0.0-10.10.0.255:0
+    dst: 0:10.20.0.0-10.20.0.255:0
+    SA: ref=3 options=10227 type=00 soft=0 mtu=1438 expire=27142 replaywin=2048
+    life: type=01 bytes=0/0 timeout=43191/43200
+    stat: rxp=4823 txp=4234 rxb=3241887 txb=2891234
+  proxyid=SITE-B-VPN-P2b proto=0 sa=0 ref=2 serial=2
+    src: 0:10.10.1.0-10.10.1.255:0
+    dst: 0:10.20.1.0-10.20.1.255:0
+    SA: not established  <-- selector mismatch, remote not accepting
+
+-- Remote side config shows --
+dst subnet: 10.20.0.0/16  (does not match 10.20.1.0/24)`,
+
+    vpn_natt:
+`diagnose debug application ike -1
+diagnose debug enable
+
+ike 0:BRANCH-VPN: comes 192.0.2.100:4500->203.0.113.1:4500 -- NAT-T detected
+ike 0:BRANCH-VPN: NAT traversal detected, using UDP port 4500
+ike 0:BRANCH-VPN:1234: initiator: quick mode is sending 1st message
+ike 0:BRANCH-VPN:1234: out 203.0.113.1:4500->192.0.2.100:4500
+ike 0:BRANCH-VPN:1234: sent IKE msg (quick_i1send): len=364
+ike 0:BRANCH-VPN:1234: recv IKE msg (quick_r1recv): 192.0.2.100:4500->203.0.113.1:4500
+ike 0:BRANCH-VPN:1234: established child SA
+ike 0:BRANCH-VPN: adding encap ESP SA
+
+get vpn ipsec tunnel summary
+'BRANCH-VPN' 192.0.2.100:4500 selectors(total,up): 1/1 rx(pkt,err): 4823/0 tx(pkt,err): 4234/0
+note: NAT-T mode active (UDP 4500 encapsulation)`,
+
+    vpn_ikev1v2:
+`diagnose debug application ike -1
+diagnose debug enable
+
+-- Scenario: local configured IKEv2, remote only supports IKEv1 --
+ike 2:REMOTE-VPN: comes 198.51.100.20:500->203.0.113.1:500
+ike 2:REMOTE-VPN: IKEv2 exchange type 34 (IKE_SA_INIT)
+ike 2:REMOTE-VPN: peer sent IKEv1 Main Mode, but we require IKEv2
+ike 2:REMOTE-VPN: sending INVALID_MAJOR_VERSION notify
+ike 2:REMOTE-VPN: negotiation failed
+
+-- Fix: change ike-version on local phase1 --
+show vpn ipsec phase1-interface REMOTE-VPN
+  set ike-version 2   <-- change to 1 to match remote
+
+-- After fix --
+ike 1:REMOTE-VPN:5001: initiator: main mode is sending 1st message
+ike 1:REMOTE-VPN:5001: sent IKE msg (ident_i1send): len=284
+ike 1:REMOTE-VPN:5001: established IKEv1 SA`,
+
+    ssl_geoip:
+`diagnose debug application sslvpn -1
+diagnose debug enable
+
+[sslvpn_auth.c:423] user=engineer src=185.220.101.50 (Belgium)
+[sslvpn_auth.c:441] checking geo-ip policy for src 185.220.101.50
+[sslvpn_auth.c:458] geo-ip lookup result: country=BE continent=EU
+[sslvpn_auth.c:471] policy check: allow_only=NL — BLOCKED
+[sslvpn_conn.c:218] connection from 185.220.101.50 rejected: geo-ip restriction
+
+diagnose firewall iprope lookup 185.220.101.50 203.0.113.1 10443 tcp wan1
+policy id: 0
+action: deny
+reason: source geo-ip country BE not in allowed list
+
+show firewall policy 612
+  set srcaddr NL-GEO-ADDRESS   <-- only Netherlands allowed
+  
+-- Fix: add Belgium address object to policy 612 srcaddr --`,
+
+    ssl_split:
+`get vpn ssl monitor
+SSL VPN Login Users:
+Index   User      Group       From          Tunnel IP
+0       jdoe      VPN-USERS   203.0.113.50  10.200.0.11
+
+-- User reports: can reach VPN resources but internet stops working --
+
+show vpn ssl web portal STAFF-PORTAL
+  set split-tunneling enable
+  config split-tunneling-routing-address
+    edit 1
+      set name "CORP-LAN"    <-- only 10.10.0.0/8 goes through VPN
+    next
+  end
+
+diagnose vpn ssl list
+  tunnel-ip=10.200.0.11 src=203.0.113.50
+  routes pushed to client:
+    10.10.0.0/8 -> tunnel
+    -- default route NOT pushed (split tunnel active) --
+
+-- If internet is broken, client default gateway was lost --
+-- Fix: check client DNS and ensure default route is not being overridden --
+-- Or: disable split tunneling if all traffic must go through VPN --`,
+
+    ssl_pool:
+`get vpn ssl monitor
+SSL VPN Login Users:
+Index   User     Group       Tunnel IP
+0       user01   VPN-USERS   10.200.0.10
+1       user02   VPN-USERS   10.200.0.11
+...
+49      user50   VPN-USERS   10.200.0.59
+
+SSL VPN statistics:
+  Login failed (pool exhausted) :          14
+  Current sessions              :          50
+  Max sessions                  :          50
+
+show firewall address SSLVPN-POOL
+  set type iprange
+  set start-ip 10.200.0.10
+  set end-ip   10.200.0.59   <-- only 50 IPs, pool full
+
+-- Fix: expand the pool --
+config firewall address
+  edit SSLVPN-POOL
+    set end-ip 10.200.0.200  <-- expand to 191 addresses
+  next
+end`,
+
+    policy_dnat:
+`-- User reports: port 443 on public IP not reaching internal server --
+
+show firewall vip VIP-WEBSERVER
+  set extintf wan1
+  set extip 203.0.113.1
+  set mappedip 10.10.1.50
+  set portforward enable
+  set extport 443
+  set mappedport 443
+
+diagnose firewall iprope lookup 198.51.100.99 203.0.113.1 443 tcp wan1
+policy id: 0
+action: deny   <-- no policy matched
+
+show firewall policy | grep VIP-WEBSERVER
+-- Not found! Policy references old VIP name --
+
+-- Root cause: VIP was renamed but policy still references old object --
+-- Fix: update policy dstaddr to VIP-WEBSERVER --
+
+config firewall policy
+  edit 30
+    set dstaddr VIP-WEBSERVER   <-- was VIP-WEB-OLD
+  next
+end
+
+-- After fix --
+diagnose firewall iprope lookup 198.51.100.99 203.0.113.1 443 tcp wan1
+policy id: 30
+action: accept
+dnat: 203.0.113.1:443 -> 10.10.1.50:443`,
+
+    policy_implicit:
+`get firewall policy
+== [ 1 ]
+name: LAN-TO-WAN  srcintf: port3  dstintf: port1  action: accept  policyid: 1
+  hit count: 18234  bytes: 2891234432
+
+== [ 2 ]
+name: VPN-USERS-TO-DC  srcintf: ssl.root  dstintf: port3  action: accept  policyid: 2
+  hit count: 4821  bytes: 892341234
+
+== [ 0 ]
+name: implicit deny  action: deny
+  hit count: 0  bytes: 0   <-- zero hits but traffic is being dropped
+
+diagnose debug flow filter addr 10.10.1.200
+diagnose debug flow trace start 10
+diagnose debug enable
+
+id=20085 trace_id=1 msg="vd-root received packet proto=6 10.10.1.200:52341->10.10.2.50:8080"
+id=20085 trace_id=1 msg="find a route: gw=10.10.2.50 via port4"
+id=20085 trace_id=1 msg="denied by forward policy check (policy 0)"
+
+-- Root cause: srcintf=port3, dstintf=port4 — no policy covers this zone pair --`,
+
+    policy_utm:
+`execute log filter category 2
+execute log display
+
+date=2024-05-14 time=10:23:41 logid=1059028704 type=utm subtype=app-ctrl
+level=warning policyid=1 sessionid=123456 srcip=10.10.1.100 dstip=203.0.113.80
+app=Dropbox action=block msg="Application Dropbox detected and blocked"
+
+date=2024-05-14 time=10:24:15 logid=0316013312 type=utm subtype=webfilter
+level=warning policyid=1 srcip=10.10.1.105 dstip=198.51.100.200
+url=streaming-service.com catdesc="Streaming Media" action=blocked
+
+execute log filter category 0
+execute log filter field srcip 10.10.1.100
+execute log display
+
+date=2024-05-14 time=10:23:41 type=traffic action=deny
+msg="UTM application control block: Dropbox"
+sessionid=123456 policy=1 profile=APP-STANDARD
+
+-- Fix: if Dropbox/streaming is legitimate business use --
+config application list
+  edit APP-STANDARD
+    config entries
+      edit 1
+        set application 19195   -- Dropbox app ID
+        set action pass
+      next
+    end
+  next
+end`,
+
+    policy_nat_missing:
+`-- Scenario: users on LAN cannot reach internet, policy exists but no connectivity --
+
+show firewall policy 1
+  config firewall policy
+    edit 1
+      set name LAN-TO-WAN
+      set srcintf port3
+      set dstintf port1
+      set srcaddr all
+      set dstaddr all
+      set action accept
+      set schedule always
+      set service ALL
+      -- nat missing! --   <-- set nat enable NOT present
+    next
+  end
+
+diagnose debug flow filter addr 10.10.1.100
+diagnose debug flow trace start 5
+diagnose debug enable
+
+id=20085 trace_id=1 msg="vd-root received packet 10.10.1.100:54231->8.8.8.8:443"
+id=20085 trace_id=1 msg="find a route: gw=203.0.113.1 via port1"
+id=20085 trace_id=1 msg="Allowed by Policy-id 1 on root"
+id=20085 trace_id=1 msg="no SNAT applied — packet sent with private src IP 10.10.1.100"
+-- ISP drops packet: private IP not routable on internet --
+
+-- Fix --
+config firewall policy
+  edit 1
+    set nat enable
+  next
+end`,
+
+    policy_order:
+`-- Scenario: traffic hitting wrong policy, more specific policy below general one --
+
+get firewall policy
+== [ 1 ]
+name: ALL-USERS-INTERNET  srcintf: port3  dstintf: port1
+srcaddr: all  dstaddr: all  action: accept  nat: enable
+policyid: 1  hit count: 42891
+
+== [ 2 ]
+name: BLOCK-SOCIAL-MEDIA  srcintf: port3  dstintf: port1
+srcaddr: all  dstaddr: SOCIAL-MEDIA-GROUP  action: deny
+policyid: 2  hit count: 0   <-- never hit! sits below policy 1
+
+-- Root cause: policy 1 is too broad and catches all traffic before policy 2 --
+-- FortiGate evaluates policies top to bottom, first match wins --
+
+-- Fix: move BLOCK-SOCIAL-MEDIA above ALL-USERS-INTERNET --
+config firewall policy
+  move 2 before 1
+end
+
+-- After fix --
+== [ 2 ]  hit count: 1823   -- now catching social media traffic
+== [ 1 ]  hit count: 41068  -- only non-social traffic reaches here`,
+
+    policy_asic:
+`-- Scenario: IPS/UTM not inspecting traffic, packets offloaded to NPU --
+
+diagnose npu np6 session stats
+np6 session stats:
+  Current NP6 sessions: 14832
+  Offloaded sessions:   14820  (99.9%)
+  Non-offloaded:           12
+
+-- IPS signatures not firing on known bad traffic --
+
+show firewall policy 1
+  set auto-asic-offload enable   <-- NPU handling packets, bypassing IPS
+
+-- Fix: disable ASIC offload on this policy to force software inspection --
+config firewall policy
+  edit 1
+    set auto-asic-offload disable
+  next
+end
+
+-- Verify IPS now processing --
+execute log filter category 4
+execute log display
+date=2024-05-14 time=14:23:41 type=utm subtype=ips
+msg="IPS signature ET.WEB.SQL.Injection detected" action=block src=198.51.100.99`,
+
+    ospf_dr:
+`get router info ospf neighbor
+OSPF process 0:
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.10.0.2       128   Full/DR           00:00:37   10.10.0.2       port2
+10.10.0.3         1   Full/BDR          00:00:31   10.10.0.3       port2
+10.10.0.1         1   Full/DROther      00:00:29   10.10.0.1       port2
+
+get router info ospf interface port2
+port2 is up, line protocol is up
+  Internet Address 10.10.0.4/24, Broadcast 10.10.0.255, Area 0.0.0.0
+  Router ID 10.0.0.4, Network Type BROADCAST, Cost: 10
+  Transmit Delay is 1 sec, State DROther, Priority 1
+  Designated Router (ID) 10.10.0.2, Interface address 10.10.0.2
+  Backup Designated Router (ID) 10.10.0.3, Interface address 10.10.0.3
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+
+-- If FortiGate should be DR: increase priority --
+config router ospf
+  config ospf-interface
+    edit port2
+      set priority 200   -- higher than 128 will make it DR
+    next
+  end
+end`,
+
+    bgp_flap:
+`get router info bgp summary
+BGP router identifier 10.0.0.1, local AS number 65001
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+203.0.113.1     4 65000    8234    8229       47    0    0 00:02:11       16
+198.51.100.10   4 65002     423     419        0    0    0 00:00:07  Active
+
+-- 2 minutes later --
+198.51.100.10   4 65002     445     441        0    0    0 00:00:03  Idle
+
+-- BGP keeps going Active -> OpenSent -> Established -> Active --
+diagnose debug application bgp -1
+diagnose debug enable
+
+BGP: 198.51.100.10 rcv NOTIFICATION 6/2 (Cease/Administrative Reset)
+BGP: 198.51.100.10 went from Established to Idle
+BGP: 198.51.100.10 Timer (hold timer expired) -- hold-time mismatch
+BGP: 198.51.100.10 Hold time local=90 remote=30
+
+-- Fix: align hold timers --
+config router bgp
+  config neighbor
+    edit 198.51.100.10
+      set keep-alive-timer 10
+      set holdtime-timer 30
+    next
+  end
+end`,
+
+    bgp_no_route:
+`get router info bgp neighbors 198.51.100.10 advertised-routes
+BGP table version is 47, local router ID is 10.0.0.1
+Status codes: s suppressed, d damped, h history, * valid, > best
+
+   Network          Next Hop         Metric LocPrf Weight Path
+*> 10.10.0.0/24    0.0.0.0               0         32768 i
+-- 10.10.1.0/24 NOT advertised --
+
+get router info bgp neighbors 198.51.100.10 received-routes
+*> 0.0.0.0/0       198.51.100.10          0          0 65002 i
+*> 172.16.0.0/16   198.51.100.10          0          0 65002 i
+
+-- Root cause: 10.10.1.0/24 not in BGP network statement --
+config router bgp
+  edit 65001
+    config network
+      edit 1
+        set prefix 10.10.0.0 255.255.255.0   -- only this network
+      next
+      -- 10.10.1.0/24 missing!
+    end
+  end
+end
+
+-- Fix: add missing network --
+config router bgp
+  config network
+    edit 2
+      set prefix 10.10.1.0 255.255.255.0
+    next
+  end
+end`,
+
+    bgp_conflict:
+`get router info routing-table all
+Codes: K - kernel, C - connected, S - static, B - BGP
+
+K*   0.0.0.0/0 [10/0] via 203.0.113.1, port1
+C    10.10.0.0/24 is directly connected, port2
+S    10.20.0.0/16 [10/0] via 10.10.0.2, port2      <-- admin distance 10
+B    10.20.0.0/16 [20/0] via 203.0.113.5, port1    <-- admin distance 20, not installed
+
+-- Static route wins over BGP (AD 10 < 20) --
+-- BGP route to 10.20.0.0/16 is valid but suppressed --
+
+get router info bgp neighbors 203.0.113.5 routes
+*  10.20.0.0/16   203.0.113.5   0  0  65002 i
+-- asterisk but NOT > (not best) -- static is preferred
+
+-- Fix options: --
+-- 1. Remove static route if BGP should take over --
+-- 2. Raise static route AD: set distance 200 --
+config router static
+  edit 1
+    set distance 200   -- now BGP AD 20 wins
+  next
+end`,
+
+    route_missing:
+`get router info routing-table all
+Codes: K - kernel, C - connected, S - static
+
+C    10.10.0.0/24 is directly connected, port2
+C    10.10.1.0/24 is directly connected, port3
+-- NO default route! 0.0.0.0/0 missing --
+
+execute ping 8.8.8.8
+PING 8.8.8.8: 100% packet loss
+(no route to host)
+
+diagnose debug flow filter addr 10.10.1.100
+diagnose debug flow trace start 5
+diagnose debug enable
+
+id=20085 trace_id=1 msg="vd-root received packet 10.10.1.100:54231->8.8.8.8:443"
+id=20085 trace_id=1 msg="no route found for 8.8.8.8 — drop"
+
+get system interface port1
+  ip: 203.0.113.2/30
+  gateway: 203.0.113.1  <-- gateway known but no default route configured
+
+-- Fix --
+config router static
+  edit 1
+    set dst 0.0.0.0 0.0.0.0
+    set gateway 203.0.113.1
+    set device port1
+  next
+end`,
+
+    sdwan_hc_fail:
+`get router info sdwan health-check
+Health Check: HC-GOOGLE
+  Server: 8.8.8.8
+  Interface: wan1 (member 1)
+    Status: FAILED
+    Packet Loss: 100%
+    Latency: N/A
+    Jitter: N/A
+    SLA: FAIL (loss threshold 5%, current 100%)
+  Interface: wan2 (member 2)
+    Status: ALIVE
+    Packet Loss: 0%
+    Latency: 12ms
+    Jitter: 2ms
+    SLA: PASS
+
+diagnose sniffer packet wan1 "host 8.8.8.8 and icmp" 4 10 l
+-- No packets captured! --
+
+diagnose debug application sdwan -1
+diagnose debug enable
+sdwan: hc probe sent to 8.8.8.8 via wan1
+sdwan: no response from 8.8.8.8 via wan1 (timeout 500ms)
+sdwan: member 1 wan1 marked as SLA fail, failover to member 2
+
+-- Root cause: wan1 ISP blocking ICMP to 8.8.8.8 --
+-- Fix: change health-check server to ISP gateway or use DNS probe --
+config system sdwan
+  config health-check
+    edit HC-GOOGLE
+      set server 203.0.113.1   -- use ISP gateway instead
+      set protocol ping
+    next
+  end
+end`,
+
+    sdwan_wrong:
+`get router info sdwan service
+SD-WAN service list:
+1: name=CRITICAL-APP mode=sla
+   SLA: HC-GOOGLE member=1(wan1) sla_id=1
+   Status: wan1 FAIL sla, wan2 OK sla
+   preferred-member: wan2 (fallback active)
+
+2: name=DEFAULT mode=load-balance
+   members: wan1(up) wan2(up)
+   current distribution: wan1=45% wan2=55%
+
+-- User reports: critical app using wrong link (wan2 instead of wan1) --
+
+diagnose sys sdwan intf-sla-log
+wan1: latency=148ms jitter=32ms loss=1% sla=PASS  <-- within threshold now!
+-- But SD-WAN still using wan2 after previous failure --
+
+-- Root cause: wan1 recovered but SD-WAN not failing back --
+-- Check: recoverytime setting --
+show system sdwan health-check HC-GOOGLE
+  set failtime 3      -- 3 failures to fail
+  set recoverytime 5  -- 5 successes to recover
+
+-- wan1 has only been stable for 2 probes, not yet 5 --
+-- Wait for recoverytime or lower threshold --`,
+
+    pbr_conflict:
+`show router policy
+id=1 tos=0x00/0x00 protocol=0 src=10.10.1.0/24 dst=0.0.0.0/0
+  action=goto-table nexthop=198.51.100.1 interface=port5  <-- PBR sending to backup ISP
+
+id=2 tos=0x00/0x00 protocol=0 src=0.0.0.0/0 dst=0.0.0.0/0
+  action=goto-table nexthop=203.0.113.1 interface=port1
+
+diagnose debug flow filter addr 10.10.1.100
+diagnose debug flow trace start 5
+diagnose debug enable
+
+id=20085 trace_id=1 msg="vd-root received packet 10.10.1.100:54231->8.8.8.8:443"
+id=20085 trace_id=1 msg="policy route matched id=1 nexthop=198.51.100.1 dev=port5"
+id=20085 trace_id=1 msg="SNAT 10.10.1.100->198.51.100.2"
+-- Traffic going out port5 instead of main WAN port1 --
+
+-- Root cause: PBR rule 1 catches all 10.10.1.0/24 traffic --
+-- Fix: remove or update PBR if it was unintentional --
+config router policy
+  delete 1
+end`,
+
+    disk_full:
+`diagnose sys df
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mmcblk0p3        1.9G  1.9G    0M 100% /   <-- FULL!
+tmpfs                 7.8G     0  7.8G   0% /dev/shm
+/dev/mmcblk0p5        28G   14G   14G  50% /data
+
+execute log filter category 0
+execute log filter field msg "disk"
+execute log display
+date=2024-05-14 time=09:12:33 msg="Log disk is full, new logs will be dropped"
+date=2024-05-14 time=09:12:33 msg="Disk usage 100% on /var/log"
+
+diagnose sys flash list
+part: /dev/sda1  size: 2048M  used: 2047M  (99.95%)
+quarantine files: 823M
+debug logs:       412M
+traffic logs:     812M
+
+-- Fix: clear old logs or increase disk quota --
+execute log delete-all
+-- Or reduce log retention --
+config log disk setting
+  set max-log-file-size 50
+  set log-quota 1024
+end`,
+
+    ntp_fail:
+`diagnose sys ntp status
+synchronized: no   <-- NOT synced!
+reference NTP server: 0.0.0.0
+reach: 0
+offset: 0.000 ms
+
+show system ntp
+config system ntp
+  set ntpsync enable
+  set type custom
+  config ntpserver
+    edit 1
+      set server 10.0.0.1   <-- internal NTP server
+    next
+  end
+end
+
+execute ping 10.0.0.1
+PING 10.0.0.1: 100% packet loss   <-- NTP server unreachable!
+
+diagnose debug application ntpd -1
+diagnose debug enable
+ntpd: socket connect to 10.0.0.1:123 failed: Connection refused
+ntpd: no valid NTP servers reachable
+
+-- Fix: use public NTP or fix route to internal NTP --
+config system ntp
+  config ntpserver
+    edit 1
+      set server pool.ntp.org
+    next
+  end
+end`,
+
+    fguard_fail:
+`diagnose debug rating
+License Status: Valid
+Expiry date: 2025-01-01
+Server: update.fortiguard.net
+
+execute fortiguard-connectivity-check
+Checking FortiGuard connectivity...
+  Contacting FDS: FAILED (timeout)
+  Contacting FortiGuard web filter: FAILED
+  Contacting FortiGuard AV updates: FAILED
+
+get system fortiguard
+  service-account-id: FGVM...
+  load-balance-servers: 1
+  auto-firmware-upgrade: enable
+  update-server-location: usa
+  sandbox-region: us
+
+diagnose sniffer packet port1 "host 208.91.112.220 and port 443" 4 10 l
+-- No packets captured -- firewall blocking outbound to FortiGuard IPs --
+
+-- Fix: check outbound policy allows FortiGuard IPs --
+-- Or: configure web proxy for FortiGuard updates --
+config system fortiguard
+  set proxy-server-ip 10.0.0.100
+  set proxy-server-port 8080
+end`,
+
+    crash_log:
+`diagnose debug crashlog read
+
+2024-05-14 03:22:41: System rebooted
+2024-05-14 03:22:38: kernel panic - not syncing: softlockup: hung_task_timeout_secs
+2024-05-14 03:22:38: CPU: 0 PID: 2341 Comm: proxyd
+2024-05-14 03:22:38: Call trace:
+  proxyd+0x234/0x890
+  handle_ssl_inspect+0x12/0x44
+  wad_dispatch+0x8a/0x200
+2024-05-14 03:22:38: WAD process (proxyd PID 2341) killed by signal 11
+
+get system status
+  System time: 2024-05-14 08:45:12
+  Last reboot reason: kernel panic
+  Uptime: 5 hours 22 minutes
+
+-- Recommended actions --
+-- 1. Check memory before crash: conserve mode logs --
+-- 2. Check proxyd / WAD for runaway SSL inspection --
+-- 3. Upgrade firmware if known bug --
+-- 4. Temporarily disable SSL deep inspection to stabilize --`,
+
+    mem_leak:
+`diagnose sys top 5 20
+Run Time: 23 days 4 hours
+          proxyd     112    S    2847.3M   36.2    <-- WAD using 2.8GB!
+          newcli      48    R       8.1M    0.1
+          cmdbsvr    113    S      42.1M    0.5
+
+diagnose hardware sysinfo memory
+        total:        used:        free:
+Mem:   8192000k     7934000k      258000k   <-- only 258MB free
+
+diagnose hardware sysinfo conserve
+memory conserve mode: yes
+wad conserve mode: yes
+threshold: 15% free (1228800k)
+current: 3.1% free (258000k)
+
+-- proxyd growing over time = memory leak in WAD/SSL inspection --
+
+-- Immediate mitigation --
+diagnose test application wad 99   -- restart WAD process
+-- Or --
+config system global
+  set wad-restart-end-time 03:00
+  set wad-restart-mode daily
+end`,
+
+    dns_fail:
+`execute nslookup name google.com
+Server: 8.8.8.8
+nslookup failed for google.com
+Error: connection timed out; no servers could be reached
+
+execute nslookup name google.com 8.8.8.8
+Server: 8.8.8.8
+nslookup failed: Request timeout
+
+diagnose test application dnsproxy 6
+DNS proxy debug:
+  Query: google.com type A
+  Sending to 8.8.8.8:53...
+  Timeout after 3000ms
+  Retry 1/3... timeout
+  Retry 2/3... timeout
+  DNS resolution failed
+
+diagnose sniffer packet port1 "port 53" 4 20 l
+-- No DNS traffic on port1 -- DNS being blocked --
+
+show firewall policy | grep DNS
+-- No policy allowing UDP 53 outbound --
+
+-- Fix: add DNS service to outbound policy --
+config firewall policy
+  edit 1
+    set service ALL   -- or explicitly add DNS service
+  next
+end`,
+
+    conserve:
+`-- Full Conserve Mode Investigation --
+get system performance status
+CPU states: 78% user 15% system 0% nice 7% idle
+Memory: 16384000k total, 15728640k used (96%), 655360k free (4%)
+Conserve mode: enabled
+
+diagnose hardware sysinfo conserve
+memory conserve mode: yes
+wad conserve mode: yes
+ips conserve mode: yes
+threshold: 15% (2457600k)
+current: 4% (655360k)
+entering conserve: 2024-05-14 08:22:41
+
+diagnose sys top 5 10
+          proxyd     112    S    4823.1M   29.4
+          ipsengine  234    S    2341.2M   14.3
+          urlfilter  204    S     823.4M    5.0
+          reportd    312    S     412.2M    2.5
+
+-- proxyd (WAD) + ipsengine consuming most memory --
+
+get system performance status | grep session
+Average sessions: 24820 sessions in 1 minute
+
+-- Actions in conserve mode --
+-- 1. New sessions being dropped --
+-- 2. Reduce active UTM features temporarily --
+-- 3. Restart WAD: diagnose test application wad 99 --
+-- 4. Upgrade RAM or hardware if sustained --`,
+
+    radius_timeout:
+`diagnose test authserver radius CORP-RADIUS pap jdoe Passw0rd!
+Connect to server 10.0.0.20:1812...
+timeout (5000ms) — no response
+
+diagnose debug application fnbamd -1
+diagnose debug enable
+
+fnbamd: start radius auth for user jdoe
+fnbamd: connect to 10.0.0.20:1812 (UDP)
+fnbamd: sent Access-Request for jdoe
+fnbamd: waiting for response (timeout=5000ms)
+fnbamd: no response from 10.0.0.20:1812 — timeout
+fnbamd: trying secondary 10.0.0.21:1812
+fnbamd: no response from 10.0.0.21:1812 — timeout
+fnbamd: all RADIUS servers unreachable — auth failed
+
+execute ping 10.0.0.20
+PING 10.0.0.20: 100% packet loss
+
+-- Root cause: RADIUS server unreachable from FortiGate --
+-- Check: firewall policy, shared secret, NPS service status --`,
+
+    fsso_fail:
+`diagnose firewall auth list
+Total auth sessions: 12
+
+-- jdoe NOT in list despite being logged into domain --
+
+get user fsso
+Server: FSSO-AGENT  10.0.0.15:8000
+  Status: connected
+  Users: 45 (last sync: 2 min ago)
+
+diagnose debug authd fsso -1
+diagnose debug enable
+
+fsso: received logon event from 10.0.0.15
+fsso: user=CORP\jdoe ip=10.10.1.100 groups=Domain Users
+fsso: group lookup: CN=VPN-USERS not in user group list
+fsso: user jdoe matched no FSSO group — skipping
+
+-- Root cause: FSSO group "Domain Users" not mapped to FortiGate group --
+config user group
+  edit VPN-FSSO-USERS
+    set member FSSO-AGENT
+    config match
+      edit 1
+        set server-name FSSO-AGENT
+        set group-name CORP\VPN-USERS   <-- must match AD group exactly
+      next
+    end
+  next
+end`,
+
+    twofa_fail:
+`diagnose debug application fnbamd -1
+diagnose debug enable
+
+fnbamd: start 2FA auth for user jdoe
+fnbamd: primary auth (LDAP) succeeded
+fnbamd: sending OTP request to FortiToken Mobile
+fnbamd: waiting for OTP response (timeout=60s)
+fnbamd: OTP received: 123456
+fnbamd: OTP validation failed — token out of sync (drift=120s)
+
+-- Root cause: time drift between FortiGate and FortiToken --
+
+diagnose sys ntp status
+synchronized: yes
+offset: -118.432 ms   <-- large offset!
+
+execute time
+Current time is: 10:45:12 2024-05-14
+Timezone: UTC+0
+
+-- FortiGate time is 2 minutes behind FortiToken server --
+-- Fix: sync NTP immediately --
+execute ntp-sync-now
+
+-- After sync --
+diagnose sys ntp status
+synchronized: yes
+offset: 0.234 ms   -- now within acceptable drift`,
+
+    admin_locked:
+`-- Admin locked out after too many failed attempts --
+
+diagnose debug application httpsd -1
+diagnose debug enable
+
+httpsd: login attempt from 198.51.100.99 user=admin
+httpsd: login failed (wrong password) attempt 1/3
+httpsd: login attempt from 198.51.100.99 user=admin
+httpsd: login failed (wrong password) attempt 2/3
+httpsd: login attempt from 198.51.100.99 user=admin
+httpsd: login failed (wrong password) attempt 3/3
+httpsd: admin account locked for 300 seconds
+
+-- If you are locked out completely --
+-- Physical console access required: --
+-- 1. Connect serial cable to console port --
+-- 2. Login via console (not affected by HTTP lockout) --
+-- 3. On console: --
+config system admin
+  edit admin
+    set login-fail-count 0
+  next
+end`,
+
+    ha_splitbrain:
+`-- Both units think they are primary! --
+
+FGT-HQ-01 # get system ha status
+Mode: Active-Passive
+Role: Primary
+Uptime: 23 days 4 hours
+
+FGT-HQ-02 # get system ha status
+Mode: Active-Passive
+Role: Primary    <-- BOTH showing Primary = split brain!
+Uptime: 0 days 2 hours
+
+FGT-HQ-01 # diagnose sys ha status
+vcluster 1: work
+  master: FGT-HQ-01 (self) priority=200
+  -- FGT-HQ-02 not visible in cluster --
+
+-- Root cause: heartbeat link failure --
+get system ha
+  set hbdev ha1 50 ha2 50
+
+FGT-HQ-01 # get hardware nic ha1
+  link: down   <-- HA heartbeat link down!
+
+-- Fix: restore heartbeat link --
+-- Short term: shutdown secondary to avoid duplicate traffic --
+FGT-HQ-02 # execute ha failover unset 1`,
+
+    ha_secondary:
+`FGT-HQ-01 # get system ha status
+HA information
+  Mode: Active-Passive
+  Group-Name: HQ-CLUSTER
+
+Primary: FGT-HQ-01  Serial: FGT20F0000000001
+  Role: Primary  Uptime: 45 days 2 hours
+
+-- No secondary listed --
+
+FGT-HQ-01 # diagnose sys ha status
+vcluster 1: work
+  master: FGT-HQ-01 prio=200
+  -- FGT-HQ-02 not joined --
+
+FGT-HQ-01 # diagnose debug application hatalk -1
+diagnose debug enable
+hatalk: receive ha join from FGT-HQ-02
+hatalk: checking group-name: received=CLUSTER-02 expected=HQ-CLUSTER
+hatalk: group name mismatch — rejecting join
+
+-- Root cause: secondary has wrong HA group name --
+-- Fix on FGT-HQ-02 --
+config system ha
+  set group-name HQ-CLUSTER   <-- was CLUSTER-02
+end`,
+
+    ha_session:
+`FGT-HQ-01 # diagnose sys ha status
+vcluster 1: work
+  master: FGT-HQ-01 prio=200
+  slave: FGT-HQ-02 prio=100
+  sync state: out-of-sync (session)
+
+FGT-HQ-01 # diagnose debug application hasync -1
+diagnose debug enable
+
+hasync: session sync queue depth: 48234  <-- large backlog
+hasync: sync tx rate: 12 sessions/sec
+hasync: sync failed for session 0x8a3c4d5e — buffer full
+hasync: dropping session sync — secondary falling behind
+
+-- After failover, sessions will be lost --
+
+FGT-HQ-01 # diagnose sys session stat
+session table: total 48234
+  synced to secondary: 12441
+  pending sync: 35793   <-- large gap
+
+-- Root cause: session sync bandwidth insufficient --
+-- Check HA heartbeat link speed and load --`,
+
+    ha_failover:
+`-- Manual HA failover procedure --
+
+FGT-HQ-01 # get system ha status
+Primary: FGT-HQ-01  Uptime: 45 days 2 hours
+Secondary: FGT-HQ-02  Uptime: 45 days 1 hour
+Synchronization: synchronized
+
+FGT-HQ-01 # execute ha failover set 1
+This operation will cause a failover.
+Do you want to continue? (y/n) y
+
+-- Failover initiated --
+FGT-HQ-01 # get system ha status
+Primary: FGT-HQ-02  Uptime: 0 days 0 hours 0 minutes 8 seconds
+Secondary: FGT-HQ-01  Uptime: 45 days 2 hours 0 minutes 15 seconds
+Synchronization: synchronized
+
+FGT-HQ-02 # get system ha status
+Role: Primary
+Uptime: 0 days 0 hours 0 minutes 22 seconds
+
+-- Revert back to original primary --
+FGT-HQ-01 # execute ha failover unset 1
+-- Or wait for FGT-HQ-01 override to kick in (set override enable) --`,
+
+    sfp_error:
+`diagnose hardware deviceinfo nic port5
+Name:      port5
+Driver:    sfc
+Status:    up
+Speed:     1000Mbps
+Duplex:    full
+Link:      up
+
+get hardware nic port5
+SFP information:
+  Vendor: FINISAR
+  Model:  FTLX8574D3BCL
+  Serial: PL42JMR
+  Wavelength: 850nm
+  Connector: LC
+  Type: 10GBASE-SR
+  Tx Power: -3.2 dBm (min: -8.2, max: 0.5) -- OK
+  Rx Power: -14.8 dBm (min: -11.1, max: 0.5) -- BELOW MINIMUM! Low signal
+  Temperature: 42.3C (normal)
+  Voltage: 3.28V (normal)
+
+-- Rx power -14.8 dBm below threshold -11.1 dBm --
+-- Causes intermittent link flaps and CRC errors --
+-- Fix: check fiber cable, clean connectors, check bend radius --`,
+
+    lacp_down:
+`show system interface LAG1
+  type: aggregate
+  mode: lacp
+  members: port7 port8
+  ip: 10.10.5.1/24
+
+diagnose netlink interface list LAG1
+if=LAG1 family=00 type=1 index=12 mtu=1500 link=0 master=0
+ref=8 state=up flags=up broadcast multicast
+  lacp: mode=active rate=slow
+  members: port7(selected) port8(not-selected)
+  -- port8 not aggregating! --
+
+diagnose netlink interface list port8
+if=port8 state=up
+  lacp partner: NOT responding
+  partner key: 0x0000   <-- should match local key
+  actor state: 0x3D, partner state: 0x00
+
+-- Root cause: switch port8 counterpart not LACP active --
+-- Check switch side LACP config --
+-- Switch must have channel-group X mode active on matching port --`,
+
+    vlan_mismatch:
+`show system interface VLAN20
+  config system interface
+    edit VLAN20
+      set vdom root
+      set ip 192.168.20.1 255.255.255.0
+      set interface port3
+      set vlanid 20
+    next
+  end
+
+-- Users on VLAN20 getting 169.254.x.x APIPA addresses --
+
+diagnose sniffer packet port3 "udp port 67 or port 68" 4 20 l
+-- No DHCP traffic arriving on port3 --
+
+-- Checking switch port config --
+-- Switch port connected to FortiGate port3: --
+-- interface GigabitEthernet1/0/24 --
+--   switchport mode trunk --
+--   switchport trunk allowed vlan 10,30  <-- VLAN 20 missing! --
+
+-- FortiGate sending tagged VLAN20 frames, switch not passing them --
+-- Fix on switch: --
+-- switchport trunk allowed vlan 10,20,30 --`,
+
+    mtu_blackhole:
+`-- Users complain large file transfers fail, small traffic works fine --
+
+execute ping 8.8.8.8
+5 packets sent, 5 received, 0% packet loss  -- basic ping works
+
+execute ping-options data-size 1400
+execute ping-options df-bit yes
+execute ping 8.8.8.8
+5 packets sent, 5 received, 0% packet loss  -- 1400 byte works
+
+execute ping-options data-size 1450
+execute ping 8.8.8.8
+5 packets sent, 0 received, 100% packet loss  -- 1450 byte FAILS
+
+-- MTU black hole: ICMP fragmentation-needed messages being blocked --
+
+diagnose sniffer packet port1 "icmp" 4 20 l
+-- No ICMP type 3 code 4 (fragmentation needed) messages returning --
+-- ISP or intermediate router blocking ICMP, causing PMTUD failure --
+
+-- Fix: set TCP MSS clamp --
+config system interface
+  edit port1
+    set tcp-mss 1400
+  next
+end`,
+
+    session_limit:
+`diagnose sys session stat
+session table: total 500000 max 500000  <-- AT LIMIT!
+  new sessions blocked: 8234
+
+get system performance status
+CPU states: 34% user 8% system 58% idle
+Memory: 16384000k total, 8192000k used (50%)
+Sessions: 500000 (max: 500000)  -- SESSION TABLE FULL
+
+diagnose sys session filter proto 6
+diagnose sys session list | head -20
+-- Thousands of sessions in TIME_WAIT state --
+
+session info: proto=6 proto_state=TIME_WAIT duration=120 expire=30
+session info: proto=6 proto_state=TIME_WAIT duration=118 expire=28
+-- TIME_WAIT sessions not clearing fast enough --
+
+-- Fix: reduce TCP session timers --
+config system session-ttl
+  set default 300
+  config port
+    edit 1
+      set protocol 6
+      set timeout 120
+      set start-port 1
+      set end-port 65535
+    next
+  end
+end`
+  };
+
+  document.getElementById('exampleGroqBtn').onclick=()=>{
+    const sel=document.getElementById('exampleScenarioSelect');
+    if(!sel||!sel.value){showToast('⚠️ Select a training scenario first');return;}
+    const txt=TRAINING_EXAMPLES[sel.value];
+    if(txt){
+      document.getElementById('groqPrompt').value=txt;
+      freeAIPrompt=txt;
+      showToast('✅ Scenario loaded — click Analyze!');
+    }
   };
 
   document.getElementById('clearGroqBtn').onclick=()=>{
