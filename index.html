@@ -430,10 +430,10 @@ h1 .accent{background:linear-gradient(120deg,var(--a),#7fe5c2);-webkit-backgroun
 .success-creds{background:var(--b2);border:1px solid var(--a);border-radius:10px;padding:16px 20px;margin:20px auto 0;max-width:380px;font-family:var(--mono);font-size:13px;text-align:left}
 .success-creds div{margin-bottom:7px;color:var(--t2)}
 .success-creds span{color:var(--g)}
-.beta-notice{background:rgba(210,153,34,.05);border:1px solid rgba(210,153,34,.22);border-radius:11px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
-.beta-notice .ic{font-size:18px;color:var(--y);flex-shrink:0;margin-top:1px}
-.beta-notice .title{font-size:13px;font-weight:700;color:var(--y);margin-bottom:4px}
-.beta-notice .text{font-size:12px;color:var(--t2);line-height:1.6}
+.subscription-notice{background:rgba(210,153,34,.05);border:1px solid rgba(210,153,34,.22);border-radius:11px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.subscription-notice .ic{font-size:18px;color:var(--y);flex-shrink:0;margin-top:1px}
+.subscription-notice .title{font-size:13px;font-weight:700;color:var(--y);margin-bottom:4px}
+.subscription-notice .text{font-size:12px;color:var(--t2);line-height:1.6}
 
 .howit{background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.15);border-radius:11px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--t2);line-height:1.7}
 .howit strong{color:var(--t)}
@@ -1366,7 +1366,7 @@ footer a:hover{color:var(--a)}
   <div class="order-inner">
     <div class="section-label-wrap" style="justify-content:flex-start"><div class="section-label" style="text-align:left">Subscribe</div></div>
     <h2 class="section-title" style="text-align:left;margin-bottom:8px">Create your account</h2>
-    <p style="color:var(--t2);font-size:14px;margin-bottom:28px;line-height:1.7">Fill in your details below and choose your plan. Once the form is complete click <strong style="color:var(--t)">Create Account &amp; Continue to Payment</strong> — you will be taken to Stripe's secure checkout to complete payment. Questions? Email <a href="/cdn-cgi/l/email-protection#bfcccacfcfd0cdcbffd1dacbc8d0d3d9d9d0cdcbd6d8decbda91dcd0d2" style="color:var(--a)"><span class="__cf_email__" data-cfemail="b9caccc9c9d6cbcdf9d7dccdced6d5dfdfd6cbcdd0ded8cddc97dad6d4">[email&#160;protected]</span></a></p>
+    <p style="color:var(--t2);font-size:14px;margin-bottom:28px;line-height:1.7">Fill in your details below and choose your plan. Once the form is complete click <strong style="color:var(--t)">Create Account &amp; Continue to Payment</strong> — you will be taken to Stripe's secure checkout to complete payment. Questions? Email <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a></p>
 
     <div class="form-card" id="formCard">
       <div class="howit">
@@ -1483,7 +1483,7 @@ footer a:hover{color:var(--a)}
 </section>
 
 <footer>
-  <p>© 2025–2026 NetWolf · All rights reserved · <a href="https://netwolffortigate.com/app.html">Open Toolkit</a> · <a href="/cdn-cgi/l/email-protection#d4a7a1a4a4bba6a094bab1a0a3bbb8b2b2bba6a0bdb3b5a0b1fab7bbb9"><span class="__cf_email__" data-cfemail="285b5d5858475a5c68464d5c5f47444e4e475a5c414f495c4d064b4745">[email&#160;protected]</span></a> · <a href="#" onclick="openTos(event)">Terms of Use</a></p>
+  <p>© 2025–2026 NetWolf · All rights reserved · <a href="https://netwolffortigate.com/app.html">Open Toolkit</a> · <a href="mailto:support@netwolffortigate.com">support@netwolffortigate.com</a> · <a href="#" onclick="openTos(event)">Terms of Use</a></p>
 </footer>
 
 <div class="toast" id="toast"><svg class="ic"><use href="#i-check"/></svg><span id="toastMsg"></span></div>
@@ -1505,21 +1505,21 @@ footer a:hover{color:var(--a)}
       <h4>11. Intellectual Property</h4><p>All content within NetWolf Pro — including UI design, playbook structures, accompanying text, configuration templates, the EVE-NG lab guide, and the curated CLI command sets — is the intellectual property of NetWolf and is protected by applicable copyright and database-rights legislation. The User receives a <strong>non-exclusive, non-transferable, revocable licence</strong> to use the content for their own professional and educational purposes only. Copying, publishing, or distributing the content outside of internal personal use without written permission is prohibited.</p>
       <h4>12. Trademarks &amp; Third-Party References</h4><p>NetWolf is an independent toolkit. NetWolf is <strong>not affiliated with, endorsed by, or sponsored by Fortinet, Cisco, Microsoft, Aruba, HPE, Huawei, Juniper, Palo Alto Networks, VMware, Stripe, Firebase, Anthropic, Groq</strong>, or any other vendor referenced in the product. All product names, logos, and trademarks remain the property of their respective owners and are used solely for identification and educational reference.</p>
       <h4>13. Service Availability</h4><p>The Service is provided on a best-effort basis. NetWolf does not guarantee uninterrupted availability, error-free operation, or compatibility with every browser, OS, or assistive technology. Planned maintenance, third-party outages (Firebase, Stripe, Groq, Formspree, the hosting provider), or force majeure events may cause temporary unavailability without entitlement to refund.</p>
-      <h4>14. Suspension &amp; Termination</h4><p>NetWolf may suspend or terminate any account that breaches these Terms, abuses the Service, charges back without prior contact, or poses a security risk — at its sole discretion, with or without notice, and without refund. The User may cancel at any time by emailing <a href="/cdn-cgi/l/email-protection#97e4e2e7e7f8e5e3d7f9f2e3e0f8fbf1f1f8e5e3fef0f6e3f2b9f4f8fa" style="color:var(--a)"><span class="__cf_email__" data-cfemail="45363035352a3731052b2031322a2923232a37312c222431206b262a28">[email&#160;protected]</span></a>; cancellation takes effect at the end of the current billing period and access continues until that date. No refund is issued for the remaining portion of the paid period.</p>
+      <h4>14. Suspension &amp; Termination</h4><p>NetWolf may suspend or terminate any account that breaches these Terms, abuses the Service, charges back without prior contact, or poses a security risk — at its sole discretion, with or without notice, and without refund. The User may cancel at any time by emailing <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a>; once cancellation is confirmed, access may be disabled and no refund is issued for the remaining portion of the paid period.</p>
       <h4>15. Disclaimer of Warranties</h4><p>The Service is provided <strong>"AS IS" and "AS AVAILABLE"</strong>, without warranty of any kind, whether express, implied, statutory, or otherwise, including warranties of merchantability, fitness for a particular purpose, accuracy, completeness, non-infringement, security, or uninterrupted use. No advice or information obtained from the Service creates any warranty not expressly stated in these Terms.</p>
       <h4>16. Limitation of Liability</h4><p>To the maximum extent permitted by Dutch and EU law, NetWolf's total aggregate liability arising out of or relating to the Service is limited to the amount actually paid by the User to NetWolf in the <strong>twelve (12) months</strong> immediately preceding the event giving rise to the claim. NetWolf is not liable for any indirect, incidental, consequential, special, exemplary, or punitive damages.</p>
       <h4>17. Indemnification</h4><p>The User agrees to defend, indemnify, and hold harmless NetWolf and its operators against any claim, demand, loss, or expense (including reasonable legal fees) arising from the User's breach of these Terms, misuse of the Service, or violation of any law or third-party right.</p>
       <h4>18. Changes to These Terms</h4><p>NetWolf may update these Terms from time to time. Material changes will be communicated by email or in-app notice at least 14 days before taking effect. Continued use of the Service after the effective date constitutes acceptance of the revised Terms.</p>
       <h4>19. Governing Law &amp; Jurisdiction</h4><p>These Terms, and any dispute or claim arising out of or in connection with them, are <strong>governed exclusively by the laws of the Netherlands</strong>, without regard to its conflict-of-law principles. The United Nations Convention on Contracts for the International Sale of Goods does not apply. Any dispute that cannot be resolved amicably shall be submitted to the <strong>exclusive jurisdiction of the competent courts of the Netherlands</strong>. Where the User qualifies as a consumer under mandatory provisions of the law of their habitual residence, those mandatory protections remain unaffected.</p>
       <h4>20. Severability &amp; Entire Agreement</h4><p>If any provision of these Terms is held unenforceable, the remaining provisions remain in full force and effect. These Terms constitute the entire agreement between the User and NetWolf regarding the Service and supersede any prior agreements on the same subject matter.</p>
-      <h4>21. Contact</h4><p>Questions, notices, or legal correspondence: <a href="/cdn-cgi/l/email-protection#cdbeb8bdbda2bfb98da3a8b9baa2a1ababa2bfb9a4aaacb9a8e3aea2a0" style="color:var(--a)"><span class="__cf_email__" data-cfemail="e5969095958a9791a58b8091928a8983838a97918c82849180cb868a88">[email&#160;protected]</span></a>.</p>
+      <h4>21. Contact</h4><p>Questions, notices, or legal correspondence: <a href="mailto:support@netwolffortigate.com" style="color:var(--a)">support@netwolffortigate.com</a>.</p>
       <p style="margin-top:20px;font-size:12px;color:var(--t3)">Last updated: May 2026 · NetWolf Pro Toolkit · Governed by the laws of the Netherlands</p>
     </div>
     <div class="tos-foot"><button class="tos-btn-close" onclick="closeTos()">Close</button><button class="tos-btn-accept" onclick="acceptTos()"><svg class="ic"><use href="#i-check"/></svg>I Accept</button></div>
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ── MATRIX ── */
 const canvas = document.getElementById('matBg');
 const ctx = canvas.getContext('2d');
