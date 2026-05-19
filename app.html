@@ -1260,7 +1260,7 @@ async function nwSubscriptionInfo(uid){
   const snap=await fbDB.ref('users/'+uid+'/subscription').once('value');
   const sub=snap.val()||{};
   const plan=String(sub.plan||sub.type||'monthly').toLowerCase();
-  const status=String(sub.status||'active').toLowerCase();
+  const status=String(sub.status||'').toLowerCase();
   const limit=Number(sub.deviceLimit||sub.devices||NW_PLAN_LIMITS[plan]||2);
   return {plan,status,limit};
 }
@@ -1312,7 +1312,7 @@ function nwShowDeviceLimit(info){
 }
 async function nwEnsureDeviceAllowed(user){
   const info=await nwSubscriptionInfo(user.uid);
-  if(info.status && !['active','trialing','paid','manual'].includes(info.status)){
+  if(!['active','trialing','paid','manual'].includes(info.status)){
     return {allowed:false,reason:'subscription',...info,activeCount:0};
   }
   const fp=await nwDeviceFingerprint();
@@ -1397,7 +1397,15 @@ fbAuth.onAuthStateChanged(function(user){
       ]).then(([termsSnap,statusSnap])=>{
         const hasAcceptedTerms=termsSnap.val()===true;
         const subscriptionStatus=String(statusSnap.val()||'').toLowerCase();
-        const hasActiveSubscription=['active','trialing'].includes(subscriptionStatus);
+        const hasActiveSubscription=['active','trialing','paid','manual'].includes(subscriptionStatus);
+        if(!hasActiveSubscription){
+          // No active subscription — should have been caught by device gate, but block here too
+          document.getElementById('toolkitContainer').style.display='none';
+          document.getElementById('loginOverlay').style.display='flex';
+          const e=document.getElementById('loginError');
+          if(e){e.textContent='No active subscription found. Please subscribe at netwolffortigate.com to access the toolkit.';e.style.display='block';}
+          return;
+        }
         if(hasAcceptedTerms||hasActiveSubscription){
           if(!hasAcceptedTerms&&hasActiveSubscription){
             _userRef.child('terms_accepted').set(true).catch(()=>{});
