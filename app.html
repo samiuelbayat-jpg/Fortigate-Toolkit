@@ -5235,7 +5235,7 @@ async function sendClaudeMsg(){
       body:JSON.stringify({
         model:'claude-sonnet-4-5',
         max_tokens:1500,
-        system:'You are a senior FortiGate network engineer and general networking expert. Give concise, practical answers. Use backticks for CLI commands.',
+        system:'You are a senior FortiGate network engineer and general networking expert. First classify the issue from the pasted output or question. Do not assume VPN unless the output clearly contains VPN/IKE/IPsec/SSL-VPN evidence. Give concise, practical answers. Use backticks for CLI commands.'+nwAnonContextForText(text),
         messages:claudeChat
       })
     });
@@ -5258,7 +5258,8 @@ async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loadi
   inp.value='';chat.push({role:'user',content:text});loading=true;render();
   const sys = aiChatMode==='free'
     ? 'You are a knowledgeable network and IT engineer. Answer any question the user has — networking, FortiGate, Linux, Windows, routing, security, or general IT. Be concise and practical. Use backticks for commands and code.'
-    : 'You are a senior FortiGate engineer. Current category: "'+((D[cur]&&D[cur].t)||cur)+'". Give concise, practical FortiGate CLI answers. Use backticks for commands.';
+    : 'You are a senior FortiGate engineer. First classify the issue from the user message and pasted CLI output: policy/NAT, routing, VPN, SSL VPN, DNS, HA, SD-WAN, system health, authentication, interface, or unknown. The current UI tab is only a weak hint ("'+((D[cur]&&D[cur].t)||cur)+'") and must not bias the diagnosis. Do not assume VPN unless the pasted output clearly contains VPN/IKE/IPsec/SSL-VPN evidence. Give concise, practical FortiGate CLI answers. Use backticks for commands.';
+  const sysWithAnon = sys + nwAnonContextForText(text);
   try{
     const useClaude = freeAIProvider==='claude' ? !!claudeApiKey : (!groqApiKey && !!claudeApiKey);
     if(!groqApiKey&&!claudeApiKey)throw new Error('no-key');
@@ -5266,12 +5267,12 @@ async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loadi
     if(freeAIProvider==='groq'&&!groqApiKey&&!claudeApiKey)throw new Error('no-key');
     let reply='';
     if(useClaude){
-      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1200,system:sys,messages:chat.slice(0,-1).concat([{role:'user',content:text}])})});
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1200,system:sysWithAnon,messages:chat.slice(0,-1).concat([{role:'user',content:text}])})});
       const data=await resp.json();
       if(data.error)throw new Error(data.error.message);
       reply=data.content[0].text;
     } else {
-      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sys},...chat]})});
+      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sysWithAnon},...chat]})});
       const data=await resp.json();
       if(data.error)throw new Error(data.error.message);
       reply=data.choices[0].message.content;
@@ -5612,7 +5613,7 @@ Npu-flag      : 00`;
     respDiv.innerHTML='<div class="typing"><span></span><span></span><span></span></div>&nbsp; Analyzing with '+escapeHtml(modelLabel)+'...';
     try{
       let _rt='';
-      const sysmsg='You are a senior FortiGate network engineer. Analyze the CLI output or question and provide: 1) Root cause or direct answer, 2) Recommended CLI fix commands in code blocks, 3) Brief explanation. Be concise and practical.';
+      const sysmsg='You are a senior FortiGate network engineer. First classify the issue from the pasted output or question: policy/NAT, routing, VPN, SSL VPN, DNS, HA, SD-WAN, system health, authentication, interface, or unknown. Do not assume VPN unless the output clearly contains VPN/IKE/IPsec/SSL-VPN evidence. Then provide: 1) Root cause or direct answer, 2) Recommended CLI fix commands in code blocks, 3) Brief explanation. Be concise and practical.'+nwAnonContextForText(prompt);
       const chosenModel=selModel.value;
       if(prov==='claude'){
         const resp=await fetch('https://api.anthropic.com/v1/messages',{
@@ -7092,6 +7093,96 @@ function replaceIPsInText(text,map){let r=text;for(const[real,fake]of map.entrie
 let _anonInput = '';
 let _anonOutput = '';
 let _anonMapping = '';
+const NW_ANON_AI_CONTEXT_KEY='netwolf_anon_ai_context_v1';
+let nwAnonAIContext=null;
+try{nwAnonAIContext=JSON.parse(localStorage.getItem(NW_ANON_AI_CONTEXT_KEY)||'null');}catch(e){nwAnonAIContext=null;}
+
+function nwAnonEscapeRegex(v){return String(v).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function nwAnonStripIPs(v){return String(v||'').replace(/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g,'[ip]');}
+function nwAnonIpScope(ip){
+  if(/^10\./.test(ip)||/^192\.168\./.test(ip)||/^172\.(1[6-9]|2\d|3[01])\./.test(ip)) return 'private/internal';
+  if(/^100\.64\./.test(ip)) return 'carrier-grade NAT';
+  if(/^169\.254\./.test(ip)) return 'link-local';
+  if(/^224\.|^239\./.test(ip)) return 'multicast';
+  if(/^192\.0\.2\.|^198\.51\.100\.|^203\.0\.113\./.test(ip)) return 'documentation/test range';
+  return 'public/external';
+}
+function nwAnonRoleForIP(raw,ip){
+  const roles=[];
+  const rx=new RegExp('(.{0,70})\\b'+nwAnonEscapeRegex(ip)+'\\b(.{0,70})','gi');
+  let m,guard=0;
+  while((m=rx.exec(raw))&&guard<8){
+    guard++;
+    const c=(m[1]+' '+m[2]).toLowerCase();
+    if(/\b(remote-gw|peer|ike|ipsec|vpn|tunnel)\b/.test(c)) roles.push('VPN peer/tunnel endpoint');
+    if(/\b(local|local-gw|src|source|saddr|client)\b/.test(c)) roles.push('source/local side');
+    if(/\b(dst|dest|destination|daddr|server|service)\b/.test(c)) roles.push('destination/service side');
+    if(/\b(gateway|gw|next-hop|nexthop|route|via)\b/.test(c)) roles.push('gateway/next hop');
+    if(/\b(nat|snat|dnat|translated|mapped|vip)\b/.test(c)) roles.push('NAT/translated address');
+    if(/\b(dns|resolver|ldap|radius|tacacs|syslog|ntp)\b/.test(c)) roles.push('infrastructure service');
+    if(/\b(wan|internet|outside|external)\b/.test(c)) roles.push('WAN/external side');
+    if(/\b(lan|inside|internal|vlan|subnet)\b/.test(c)) roles.push('LAN/internal side');
+  }
+  return [...new Set(roles)].slice(0,3).join(', ')||'observed host/address';
+}
+function nwBuildAnonAIContext(raw,mappingRows){
+  const ipRows=(mappingRows||[]).filter(r=>r&&r.type==='IPv4'&&r.fake&&r.real);
+  if(!ipRows.length) return null;
+  const netGroups=new Map();
+  let netCounter=1;
+  const seen=new Set();
+  const entries=[];
+  ipRows.forEach(row=>{
+    const key=row.fake;
+    if(seen.has(key)) return;
+    seen.add(key);
+    const oct=String(row.real).split('.');
+    const netKey=oct.length===4?oct.slice(0,3).join('.'):'host';
+    if(!netGroups.has(netKey)) netGroups.set(netKey,'NET_'+String(netCounter++).padStart(2,'0'));
+    entries.push({
+      label:'ANON_IP_'+String(entries.length+1).padStart(2,'0'),
+      fake:row.fake,
+      scope:nwAnonIpScope(row.real),
+      role:nwAnonRoleForIP(raw,row.real),
+      group:netGroups.get(netKey)
+    });
+  });
+  return {version:1,createdAt:Date.now(),entries};
+}
+function nwSaveAnonAIContext(ctx){
+  nwAnonAIContext=ctx&&ctx.entries&&ctx.entries.length?ctx:null;
+  if(nwAnonAIContext)localStorage.setItem(NW_ANON_AI_CONTEXT_KEY,JSON.stringify(nwAnonAIContext));
+  else localStorage.removeItem(NW_ANON_AI_CONTEXT_KEY);
+}
+function nwManualMaskContextEntries(text){
+  try{
+    if(typeof ipMappings==='undefined'||!Array.isArray(ipMappings)) return [];
+    return ipMappings.filter(m=>m&&m.fake&&text.includes(m.fake)).map((m,i)=>({
+      label:'MANUAL_MASK_'+String(i+1).padStart(2,'0'),
+      fake:m.fake,
+      scope:'user-masked address',
+      role:nwAnonStripIPs(m.desc||'manual IP mask')||'manual IP mask',
+      group:'MANUAL'
+    }));
+  }catch(e){return [];}
+}
+function nwAnonContextForText(text){
+  const entries=[];
+  const t=String(text||'');
+  if(nwAnonAIContext&&Array.isArray(nwAnonAIContext.entries)){
+    nwAnonAIContext.entries.forEach(e=>{if(e&&e.fake&&t.includes(e.fake))entries.push(e);});
+  }
+  nwManualMaskContextEntries(t).forEach(e=>entries.push(e));
+  const unique=[],seen=new Set();
+  entries.forEach(e=>{if(!seen.has(e.fake)){seen.add(e.fake);unique.push(e);}});
+  if(!unique.length) return '';
+  const lines=unique.slice(0,80).map(e=>'- '+e.label+' = '+e.fake+' | role: '+e.role+' | scope: '+e.scope+' | same-network group: '+e.group);
+  return '\n\nANONYMIZED ADDRESS CONTEXT:\nAll IP addresses listed below are fake placeholders created by NetWolf. The real IP mapping stays only in the user browser and is not available to you. Do not geolocate these IPs or infer ownership from the fake ranges. Use the labels, roles, and same-network groups to reason about routing, NAT, VPN, policy, and return-path issues.\n'+lines.join('\n')+'\nWhen giving the answer, refer to the fake IPs and labels, and explain what the user should check on the corresponding real systems locally.';
+}
+function nwAnonContextBlockForClipboard(){
+  if(!nwAnonAIContext||!Array.isArray(nwAnonAIContext.entries)||!nwAnonAIContext.entries.length) return '';
+  return nwAnonContextForText(nwAnonAIContext.entries.map(e=>e.fake).join(' ')).trim();
+}
 
 function renderBulkAnonTab(el){
   el.innerHTML=`
@@ -7120,6 +7211,7 @@ function renderBulkAnonTab(el){
         <div style="display:flex;align-items:center;gap:8px">
           <span style="font-size:11px;font-weight:700;color:var(--t2)">📤 Anonymized output</span>
           <button class="sbtn" id="bulkAnonCopyBtn" style="background:#15803D;font-size:10px;padding:3px 10px;margin-left:auto">📋 Copy</button>
+          <button class="sbtn" id="bulkAnonCopyAIBtn" style="background:var(--a);font-size:10px;padding:3px 10px">Copy for AI</button>
         </div>
         <pre id="bulkAnonOutput" style="flex:1;min-height:0;margin:0;background:#010409;color:#e6edf3;border-radius:6px;padding:12px;font-family:var(--mono);font-size:11.5px;white-space:pre-wrap;overflow-y:auto;border:1px solid var(--br);line-height:1.7;word-break:break-all">— Output will appear here —</pre>
       </div>
@@ -7256,6 +7348,8 @@ function renderBulkAnonTab(el){
     document.getElementById('bulkAnonOutput').textContent = result;
     _anonInput = raw;
     _anonOutput = result;
+    const aiContext = nwBuildAnonAIContext(raw,mappingRows);
+    nwSaveAnonAIContext(aiContext);
 
     // ── Mapping table ──
     if(mappingRows.length === 0){
@@ -7289,6 +7383,9 @@ function renderBulkAnonTab(el){
       });
       th+='</tbody></table>';
       th+=`<div style="margin-top:10px;font-size:11px;color:var(--t3)">${[...new Set(mappingRows.map(r=>r.real))].length} unique values replaced across ${mappingRows.length} occurrences.</div>`;
+      if(aiContext&&aiContext.entries&&aiContext.entries.length){
+        th+=`<div style="margin-top:8px;font-size:11px;color:var(--a);line-height:1.5">AI-safe context saved locally: ${aiContext.entries.length} anonymized IP label(s). AI Assistant will treat these fake IPs as placeholders and use role/network hints without seeing real IPs.</div>`;
+      }
       document.getElementById('bulkAnonMappingContainer').innerHTML=th;
       _anonMapping = th;
     }
@@ -7310,6 +7407,12 @@ function renderBulkAnonTab(el){
     navigator.clipboard.writeText(document.getElementById('bulkAnonOutput').textContent)
       .then(()=>showToast('✅ Copied to clipboard'));
   };
+  document.getElementById('bulkAnonCopyAIBtn').onclick = ()=>{
+    const out=document.getElementById('bulkAnonOutput').textContent;
+    const ctx=nwAnonContextBlockForClipboard();
+    const payload=ctx?out+'\n\n--- NETWOLF AI-SAFE CONTEXT ---\n'+ctx:out;
+    navigator.clipboard.writeText(payload).then(()=>showToast('Copied with AI-safe context'));
+  };
   document.getElementById('bulkAnonClearBtn').onclick = ()=>{
     _anonInput = '';
     _anonOutput = '';
@@ -7317,6 +7420,7 @@ function renderBulkAnonTab(el){
     document.getElementById('bulkAnonInput').value='';
     document.getElementById('bulkAnonOutput').textContent='— Output will appear here —';
     document.getElementById('bulkAnonMappingContainer').innerHTML='<div class="cnote">Run anonymization to see what was replaced.</div>';
+    nwSaveAnonAIContext(null);
   };
 }
 
