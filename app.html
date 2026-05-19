@@ -934,6 +934,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <div class="device-limit-actions">
       <button class="device-limit-primary" onclick="window.location.reload()">Check Again</button>
       <button class="device-limit-secondary" onclick="doLogout()">Logout</button>
+      <button class="device-limit-secondary" id="deviceLimitSubscribeBtn" onclick="window.open('https://netwolffortigate.com/#pricing','_blank')" style="display:none">Subscribe Now</button>
       <button class="device-limit-secondary" onclick="location.href='mailto:support@netwolffortigate.com?subject=NetWolf%20device%20limit%20request'">Contact Support</button>
     </div>
   </div>
@@ -1303,12 +1304,31 @@ function nwShowDeviceLimit(info){
   const overlay=document.getElementById('deviceLimitOverlay');
   const txt=document.getElementById('deviceLimitText');
   const meta=document.getElementById('deviceLimitMeta');
+  const title=overlay?overlay.querySelector('.device-limit-title'):null;
+  const upgradeHint=document.getElementById('deviceUpgradeHint');
+  const deviceList=document.getElementById('deviceList');
   document.getElementById('toolkitContainer').style.display='none';
   document.getElementById('loginOverlay').style.display='none';
-  if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
-  if(meta) meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();
+  if(info.reason==='subscription'){
+    if(title) title.textContent='Subscription required';
+    if(txt) txt.innerHTML='This account does not have an active subscription.<br><br>'
+      +'Subscribe at <a href="https://netwolffortigate.com" style="color:var(--a)" target="_blank">netwolffortigate.com</a> to get full access to the NetWolf toolkit.';
+    if(meta) meta.style.display='none';
+    if(upgradeHint) upgradeHint.style.display='none';
+    if(deviceList) deviceList.style.display='none';
+    const subBtn=document.getElementById('deviceLimitSubscribeBtn');
+    if(subBtn) subBtn.style.display='';
+    const checkBtn=overlay?overlay.querySelector('.device-limit-primary'):null;
+    if(checkBtn) checkBtn.style.display='none';
+  }else{
+    if(title) title.textContent='Device limit reached';
+    if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
+    if(meta){meta.style.display='';meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();}
+    if(upgradeHint) upgradeHint.style.display='';
+    if(deviceList) deviceList.style.display='';
+    nwRenderDeviceList(info);
+  }
   if(overlay) overlay.style.display='flex';
-  nwRenderDeviceList(info);
 }
 async function nwEnsureDeviceAllowed(user){
   const info=await nwSubscriptionInfo(user.uid);

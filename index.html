@@ -1491,14 +1491,8 @@ footer a:hover{color:var(--a)}
       <div class="success-msg" id="successMsg">
         <div class="success-check"><svg class="ic"><use href="#i-check"/></svg></div>
         <h3>Account created!</h3>
-        <p>Your account is ready. We are opening Stripe Checkout so you can activate your subscription securely.</p>
-        <p style="margin-top:8px">After payment, your NetWolf access and device allowance will update automatically.</p>
-        <div class="success-creds">
-          <div>Username: <span id="showUsername">—</span></div>
-          <div>Password: <span id="showPassword">—</span></div>
-          <div style="margin-top:10px;font-size:11px;color:var(--t3)">Keep these safe — you'll need them to log in at app.html</div>
-        </div>
-        <a href="https://netwolffortigate.com/app.html" class="btn-primary" style="margin-top:24px;display:inline-flex">Open Toolkit <svg class="ic"><use href="#i-arrow-right"/></svg></a>
+        <p>Your account is ready. Opening Stripe Checkout now to activate your subscription.</p>
+        <p style="margin-top:8px;font-size:13px;color:var(--t3)">You will be redirected automatically. If nothing happens, <a href="https://netwolffortigate.com" style="color:var(--a)">click here</a>.</p>
       </div>
     </div>
   </div>
@@ -1683,8 +1677,6 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
     const checkoutUrl=await createStripeCheckout(selectedPlan);
     document.getElementById('orderForm').style.display='none';
     document.getElementById('successMsg').style.display='block';
-    document.getElementById('showUsername').textContent=username;
-    document.getElementById('showPassword').textContent='•'.repeat(password.length);
     window.location.href=checkoutUrl;
   }catch(checkoutErr){
     btn.textContent='Continue to Payment';
