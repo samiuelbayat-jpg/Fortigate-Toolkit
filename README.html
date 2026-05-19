@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NetWolf Local Agent Setup</title>
+  <style>
+    body{margin:0;background:#0b1220;color:#e5edf7;font-family:Segoe UI,Arial,sans-serif;line-height:1.6}
+    main{max-width:900px;margin:0 auto;padding:28px 18px 44px}
+    h1{font-size:28px;margin:0 0 8px;color:#fff}
+    h2{font-size:18px;margin:26px 0 8px;color:#7dd3fc}
+    p,li{font-size:14px;color:#cbd5e1}
+    code,pre{font-family:Consolas,Menlo,monospace}
+    pre{background:#050914;border:1px solid #24344e;border-radius:8px;padding:12px;overflow:auto;color:#dbeafe}
+    .card{background:#111a2c;border:1px solid #26364f;border-radius:10px;padding:16px;margin:14px 0}
+    .good{color:#86efac;font-weight:700}
+    .warn{color:#fde68a;font-weight:700}
+    .btn{display:inline-block;background:#15803d;color:#fff;text-decoration:none;border-radius:7px;padding:10px 14px;font-weight:700;margin:6px 8px 6px 0}
+    .muted{color:#94a3b8;font-size:13px}
+  </style>
+</head>
+<body>
+<main>
+  <h1>NetWolf Local Agent Setup</h1>
+  <p class="muted">Level 2 connector for safe local FortiGate checks.</p>
+
+  <div class="card">
+    <p><span class="good">Safe default:</span> the agent listens only on <code>127.0.0.1</code>, starts in dry-run mode, and does not upload firewall output to the internet.</p>
+    <a class="btn" href="../netwolf-agent.zip" download>Download NetWolf Local Agent</a>
+  </div>
+
+  <h2>Option 1: Local Agent</h2>
+  <ol>
+    <li>Download <code>netwolf-agent.zip</code>.</li>
+    <li>Extract the zip file.</li>
+    <li>Open the extracted <code>netwolf-agent</code> folder.</li>
+    <li>Double-click <code>start-local-agent.bat</code>.</li>
+    <li>Go back to NetWolf Assistant and click <strong>Check Agent</strong>.</li>
+  </ol>
+
+  <p>You should see:</p>
+  <pre>NetWolf agent listening on http://127.0.0.1:5051
+Command execution is OFF (dry-run only)</pre>
+
+  <h2>Option 2: MSP/NOC Jump Server</h2>
+  <p>Run the same agent on an internal jump server behind VPN or LAN. Keep it private. Do not expose port <code>5051</code> to the public internet.</p>
+  <p>For production, place it behind internal HTTPS with authentication and logging.</p>
+
+  <h2>What Stays Local</h2>
+  <ul>
+    <li>No Groq, Claude, OpenAI, Firebase, or other cloud API calls from the agent.</li>
+    <li>No device passwords or API tokens are stored by the agent.</li>
+    <li>Audit logs stay in the local <code>logs</code> folder.</li>
+    <li>The <code>/logs</code> viewer returns audit metadata only, not passwords, SSH keys, or command output.</li>
+    <li>Dry-run mode shows commands only; it does not connect to a firewall.</li>
+  </ul>
+
+  <h2>View Agent Logs</h2>
+  <p>In NetWolf, open <strong>NetWolf Assistant → Level 2 Live Agent</strong> and click <strong>Agent Logs</strong>.</p>
+  <p>You can also open the local endpoint:</p>
+  <pre>http://127.0.0.1:5051/logs</pre>
+
+  <h2>Enable Real Read-Only SSH Later</h2>
+  <p>Only after dry-run is tested, edit <code>config.json</code> and change:</p>
+  <pre>"enableCommandExecution": false</pre>
+  <p>to:</p>
+  <pre>"enableCommandExecution": true</pre>
+  <p class="warn">Use a read-only FortiGate account and keep the agent inside the customer network or VPN.</p>
+
+  <h2>Create SSH Key For Read-Only Access</h2>
+  <p>If the FortiGate read-only account uses SSH key login, create the key on the engineer PC or jump server.</p>
+  <pre>ssh-keygen -t ed25519 -f "%USERPROFILE%\.ssh\netwolf_fortigate_key" -C "netwolf-readonly"</pre>
+  <p>This creates two files:</p>
+  <pre>C:\Users\&lt;user&gt;\.ssh\netwolf_fortigate_key
+C:\Users\&lt;user&gt;\.ssh\netwolf_fortigate_key.pub</pre>
+  <p>Paste this private key path into NetWolf:</p>
+  <pre>C:\Users\&lt;user&gt;\.ssh\netwolf_fortigate_key</pre>
+  <p>Add the contents of the <code>.pub</code> file to the FortiGate read-only admin account:</p>
+  <pre>config system admin
+    edit "netwolf-readonly"
+        set accprofile "read-only"
+        set ssh-public-key1 "&lt;contents of netwolf_fortigate_key.pub&gt;"
+    next
+end</pre>
+  <p class="warn">Keep the private key file private. Only the <code>.pub</code> file should be copied to the firewall.</p>
+</main>
+</body>
+</html>
