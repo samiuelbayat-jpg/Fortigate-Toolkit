@@ -420,6 +420,7 @@ h1 .accent{background:linear-gradient(120deg,var(--a),#7fe5c2);-webkit-backgroun
 .btn-submit:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(29,158,117,.32)}
 .btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
 .stripe-powered{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--t3);margin-top:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
 .form-err{color:var(--r);font-size:12.5px;margin:10px 0;display:none;align-items:flex-start;gap:6px}
 .form-err .ic{font-size:14px;margin-top:1px}
 .success-msg{display:none;text-align:center;padding:44px 20px}
@@ -1489,10 +1490,10 @@ footer a:hover{color:var(--a)}
       </form>
 
       <div class="success-msg" id="successMsg">
-        <div class="success-check"><svg class="ic"><use href="#i-check"/></svg></div>
-        <h3>Account created!</h3>
-        <p>Your account is ready. Opening Stripe Checkout now to activate your subscription.</p>
-        <p style="margin-top:8px;font-size:13px;color:var(--t3)">You will be redirected automatically. If nothing happens, <a href="https://netwolffortigate.com" style="color:var(--a)">click here</a>.</p>
+        <div style="width:48px;height:48px;border:3px solid var(--br);border-top-color:var(--a);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px"></div>
+        <h3 style="font-size:18px;margin-bottom:8px">Opening secure payment...</h3>
+        <p>Your account has been created. You are being redirected to Stripe to complete your subscription.</p>
+        <p style="margin-top:12px;font-size:12px;color:var(--t3)">Not redirected? <a id="stripeManualLink" href="#" style="color:var(--a)">Click here</a></p>
       </div>
     </div>
   </div>
@@ -1610,9 +1611,9 @@ function setPlan(plan){
 /* ── STRIPE CHECKOUT ── */
 function getAppReturnUrl(){
   if(location.protocol === 'http:' || location.protocol === 'https:'){
-    return new URL('app.html', location.href).href;
+    return new URL('app.html?payment=success', location.href).href;
   }
-  return 'https://netwolffortigate.com/app.html';
+  return 'https://netwolffortigate.com/app.html?payment=success';
 }
 async function createStripeCheckout(plan){
   const createCheckoutSession=fbFunctions.httpsCallable('createCheckoutSession');
@@ -1677,6 +1678,8 @@ document.getElementById('orderForm').addEventListener('submit',async function(e)
     const checkoutUrl=await createStripeCheckout(selectedPlan);
     document.getElementById('orderForm').style.display='none';
     document.getElementById('successMsg').style.display='block';
+    const manualLink=document.getElementById('stripeManualLink');
+    if(manualLink) manualLink.href=checkoutUrl;
     window.location.href=checkoutUrl;
   }catch(checkoutErr){
     btn.textContent='Continue to Payment';

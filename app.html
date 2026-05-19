@@ -16447,6 +16447,26 @@ function renderMostUsed(el){
 }
 window.showLandingThenInit=function(){
   initAndRender(); // load the toolkit in background
+  // Show post-payment welcome if redirected from Stripe
+  if(new URLSearchParams(location.search).get('payment')==='success'){
+    history.replaceState(null,'',location.pathname); // clean URL
+    var user=fbAuth.currentUser;
+    var name=user?(user.displayName||(user.email?user.email.split('@')[0]:'Engineer')):'Engineer';
+    var modal=document.createElement('div');
+    modal.id='paymentSuccessModal';
+    modal.style.cssText='position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);padding:18px';
+    modal.innerHTML='<div style="width:min(480px,96vw);background:var(--b2);border:1px solid rgba(29,158,117,.4);border-radius:18px;padding:36px 32px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)">'
+      +'<div style="width:64px;height:64px;border-radius:50%;background:rgba(29,158,117,.12);border:2px solid var(--a);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px">✅</div>'
+      +'<div style="font-size:22px;font-weight:900;color:var(--t);margin-bottom:10px">Welcome to NetWolf, '+escapeHtml(name)+'!</div>'
+      +'<div style="font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:8px">Your subscription is active. You now have full access to the NetWolf toolkit.</div>'
+      +'<div style="font-size:12px;color:var(--t3);margin-bottom:28px">A confirmation email will arrive shortly. Your device has been registered.</div>'
+      +'<button onclick="document.getElementById(\'paymentSuccessModal\').remove();sessionStorage.setItem(\'nw_landing_seen\',\'1\');var o=document.getElementById(\'landingOverlay\');if(o)o.style.display=\'block\';" '
+      +'style="background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:10px;padding:13px 32px;font-size:15px;font-weight:800;cursor:pointer;width:100%">'
+      +'Open NetWolf Toolkit →</button>'
+      +'</div>';
+    document.body.appendChild(modal);
+    return; // don't show landing overlay yet — button will trigger it
+  }
   // Only show landing on first login of this browser session, not on refresh
   var alreadySeen=sessionStorage.getItem('nw_landing_seen');
   if(alreadySeen) return; // skip landing on refresh/tab restore
