@@ -7,11 +7,10 @@
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 <!-- SECURITY NOTE: unsafe-inline is required because this is a single-file app with inline scripts/styles.
      To remove it: split into separate .js/.css files and use a nonce or hash-based CSP.
      object-src none and base-uri self added to limit attack surface. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app wss:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' http://127.0.0.1:5051 http://localhost:5051 https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app; upgrade-insecure-requests">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
@@ -920,7 +919,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
 
 <div id="deviceLimitOverlay" class="device-limit-overlay">
   <div class="device-limit-card">
-    <div class="device-limit-title" id="deviceLimitTitle">Device limit reached</div>
+    <div class="device-limit-title">Device limit reached</div>
     <div class="device-limit-copy" id="deviceLimitText">
       This subscription has already used all allowed registered devices.
     </div>
@@ -1059,6 +1058,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
           <div class="tab-group-btns">
             <button class="tab" onclick="stab('freeai')" id="tab-freeai" title="AI CLI Analyzer">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">AI Analyzer</span>
+            </button>
+            <button class="tab" onclick="stab('nwassistant')" id="tab-nwassistant" title="NetWolf Assistant">
+              <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">NetWolf</span>
             </button>
             <button class="tab" onclick="stab('ai')" id="tab-ai" title="FortiGate AI Assistant (Groq)">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Assistant</span>
@@ -1258,13 +1260,9 @@ async function nwSubscriptionInfo(uid){
   const snap=await fbDB.ref('users/'+uid+'/subscription').once('value');
   const sub=snap.val()||{};
   const plan=String(sub.plan||sub.type||'monthly').toLowerCase();
-  const status=String(sub.status||'missing').toLowerCase();
-  const hasSubscription=snap.exists();
-  const cancelAtPeriodEnd=sub.cancelAtPeriodEnd===true||sub.cancel_at_period_end===true;
-  const canceledAt=sub.canceledAt||sub.canceled_at||null;
-  const currentPeriodEnd=sub.currentPeriodEnd||sub.current_period_end||null;
+  const status=String(sub.status||'active').toLowerCase();
   const limit=Number(sub.deviceLimit||sub.devices||NW_PLAN_LIMITS[plan]||2);
-  return {plan,status,limit,hasSubscription,cancelAtPeriodEnd,canceledAt,currentPeriodEnd};
+  return {plan,status,limit};
 }
 function nwFormatTime(v){
   if(!v) return 'unknown';
@@ -1303,33 +1301,18 @@ window.nwRemoveRegisteredDevice=async function(fp){
 function nwShowDeviceLimit(info){
   NW_DEVICE_LIMIT_CONTEXT=info;
   const overlay=document.getElementById('deviceLimitOverlay');
-  const title=document.getElementById('deviceLimitTitle');
   const txt=document.getElementById('deviceLimitText');
   const meta=document.getElementById('deviceLimitMeta');
-  const upgrade=document.getElementById('deviceUpgradeHint');
-  const list=document.getElementById('deviceList');
   document.getElementById('toolkitContainer').style.display='none';
   document.getElementById('loginOverlay').style.display='none';
-  if(info.reason==='subscription'){
-    if(title) title.textContent='Payment required';
-    if(txt) txt.textContent='Your NetWolf subscription is not active yet. Please complete payment before using the toolkit.';
-    if(meta) meta.innerHTML='Plan: '+info.plan+'<br>Status: '+info.status+(info.cancelAtPeriodEnd?'<br>Cancellation requested: yes':'')+(info.currentPeriodEnd?'<br>Paid period ends: '+nwFormatTime(info.currentPeriodEnd):'');
-    if(upgrade) upgrade.innerHTML='Already paid? Wait a few seconds and click <strong>Check Again</strong>. If it still does not activate, contact support.';
-    if(list) list.innerHTML='';
-  }else{
-    if(title) title.textContent='Device limit reached';
-    if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
-    if(meta) meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();
-    if(upgrade) upgrade.innerHTML='Need more devices? <strong>Upgrade to the yearly plan</strong> to allow up to 5 registered devices.';
-    nwRenderDeviceList(info);
-  }
+  if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
+  if(meta) meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();
   if(overlay) overlay.style.display='flex';
+  nwRenderDeviceList(info);
 }
 async function nwEnsureDeviceAllowed(user){
   const info=await nwSubscriptionInfo(user.uid);
-  const allowedStatus=['active','trialing','paid','manual'].includes(info.status);
-  const subscriptionBlocked=!info.hasSubscription||!allowedStatus||(info.cancelAtPeriodEnd&&info.status!=='manual');
-  if(subscriptionBlocked){
+  if(info.status && !['active','trialing','paid','manual'].includes(info.status)){
     return {allowed:false,reason:'subscription',...info,activeCount:0};
   }
   const fp=await nwDeviceFingerprint();
@@ -4368,7 +4351,7 @@ function hasHighRisk(cmds){return cmds.some(c=>cmdSafety(c)==='danger');}
 function hasCaution(cmds){return cmds.some(c=>cmdSafety(c)==='caution');}
 
 let cur='vpn',tab='guide',chat=[],loading=false;
-const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','liveconnect','emailgen','swcfg','devices']);
+const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','liveconnect','emailgen','swcfg','devices']);
 function normalizeTab(t){return VALID_TABS.has(t)?t:'guide';}
 let freeAIPrompt='',freeAIHistory=[];
 
@@ -4480,6 +4463,7 @@ function nav(id){
 function stab(t){t=normalizeTab(t);tab=t;localStorage.setItem('nw_tab',t);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');if(t!=='guide'){document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+t))document.getElementById('cat-'+t).classList.add('active');}else{document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+cur))document.getElementById('cat-'+cur).classList.add('active');}render();}
 function esc(s){return String(s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
 function fmt(t){t=t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
+function safeFmt(t){return fmt(t).replace(/<(?!\/?(?:pre|code|strong|br|span)\b)[^>]+>/gi,'');}
 function copyAll(btn,key,idx){const step=D[cur].steps?D[cur].steps[idx]:D[cur].sections[idx];const cmds=(step.cmds||[]).filter(c=>!c.startsWith('('));navigator.clipboard.writeText(cmds.join('\n')).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy all',1500);});}
 function copyRef(btn,ci,si){navigator.clipboard.writeText(QREF[ci].cmds[si]).then(()=>{btn.textContent='✓';setTimeout(()=>btn.textContent='Copy',1200);});}
 function askAI(q){stab('ai');setTimeout(()=>{const i=document.getElementById('chi');if(i){i.value=q;i.focus();}},50);}
@@ -4495,6 +4479,7 @@ function upgradeTabIcons(){
     'tab-topology':'<circle cx="6" cy="7" r="3"></circle><circle cx="18" cy="7" r="3"></circle><circle cx="12" cy="18" r="3"></circle><path d="M8.5 9.5 11 15"></path><path d="m15.5 9.5-2.5 5.5"></path><path d="M9 7h6"></path>',
     'tab-pkttools':'<path d="M4 10h16"></path><path d="M4 14h16"></path><path d="m7 7-3 3 3 3"></path><path d="m17 11 3 3-3 3"></path>',
     'tab-freeai':'<path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Z"></path><path d="M19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z"></path>',
+    'tab-nwassistant':'<path d="M12 2 5 5v6c0 5 3.6 8.6 7 11 3.4-2.4 7-6 7-11V5l-7-3Z"></path><path d="M8.5 12h7"></path><path d="M10 9.5h4"></path><path d="M9.5 15.5h5"></path>',
     'tab-ai':'<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"></path><path d="M8 10h8"></path><path d="M8 13h5"></path>',
     'tab-claudechat':'<path d="M12 4a7 7 0 0 0-7 7v2a5 5 0 0 0 5 5h4a5 5 0 0 0 5-5v-2a7 7 0 0 0-7-7Z"></path><path d="M9 11h.01"></path><path d="M15 11h.01"></path><path d="M9 15c1.5 1 4.5 1 6 0"></path>',
     'tab-masking':'<path d="M3 12s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6Z"></path><path d="M4 4l16 16"></path>',
@@ -4944,7 +4929,7 @@ function render(){const el=document.getElementById('mc');
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+escapeHtml(cur)+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -5235,7 +5220,7 @@ async function sendClaudeMsg(){
       body:JSON.stringify({
         model:'claude-sonnet-4-5',
         max_tokens:1500,
-        system:'You are a senior FortiGate network engineer and general networking expert. First classify the issue from the pasted output or question. Do not assume VPN unless the output clearly contains VPN/IKE/IPsec/SSL-VPN evidence. Give concise, practical answers. Use backticks for CLI commands.'+nwAnonContextForText(text),
+        system:'You are a senior FortiGate network engineer and general networking expert. Give concise, practical answers. Use backticks for CLI commands.',
         messages:claudeChat
       })
     });
@@ -5258,8 +5243,7 @@ async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loadi
   inp.value='';chat.push({role:'user',content:text});loading=true;render();
   const sys = aiChatMode==='free'
     ? 'You are a knowledgeable network and IT engineer. Answer any question the user has — networking, FortiGate, Linux, Windows, routing, security, or general IT. Be concise and practical. Use backticks for commands and code.'
-    : 'You are a senior FortiGate engineer. First classify the issue from the user message and pasted CLI output: policy/NAT, routing, VPN, SSL VPN, DNS, HA, SD-WAN, system health, authentication, interface, or unknown. The current UI tab is only a weak hint ("'+((D[cur]&&D[cur].t)||cur)+'") and must not bias the diagnosis. Do not assume VPN unless the pasted output clearly contains VPN/IKE/IPsec/SSL-VPN evidence. Give concise, practical FortiGate CLI answers. Use backticks for commands.';
-  const sysWithAnon = sys + nwAnonContextForText(text);
+    : 'You are a senior FortiGate engineer. Current category: "'+((D[cur]&&D[cur].t)||cur)+'". Give concise, practical FortiGate CLI answers. Use backticks for commands.';
   try{
     const useClaude = freeAIProvider==='claude' ? !!claudeApiKey : (!groqApiKey && !!claudeApiKey);
     if(!groqApiKey&&!claudeApiKey)throw new Error('no-key');
@@ -5267,12 +5251,12 @@ async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loadi
     if(freeAIProvider==='groq'&&!groqApiKey&&!claudeApiKey)throw new Error('no-key');
     let reply='';
     if(useClaude){
-      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1200,system:sysWithAnon,messages:chat.slice(0,-1).concat([{role:'user',content:text}])})});
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':claudeApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1200,system:sys,messages:chat.slice(0,-1).concat([{role:'user',content:text}])})});
       const data=await resp.json();
       if(data.error)throw new Error(data.error.message);
       reply=data.content[0].text;
     } else {
-      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sysWithAnon},...chat]})});
+      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sys},...chat]})});
       const data=await resp.json();
       if(data.error)throw new Error(data.error.message);
       reply=data.choices[0].message.content;
@@ -5283,6 +5267,443 @@ async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loadi
     chat.push({role:'assistant',content:msg});
   }
   loading=false;render();}
+
+const NW_ASSISTANT_PACKS={
+  vpn:{label:'VPN / IPsec',color:'high',symptoms:'Phase 1 down, Phase 2 down, tunnel up but traffic not passing, negotiation errors',cmds:['get vpn ipsec tunnel summary','diagnose vpn tunnel list','diagnose vpn ike gateway list','diagnose debug reset','diagnose vpn ike log-filter name <PHASE1_NAME>','diagnose debug application ike -1','diagnose debug enable','diagnose debug disable','diagnose debug reset'],keys:['NO_PROPOSAL_CHOSEN','AUTH_FAILED','peer SA proposal not match','no matching gateway','phase1','phase2','dpd','ike']},
+  policy:{label:'Policy / NAT',color:'warn',symptoms:'Traffic denied, wrong policy hit, NAT missing, VIP not working, no policy matched',cmds:['diagnose firewall iprope lookup <SRC_IP> <DST_IP> <DST_PORT> <PROTO>','show firewall policy','show firewall vip','show firewall central-snat-map','diagnose sys session filter clear','diagnose sys session filter src <SRC_IP>','diagnose sys session filter dst <DST_IP>','diagnose sys session list'],keys:['iprope','policy','deny','accept','nat','snat','dnat','vip','no matching policy']},
+  routing:{label:'Routing / SD-WAN',color:'warn',symptoms:'No route, wrong egress interface, SD-WAN picks wrong member, asymmetric path',cmds:['get router info routing-table all','diagnose ip route get <DST_IP>','diagnose sys sdwan service','diagnose sys sdwan member','diagnose sys sdwan health-check','get router info bgp summary','get router info ospf neighbor'],keys:['no route','route','gateway','sdwan','member','blackhole','rpf','reverse path']},
+  sslvpn:{label:'SSL VPN',color:'high',symptoms:'Login failure, tunnel connects but no access, portal issue, web mode issue, MFA/cert problem',cmds:['get vpn ssl monitor','diagnose vpn ssl list','diagnose vpn ssl statistics','diagnose debug application sslvpn -1','diagnose debug application fnbamd -1','diagnose debug enable','diagnose debug disable','diagnose debug reset'],keys:['sslvpn','ssl vpn','fnbamd','portal','realm','ldap','radius','mfa','certificate']},
+  dhcp:{label:'DHCP / DNS',color:'info',symptoms:'Clients not getting IP, wrong DNS/gateway, rogue DHCP, lease conflicts',cmds:['execute dhcp lease-list','diagnose ip dhcp server list','diagnose debug application dhcps -1','diagnose debug enable','diagnose debug disable','diagnose debug reset','get system dns','diagnose test application dnsproxy 6'],keys:['dhcp','lease','discover','offer','request','ack','dns','dnsproxy']},
+  performance:{label:'Performance / CPU',color:'high',symptoms:'High CPU, high memory, slow traffic, conserve mode, drops, NPU offload problems',cmds:['get system performance status','diagnose sys top 2 20','diagnose hardware sysinfo memory','diagnose hardware deviceinfo nic <INTERFACE>','diagnose npu np6 session-stats','diagnose sys session stat','get system status'],keys:['cpu','memory','conserve','drops','errors','npu','offload','latency']},
+  ha:{label:'HA / Cluster',color:'warn',symptoms:'HA failover, split brain, out of sync, heartbeat issue, session pickup issue',cmds:['get system ha status','diagnose sys ha status','diagnose sys ha checksum show','diagnose sys ha dump-by group','execute ha manage <INDEX>','get system performance status'],keys:['ha','cluster','sync','heartbeat','failover','primary','secondary','checksum']},
+  security:{label:'Security Profiles / Logs',color:'warn',symptoms:'UTM blocks traffic, IPS/AV/WebFilter denies, app control issue, log explains block',cmds:['show firewall policy <POLICY_ID>','show firewall profile-protocol-options','show antivirus profile','show ips sensor','show webfilter profile','execute log filter category 1','execute log display'],keys:['ips','virus','webfilter','blocked','utm','profile','threat','signature','category']},
+  sniffer:{label:'Packet Capture / Wireshark',color:'info',symptoms:'Need proof traffic arrives/leaves, SYN without SYN-ACK, resets, retransmissions, port reachability',cmds:['diagnose sniffer packet any "host <SRC_IP> and host <DST_IP>" 4 100 l','diagnose debug flow filter addr <SRC_IP>','diagnose debug flow filter daddr <DST_IP>','diagnose debug flow trace start 20','diagnose debug enable','diagnose debug disable','diagnose debug reset'],keys:['syn','syn-ack','rst','icmp','retransmission','sniffer','pcap','wireshark','packet']},
+  auth:{label:'Authentication / LDAP / RADIUS',color:'warn',symptoms:'Admin login fails, SSL VPN auth fails, LDAP/RADIUS timeout, MFA issue, group mismatch',cmds:['diagnose test authserver ldap <SERVER> <USER> <PASSWORD>','diagnose test authserver radius <SERVER> <USER> <PASSWORD>','diagnose debug application fnbamd -1','diagnose debug enable','diagnose debug disable','show user ldap','show user radius','show user group'],keys:['ldap','radius','fnbamd','mfa','token','group','auth','invalid password','timeout']},
+  certificates:{label:'Certificates / TLS',color:'warn',symptoms:'Certificate warning, expired cert, SSL inspection issue, admin GUI cert problem, VPN cert error',cmds:['get vpn certificate local details','show vpn certificate local','show vpn certificate ca','diagnose vpn certificate local list','show firewall ssl-ssh-profile','get system status'],keys:['certificate','cert','expired','ssl','tls','ca','issuer','subject','inspection']},
+  logging:{label:'Logging / FortiAnalyzer',color:'info',symptoms:'Logs missing, FAZ disconnected, wrong log category, traffic log not visible, disk logging issue',cmds:['get log fortianalyzer setting','diagnose test application miglogd 20','diagnose test application miglogd 6','execute log filter category 0','execute log display','show log setting','show log fortianalyzer setting'],keys:['log','faz','fortianalyzer','miglogd','logging','disk','traffic log','event log']},
+  config:{label:'Config / Change Plan',color:'warn',symptoms:'Need a safe change plan, compare config, build config, migrate setting, rollback checklist',cmds:['show full-configuration','show system global','execute backup config flash <FILE_NAME>','diagnose sys config lock-info','execute revision list config','execute restore config flash <FILE_NAME>'],keys:['config','change','backup','rollback','revision','migrate','object','policy']},
+  switching:{label:'FortiSwitch / FortiAP',color:'info',symptoms:'Switch port down, VLAN issue, managed FortiSwitch offline, AP offline, WiFi clients failing',cmds:['get switch-controller managed-switch','diagnose switch-controller switch-info all','show switch-controller managed-switch','diagnose wireless-controller wlac -c wtp','get wireless-controller wtp','show wireless-controller vap'],keys:['fortiswitch','fortiap','switch','vlan','ssid','wifi','wtp','poe','managed-switch']},
+  ztna:{label:'ZTNA / Proxy / VIP',color:'warn',symptoms:'ZTNA access proxy fails, HTTPS publishing issue, VIP not matching, proxy auth issue',cmds:['show firewall proxy-policy','show firewall access-proxy','show firewall vip','diagnose wad user list','diagnose debug application wad -1','diagnose debug enable','diagnose debug disable'],keys:['ztna','proxy','access-proxy','vip','wad','saml','portal','published']}
+};
+
+const NW_ASSISTANT_MODES={
+  triage:{label:'Triage incident',hint:'Find likely root cause and next safe checks.'},
+  explain:{label:'Explain output',hint:'Explain pasted CLI/log output in plain engineer language.'},
+  commands:{label:'Find commands',hint:'Generate the best read-only commands for the selected problem.'},
+  config:{label:'Build config plan',hint:'Create a careful config/change plan with rollback.'},
+  compare:{label:'Compare / audit config',hint:'Find risk, missing pieces, or bad practice in pasted config.'},
+  report:{label:'Customer report',hint:'Create a short professional status/update message.'},
+  learn:{label:'Teach me',hint:'Explain what is happening and how to troubleshoot it next time.'}
+};
+
+const NW_ASSISTANT_TOOLKIT=[
+  {id:'pkttools',icon:'📦',title:'Packet Tools',desc:'Debug flow, packet walk, traceroute, Wireshark helper'},
+  {id:'mostused',icon:'⭐',title:'Most Used',desc:'Daily troubleshooting generators'},
+  {id:'analyze',icon:'🔎',title:'Analyze Output',desc:'Paste CLI output for general analysis'},
+  {id:'cfggen',icon:'🧩',title:'Config Generator',desc:'Build FortiGate config templates'},
+  {id:'cfgmigrate',icon:'🔀',title:'Config Migrator',desc:'Replace fields and migrate configs'},
+  {id:'swcfg',icon:'🔧',title:'SW/Router Config',desc:'Switch/router/firewall config builder'},
+  {id:'security',icon:'🛡️',title:'Security',desc:'Privacy, safe usage, and risk notes'},
+  {id:'bulkAnon',icon:'🧹',title:'Anonymizer',desc:'Mask IPs and hostnames before AI'},
+  {id:'multivendor',icon:'🌐',title:'Multi-Vendor CLI',desc:'Cisco, Juniper, Palo Alto, Aruba and more'},
+  {id:'devices',icon:'🖥️',title:'Device Catalog',desc:'Firewall, router, switch catalog'},
+  {id:'topology',icon:'🕸️',title:'Topology',desc:'Draw or plan the network path'},
+  {id:'labsetup',icon:'🧪',title:'Lab Setup',desc:'Build and test in a lab first'}
+];
+
+function nwAssistantPackOptions(){
+  return Object.keys(NW_ASSISTANT_PACKS).map(k=>'<option value="'+k+'">'+NW_ASSISTANT_PACKS[k].label+'</option>').join('');
+}
+let nwAssistantCommandsExpanded=false;
+function nwAssistantCommandHtml(kind){
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const visible=nwAssistantCommandsExpanded?pack.cmds:pack.cmds.slice(0,4);
+  let html=visible.map(c=>'<div class="nwa-cmd-row"><span class="nwa-read-badge">R</span><code class="nwa-cmd-code">'+escapeHtml(c)+'</code></div>').join('');
+  if(pack.cmds.length>4){
+    html+='<button class="nwa-expand-cmds" onclick="nwAssistantToggleCommands()">'+(nwAssistantCommandsExpanded?'Show less':'Show all '+pack.cmds.length+' commands')+'</button>';
+  }
+  return html;
+}
+function nwAssistantMaskIfNeeded(text){
+  const doMask=document.getElementById('nwa-mask')&&document.getElementById('nwa-mask').checked;
+  return doMask?maskTextStandalone(text):text;
+}
+function nwAssistantSetKind(kind){
+  if(window.event&&window.event.type==='change') nwAssistantCommandsExpanded=false;
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const hints=document.getElementById('nwa-hints');
+  const cmds=document.getElementById('nwa-cmds');
+  const title=document.getElementById('nwa-pack-title');
+  if(title) title.textContent=pack.label;
+  if(hints) hints.innerHTML='<strong>Typical signs:</strong><br><span>'+escapeHtml(pack.symptoms)+'</span>';
+  if(cmds) cmds.innerHTML=nwAssistantCommandHtml(kind);
+}
+window.nwAssistantToggleCommands=function(){
+  nwAssistantCommandsExpanded=!nwAssistantCommandsExpanded;
+  const kind=document.getElementById('nwa-kind')?.value||'vpn';
+  nwAssistantSetKind(kind);
+};
+function nwAssistantModeOptions(){
+  return Object.keys(NW_ASSISTANT_MODES).map(k=>'<option value="'+k+'">'+NW_ASSISTANT_MODES[k].label+'</option>').join('');
+}
+function nwAssistantToolkitHtml(){
+  return NW_ASSISTANT_TOOLKIT.map(t=>'<button class="nwa-tool" data-tab="'+t.id+'" title="'+escapeHtml(t.desc)+'">'
+    +'<span class="nwa-tool-ico">'+t.icon+'</span><span><b>'+escapeHtml(t.title)+'</b><small>'+escapeHtml(t.desc)+'</small></span></button>').join('');
+}
+function nwAssistantModeHint(){
+  const mode=document.getElementById('nwa-mode')?.value||'triage';
+  const box=document.getElementById('nwa-mode-hint');
+  if(box) box.textContent=(NW_ASSISTANT_MODES[mode]||NW_ASSISTANT_MODES.triage).hint;
+}
+function nwAssistantLocalFindings(kind,text,symptom,cmd){
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const low=(text+' '+symptom+' '+cmd).toLowerCase();
+  const findings=[];
+  const add=(sev,title,why,next)=>findings.push({sev,title,why,next});
+  if(!text.trim()) add('warn','No device output pasted','The assistant can still suggest commands, but real diagnosis needs CLI output or logs.','Run the green read-only commands for '+pack.label+' and paste the result.');
+  if(/\b(no policy matched|iprope.*fail|implicit deny|policy-0|action=deny|denied by forward policy)\b/i.test(text)) add('danger','Policy deny detected','The output suggests traffic is hitting an implicit deny or a deny policy.','Check policy order, source/destination interface, address objects, service, schedule, and NAT setting.');
+  if(/\b(no route|find a route.*fail|reverse path|rpf|blackhole)\b/i.test(text)) add('danger','Routing or reverse-path problem','FortiGate may not know the return path or may reject traffic because the reverse route is wrong.','Run `diagnose ip route get <DST_IP>` and verify static/dynamic routes and SD-WAN rules.');
+  if(/\b(no_proposal_chosen|proposal.*mismatch|peer sa proposal not match|auth_failed|authentication failed|psk|pre-shared)\b/i.test(text)) add('danger','VPN negotiation mismatch','IKE/IPsec proposals, PSK, authentication, ID, or peer settings may not match.','Compare phase1/phase2 encryption, DH/PFS, lifetime, local/remote IDs, NAT-T, and PSK on both peers.');
+  if(/\b(phase 1.*down|phase1.*down|phase 2.*down|phase2.*down|no matching gateway|delete sa)\b/i.test(text)) add('warn','VPN phase issue','The tunnel is not fully established or SAs are being removed.','Filter IKE debug to the tunnel and reproduce once, then inspect the first error before repeated retries.');
+  if(/\b(conserve mode|memory.*low|cpu.*9\d|cpu.*100|high cpu|miglogd|ipsengine|wad)\b/i.test(text)) add('danger','System resource pressure','High CPU, memory pressure, or conserve mode can affect inspection and forwarding.','Check top processes, memory, sessions, UTM load, and recent config or traffic changes.');
+  if(/\b(retransmission|duplicate ack|lost segment|syn.*retrans|reset|rst)\b/i.test(text)) add('warn','Packet-level symptoms found','The capture/log hints at retransmissions, resets, or missing replies.','Use Packet Tools > Wireshark Helper and capture both ingress and egress sides if possible.');
+  if(/\b(dhcp|discover|offer|request|ack|lease|dnsproxy|server failed)\b/i.test(low)) add('info','DHCP/DNS path relevant','The symptoms mention client address assignment or name resolution.','Check DHCP lease list, DHCP debug, DNS proxy status, and whether policy allows DNS to the configured resolver.');
+  if(/\b(blocked|ips|virus|webfilter|application control|utm|signature)\b/i.test(text)) add('warn','Security profile may be blocking','A UTM/security profile may be making the final allow/deny decision after policy match.','Check forward traffic logs and the policy security profiles. Temporarily test with a lab-safe policy change only if approved.');
+  const matched=pack.keys.filter(k=>low.includes(k.toLowerCase())).slice(0,6);
+  if(matched.length) add('info','Matched '+pack.label+' keywords','Found: '+matched.join(', ')+'.','Use the command pack on the right to collect focused evidence.');
+  if(!findings.length) add('info','No obvious red flags found','The pasted output did not contain the common failure signatures I check locally.','Use AI Deep Analyze or paste more complete output: command, symptom, source/destination, and timestamp.');
+  return findings;
+}
+function nwAssistantRenderResult(title,findings,extra){
+  const color={danger:'#f85149',warn:'#d29922',info:'#58a6ff',safe:'#3fb950'};
+  let html='<div class="cblock" style="margin-top:14px"><div class="chdr"><div class="chdr-l">'+escapeHtml(title)+'</div><span class="cbadge ro">Level 1</span></div><div class="cbody">';
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px">';
+  findings.forEach(f=>{
+    const c=color[f.sev]||color.info;
+    html+='<div style="padding:11px 12px;border-radius:8px;background:rgba(255,255,255,.035);border-left:3px solid '+c+';font-size:12px;line-height:1.65">'
+      +'<div style="font-weight:800;color:'+c+';margin-bottom:4px">'+escapeHtml(f.title)+'</div>'
+      +'<div style="color:var(--t2);margin-bottom:6px">'+escapeHtml(f.why)+'</div>'
+      +'<div style="color:var(--t)"><strong>Next:</strong> '+escapeHtml(f.next)+'</div></div>';
+  });
+  html+='</div>';
+  if(extra) html+='<pre id="nwa-result-text" style="margin-top:12px;background:#0a0e14;color:#c9d1d9;font-family:var(--mono);font-size:12px;padding:14px;border-radius:8px;white-space:pre-wrap;line-height:1.75">'+escapeHtml(extra)+'</pre>';
+  html+='</div></div>';
+  const out=document.getElementById('nwa-output');
+  if(out) out.innerHTML=html;
+}
+function renderNetWolfAssistant(el){
+  if(!document.getElementById('nwa-style')){
+    const st=document.createElement('style');st.id='nwa-style';
+    st.textContent=[
+      '.nwa-shell{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.68fr);gap:14px;align-items:start}',
+      '.nwa-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:linear-gradient(135deg,rgba(29,158,117,.13),rgba(29,158,117,.04));border:1px solid rgba(29,158,117,.25);border-radius:10px;margin-bottom:12px}',
+      '.nwa-banner-left{display:flex;align-items:center;gap:12px}',
+      '.nwa-banner-ico{font-size:26px;line-height:1;flex-shrink:0}',
+      '.nwa-banner-title{font-size:15px;font-weight:900;color:var(--t);margin-bottom:2px}',
+      '.nwa-banner-sub{font-size:11px;color:var(--t2);line-height:1.5}',
+      '.nwa-badges{display:flex;flex-wrap:wrap;gap:6px}',
+      '.nwa-badge{font-size:10px;font-family:var(--mono);padding:3px 8px;border:1px solid var(--br);border-radius:999px;background:var(--b3);color:var(--t2)}',
+      '.nwa-mode-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-bottom:12px}',
+      '.nwa-mode-btn{border:1px solid var(--br);background:var(--b3);color:var(--t2);border-radius:8px;padding:8px 10px;text-align:left;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;line-height:1.2}',
+      '.nwa-mode-btn:hover,.nwa-mode-btn.active{border-color:var(--a);background:rgba(29,158,117,.1);color:var(--t)}',
+      '.nwa-mode-btn small{display:block;font-size:9.5px;color:var(--t3);font-weight:400;line-height:1.3;margin-top:1px}',
+      '.nwa-mode-ico{font-size:16px;flex-shrink:0;width:20px;text-align:center}',
+      '.nwa-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}',
+      '.nwa-field label{font-size:10px;color:var(--t3);font-family:var(--mono);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}',
+      '.nwa-field input,.nwa-field select,.nwa-field textarea{width:100%;background:var(--bg);border:1px solid var(--br);border-radius:7px;color:var(--t);padding:7px 10px;outline:none;font-size:12px}',
+      '.nwa-field textarea{font-family:var(--mono);font-size:12px;line-height:1.65;resize:vertical}',
+      '.nwa-field input:focus,.nwa-field select:focus,.nwa-field textarea:focus{border-color:var(--a)}',
+      '.nwa-inputs-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}',
+      '.nwa-textarea-wrap{margin-bottom:10px;position:relative}',
+      '.nwa-textarea-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}',
+      '.nwa-textarea-label span{font-size:10px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em}',
+      '.nwa-mask-toggle{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);cursor:pointer}',
+      '.nwa-mask-toggle input{accent-color:var(--a);width:12px;height:12px}',
+      '.nwa-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:10px;border-top:1px solid var(--br)}',
+      '.nwa-btn-primary{background:var(--a);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;transition:opacity .15s}',
+      '.nwa-btn-primary:hover{opacity:.88}',
+      '.nwa-btn-ai{background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;transition:opacity .15s}',
+      '.nwa-btn-ai:hover{opacity:.88}',
+      '.nwa-side{display:flex;flex-direction:column;gap:10px}',
+      '.nwa-pack-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}',
+      '.nwa-pack-title{font-size:12px;font-weight:800;color:var(--t)}',
+      '#nwa-hints{background:#0a0f18;border:1px solid #2f425f;border-radius:7px;padding:8px 10px;color:#dbeafe;font-size:11px;line-height:1.5;margin-bottom:8px}',
+      '#nwa-hints strong{color:#fff;font-weight:900}',
+      '.nwa-cmd-row{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid rgba(148,163,184,.14)}',
+      '.nwa-read-badge{flex-shrink:0;font-size:8px;font-weight:900;color:#04130a;background:#22c55e;border:1px solid #16a34a;border-radius:4px;padding:1px 4px;margin-top:2px;letter-spacing:.02em}',
+      '.nwa-cmd-code{display:block;min-width:0;color:#e5edf7;font-family:var(--mono);font-size:11px;line-height:1.4;word-break:break-word;white-space:pre-wrap}',
+      '.nwa-expand-cmds{width:100%;margin-top:6px;background:transparent;border:1px dashed #3b5778;color:#93c5fd;border-radius:6px;padding:5px 10px;font-size:10.5px;font-weight:700;cursor:pointer}',
+      '.nwa-expand-cmds:hover{border-color:var(--a);color:#fff;background:rgba(29,158,117,.08)}',
+      '.nwa-domain-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}',
+      '.nwa-domain-btn{border:1px solid rgba(47,66,95,.7);background:rgba(10,15,24,.7);color:#e2e8f0;border-radius:6px;padding:5px 8px;font-size:10px;font-weight:700;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .12s}',
+      '.nwa-domain-btn:hover{border-color:var(--a);background:rgba(29,158,117,.1);color:#fff}',
+      '.nwa-agent-status{font-size:11px;line-height:1.5;padding:8px 10px;border-radius:7px;border:1px solid var(--br);background:#0a0f18;color:var(--t2)}',
+      '.nwa-agent-status.ok{border-color:rgba(34,197,94,.45);color:#bbf7d0}',
+      '.nwa-agent-status.warn{border-color:rgba(234,179,8,.5);color:#fde68a}',
+      '.nwa-agent-status.bad{border-color:rgba(248,81,73,.45);color:#fecaca}',
+      '.nwa-agent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px}',
+      '.nwa-agent-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}',
+      '.nwa-agent-actions .sbtn,.nwa-agent-actions a{width:100%;text-align:center;justify-content:center;font-size:11px}',
+      '.nwa-agent-note{font-size:10px;color:var(--t3);line-height:1.5;margin-top:7px;padding:6px 8px;border-radius:6px;background:rgba(255,255,255,.03);border:1px solid var(--br)}',
+      '.nwa-agent-output{margin-top:8px;max-height:180px;overflow:auto;background:#050914;border:1px solid #24344e;border-radius:7px;padding:9px;color:#e5edf7;font-family:var(--mono);font-size:10.5px;line-height:1.45;white-space:pre-wrap}',
+      '@media(max-width:980px){.nwa-shell{grid-template-columns:1fr}.nwa-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}',
+      '@media(max-width:620px){.nwa-mode-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.nwa-controls,.nwa-inputs-row{grid-template-columns:1fr}.nwa-banner{flex-direction:column;align-items:flex-start;gap:8px}.nwa-agent-grid,.nwa-agent-actions{grid-template-columns:1fr}.nwa-domain-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}'
+    ].join('');
+    document.head.appendChild(st);
+  }
+
+  const modeIcons={triage:'🩺',explain:'📖',commands:'⌨️',config:'🧩',compare:'🔍',report:'📝',learn:'🎓'};
+
+  el.innerHTML='<div class="nwa-shell">'
+    // ── MAIN COLUMN ──
+    +'<div>'
+    // Banner
+    +'<div class="nwa-banner">'
+    +'<div class="nwa-banner-left"><span class="nwa-banner-ico">🐺</span><div><div class="nwa-banner-title">NetWolf Assistant</div><div class="nwa-banner-sub">Triage incidents, explain CLI output, build config plans, and run Level 2 live checks — all without leaving the toolkit.</div></div></div>'
+    +'<div class="nwa-badges"><span class="nwa-badge">🟢 Local triage</span><span class="nwa-badge">⚡ Optional AI</span><span class="nwa-badge">🔌 Level 2 agent</span></div>'
+    +'</div>'
+    // Mode strip
+    +'<div class="nwa-mode-strip">'
+    +Object.keys(NW_ASSISTANT_MODES).map(k=>'<button class="nwa-mode-btn" data-mode="'+k+'"><span class="nwa-mode-ico">'+modeIcons[k]+'</span><span><b style="font-size:11.5px">'+escapeHtml(NW_ASSISTANT_MODES[k].label)+'</b><small>'+escapeHtml(NW_ASSISTANT_MODES[k].hint)+'</small></span></button>').join('')
+    +'</div>'
+    // Controls row
+    +'<div class="cblock" style="margin-bottom:10px"><div class="cbody">'
+    +'<div class="nwa-controls">'
+    +'<div class="nwa-field"><label>Mode</label><select id="nwa-mode" onchange="nwAssistantModeHint()">'+nwAssistantModeOptions()+'</select></div>'
+    +'<div class="nwa-field"><label>Problem domain</label><select id="nwa-kind" onchange="nwAssistantSetKind(this.value)">'+nwAssistantPackOptions()+'</select></div>'
+    +'<div class="nwa-field"><label>Severity</label><select id="nwa-sev"><option>Production down</option><option selected>Service degraded</option><option>Investigation only</option><option>Lab / training</option></select></div>'
+    +'</div>'
+    +'<div id="nwa-mode-hint" style="font-size:10.5px;color:var(--a);margin:-2px 0 8px;font-family:var(--mono);min-height:14px"></div>'
+    +'<div class="nwa-inputs-row">'
+    +'<div class="nwa-field"><label>Symptom / request</label><input id="nwa-symptom" placeholder="e.g. users cannot reach server behind NAT"></div>'
+    +'<div class="nwa-field"><label>Command you ran</label><input id="nwa-cmd" placeholder="diagnose debug flow / show firewall policy..."></div>'
+    +'</div>'
+    +'<div class="nwa-textarea-wrap">'
+    +'<div class="nwa-textarea-label"><span>CLI output · config · logs · change request</span><label class="nwa-mask-toggle"><input type="checkbox" id="nwa-mask" checked> auto-mask IPs before AI</label></div>'
+    +'<textarea id="nwa-input" rows="13" placeholder="Paste CLI output, config snippet, log lines, or describe what you need. Run Bulk Anonymizer first for customer data."></textarea>'
+    +'</div>'
+    +'<div class="nwa-actions">'
+    +'<button class="nwa-btn-primary" onclick="nwAssistantLocal()">🔍 Local Triage</button>'
+    +'<button class="nwa-btn-ai" onclick="nwAssistantAI()">✨ AI Deep Analyze</button>'
+    +'<button class="sbtn" onclick="nwAssistantCopy()" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Copy Result</button>'
+    +'<button class="sbtn" onclick="nwAssistantClear()" style="background:rgba(248,81,73,.08);color:var(--r);border:1px solid rgba(248,81,73,.22)">Clear</button>'
+    +'</div>'
+    +'</div></div>'
+    +'<div id="nwa-output"></div>'
+    +'</div>'
+    // ── SIDEBAR ──
+    +'<div class="nwa-side">'
+    // Command pack card
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l" id="nwa-pack-title">VPN / IPsec</div><span class="cbadge ro">Read-only</span></div><div class="cbody">'
+    +'<div id="nwa-hints"></div>'
+    +'<div id="nwa-cmds"></div>'
+    +'</div></div>'
+    // Problem domain picker
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">Problem domains</div></div><div class="cbody" style="padding-bottom:10px">'
+    +'<div class="nwa-domain-grid">'
+    +Object.keys(NW_ASSISTANT_PACKS).map(k=>'<button class="nwa-domain-btn nwa-quick" data-kind="'+k+'">'+escapeHtml(NW_ASSISTANT_PACKS[k].label)+'</button>').join('')
+    +'</div>'
+    +'</div></div>'
+    // Level 2 agent card
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">🔌 Level 2 Live Agent</div><span class="cbadge ro">Local only</span></div><div class="cbody">'
+    +'<div id="nwa-agent-status" class="nwa-agent-status warn">Agent not checked yet. Start <code>netwolf-agent</code>, then click Check Agent.</div>'
+    +'<div class="nwa-field" style="margin-top:8px"><label>Agent URL</label><input id="nwa-agent-url" value="http://127.0.0.1:5051"></div>'
+    +'<div class="nwa-agent-grid">'
+    +'<div class="nwa-field"><label>Firewall host</label><input id="nwa-agent-host" placeholder="192.168.x.x"></div>'
+    +'<div class="nwa-field"><label>SSH user</label><input id="nwa-agent-user" placeholder="readonly-admin"></div>'
+    +'<div class="nwa-field"><label>SSH port</label><input id="nwa-agent-port" value="22"></div>'
+    +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" placeholder="C:\\netwolf-agent\\key"></div>'
+    +'</div>'
+    +'<div class="nwa-field" style="margin-top:8px"><label>Read-only check</label><select id="nwa-agent-check"><option value="system_health">System health</option><option value="vpn_ipsec">VPN / IPsec</option><option value="policy_nat">Policy / NAT / VIP</option><option value="sessions_ports">Sessions / Ports</option><option value="routing">Routing / SD-WAN</option><option value="ha_cluster">HA / Cluster</option><option value="dhcp_dns">DHCP / DNS</option><option value="security_profiles">Security profiles / Logs</option><option value="certificates">Certificates / TLS</option><option value="fortianalyzer">FortiAnalyzer / Logging</option></select></div>'
+    +'<div class="nwa-agent-actions">'
+    +'<button class="sbtn" onclick="nwAgentCheckStatus()">Check Agent</button>'
+    +'<button class="sbtn" onclick="nwAgentRunCheck()" style="background:#15803D">Dry-run Check</button>'
+    +'<button class="sbtn" onclick="nwAgentShowLogs()" style="background:#2563EB">Agent Logs</button>'
+    +'<button class="sbtn" onclick="nav(\'liveconnect\')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Live Connect</button>'
+    +'<a class="sbtn" href="netwolf-agent.zip" download style="text-decoration:none;background:#15803D">⬇ Download Agent</a>'
+    +'<a class="sbtn" href="netwolf-agent/README.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:var(--b3);border:1px solid var(--br);color:var(--t2)">Guide</a>'
+    +'</div>'
+    +'<div class="nwa-agent-note">⚠️ Dry-run mode only by default. The agent runs locally — no cloud APIs, no external calls unless you explicitly enable them.</div>'
+    +'<pre id="nwa-agent-output" class="nwa-agent-output" style="display:none"></pre>'
+    +'</div></div>'
+    +'</div>'
+    +'</div>';
+
+  document.querySelectorAll('.nwa-mode-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.nwa-mode-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode=btn.getAttribute('data-mode')||'triage';
+      const sel=document.getElementById('nwa-mode');
+      if(sel) sel.value=mode;
+      nwAssistantModeHint();
+    });
+  });
+  document.querySelectorAll('.nwa-quick').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const k=btn.getAttribute('data-kind')||'vpn';
+      const sel=document.getElementById('nwa-kind');
+      if(sel) sel.value=k;
+      nwAssistantCommandsExpanded=false;
+      nwAssistantSetKind(k);
+      document.querySelectorAll('.nwa-domain-btn').forEach(b=>b.style.borderColor='');
+      btn.style.borderColor='var(--a)';
+    });
+  });
+  // activate first mode button
+  const firstMode=el.querySelector('.nwa-mode-btn');
+  if(firstMode) firstMode.classList.add('active');
+  nwAssistantSetKind('vpn');
+  nwAssistantModeHint();
+}
+function nwAgentUrl(){
+  const el=document.getElementById('nwa-agent-url');
+  return (el&&el.value?el.value:'http://127.0.0.1:5051').replace(/\/+$/,'');
+}
+function nwAgentStatus(text,state){
+  const el=document.getElementById('nwa-agent-status');
+  if(!el)return;
+  el.className='nwa-agent-status '+(state||'warn');
+  el.innerHTML=text;
+}
+function nwAgentOutput(text){
+  const el=document.getElementById('nwa-agent-output');
+  if(!el)return;
+  el.style.display='block';
+  el.textContent=text;
+}
+window.nwAgentCheckStatus=async function(){
+  nwAgentStatus('Checking local agent...','warn');
+  try{
+    const resp=await fetch(nwAgentUrl()+'/health',{method:'GET',cache:'no-store'});
+    const data=await resp.json();
+    if(!resp.ok||!data.ok)throw new Error(data.error||'Agent health check failed');
+    const state=data.commandExecutionEnabled?'ok':'warn';
+    nwAgentStatus('Agent detected: '+escapeHtml(data.mode||'local')+' on '+escapeHtml(data.bind||'127.0.0.1')+':'+escapeHtml(String(data.port||5051))+'<br>Cloud egress: off. External API calls: off. Command execution: '+(data.commandExecutionEnabled?'enabled':'dry-run only')+'.',state);
+    try{
+      const checks=await fetch(nwAgentUrl()+'/checks',{method:'GET',cache:'no-store'}).then(r=>r.json());
+      const sel=document.getElementById('nwa-agent-check');
+      if(sel&&checks.ok&&Array.isArray(checks.checks)){
+        sel.innerHTML=checks.checks.map(c=>'<option value="'+escapeHtml(c.id)+'">'+escapeHtml(c.title)+'</option>').join('');
+      }
+    }catch(_e){}
+  }catch(e){
+    nwAgentStatus('Agent not reachable. Start <code>C:\\netwolf-agent\\start-local-agent.bat</code> and try again.','bad');
+  }
+};
+window.nwAgentRunCheck=async function(){
+  const out=document.getElementById('nwa-agent-output');
+  if(out){out.style.display='block';out.textContent='Preparing safe dry-run request...';}
+  try{
+    const body={
+      checkId:document.getElementById('nwa-agent-check')?.value||'system_health',
+      dryRun:true,
+      device:{
+        host:document.getElementById('nwa-agent-host')?.value||'',
+        username:document.getElementById('nwa-agent-user')?.value||'',
+        port:Number(document.getElementById('nwa-agent-port')?.value||22),
+        sshKeyPath:document.getElementById('nwa-agent-key')?.value||''
+      }
+    };
+    const resp=await fetch(nwAgentUrl()+'/run-check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data=await resp.json();
+    if(!resp.ok||!data.ok)throw new Error((data.errors||[data.error||'Agent request failed']).join('\n'));
+    const text='Level 2 dry-run: no firewall connection opened.\n\nCheck: '+data.check.title+'\nPurpose: '+data.check.description+'\n\nCommands the local agent would run:\n'+data.commands.map(c=>' - '+c).join('\n');
+    nwAgentOutput(text);
+    const assistantInput=document.getElementById('nwa-input');
+    if(assistantInput&&!assistantInput.value.trim())assistantInput.value=text;
+    showToast('Level 2 dry-run ready');
+  }catch(e){
+    nwAgentOutput('Agent check failed:\n'+e.message+'\n\nNothing was sent to AI or outside the browser.');
+  }
+};
+window.nwAgentShowLogs=async function(){
+  nwAgentOutput('Loading local agent logs...');
+  try{
+    const resp=await fetch(nwAgentUrl()+'/logs?limit=30',{method:'GET',cache:'no-store'});
+    const data=await resp.json();
+    if(!resp.ok||!data.ok)throw new Error(data.error||'Could not load logs');
+    if(!data.logs.length){
+      nwAgentOutput('No agent logs yet.\n\nRun a Dry-run Check first, then click Agent Logs again.');
+      return;
+    }
+    const text='Local NetWolf Agent Logs\nSecrets and command output are not logged.\n\n'
+      +data.logs.map(l=>{
+        return [
+          l.at||'<time unknown>',
+          'action='+(l.action||''),
+          'check='+(l.checkId||''),
+          'host='+(l.host||''),
+          'user='+(l.username||''),
+          'commands='+(l.commandCount||0),
+          'dryRun='+(l.dryRun?'yes':'no')
+        ].join(' | ');
+      }).join('\n');
+    nwAgentOutput(text);
+  }catch(e){
+    nwAgentOutput('Could not load agent logs:\n'+e.message+'\n\nMake sure the local agent is running.');
+  }
+};
+window.nwAssistantLocal=function(){
+  const kind=document.getElementById('nwa-kind').value;
+  const mode=document.getElementById('nwa-mode')?.value||'triage';
+  const text=document.getElementById('nwa-input').value||'';
+  const symptom=document.getElementById('nwa-symptom').value||'';
+  const cmd=document.getElementById('nwa-cmd').value||'';
+  const findings=nwAssistantLocalFindings(kind,text,symptom,cmd);
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const modeInfo=NW_ASSISTANT_MODES[mode]||NW_ASSISTANT_MODES.triage;
+  const summary='Assistant mode: '+modeInfo.label+'\nProblem type: '+pack.label+'\nSymptom/request: '+(symptom||'<not provided>')+'\nCommand: '+(cmd||'<not provided>')+'\n\nSuggested evidence to collect:\n'+pack.cmds.map(c=>' - '+c).join('\n')+'\n\nUseful toolkit tabs:\n - Packet Tools for flow/sniffer/Wireshark work\n - Config Generator for new config\n - Bulk Anonymizer before sending customer data to AI\n - Security tab for privacy and safe-use notes';
+  nwAssistantRenderResult('Local triage result',findings,summary);
+};
+window.nwAssistantAI=async function(){
+  const kind=document.getElementById('nwa-kind').value;
+  const mode=document.getElementById('nwa-mode')?.value||'triage';
+  const modeInfo=NW_ASSISTANT_MODES[mode]||NW_ASSISTANT_MODES.triage;
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const raw=document.getElementById('nwa-input').value||'';
+  const symptom=document.getElementById('nwa-symptom').value||'';
+  const cmd=document.getElementById('nwa-cmd').value||'';
+  const sev=document.getElementById('nwa-sev').value||'';
+  const key=_loadKey('claude_key')||_loadKey('groq_key');
+  if(!key){showToast('Set Groq or Claude key first');nwAssistantLocal();return;}
+  const text=nwAssistantMaskIfNeeded(raw);
+  const out=document.getElementById('nwa-output');
+  if(out) out.innerHTML='<div class="cblock" style="margin-top:14px"><div class="cbody" style="color:var(--t2)">Analyzing with NetWolf Assistant...</div></div>';
+  const prompt='You are NetWolf Assistant, a senior FortiGate/FortiOS troubleshooting assistant inside the NetWolf toolkit. This is Level 1: you only analyze pasted data, suggest next steps, and point to toolkit areas; you do not claim live access.\\n\\n'
+    +'Assistant mode: '+modeInfo.label+' - '+modeInfo.hint+'\\nProblem type: '+pack.label+'\\nSeverity: '+sev+'\\nSymptom/request: '+symptom+'\\nCommand user ran: '+cmd+'\\n\\n'
+    +'Pasted output/config/log:\\n'+text+'\\n\\n'
+    +'Return a practical network-engineer answer. Adapt to the selected mode. Always include:\\n'
+    +'1. Verdict with color: GREEN safe/working, YELLOW needs attention, RED likely root cause or risky change.\\n'
+    +'2. Evidence found from the pasted text. Quote short snippets only.\\n'
+    +'3. Exact next read-only FortiGate commands, ordered safely.\\n'
+    +'4. Which NetWolf toolkit tab to use next: Packet Tools, Config Generator, Config Migrator, Multi-Vendor CLI, Topology, Bulk Anonymizer, Security, Lab Setup, Device Catalog, or Analyze Output.\\n'
+    +'5. If config/change is requested, provide a change plan, rollback plan, and risk color.\\n'
+    +'6. What to paste back next.\\n'
+    +'Avoid destructive commands unless clearly labelled RED. Be complete but not wordy.';
+  try{
+    let reply='';
+    if(key.startsWith('sk-ant-')){
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1800,system:'You are NetWolf Assistant for FortiGate troubleshooting. Be precise, safe, and practical.',messages:[{role:'user',content:prompt}]})});
+      const data=await resp.json(); if(data.error) throw new Error(data.error.message); reply=data.content[0].text;
+    }else{
+      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1800,messages:[{role:'system',content:'You are NetWolf Assistant for FortiGate troubleshooting. Be precise, safe, and practical.'},{role:'user',content:prompt}]})});
+      const data=await resp.json(); if(data.error) throw new Error(data.error.message); reply=data.choices[0].message.content;
+    }
+    nwAssistantRenderResult('AI deep analysis',nwAssistantLocalFindings(kind,raw,symptom,cmd),reply);
+  }catch(e){
+    nwAssistantRenderResult('AI error - local fallback',nwAssistantLocalFindings(kind,raw,symptom,cmd),'AI request failed: '+e.message+'\\n\\nLocal command pack remains available on the right.');
+  }
+};
+window.nwAssistantCopy=function(){
+  const txt=document.getElementById('nwa-result-text');
+  if(!txt){showToast('No result to copy yet');return;}
+  navigator.clipboard.writeText(txt.textContent).then(()=>showToast('Copied!'));
+};
+window.nwAssistantClear=function(){
+  ['nwa-input','nwa-symptom','nwa-cmd'].forEach(id=>{const x=document.getElementById(id);if(x)x.value='';});
+  const out=document.getElementById('nwa-output'); if(out) out.innerHTML='';
+};
 
 function renderAnalyze(el){el.innerHTML='<div style="margin-bottom:10px;"><div style="font-size:15px;font-weight:700;">Paste CLI output for AI analysis</div><div style="font-size:12px;color:var(--t2);">Mask IPs before sending.</div></div><div style="display:flex;gap:8px;margin-bottom:8px;"><select id="acat" style="font-size:12px;padding:6px;background:var(--b2);"><option value="">-- Context --</option>'+Object.keys(D).map(k=>'<option value="'+k+'">'+D[k].t+'</option>').join('')+'</select><input type="text" id="acmd" placeholder="Command you ran" style="flex:1;font-size:12px;padding:6px;background:var(--bg);"/></div><textarea id="aout" placeholder="Paste raw FortiGate CLI output..." style="width:100%;height:160px;font-family:var(--mono);font-size:12px;padding:12px;background:var(--bg);color:var(--g);border:1px solid var(--br);border-radius:8px;"></textarea><div id="ares" style="margin-top:12px;"></div>';}
 
@@ -5361,90 +5782,48 @@ function renderFreeAITab(el){
   const hasClaude = !!claudeApiKeyFree;
   const hasKey = freeAIProvider==='claude' ? hasClaude : hasGroq;
   el.innerHTML=`
-  <div class="sh"><span class="stitle">🧠 AI CLI Analyzer</span><span class="sev info">Powered by Groq or Claude</span></div>
-
-  <!-- Provider selector -->
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:10px 14px">
-    <span style="font-size:12px;font-weight:700;color:var(--t2)">🤖 AI Provider:</span>
-    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--t)">
+  <!-- Header + provider selector in one compact row -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:8px 14px">
+    <span class="stitle" style="font-size:13px;margin:0">🧠 AI CLI Analyzer</span>
+    <span style="font-size:10px;color:var(--t3);margin-right:4px">Powered by</span>
+    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--t)">
       <input type="radio" name="freeAIProvider" value="groq" ${freeAIProvider==='groq'?'checked':''} onchange="freeAIProviderChange('groq')" style="accent-color:var(--a)">
-      <span>Groq <span style="color:var(--g);font-size:10px">${hasGroq?'✓ key saved':'(no key)'}</span></span>
+      <span>Groq <span style="font-size:10px;color:${hasGroq?'var(--g)':'var(--t3)'}">${hasGroq?'✓':'(no key)'}</span></span>
     </label>
-    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--t)">
+    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--t)">
       <input type="radio" name="freeAIProvider" value="claude" ${freeAIProvider==='claude'?'checked':''} onchange="freeAIProviderChange('claude')" style="accent-color:var(--a)">
-      <span>Claude (Anthropic) <span style="color:var(--g);font-size:10px">${hasClaude?'✓ key saved':'(no key)'}</span></span>
+      <span>Claude <span style="font-size:10px;color:${hasClaude?'var(--g)':'var(--t3)'}">${hasClaude?'✓':'(no key)'}</span></span>
     </label>
+    ${!hasKey ? `<span style="margin-left:auto;font-size:10px;color:var(--t3)">→ <a href="${freeAIProvider==='claude'?'https://console.anthropic.com/keys':'https://console.groq.com/keys'}" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">${freeAIProvider==='claude'?'Get Claude key':'Get free Groq key'}</a> then paste below</span>` : ''}
   </div>
 
-  <!-- Setup guide — only shown when no key for current provider -->
-  ${!hasKey ? `
-  <div style="background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.2);border-radius:12px;padding:20px 22px;margin-bottom:16px">
-    <div style="font-size:13px;font-weight:700;color:var(--bl);margin-bottom:14px;display:flex;align-items:center;gap:8px">
-      <span style="font-size:16px">🔑</span> ${freeAIProvider==='claude'?'Set up your Claude (Anthropic) API key':'First-time setup — get your free Groq API key'}
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px">
-      ${freeAIProvider==='claude'?`
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">1</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Open console.anthropic.com</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Go to <a href="https://console.anthropic.com/keys" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">console.anthropic.com/keys</a> and sign in.</div>
-      </div>
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">2</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Create API key</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Click <strong style="color:var(--t)">Create Key</strong>. Copy the key starting with <span style="font-family:var(--mono);color:var(--g);font-size:10.5px">sk-ant-...</span></div>
-      </div>
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">3</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Paste it below</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Enter your key in the field below and click <strong style="color:var(--t)">Save</strong>. Stored locally only.</div>
-      </div>`:`
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">1</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Create free account</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Go to <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer" style="color:var(--bl)">console.groq.com</a> and sign up for free — no credit card needed.</div>
-      </div>
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">2</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Generate API key</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">In the Groq console click <strong style="color:var(--t)">API Keys → Create API Key</strong>. Copy the key starting with <span style="font-family:var(--mono);color:var(--g);font-size:10.5px">gsk_...</span></div>
-      </div>
-      <div style="background:var(--b2);border:1px solid var(--br);border-radius:9px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono)">3</div>
-          <span style="font-size:12px;font-weight:700;color:var(--t)">Paste it below</span>
-        </div>
-        <div style="font-size:11.5px;color:var(--t2);line-height:1.6;margin-left:30px">Enter your key in the field below and click <strong style="color:var(--t)">Save</strong>. It's stored locally — never sent to our servers.</div>
-      </div>`}
-    </div>
-    <div style="background:rgba(29,158,117,.05);border-left:3px solid var(--a);padding:8px 12px;border-radius:0 6px 6px 0;font-size:11.5px;color:var(--t2);line-height:1.6">
-      ${freeAIProvider==='claude'?'💡 <strong style="color:var(--t)">Claude API</strong> — powerful models by Anthropic. Requires an account with available credits. Key stored in your browser only.':'💡 <strong style="color:var(--t)">Completely free</strong> — Groq offers a generous free tier with no credit card required. Your key is saved in your browser and persists between sessions.'}
-    </div>
-  </div>` : ''}
-
-  <!-- Key input row — compact toggle -->
+  <!-- Key + Model — single compact row -->
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
     ${hasKey
-      ? `<div style="display:flex;align-items:center;gap:8px;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:20px;padding:5px 14px">
-           <span style="font-size:11px;color:var(--g)">✓ ${freeAIProvider==='claude'?'Claude':'Groq'} key saved</span>
+      ? `<div style="display:flex;align-items:center;gap:6px;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:20px;padding:4px 12px">
+           <span style="font-size:11px;color:var(--g)">✓ ${freeAIProvider==='claude'?'Claude':'Groq'} key</span>
            <button id="groqToggleBtn" onclick="groqToggleKey()" style="font-size:10px;color:var(--bl);background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono)">Change</button>
          </div>`
       : `<button id="groqToggleBtn" onclick="groqToggleKey()"
-           style="display:inline-flex;align-items:center;gap:6px;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--bl);cursor:pointer;font-family:var(--mono)">
+           style="display:inline-flex;align-items:center;gap:6px;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--bl);cursor:pointer;font-family:var(--mono)">
            🔑 Add ${freeAIProvider==='claude'?'Claude':'Groq'} API Key
          </button>`
     }
-    ${freeAIProvider==='groq'?`<button onclick="showGroqGuide()" style="font-size:11px;color:var(--bl);background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:20px;padding:4px 12px;cursor:pointer;white-space:nowrap">❓ How to get a free key</button>`:''}
+    ${freeAIProvider==='groq'?`<button onclick="showGroqGuide()" style="font-size:11px;color:var(--bl);background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:20px;padding:4px 10px;cursor:pointer;white-space:nowrap">❓ How to get a free key</button>`:''}
+    <span style="font-size:10px;color:var(--t3);padding:0 2px">|</span>
+    <span style="font-size:11px;color:var(--t2);white-space:nowrap">🧠</span>
+    <select id="groqModelSelect" style="background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--t);outline:none;cursor:pointer">
+      ${freeAIProvider==='claude'?`
+      <option value="claude-sonnet-4-5">Claude Sonnet 4 — Best balance (recommended)</option>
+      <option value="claude-haiku-4-5">Claude Haiku 4.5 — Fastest</option>
+      <option value="claude-opus-4-5">Claude Opus 4 — Most powerful</option>
+      `:`
+      <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B — Most accurate (recommended)</option>
+      <option value="mixtral-8x7b-32768">Mixtral 8x7B — Fast &amp; balanced</option>
+      <option value="llama-3.1-8b-instant">LLaMA 3.1 8B — Fastest response</option>
+      `}
+    </select>
+    <span style="font-size:10px;color:var(--t3)">${freeAIProvider==='claude'?'Anthropic API':'All free via Groq'}</span>
   </div>
   <div id="groqKeyPanel" style="display:none;flex-direction:column;gap:8px;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:12px 14px;margin-bottom:12px">
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -5458,23 +5837,6 @@ function renderFreeAITab(el){
     <div style="font-size:11px;color:var(--t3);line-height:1.5;border-top:1px solid var(--br);padding-top:8px;">
       🔒 Your key is stored locally in <strong style="color:var(--t2)">your browser only</strong> — never sent to NetWolf servers. On a shared computer, click <strong style="color:var(--r)">Clear Key</strong> before closing.
     </div>
-  </div>
-
-  <!-- Model selector -->
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-    <span style="font-size:12px;font-weight:600;color:var(--t2)">🧠 Model:</span>
-    <select id="groqModelSelect" style="background:var(--b2);border:1px solid var(--br);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--t);outline:none;cursor:pointer">
-      ${freeAIProvider==='claude'?`
-      <option value="claude-sonnet-4-5">Claude Sonnet 4 — Best balance (recommended)</option>
-      <option value="claude-haiku-4-5">Claude Haiku 4.5 — Fastest</option>
-      <option value="claude-opus-4-5">Claude Opus 4 — Most powerful</option>
-      `:`
-      <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B — Most accurate (recommended)</option>
-      <option value="mixtral-8x7b-32768">Mixtral 8x7B — Fast &amp; balanced</option>
-      <option value="llama-3.1-8b-instant">LLaMA 3.1 8B — Fastest response</option>
-      `}
-    </select>
-    <span style="font-size:11px;color:var(--t3)">${freeAIProvider==='claude'?'Claude API — requires Anthropic account':'All models free via Groq API'}</span>
   </div>
 
   <!-- Privacy warning banner -->
@@ -5491,17 +5853,93 @@ function renderFreeAITab(el){
   <!-- Input area -->
   <div style="margin-bottom:10px">
     <label style="font-size:12px;font-weight:600;color:var(--t2);display:block;margin-bottom:6px">📄 Paste CLI output or ask a question:</label>
-    <textarea id="groqPrompt" rows="8" oninput="freeAIPrompt=this.value"
+    <textarea id="groqPrompt" oninput="freeAIPrompt=this.value"
       placeholder="Paste any FortiGate CLI output here — e.g. get vpn ipsec tunnel summary, diagnose sys session list, debug flow output...&#10;&#10;Or ask a question like: How do I check if a policy is matching traffic?"
-      style="width:100%;background:var(--bg);border:1px solid var(--br);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--t);resize:vertical;outline:none;line-height:1.7"></textarea>
+      style="width:100%;height:220px;min-height:120px;max-height:320px;background:var(--bg);border:1px solid var(--br);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--t);resize:vertical;outline:none;line-height:1.7;box-sizing:border-box"></textarea>
   </div>
 
   <!-- Action buttons -->
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
     <button class="sbtn" id="analyzeGroqBtn" style="padding:9px 20px;font-size:13px">🚀 Analyze</button>
-    <button class="sbtn" id="exampleGroqBtn" style="background:var(--b3)">📋 Load Example</button>
     <button class="sbtn" id="copyGroqResponseBtn" style="background:#15803D">📋 Copy Response</button>
     <button class="sbtn" id="clearGroqBtn" style="background:var(--b3)">🗑️ Clear</button>
+  </div>
+  <!-- Training scenario dropdown -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <select id="exampleScenarioSelect" style="flex:1;min-width:220px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--t);outline:none;font-family:var(--mono)">
+      <option value="">📋 Select a training scenario...</option>
+      <optgroup label="🔒 VPN — IPsec">
+        <option value="vpn_down">IPsec — Tunnel Partially Down (Phase 2 fail)</option>
+        <option value="vpn_no_proposal">IPsec — No Proposal Chosen (mismatch)</option>
+        <option value="vpn_dpd">IPsec — DPD Dead Peer Detection Triggering</option>
+        <option value="vpn_selector">IPsec — Phase 2 Selector Mismatch</option>
+        <option value="vpn_natt">IPsec — NAT-T UDP 4500 Traversal</option>
+        <option value="vpn_ikev1v2">IPsec — IKEv1 vs IKEv2 Negotiation Fail</option>
+      </optgroup>
+      <optgroup label="🕵️ VPN — SSL">
+        <option value="ssl_fail">SSL VPN — Cert Error / Login Failures</option>
+        <option value="ssl_geoip">SSL VPN — Geo-IP Block (foreign country)</option>
+        <option value="ssl_split">SSL VPN — Split Tunneling Issue</option>
+        <option value="ssl_pool">SSL VPN — IP Pool Exhausted</option>
+      </optgroup>
+      <optgroup label="📜 Firewall and Policy">
+        <option value="flow_denied">Debug Flow — Policy Denied (policy 0)</option>
+        <option value="policy_dnat">DNAT — Port Forward Not Working</option>
+        <option value="policy_implicit">Policy — Implicit Deny Zero Hit Counter</option>
+        <option value="policy_utm">UTM Profile — Blocking Legitimate Traffic</option>
+        <option value="policy_nat_missing">NAT — Missing set nat enable</option>
+        <option value="policy_order">Policy — Wrong Policy Matched (order issue)</option>
+        <option value="policy_asic">ASIC Offload — Bypass Needed for Inspection</option>
+      </optgroup>
+      <optgroup label="🌐 Routing">
+        <option value="ospf_stuck">OSPF — Neighbor Stuck at ExStart (MTU)</option>
+        <option value="ospf_dr">OSPF — DR/BDR Election Issue</option>
+        <option value="bgp_flap">BGP — Neighbor Flapping</option>
+        <option value="bgp_no_route">BGP — Route Not Being Advertised</option>
+        <option value="bgp_conflict">Routing — Static vs BGP Route Conflict</option>
+        <option value="route_missing">Routing — Default Route Missing</option>
+        <option value="sdwan_hc_fail">SD-WAN — Health Check Failing</option>
+        <option value="sdwan_wrong">SD-WAN — Wrong Member Selected</option>
+        <option value="pbr_conflict">PBR — Policy Route Conflict</option>
+      </optgroup>
+      <optgroup label="🩺 System Health">
+        <option value="high_cpu">High CPU + Conserve Mode Active</option>
+        <option value="disk_full">Disk Full — Log Disk 100%</option>
+        <option value="ntp_fail">NTP — Sync Failed</option>
+        <option value="fguard_fail">FortiGuard — Connectivity Failed</option>
+        <option value="crash_log">Crash Log — After Unexpected Reboot</option>
+        <option value="mem_leak">Memory Leak — WAD Process</option>
+        <option value="dns_fail">DNS — Resolution Failing</option>
+        <option value="conserve">Conserve Mode — Full Investigation</option>
+      </optgroup>
+      <optgroup label="🔑 Authentication">
+        <option value="ldap_locked">LDAP Auth — Account Locked Out</option>
+        <option value="radius_timeout">RADIUS — Timeout / Unreachable</option>
+        <option value="fsso_fail">FSSO — User Not Authenticated</option>
+        <option value="twofa_fail">Two-Factor Auth — Failure</option>
+        <option value="admin_locked">Admin — Account Lockout</option>
+      </optgroup>
+      <optgroup label="⚙️ HA / Cluster">
+        <option value="ha_mismatch">HA — Checksum Mismatch / Out of Sync</option>
+        <option value="ha_splitbrain">HA — Split Brain Scenario</option>
+        <option value="ha_secondary">HA — Secondary Not Joining</option>
+        <option value="ha_session">HA — Session Sync Failure</option>
+        <option value="ha_failover">HA — Manual Failover Output</option>
+      </optgroup>
+      <optgroup label="📡 Interface and Layer 2">
+        <option value="crc_errors">Interface — CRC Errors / Duplex Mismatch</option>
+        <option value="sfp_error">Interface — SFP Transceiver Error</option>
+        <option value="lacp_down">Interface — LACP Bond Member Down</option>
+        <option value="vlan_mismatch">Interface — VLAN Mismatch</option>
+        <option value="mtu_blackhole">Interface — MTU Black Hole</option>
+      </optgroup>
+      <optgroup label="📊 Sessions and NAT">
+        <option value="session_nat">Session Table — NAT Translation</option>
+        <option value="arp_conflict">ARP Table — IP Conflict Detected</option>
+        <option value="session_limit">Session — Table Full / Limit Reached</option>
+      </optgroup>
+    </select>
+    <button class="sbtn" id="exampleGroqBtn" style="white-space:nowrap">⚡ Load Example</button>
   </div>
 
   <!-- Response area -->
@@ -5571,14 +6009,1351 @@ function renderFreeAITab(el){
     renderFreeAITab(el);
   };
 
-  document.getElementById('exampleGroqBtn').onclick=()=>{
-    document.getElementById('groqPrompt').value=
+  // ── Training scenario examples ──
+  const TRAINING_EXAMPLES={
+    vpn_down:
 `get vpn ipsec tunnel summary
-Tunnel name   : SiteA-HQ
-Status        : down
-Local         : 203.0.113.1    Remote: 198.51.100.5
-Last error    : no proposal chosen
-Npu-flag      : 00`;
+'SITE-B-VPN'  203.0.113.5:0  selectors(total,up): 2/2  rx(pkt,err): 14523/0  tx(pkt,err): 13891/0
+'SITE-C-VPN'  198.51.100.10:0  selectors(total,up): 1/0  rx(pkt,err): 8234/0  tx(pkt,err): 0/0
+'SITE-D-VPN'  192.0.2.20:0  selectors(total,up): 1/1  rx(pkt,err): 421/0  tx(pkt,err): 398/0
+
+diagnose vpn tunnel list name SITE-C-VPN
+name=SITE-C-VPN ver=2 serial=3 203.0.113.1:500->198.51.100.10:500 tun_id=198.51.100.10
+bound_if=5 lgwy=203.0.113.1:500 tun_if_name=SITE-C-VPN
+proxyid_num=1 child_num=0 refcnt=5 ilast=12 olast=12
+stat: rxp=8234 txp=0 rxb=5823441 txb=0
+dpd: mode=on-idle on=1 idle=20000ms retry=3 count=0 seqno=124
+natt: mode=none draft=0 interval=0 remote_port=0
+last err: no proposal chosen`,
+
+    high_cpu:
+`get system performance status
+CPU states: 87% user 8% system 0% nice 5% idle
+CPU0 states: 91% user 7% system 0% nice 2% idle
+CPU1 states: 83% user 9% system 0% nice 8% idle
+Memory: 8192000k total, 7340032k used (89.6%), 851968k free (10.4%)
+Average network usage: 824 kbps in 1 minute, 756 kbps in 10 minutes
+Average sessions: 18420 sessions in 1 minute
+Virus detected last minute: 0
+Intrusions detected last minute: 3
+Conserve mode: enabled
+
+diagnose sys top 5 10
+Run Time:  23 days, 4 hours and 12 minutes
+0U, 0N, 87S, 5I; 7868T, 739F, 1608KF
+          newcli      48      R       1.3 S    0.5
+          proxyd     112      S      42.1 S   18.2
+          cmdbsvr    113      S       8.3 S    3.1
+          urlfilter  204      S       6.2 S    2.4
+          ipshelper  208      S       5.1 S    1.9`,
+
+    ospf_stuck:
+`get router info ospf neighbor
+OSPF process 0:
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.10.0.2         1   Full/DR           00:00:32   10.10.0.2       port2
+10.10.1.2         1   Full/BDR          00:00:38   10.10.1.2       port3
+172.16.10.1       1   ExStart/-         00:00:35   172.16.10.1     port4
+192.0.2.1         1   Down/-            -           192.0.2.1       port5
+
+get router info ospf interface port4
+ port4 is up, line protocol is up
+   Internet Address 172.16.10.2/30, Broadcast 172.16.10.3, Area 0.0.0.0
+   MTU mismatch detection: enabled
+   Router ID 10.0.0.1, Network Type BROADCAST, Cost: 10
+   Interface MTU: 1500
+   Neighbor MTU: 9000   <-- MTU mismatch causing ExStart loop`,
+
+    arp_conflict:
+`get system arp
+Address          Age(min)  Hardware Addr      Interface
+10.10.0.1        0         00:1a:2b:3c:4d:5e  port2
+10.10.0.2        1         00:1a:2b:3c:4d:6f  port2
+10.10.1.1        0         00:1a:2b:3c:4e:5e  port3
+10.10.1.100      3         00:1a:2b:3c:4e:6f  port3
+10.10.1.105      0         00:1a:2b:3c:4e:70  port3
+10.10.1.105      0         aa:bb:cc:dd:ee:ff  port3
+203.0.113.1      0         00:1a:2b:3c:4f:5e  port1
+
+diagnose ip arp list
+index=5 ifname=port3 ip=10.10.1.105 mac=00:1a:2b:3c:4e:70 state=00000004 retry=0 ref=1 use=12
+index=5 ifname=port3 ip=10.10.1.105 mac=aa:bb:cc:dd:ee:ff state=00000004 retry=0 ref=1 use=3`,
+
+    ldap_locked:
+`diagnose test authserver ldap CORP-LDAP jdoe Passw0rd!
+authenticate 'jdoe' against 'CORP-LDAP' succeeded!
+Group membership(s) - CN=VPN-USERS,OU=Groups,DC=corp,DC=local
+                    - CN=All-Staff,OU=Groups,DC=corp,DC=local
+
+diagnose test authserver ldap CORP-LDAP hacker WrongPass
+authenticate 'hacker' against 'CORP-LDAP' failed!
+Error: 49 (Invalid credentials)
+
+diagnose test authserver ldap CORP-LDAP svc-fgt ServicePass123
+authenticate 'svc-fgt' against 'CORP-LDAP' failed!
+Error: 775 (Account locked out)
+
+diagnose test authserver ldap CORP-LDAP bwilson Summer2024!
+authenticate 'bwilson' against 'CORP-LDAP' failed!
+Error: 532 (Password expired)`,
+
+    session_nat:
+`diagnose sys session list
+session info: proto=6 proto_state=01 duration=142 expire=3598 timeout=3600 flags=00000000 socktype=0 sockport=0 av_idx=0 use=3
+  origin-shaper=
+  reply-shaper=
+  per_ip_shaper=
+  class_id=0 ha_id=0 policy_dir=0 tunnel=/ vlan_cos=0/255
+  state=log may_dirty
+  statistic(bytes/packets/allow_err): org=18291/124/1 reply=21443/98/1 tuples=2
+  orgin->sink: org pre->post, reply pre->post dev=4->6/6->4 gwy=203.0.113.1/10.10.1.100
+  hook=post dir=org act=snat 10.10.1.100:54231->203.0.113.80:443(203.0.113.2:61024)
+  hook=pre dir=reply act=dnat 203.0.113.80:443->203.0.113.2:61024(10.10.1.100:54231)
+  src_mac=00:1a:2b:3c:4d:5e
+
+diagnose sys session stat
+session table: total 18420 tcp 12443 udp 5534 icmp 118 other 325
+expected session table: total 0
+npu session table total 16840`,
+
+    flow_denied:
+`diagnose debug flow trace start 20
+
+id=20085 trace_id=1 func=print_pkt_detail line=5844 msg="vd-root:0 received a packet(proto=6, 10.10.1.100:54231->203.0.113.80:443) tun_id=0.0.0.0 vlan_id=0"
+id=20085 trace_id=1 func=init_ip_session_common line=6091 msg="allocate a new session-01234567"
+id=20085 trace_id=1 func=vf_ip_route_input_common line=2605 msg="find a route: flag=04000000 gw=203.0.113.1 via root"
+id=20085 trace_id=1 func=fw_forward_handler line=822 msg="Allowed by Policy-id 42 on root"
+id=20085 trace_id=1 func=__ip_session_run_tuple line=3450 msg="SNAT 10.10.1.100->203.0.113.2:61024"
+id=20085 trace_id=1 func=npu_handle_session44 line=1160 msg="Offloaded to NPU"
+
+id=20085 trace_id=2 func=print_pkt_detail line=5844 msg="vd-root:0 received a packet(proto=6, 10.10.1.105:49821->10.20.0.50:22) tun_id=0.0.0.0 vlan_id=0"
+id=20085 trace_id=2 func=init_ip_session_common line=6091 msg="allocate a new session-01234568"
+id=20085 trace_id=2 func=vf_ip_route_input_common line=2605 msg="find a route: flag=04000000 gw=0.0.0.0 via SITE-B-VPN"
+id=20085 trace_id=2 func=fw_forward_handler line=789 msg="denied by forward policy check (policy 0)"
+id=20085 trace_id=2 func=ip_session_delete line=1023 msg="delete a ses SRC-10.10.1.105:49821 DST-10.20.0.50:22"
+
+id=20085 trace_id=3 func=print_pkt_detail line=5844 msg="vd-root:0 received a packet(proto=6, 10.10.1.200:12345->10.10.2.50:3389) tun_id=0.0.0.0"
+id=20085 trace_id=3 func=vf_ip_route_input_common line=2605 msg="reverse path check fail, drop"`,
+
+    ha_mismatch:
+`get system ha status
+HA information
+  Model: FortiGate-200F
+  Mode: Active-Passive
+  Group-ID: 1
+  Group-Name: HQ-CLUSTER
+  Debug: 0
+
+Primary information
+  Name: FGT-HQ-01
+  Serial number: FGT20F0000000001
+  Software version: v7.4.3
+  Uptime: 23 days 4 hours 12 minutes
+  Role: Primary
+
+Secondary information
+  Name: FGT-HQ-02
+  Serial number: FGT20F0000000002
+  Software version: v7.4.3
+  Uptime: 0 days 0 hours 3 minutes
+  Synchronization state: out-of-sync
+  Heartbeat state: OK (link: ha1, ha2)
+
+diagnose sys ha checksum show
+is_manage_master=1
+global:  3f2a1b4c  <-- mismatch
+root:    a1b2c3d4  <-- mismatch
+vdom checksum differs from primary — config sync required`,
+
+    crc_errors:
+`diagnose netlink interface list port3
+if=port3 family=00 type=1 index=5 mtu=1500 link=0 master=0
+ref=8 state=up flags=up broadcast multicast
+Qdisc=mq hw_addr=00:1a:2b:3c:4e:5e broadcast=ff:ff:ff:ff:ff:ff
+stat: rxp=1234567 txp=987654 rxb=892341234 txb=712893421
+      rxe=1847 txe=0 rxd=234 txd=0 mc=0 collision=0
+      rxl=12 rxo=0 rxc=1823 rxf=9 rxfi=0 rxm=0
+
+get hardware nic port3
+Name:           port3
+Driver:         igb
+Version:        5.4.0-k
+Bus:            0000:00:19.0
+Duplex:         half
+Speed:          100Mbps
+Link:           up
+
+diagnose netlink interface list port1
+stat: rxp=4823441 txp=3912847 rxb=3241887432 txb=2891234123
+      rxe=0 txe=0 rxd=0 txd=0 mc=0 collision=0`,
+
+    ssl_fail:
+`get vpn ssl monitor
+SSL VPN Login Users:
+Index   User      Group       Auth Type   Timeout   From
+0       jdoe      VPN-USERS   1(1)        28800     203.0.113.50
+1       asmith    VPN-USERS   1(1)        28800     198.51.100.12
+
+SSL VPN statistics:
+  SSL handshake failed        :          14
+  Login failed                :          23
+  Login timed out             :           5
+  Max session limit reached   :           0
+
+diagnose vpn ssl list
+name=SSLVPN-USERS, type=1, status=2
+  user=bwilson, src=192.0.2.55, dst=10.200.0.15, idx=2
+  last_error=peer certificate verify failed
+
+diagnose debug application sslvpn -1
+[336:root:14]SSL state:3 (192.0.2.55)
+[336:root:14]SSL_accept failed: error:14094416:SSL routines:ssl3_read_bytes:sslv3 alert certificate unknown
+[336:root:14]Error: SSL handshake failed for 192.0.2.55`,
+
+    vpn_no_proposal:
+`diagnose debug application ike -1
+diagnose debug enable
+
+ike 0: comes 203.0.113.5:500->203.0.113.1:500,ifindex=5....
+ike 0:SITE-C-VPN: created connection: 0x7f8a3c4b2d10 5 203.0.113.1->203.0.113.5.
+ike 0:SITE-C-VPN:4388: initiator: main mode is sending 1st message...
+ike 0:SITE-C-VPN:4388: out 203.0.113.1:500->203.0.113.5:500
+ike 0:SITE-C-VPN:4388: sent IKE msg (ident_i1send): 203.0.113.1:500->203.0.113.5:500
+ike 0:SITE-C-VPN:4388: recv IKE msg (ident_r1recv): 203.0.113.5:500->203.0.113.1:500
+ike 0:SITE-C-VPN:4388: received notify type NO_PROPOSAL_CHOSEN
+ike 0:SITE-C-VPN:4388: negotiation failure
+ike 0:SITE-C-VPN: delete phase1 203.0.113.5
+
+-- Analysis hint --
+Local proposal:  aes256-sha256, DH group 14
+Remote proposal: aes128-sha1,   DH group 5
+Result: NO_PROPOSAL_CHOSEN — proposals do not overlap`,
+
+    vpn_dpd:
+`diagnose vpn tunnel list name SITE-B-VPN
+name=SITE-B-VPN ver=2 serial=1 203.0.113.1:500->203.0.113.5:500
+bound_if=5 lgwy=203.0.113.1:500 tun_if_name=SITE-B-VPN
+proxyid_num=1 child_num=1 refcnt=5 ilast=25 olast=25
+stat: rxp=12441 txp=11832 rxb=8234441 txb=7123891
+dpd: mode=on-idle on=1 idle=20000ms retry=3 count=3 seqno=847
+natt: mode=none draft=0 interval=0 remote_port=0
+
+-- 30 seconds later --
+name=SITE-B-VPN ver=2 serial=1
+dpd: mode=on-idle on=1 idle=20000ms retry=3 count=3 seqno=848
+ike 0:SITE-B-VPN: DPD send request
+ike 0:SITE-B-VPN: DPD out 203.0.113.1->203.0.113.5
+ike 0:SITE-B-VPN: DPD no response — retry 1/3
+ike 0:SITE-B-VPN: DPD no response — retry 2/3
+ike 0:SITE-B-VPN: DPD no response — retry 3/3
+ike 0:SITE-B-VPN: DPD peer considered dead, deleting
+ike 0:SITE-B-VPN: connection expiring due to phase1 down`,
+
+    vpn_selector:
+`diagnose vpn tunnel list name SITE-B-VPN
+name=SITE-B-VPN ver=2 serial=1 203.0.113.1:500->203.0.113.5:500
+proxyid_num=2 child_num=1 refcnt=5
+  proxyid=SITE-B-VPN-P2 proto=0 sa=1 ref=2 serial=1
+    src: 0:10.10.0.0-10.10.0.255:0
+    dst: 0:10.20.0.0-10.20.0.255:0
+    SA: ref=3 options=10227 type=00 soft=0 mtu=1438 expire=27142 replaywin=2048
+    life: type=01 bytes=0/0 timeout=43191/43200
+    stat: rxp=4823 txp=4234 rxb=3241887 txb=2891234
+  proxyid=SITE-B-VPN-P2b proto=0 sa=0 ref=2 serial=2
+    src: 0:10.10.1.0-10.10.1.255:0
+    dst: 0:10.20.1.0-10.20.1.255:0
+    SA: not established  <-- selector mismatch, remote not accepting
+
+-- Remote side config shows --
+dst subnet: 10.20.0.0/16  (does not match 10.20.1.0/24)`,
+
+    vpn_natt:
+`diagnose debug application ike -1
+diagnose debug enable
+
+ike 0:BRANCH-VPN: comes 192.0.2.100:4500->203.0.113.1:4500 -- NAT-T detected
+ike 0:BRANCH-VPN: NAT traversal detected, using UDP port 4500
+ike 0:BRANCH-VPN:1234: initiator: quick mode is sending 1st message
+ike 0:BRANCH-VPN:1234: out 203.0.113.1:4500->192.0.2.100:4500
+ike 0:BRANCH-VPN:1234: sent IKE msg (quick_i1send): len=364
+ike 0:BRANCH-VPN:1234: recv IKE msg (quick_r1recv): 192.0.2.100:4500->203.0.113.1:4500
+ike 0:BRANCH-VPN:1234: established child SA
+ike 0:BRANCH-VPN: adding encap ESP SA
+
+get vpn ipsec tunnel summary
+'BRANCH-VPN' 192.0.2.100:4500 selectors(total,up): 1/1 rx(pkt,err): 4823/0 tx(pkt,err): 4234/0
+note: NAT-T mode active (UDP 4500 encapsulation)`,
+
+    vpn_ikev1v2:
+`diagnose debug application ike -1
+diagnose debug enable
+
+-- Scenario: local configured IKEv2, remote only supports IKEv1 --
+ike 2:REMOTE-VPN: comes 198.51.100.20:500->203.0.113.1:500
+ike 2:REMOTE-VPN: IKEv2 exchange type 34 (IKE_SA_INIT)
+ike 2:REMOTE-VPN: peer sent IKEv1 Main Mode, but we require IKEv2
+ike 2:REMOTE-VPN: sending INVALID_MAJOR_VERSION notify
+ike 2:REMOTE-VPN: negotiation failed
+
+-- Fix: change ike-version on local phase1 --
+show vpn ipsec phase1-interface REMOTE-VPN
+  set ike-version 2   <-- change to 1 to match remote
+
+-- After fix --
+ike 1:REMOTE-VPN:5001: initiator: main mode is sending 1st message
+ike 1:REMOTE-VPN:5001: sent IKE msg (ident_i1send): len=284
+ike 1:REMOTE-VPN:5001: established IKEv1 SA`,
+
+    ssl_geoip:
+`diagnose debug application sslvpn -1
+diagnose debug enable
+
+[sslvpn_auth.c:423] user=engineer src=185.220.101.50 (Belgium)
+[sslvpn_auth.c:441] checking geo-ip policy for src 185.220.101.50
+[sslvpn_auth.c:458] geo-ip lookup result: country=BE continent=EU
+[sslvpn_auth.c:471] policy check: allow_only=NL — BLOCKED
+[sslvpn_conn.c:218] connection from 185.220.101.50 rejected: geo-ip restriction
+
+diagnose firewall iprope lookup 185.220.101.50 203.0.113.1 10443 tcp wan1
+policy id: 0
+action: deny
+reason: source geo-ip country BE not in allowed list
+
+show firewall policy 612
+  set srcaddr NL-GEO-ADDRESS   <-- only Netherlands allowed
+  
+-- Fix: add Belgium address object to policy 612 srcaddr --`,
+
+    ssl_split:
+`get vpn ssl monitor
+SSL VPN Login Users:
+Index   User      Group       From          Tunnel IP
+0       jdoe      VPN-USERS   203.0.113.50  10.200.0.11
+
+-- User reports: can reach VPN resources but internet stops working --
+
+show vpn ssl web portal STAFF-PORTAL
+  set split-tunneling enable
+  config split-tunneling-routing-address
+    edit 1
+      set name "CORP-LAN"    <-- only 10.10.0.0/8 goes through VPN
+    next
+  end
+
+diagnose vpn ssl list
+  tunnel-ip=10.200.0.11 src=203.0.113.50
+  routes pushed to client:
+    10.10.0.0/8 -> tunnel
+    -- default route NOT pushed (split tunnel active) --
+
+-- If internet is broken, client default gateway was lost --
+-- Fix: check client DNS and ensure default route is not being overridden --
+-- Or: disable split tunneling if all traffic must go through VPN --`,
+
+    ssl_pool:
+`get vpn ssl monitor
+SSL VPN Login Users:
+Index   User     Group       Tunnel IP
+0       user01   VPN-USERS   10.200.0.10
+1       user02   VPN-USERS   10.200.0.11
+...
+49      user50   VPN-USERS   10.200.0.59
+
+SSL VPN statistics:
+  Login failed (pool exhausted) :          14
+  Current sessions              :          50
+  Max sessions                  :          50
+
+show firewall address SSLVPN-POOL
+  set type iprange
+  set start-ip 10.200.0.10
+  set end-ip   10.200.0.59   <-- only 50 IPs, pool full
+
+-- Fix: expand the pool --
+config firewall address
+  edit SSLVPN-POOL
+    set end-ip 10.200.0.200  <-- expand to 191 addresses
+  next
+end`,
+
+    policy_dnat:
+`-- User reports: port 443 on public IP not reaching internal server --
+
+show firewall vip VIP-WEBSERVER
+  set extintf wan1
+  set extip 203.0.113.1
+  set mappedip 10.10.1.50
+  set portforward enable
+  set extport 443
+  set mappedport 443
+
+diagnose firewall iprope lookup 198.51.100.99 203.0.113.1 443 tcp wan1
+policy id: 0
+action: deny   <-- no policy matched
+
+show firewall policy | grep VIP-WEBSERVER
+-- Not found! Policy references old VIP name --
+
+-- Root cause: VIP was renamed but policy still references old object --
+-- Fix: update policy dstaddr to VIP-WEBSERVER --
+
+config firewall policy
+  edit 30
+    set dstaddr VIP-WEBSERVER   <-- was VIP-WEB-OLD
+  next
+end
+
+-- After fix --
+diagnose firewall iprope lookup 198.51.100.99 203.0.113.1 443 tcp wan1
+policy id: 30
+action: accept
+dnat: 203.0.113.1:443 -> 10.10.1.50:443`,
+
+    policy_implicit:
+`get firewall policy
+== [ 1 ]
+name: LAN-TO-WAN  srcintf: port3  dstintf: port1  action: accept  policyid: 1
+  hit count: 18234  bytes: 2891234432
+
+== [ 2 ]
+name: VPN-USERS-TO-DC  srcintf: ssl.root  dstintf: port3  action: accept  policyid: 2
+  hit count: 4821  bytes: 892341234
+
+== [ 0 ]
+name: implicit deny  action: deny
+  hit count: 0  bytes: 0   <-- zero hits but traffic is being dropped
+
+diagnose debug flow filter addr 10.10.1.200
+diagnose debug flow trace start 10
+diagnose debug enable
+
+id=20085 trace_id=1 msg="vd-root received packet proto=6 10.10.1.200:52341->10.10.2.50:8080"
+id=20085 trace_id=1 msg="find a route: gw=10.10.2.50 via port4"
+id=20085 trace_id=1 msg="denied by forward policy check (policy 0)"
+
+-- Root cause: srcintf=port3, dstintf=port4 — no policy covers this zone pair --`,
+
+    policy_utm:
+`execute log filter category 2
+execute log display
+
+date=2024-05-14 time=10:23:41 logid=1059028704 type=utm subtype=app-ctrl
+level=warning policyid=1 sessionid=123456 srcip=10.10.1.100 dstip=203.0.113.80
+app=Dropbox action=block msg="Application Dropbox detected and blocked"
+
+date=2024-05-14 time=10:24:15 logid=0316013312 type=utm subtype=webfilter
+level=warning policyid=1 srcip=10.10.1.105 dstip=198.51.100.200
+url=streaming-service.com catdesc="Streaming Media" action=blocked
+
+execute log filter category 0
+execute log filter field srcip 10.10.1.100
+execute log display
+
+date=2024-05-14 time=10:23:41 type=traffic action=deny
+msg="UTM application control block: Dropbox"
+sessionid=123456 policy=1 profile=APP-STANDARD
+
+-- Fix: if Dropbox/streaming is legitimate business use --
+config application list
+  edit APP-STANDARD
+    config entries
+      edit 1
+        set application 19195   -- Dropbox app ID
+        set action pass
+      next
+    end
+  next
+end`,
+
+    policy_nat_missing:
+`-- Scenario: users on LAN cannot reach internet, policy exists but no connectivity --
+
+show firewall policy 1
+  config firewall policy
+    edit 1
+      set name LAN-TO-WAN
+      set srcintf port3
+      set dstintf port1
+      set srcaddr all
+      set dstaddr all
+      set action accept
+      set schedule always
+      set service ALL
+      -- nat missing! --   <-- set nat enable NOT present
+    next
+  end
+
+diagnose debug flow filter addr 10.10.1.100
+diagnose debug flow trace start 5
+diagnose debug enable
+
+id=20085 trace_id=1 msg="vd-root received packet 10.10.1.100:54231->8.8.8.8:443"
+id=20085 trace_id=1 msg="find a route: gw=203.0.113.1 via port1"
+id=20085 trace_id=1 msg="Allowed by Policy-id 1 on root"
+id=20085 trace_id=1 msg="no SNAT applied — packet sent with private src IP 10.10.1.100"
+-- ISP drops packet: private IP not routable on internet --
+
+-- Fix --
+config firewall policy
+  edit 1
+    set nat enable
+  next
+end`,
+
+    policy_order:
+`-- Scenario: traffic hitting wrong policy, more specific policy below general one --
+
+get firewall policy
+== [ 1 ]
+name: ALL-USERS-INTERNET  srcintf: port3  dstintf: port1
+srcaddr: all  dstaddr: all  action: accept  nat: enable
+policyid: 1  hit count: 42891
+
+== [ 2 ]
+name: BLOCK-SOCIAL-MEDIA  srcintf: port3  dstintf: port1
+srcaddr: all  dstaddr: SOCIAL-MEDIA-GROUP  action: deny
+policyid: 2  hit count: 0   <-- never hit! sits below policy 1
+
+-- Root cause: policy 1 is too broad and catches all traffic before policy 2 --
+-- FortiGate evaluates policies top to bottom, first match wins --
+
+-- Fix: move BLOCK-SOCIAL-MEDIA above ALL-USERS-INTERNET --
+config firewall policy
+  move 2 before 1
+end
+
+-- After fix --
+== [ 2 ]  hit count: 1823   -- now catching social media traffic
+== [ 1 ]  hit count: 41068  -- only non-social traffic reaches here`,
+
+    policy_asic:
+`-- Scenario: IPS/UTM not inspecting traffic, packets offloaded to NPU --
+
+diagnose npu np6 session stats
+np6 session stats:
+  Current NP6 sessions: 14832
+  Offloaded sessions:   14820  (99.9%)
+  Non-offloaded:           12
+
+-- IPS signatures not firing on known bad traffic --
+
+show firewall policy 1
+  set auto-asic-offload enable   <-- NPU handling packets, bypassing IPS
+
+-- Fix: disable ASIC offload on this policy to force software inspection --
+config firewall policy
+  edit 1
+    set auto-asic-offload disable
+  next
+end
+
+-- Verify IPS now processing --
+execute log filter category 4
+execute log display
+date=2024-05-14 time=14:23:41 type=utm subtype=ips
+msg="IPS signature ET.WEB.SQL.Injection detected" action=block src=198.51.100.99`,
+
+    ospf_dr:
+`get router info ospf neighbor
+OSPF process 0:
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.10.0.2       128   Full/DR           00:00:37   10.10.0.2       port2
+10.10.0.3         1   Full/BDR          00:00:31   10.10.0.3       port2
+10.10.0.1         1   Full/DROther      00:00:29   10.10.0.1       port2
+
+get router info ospf interface port2
+port2 is up, line protocol is up
+  Internet Address 10.10.0.4/24, Broadcast 10.10.0.255, Area 0.0.0.0
+  Router ID 10.0.0.4, Network Type BROADCAST, Cost: 10
+  Transmit Delay is 1 sec, State DROther, Priority 1
+  Designated Router (ID) 10.10.0.2, Interface address 10.10.0.2
+  Backup Designated Router (ID) 10.10.0.3, Interface address 10.10.0.3
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+
+-- If FortiGate should be DR: increase priority --
+config router ospf
+  config ospf-interface
+    edit port2
+      set priority 200   -- higher than 128 will make it DR
+    next
+  end
+end`,
+
+    bgp_flap:
+`get router info bgp summary
+BGP router identifier 10.0.0.1, local AS number 65001
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+203.0.113.1     4 65000    8234    8229       47    0    0 00:02:11       16
+198.51.100.10   4 65002     423     419        0    0    0 00:00:07  Active
+
+-- 2 minutes later --
+198.51.100.10   4 65002     445     441        0    0    0 00:00:03  Idle
+
+-- BGP keeps going Active -> OpenSent -> Established -> Active --
+diagnose debug application bgp -1
+diagnose debug enable
+
+BGP: 198.51.100.10 rcv NOTIFICATION 6/2 (Cease/Administrative Reset)
+BGP: 198.51.100.10 went from Established to Idle
+BGP: 198.51.100.10 Timer (hold timer expired) -- hold-time mismatch
+BGP: 198.51.100.10 Hold time local=90 remote=30
+
+-- Fix: align hold timers --
+config router bgp
+  config neighbor
+    edit 198.51.100.10
+      set keep-alive-timer 10
+      set holdtime-timer 30
+    next
+  end
+end`,
+
+    bgp_no_route:
+`get router info bgp neighbors 198.51.100.10 advertised-routes
+BGP table version is 47, local router ID is 10.0.0.1
+Status codes: s suppressed, d damped, h history, * valid, > best
+
+   Network          Next Hop         Metric LocPrf Weight Path
+*> 10.10.0.0/24    0.0.0.0               0         32768 i
+-- 10.10.1.0/24 NOT advertised --
+
+get router info bgp neighbors 198.51.100.10 received-routes
+*> 0.0.0.0/0       198.51.100.10          0          0 65002 i
+*> 172.16.0.0/16   198.51.100.10          0          0 65002 i
+
+-- Root cause: 10.10.1.0/24 not in BGP network statement --
+config router bgp
+  edit 65001
+    config network
+      edit 1
+        set prefix 10.10.0.0 255.255.255.0   -- only this network
+      next
+      -- 10.10.1.0/24 missing!
+    end
+  end
+end
+
+-- Fix: add missing network --
+config router bgp
+  config network
+    edit 2
+      set prefix 10.10.1.0 255.255.255.0
+    next
+  end
+end`,
+
+    bgp_conflict:
+`get router info routing-table all
+Codes: K - kernel, C - connected, S - static, B - BGP
+
+K*   0.0.0.0/0 [10/0] via 203.0.113.1, port1
+C    10.10.0.0/24 is directly connected, port2
+S    10.20.0.0/16 [10/0] via 10.10.0.2, port2      <-- admin distance 10
+B    10.20.0.0/16 [20/0] via 203.0.113.5, port1    <-- admin distance 20, not installed
+
+-- Static route wins over BGP (AD 10 < 20) --
+-- BGP route to 10.20.0.0/16 is valid but suppressed --
+
+get router info bgp neighbors 203.0.113.5 routes
+*  10.20.0.0/16   203.0.113.5   0  0  65002 i
+-- asterisk but NOT > (not best) -- static is preferred
+
+-- Fix options: --
+-- 1. Remove static route if BGP should take over --
+-- 2. Raise static route AD: set distance 200 --
+config router static
+  edit 1
+    set distance 200   -- now BGP AD 20 wins
+  next
+end`,
+
+    route_missing:
+`get router info routing-table all
+Codes: K - kernel, C - connected, S - static
+
+C    10.10.0.0/24 is directly connected, port2
+C    10.10.1.0/24 is directly connected, port3
+-- NO default route! 0.0.0.0/0 missing --
+
+execute ping 8.8.8.8
+PING 8.8.8.8: 100% packet loss
+(no route to host)
+
+diagnose debug flow filter addr 10.10.1.100
+diagnose debug flow trace start 5
+diagnose debug enable
+
+id=20085 trace_id=1 msg="vd-root received packet 10.10.1.100:54231->8.8.8.8:443"
+id=20085 trace_id=1 msg="no route found for 8.8.8.8 — drop"
+
+get system interface port1
+  ip: 203.0.113.2/30
+  gateway: 203.0.113.1  <-- gateway known but no default route configured
+
+-- Fix --
+config router static
+  edit 1
+    set dst 0.0.0.0 0.0.0.0
+    set gateway 203.0.113.1
+    set device port1
+  next
+end`,
+
+    sdwan_hc_fail:
+`get router info sdwan health-check
+Health Check: HC-GOOGLE
+  Server: 8.8.8.8
+  Interface: wan1 (member 1)
+    Status: FAILED
+    Packet Loss: 100%
+    Latency: N/A
+    Jitter: N/A
+    SLA: FAIL (loss threshold 5%, current 100%)
+  Interface: wan2 (member 2)
+    Status: ALIVE
+    Packet Loss: 0%
+    Latency: 12ms
+    Jitter: 2ms
+    SLA: PASS
+
+diagnose sniffer packet wan1 "host 8.8.8.8 and icmp" 4 10 l
+-- No packets captured! --
+
+diagnose debug application sdwan -1
+diagnose debug enable
+sdwan: hc probe sent to 8.8.8.8 via wan1
+sdwan: no response from 8.8.8.8 via wan1 (timeout 500ms)
+sdwan: member 1 wan1 marked as SLA fail, failover to member 2
+
+-- Root cause: wan1 ISP blocking ICMP to 8.8.8.8 --
+-- Fix: change health-check server to ISP gateway or use DNS probe --
+config system sdwan
+  config health-check
+    edit HC-GOOGLE
+      set server 203.0.113.1   -- use ISP gateway instead
+      set protocol ping
+    next
+  end
+end`,
+
+    sdwan_wrong:
+`get router info sdwan service
+SD-WAN service list:
+1: name=CRITICAL-APP mode=sla
+   SLA: HC-GOOGLE member=1(wan1) sla_id=1
+   Status: wan1 FAIL sla, wan2 OK sla
+   preferred-member: wan2 (fallback active)
+
+2: name=DEFAULT mode=load-balance
+   members: wan1(up) wan2(up)
+   current distribution: wan1=45% wan2=55%
+
+-- User reports: critical app using wrong link (wan2 instead of wan1) --
+
+diagnose sys sdwan intf-sla-log
+wan1: latency=148ms jitter=32ms loss=1% sla=PASS  <-- within threshold now!
+-- But SD-WAN still using wan2 after previous failure --
+
+-- Root cause: wan1 recovered but SD-WAN not failing back --
+-- Check: recoverytime setting --
+show system sdwan health-check HC-GOOGLE
+  set failtime 3      -- 3 failures to fail
+  set recoverytime 5  -- 5 successes to recover
+
+-- wan1 has only been stable for 2 probes, not yet 5 --
+-- Wait for recoverytime or lower threshold --`,
+
+    pbr_conflict:
+`show router policy
+id=1 tos=0x00/0x00 protocol=0 src=10.10.1.0/24 dst=0.0.0.0/0
+  action=goto-table nexthop=198.51.100.1 interface=port5  <-- PBR sending to backup ISP
+
+id=2 tos=0x00/0x00 protocol=0 src=0.0.0.0/0 dst=0.0.0.0/0
+  action=goto-table nexthop=203.0.113.1 interface=port1
+
+diagnose debug flow filter addr 10.10.1.100
+diagnose debug flow trace start 5
+diagnose debug enable
+
+id=20085 trace_id=1 msg="vd-root received packet 10.10.1.100:54231->8.8.8.8:443"
+id=20085 trace_id=1 msg="policy route matched id=1 nexthop=198.51.100.1 dev=port5"
+id=20085 trace_id=1 msg="SNAT 10.10.1.100->198.51.100.2"
+-- Traffic going out port5 instead of main WAN port1 --
+
+-- Root cause: PBR rule 1 catches all 10.10.1.0/24 traffic --
+-- Fix: remove or update PBR if it was unintentional --
+config router policy
+  delete 1
+end`,
+
+    disk_full:
+`diagnose sys df
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mmcblk0p3        1.9G  1.9G    0M 100% /   <-- FULL!
+tmpfs                 7.8G     0  7.8G   0% /dev/shm
+/dev/mmcblk0p5        28G   14G   14G  50% /data
+
+execute log filter category 0
+execute log filter field msg "disk"
+execute log display
+date=2024-05-14 time=09:12:33 msg="Log disk is full, new logs will be dropped"
+date=2024-05-14 time=09:12:33 msg="Disk usage 100% on /var/log"
+
+diagnose sys flash list
+part: /dev/sda1  size: 2048M  used: 2047M  (99.95%)
+quarantine files: 823M
+debug logs:       412M
+traffic logs:     812M
+
+-- Fix: clear old logs or increase disk quota --
+execute log delete-all
+-- Or reduce log retention --
+config log disk setting
+  set max-log-file-size 50
+  set log-quota 1024
+end`,
+
+    ntp_fail:
+`diagnose sys ntp status
+synchronized: no   <-- NOT synced!
+reference NTP server: 0.0.0.0
+reach: 0
+offset: 0.000 ms
+
+show system ntp
+config system ntp
+  set ntpsync enable
+  set type custom
+  config ntpserver
+    edit 1
+      set server 10.0.0.1   <-- internal NTP server
+    next
+  end
+end
+
+execute ping 10.0.0.1
+PING 10.0.0.1: 100% packet loss   <-- NTP server unreachable!
+
+diagnose debug application ntpd -1
+diagnose debug enable
+ntpd: socket connect to 10.0.0.1:123 failed: Connection refused
+ntpd: no valid NTP servers reachable
+
+-- Fix: use public NTP or fix route to internal NTP --
+config system ntp
+  config ntpserver
+    edit 1
+      set server pool.ntp.org
+    next
+  end
+end`,
+
+    fguard_fail:
+`diagnose debug rating
+License Status: Valid
+Expiry date: 2025-01-01
+Server: update.fortiguard.net
+
+execute fortiguard-connectivity-check
+Checking FortiGuard connectivity...
+  Contacting FDS: FAILED (timeout)
+  Contacting FortiGuard web filter: FAILED
+  Contacting FortiGuard AV updates: FAILED
+
+get system fortiguard
+  service-account-id: FGVM...
+  load-balance-servers: 1
+  auto-firmware-upgrade: enable
+  update-server-location: usa
+  sandbox-region: us
+
+diagnose sniffer packet port1 "host 208.91.112.220 and port 443" 4 10 l
+-- No packets captured -- firewall blocking outbound to FortiGuard IPs --
+
+-- Fix: check outbound policy allows FortiGuard IPs --
+-- Or: configure web proxy for FortiGuard updates --
+config system fortiguard
+  set proxy-server-ip 10.0.0.100
+  set proxy-server-port 8080
+end`,
+
+    crash_log:
+`diagnose debug crashlog read
+
+2024-05-14 03:22:41: System rebooted
+2024-05-14 03:22:38: kernel panic - not syncing: softlockup: hung_task_timeout_secs
+2024-05-14 03:22:38: CPU: 0 PID: 2341 Comm: proxyd
+2024-05-14 03:22:38: Call trace:
+  proxyd+0x234/0x890
+  handle_ssl_inspect+0x12/0x44
+  wad_dispatch+0x8a/0x200
+2024-05-14 03:22:38: WAD process (proxyd PID 2341) killed by signal 11
+
+get system status
+  System time: 2024-05-14 08:45:12
+  Last reboot reason: kernel panic
+  Uptime: 5 hours 22 minutes
+
+-- Recommended actions --
+-- 1. Check memory before crash: conserve mode logs --
+-- 2. Check proxyd / WAD for runaway SSL inspection --
+-- 3. Upgrade firmware if known bug --
+-- 4. Temporarily disable SSL deep inspection to stabilize --`,
+
+    mem_leak:
+`diagnose sys top 5 20
+Run Time: 23 days 4 hours
+          proxyd     112    S    2847.3M   36.2    <-- WAD using 2.8GB!
+          newcli      48    R       8.1M    0.1
+          cmdbsvr    113    S      42.1M    0.5
+
+diagnose hardware sysinfo memory
+        total:        used:        free:
+Mem:   8192000k     7934000k      258000k   <-- only 258MB free
+
+diagnose hardware sysinfo conserve
+memory conserve mode: yes
+wad conserve mode: yes
+threshold: 15% free (1228800k)
+current: 3.1% free (258000k)
+
+-- proxyd growing over time = memory leak in WAD/SSL inspection --
+
+-- Immediate mitigation --
+diagnose test application wad 99   -- restart WAD process
+-- Or --
+config system global
+  set wad-restart-end-time 03:00
+  set wad-restart-mode daily
+end`,
+
+    dns_fail:
+`execute nslookup name google.com
+Server: 8.8.8.8
+nslookup failed for google.com
+Error: connection timed out; no servers could be reached
+
+execute nslookup name google.com 8.8.8.8
+Server: 8.8.8.8
+nslookup failed: Request timeout
+
+diagnose test application dnsproxy 6
+DNS proxy debug:
+  Query: google.com type A
+  Sending to 8.8.8.8:53...
+  Timeout after 3000ms
+  Retry 1/3... timeout
+  Retry 2/3... timeout
+  DNS resolution failed
+
+diagnose sniffer packet port1 "port 53" 4 20 l
+-- No DNS traffic on port1 -- DNS being blocked --
+
+show firewall policy | grep DNS
+-- No policy allowing UDP 53 outbound --
+
+-- Fix: add DNS service to outbound policy --
+config firewall policy
+  edit 1
+    set service ALL   -- or explicitly add DNS service
+  next
+end`,
+
+    conserve:
+`-- Full Conserve Mode Investigation --
+get system performance status
+CPU states: 78% user 15% system 0% nice 7% idle
+Memory: 16384000k total, 15728640k used (96%), 655360k free (4%)
+Conserve mode: enabled
+
+diagnose hardware sysinfo conserve
+memory conserve mode: yes
+wad conserve mode: yes
+ips conserve mode: yes
+threshold: 15% (2457600k)
+current: 4% (655360k)
+entering conserve: 2024-05-14 08:22:41
+
+diagnose sys top 5 10
+          proxyd     112    S    4823.1M   29.4
+          ipsengine  234    S    2341.2M   14.3
+          urlfilter  204    S     823.4M    5.0
+          reportd    312    S     412.2M    2.5
+
+-- proxyd (WAD) + ipsengine consuming most memory --
+
+get system performance status | grep session
+Average sessions: 24820 sessions in 1 minute
+
+-- Actions in conserve mode --
+-- 1. New sessions being dropped --
+-- 2. Reduce active UTM features temporarily --
+-- 3. Restart WAD: diagnose test application wad 99 --
+-- 4. Upgrade RAM or hardware if sustained --`,
+
+    radius_timeout:
+`diagnose test authserver radius CORP-RADIUS pap jdoe Passw0rd!
+Connect to server 10.0.0.20:1812...
+timeout (5000ms) — no response
+
+diagnose debug application fnbamd -1
+diagnose debug enable
+
+fnbamd: start radius auth for user jdoe
+fnbamd: connect to 10.0.0.20:1812 (UDP)
+fnbamd: sent Access-Request for jdoe
+fnbamd: waiting for response (timeout=5000ms)
+fnbamd: no response from 10.0.0.20:1812 — timeout
+fnbamd: trying secondary 10.0.0.21:1812
+fnbamd: no response from 10.0.0.21:1812 — timeout
+fnbamd: all RADIUS servers unreachable — auth failed
+
+execute ping 10.0.0.20
+PING 10.0.0.20: 100% packet loss
+
+-- Root cause: RADIUS server unreachable from FortiGate --
+-- Check: firewall policy, shared secret, NPS service status --`,
+
+    fsso_fail:
+`diagnose firewall auth list
+Total auth sessions: 12
+
+-- jdoe NOT in list despite being logged into domain --
+
+get user fsso
+Server: FSSO-AGENT  10.0.0.15:8000
+  Status: connected
+  Users: 45 (last sync: 2 min ago)
+
+diagnose debug authd fsso -1
+diagnose debug enable
+
+fsso: received logon event from 10.0.0.15
+fsso: user=CORP\jdoe ip=10.10.1.100 groups=Domain Users
+fsso: group lookup: CN=VPN-USERS not in user group list
+fsso: user jdoe matched no FSSO group — skipping
+
+-- Root cause: FSSO group "Domain Users" not mapped to FortiGate group --
+config user group
+  edit VPN-FSSO-USERS
+    set member FSSO-AGENT
+    config match
+      edit 1
+        set server-name FSSO-AGENT
+        set group-name CORP\VPN-USERS   <-- must match AD group exactly
+      next
+    end
+  next
+end`,
+
+    twofa_fail:
+`diagnose debug application fnbamd -1
+diagnose debug enable
+
+fnbamd: start 2FA auth for user jdoe
+fnbamd: primary auth (LDAP) succeeded
+fnbamd: sending OTP request to FortiToken Mobile
+fnbamd: waiting for OTP response (timeout=60s)
+fnbamd: OTP received: 123456
+fnbamd: OTP validation failed — token out of sync (drift=120s)
+
+-- Root cause: time drift between FortiGate and FortiToken --
+
+diagnose sys ntp status
+synchronized: yes
+offset: -118.432 ms   <-- large offset!
+
+execute time
+Current time is: 10:45:12 2024-05-14
+Timezone: UTC+0
+
+-- FortiGate time is 2 minutes behind FortiToken server --
+-- Fix: sync NTP immediately --
+execute ntp-sync-now
+
+-- After sync --
+diagnose sys ntp status
+synchronized: yes
+offset: 0.234 ms   -- now within acceptable drift`,
+
+    admin_locked:
+`-- Admin locked out after too many failed attempts --
+
+diagnose debug application httpsd -1
+diagnose debug enable
+
+httpsd: login attempt from 198.51.100.99 user=admin
+httpsd: login failed (wrong password) attempt 1/3
+httpsd: login attempt from 198.51.100.99 user=admin
+httpsd: login failed (wrong password) attempt 2/3
+httpsd: login attempt from 198.51.100.99 user=admin
+httpsd: login failed (wrong password) attempt 3/3
+httpsd: admin account locked for 300 seconds
+
+-- If you are locked out completely --
+-- Physical console access required: --
+-- 1. Connect serial cable to console port --
+-- 2. Login via console (not affected by HTTP lockout) --
+-- 3. On console: --
+config system admin
+  edit admin
+    set login-fail-count 0
+  next
+end`,
+
+    ha_splitbrain:
+`-- Both units think they are primary! --
+
+FGT-HQ-01 # get system ha status
+Mode: Active-Passive
+Role: Primary
+Uptime: 23 days 4 hours
+
+FGT-HQ-02 # get system ha status
+Mode: Active-Passive
+Role: Primary    <-- BOTH showing Primary = split brain!
+Uptime: 0 days 2 hours
+
+FGT-HQ-01 # diagnose sys ha status
+vcluster 1: work
+  master: FGT-HQ-01 (self) priority=200
+  -- FGT-HQ-02 not visible in cluster --
+
+-- Root cause: heartbeat link failure --
+get system ha
+  set hbdev ha1 50 ha2 50
+
+FGT-HQ-01 # get hardware nic ha1
+  link: down   <-- HA heartbeat link down!
+
+-- Fix: restore heartbeat link --
+-- Short term: shutdown secondary to avoid duplicate traffic --
+FGT-HQ-02 # execute ha failover unset 1`,
+
+    ha_secondary:
+`FGT-HQ-01 # get system ha status
+HA information
+  Mode: Active-Passive
+  Group-Name: HQ-CLUSTER
+
+Primary: FGT-HQ-01  Serial: FGT20F0000000001
+  Role: Primary  Uptime: 45 days 2 hours
+
+-- No secondary listed --
+
+FGT-HQ-01 # diagnose sys ha status
+vcluster 1: work
+  master: FGT-HQ-01 prio=200
+  -- FGT-HQ-02 not joined --
+
+FGT-HQ-01 # diagnose debug application hatalk -1
+diagnose debug enable
+hatalk: receive ha join from FGT-HQ-02
+hatalk: checking group-name: received=CLUSTER-02 expected=HQ-CLUSTER
+hatalk: group name mismatch — rejecting join
+
+-- Root cause: secondary has wrong HA group name --
+-- Fix on FGT-HQ-02 --
+config system ha
+  set group-name HQ-CLUSTER   <-- was CLUSTER-02
+end`,
+
+    ha_session:
+`FGT-HQ-01 # diagnose sys ha status
+vcluster 1: work
+  master: FGT-HQ-01 prio=200
+  slave: FGT-HQ-02 prio=100
+  sync state: out-of-sync (session)
+
+FGT-HQ-01 # diagnose debug application hasync -1
+diagnose debug enable
+
+hasync: session sync queue depth: 48234  <-- large backlog
+hasync: sync tx rate: 12 sessions/sec
+hasync: sync failed for session 0x8a3c4d5e — buffer full
+hasync: dropping session sync — secondary falling behind
+
+-- After failover, sessions will be lost --
+
+FGT-HQ-01 # diagnose sys session stat
+session table: total 48234
+  synced to secondary: 12441
+  pending sync: 35793   <-- large gap
+
+-- Root cause: session sync bandwidth insufficient --
+-- Check HA heartbeat link speed and load --`,
+
+    ha_failover:
+`-- Manual HA failover procedure --
+
+FGT-HQ-01 # get system ha status
+Primary: FGT-HQ-01  Uptime: 45 days 2 hours
+Secondary: FGT-HQ-02  Uptime: 45 days 1 hour
+Synchronization: synchronized
+
+FGT-HQ-01 # execute ha failover set 1
+This operation will cause a failover.
+Do you want to continue? (y/n) y
+
+-- Failover initiated --
+FGT-HQ-01 # get system ha status
+Primary: FGT-HQ-02  Uptime: 0 days 0 hours 0 minutes 8 seconds
+Secondary: FGT-HQ-01  Uptime: 45 days 2 hours 0 minutes 15 seconds
+Synchronization: synchronized
+
+FGT-HQ-02 # get system ha status
+Role: Primary
+Uptime: 0 days 0 hours 0 minutes 22 seconds
+
+-- Revert back to original primary --
+FGT-HQ-01 # execute ha failover unset 1
+-- Or wait for FGT-HQ-01 override to kick in (set override enable) --`,
+
+    sfp_error:
+`diagnose hardware deviceinfo nic port5
+Name:      port5
+Driver:    sfc
+Status:    up
+Speed:     1000Mbps
+Duplex:    full
+Link:      up
+
+get hardware nic port5
+SFP information:
+  Vendor: FINISAR
+  Model:  FTLX8574D3BCL
+  Serial: PL42JMR
+  Wavelength: 850nm
+  Connector: LC
+  Type: 10GBASE-SR
+  Tx Power: -3.2 dBm (min: -8.2, max: 0.5) -- OK
+  Rx Power: -14.8 dBm (min: -11.1, max: 0.5) -- BELOW MINIMUM! Low signal
+  Temperature: 42.3C (normal)
+  Voltage: 3.28V (normal)
+
+-- Rx power -14.8 dBm below threshold -11.1 dBm --
+-- Causes intermittent link flaps and CRC errors --
+-- Fix: check fiber cable, clean connectors, check bend radius --`,
+
+    lacp_down:
+`show system interface LAG1
+  type: aggregate
+  mode: lacp
+  members: port7 port8
+  ip: 10.10.5.1/24
+
+diagnose netlink interface list LAG1
+if=LAG1 family=00 type=1 index=12 mtu=1500 link=0 master=0
+ref=8 state=up flags=up broadcast multicast
+  lacp: mode=active rate=slow
+  members: port7(selected) port8(not-selected)
+  -- port8 not aggregating! --
+
+diagnose netlink interface list port8
+if=port8 state=up
+  lacp partner: NOT responding
+  partner key: 0x0000   <-- should match local key
+  actor state: 0x3D, partner state: 0x00
+
+-- Root cause: switch port8 counterpart not LACP active --
+-- Check switch side LACP config --
+-- Switch must have channel-group X mode active on matching port --`,
+
+    vlan_mismatch:
+`show system interface VLAN20
+  config system interface
+    edit VLAN20
+      set vdom root
+      set ip 192.168.20.1 255.255.255.0
+      set interface port3
+      set vlanid 20
+    next
+  end
+
+-- Users on VLAN20 getting 169.254.x.x APIPA addresses --
+
+diagnose sniffer packet port3 "udp port 67 or port 68" 4 20 l
+-- No DHCP traffic arriving on port3 --
+
+-- Checking switch port config --
+-- Switch port connected to FortiGate port3: --
+-- interface GigabitEthernet1/0/24 --
+--   switchport mode trunk --
+--   switchport trunk allowed vlan 10,30  <-- VLAN 20 missing! --
+
+-- FortiGate sending tagged VLAN20 frames, switch not passing them --
+-- Fix on switch: --
+-- switchport trunk allowed vlan 10,20,30 --`,
+
+    mtu_blackhole:
+`-- Users complain large file transfers fail, small traffic works fine --
+
+execute ping 8.8.8.8
+5 packets sent, 5 received, 0% packet loss  -- basic ping works
+
+execute ping-options data-size 1400
+execute ping-options df-bit yes
+execute ping 8.8.8.8
+5 packets sent, 5 received, 0% packet loss  -- 1400 byte works
+
+execute ping-options data-size 1450
+execute ping 8.8.8.8
+5 packets sent, 0 received, 100% packet loss  -- 1450 byte FAILS
+
+-- MTU black hole: ICMP fragmentation-needed messages being blocked --
+
+diagnose sniffer packet port1 "icmp" 4 20 l
+-- No ICMP type 3 code 4 (fragmentation needed) messages returning --
+-- ISP or intermediate router blocking ICMP, causing PMTUD failure --
+
+-- Fix: set TCP MSS clamp --
+config system interface
+  edit port1
+    set tcp-mss 1400
+  next
+end`,
+
+    session_limit:
+`diagnose sys session stat
+session table: total 500000 max 500000  <-- AT LIMIT!
+  new sessions blocked: 8234
+
+get system performance status
+CPU states: 34% user 8% system 58% idle
+Memory: 16384000k total, 8192000k used (50%)
+Sessions: 500000 (max: 500000)  -- SESSION TABLE FULL
+
+diagnose sys session filter proto 6
+diagnose sys session list | head -20
+-- Thousands of sessions in TIME_WAIT state --
+
+session info: proto=6 proto_state=TIME_WAIT duration=120 expire=30
+session info: proto=6 proto_state=TIME_WAIT duration=118 expire=28
+-- TIME_WAIT sessions not clearing fast enough --
+
+-- Fix: reduce TCP session timers --
+config system session-ttl
+  set default 300
+  config port
+    edit 1
+      set protocol 6
+      set timeout 120
+      set start-port 1
+      set end-port 65535
+    next
+  end
+end`
+  };
+
+  document.getElementById('exampleGroqBtn').onclick=()=>{
+    const sel=document.getElementById('exampleScenarioSelect');
+    if(!sel||!sel.value){showToast('⚠️ Select a training scenario first');return;}
+    const txt=TRAINING_EXAMPLES[sel.value];
+    if(txt){
+      document.getElementById('groqPrompt').value=txt;
+      freeAIPrompt=txt;
+      showToast('✅ Scenario loaded — click Analyze!');
+    }
   };
 
   document.getElementById('clearGroqBtn').onclick=()=>{
@@ -5613,7 +7388,7 @@ Npu-flag      : 00`;
     respDiv.innerHTML='<div class="typing"><span></span><span></span><span></span></div>&nbsp; Analyzing with '+escapeHtml(modelLabel)+'...';
     try{
       let _rt='';
-      const sysmsg='You are a senior FortiGate network engineer. First classify the issue from the pasted output or question: policy/NAT, routing, VPN, SSL VPN, DNS, HA, SD-WAN, system health, authentication, interface, or unknown. Do not assume VPN unless the output clearly contains VPN/IKE/IPsec/SSL-VPN evidence. Then provide: 1) Root cause or direct answer, 2) Recommended CLI fix commands in code blocks, 3) Brief explanation. Be concise and practical.'+nwAnonContextForText(prompt);
+      const sysmsg='You are a senior FortiGate network engineer. Analyze the CLI output or question and provide: 1) Root cause or direct answer, 2) Recommended CLI fix commands in code blocks, 3) Brief explanation. Be concise and practical.';
       const chosenModel=selModel.value;
       if(prov==='claude'){
         const resp=await fetch('https://api.anthropic.com/v1/messages',{
@@ -5637,7 +7412,7 @@ Npu-flag      : 00`;
         respDiv.innerHTML=fmt(_rt);
         // Save to persistent history
         const _ts = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-        freeAIHistory.unshift({ts:_ts, prompt:prompt, response:fmt(_rt)});
+        freeAIHistory.unshift({ts:_ts, prompt:prompt, response:safeFmt(_rt)});
         // Rebuild history div
         const _hd = document.getElementById('groqHistory');
         if(_hd){
@@ -7093,96 +8868,6 @@ function replaceIPsInText(text,map){let r=text;for(const[real,fake]of map.entrie
 let _anonInput = '';
 let _anonOutput = '';
 let _anonMapping = '';
-const NW_ANON_AI_CONTEXT_KEY='netwolf_anon_ai_context_v1';
-let nwAnonAIContext=null;
-try{nwAnonAIContext=JSON.parse(localStorage.getItem(NW_ANON_AI_CONTEXT_KEY)||'null');}catch(e){nwAnonAIContext=null;}
-
-function nwAnonEscapeRegex(v){return String(v).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
-function nwAnonStripIPs(v){return String(v||'').replace(/\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g,'[ip]');}
-function nwAnonIpScope(ip){
-  if(/^10\./.test(ip)||/^192\.168\./.test(ip)||/^172\.(1[6-9]|2\d|3[01])\./.test(ip)) return 'private/internal';
-  if(/^100\.64\./.test(ip)) return 'carrier-grade NAT';
-  if(/^169\.254\./.test(ip)) return 'link-local';
-  if(/^224\.|^239\./.test(ip)) return 'multicast';
-  if(/^192\.0\.2\.|^198\.51\.100\.|^203\.0\.113\./.test(ip)) return 'documentation/test range';
-  return 'public/external';
-}
-function nwAnonRoleForIP(raw,ip){
-  const roles=[];
-  const rx=new RegExp('(.{0,70})\\b'+nwAnonEscapeRegex(ip)+'\\b(.{0,70})','gi');
-  let m,guard=0;
-  while((m=rx.exec(raw))&&guard<8){
-    guard++;
-    const c=(m[1]+' '+m[2]).toLowerCase();
-    if(/\b(remote-gw|peer|ike|ipsec|vpn|tunnel)\b/.test(c)) roles.push('VPN peer/tunnel endpoint');
-    if(/\b(local|local-gw|src|source|saddr|client)\b/.test(c)) roles.push('source/local side');
-    if(/\b(dst|dest|destination|daddr|server|service)\b/.test(c)) roles.push('destination/service side');
-    if(/\b(gateway|gw|next-hop|nexthop|route|via)\b/.test(c)) roles.push('gateway/next hop');
-    if(/\b(nat|snat|dnat|translated|mapped|vip)\b/.test(c)) roles.push('NAT/translated address');
-    if(/\b(dns|resolver|ldap|radius|tacacs|syslog|ntp)\b/.test(c)) roles.push('infrastructure service');
-    if(/\b(wan|internet|outside|external)\b/.test(c)) roles.push('WAN/external side');
-    if(/\b(lan|inside|internal|vlan|subnet)\b/.test(c)) roles.push('LAN/internal side');
-  }
-  return [...new Set(roles)].slice(0,3).join(', ')||'observed host/address';
-}
-function nwBuildAnonAIContext(raw,mappingRows){
-  const ipRows=(mappingRows||[]).filter(r=>r&&r.type==='IPv4'&&r.fake&&r.real);
-  if(!ipRows.length) return null;
-  const netGroups=new Map();
-  let netCounter=1;
-  const seen=new Set();
-  const entries=[];
-  ipRows.forEach(row=>{
-    const key=row.fake;
-    if(seen.has(key)) return;
-    seen.add(key);
-    const oct=String(row.real).split('.');
-    const netKey=oct.length===4?oct.slice(0,3).join('.'):'host';
-    if(!netGroups.has(netKey)) netGroups.set(netKey,'NET_'+String(netCounter++).padStart(2,'0'));
-    entries.push({
-      label:'ANON_IP_'+String(entries.length+1).padStart(2,'0'),
-      fake:row.fake,
-      scope:nwAnonIpScope(row.real),
-      role:nwAnonRoleForIP(raw,row.real),
-      group:netGroups.get(netKey)
-    });
-  });
-  return {version:1,createdAt:Date.now(),entries};
-}
-function nwSaveAnonAIContext(ctx){
-  nwAnonAIContext=ctx&&ctx.entries&&ctx.entries.length?ctx:null;
-  if(nwAnonAIContext)localStorage.setItem(NW_ANON_AI_CONTEXT_KEY,JSON.stringify(nwAnonAIContext));
-  else localStorage.removeItem(NW_ANON_AI_CONTEXT_KEY);
-}
-function nwManualMaskContextEntries(text){
-  try{
-    if(typeof ipMappings==='undefined'||!Array.isArray(ipMappings)) return [];
-    return ipMappings.filter(m=>m&&m.fake&&text.includes(m.fake)).map((m,i)=>({
-      label:'MANUAL_MASK_'+String(i+1).padStart(2,'0'),
-      fake:m.fake,
-      scope:'user-masked address',
-      role:nwAnonStripIPs(m.desc||'manual IP mask')||'manual IP mask',
-      group:'MANUAL'
-    }));
-  }catch(e){return [];}
-}
-function nwAnonContextForText(text){
-  const entries=[];
-  const t=String(text||'');
-  if(nwAnonAIContext&&Array.isArray(nwAnonAIContext.entries)){
-    nwAnonAIContext.entries.forEach(e=>{if(e&&e.fake&&t.includes(e.fake))entries.push(e);});
-  }
-  nwManualMaskContextEntries(t).forEach(e=>entries.push(e));
-  const unique=[],seen=new Set();
-  entries.forEach(e=>{if(!seen.has(e.fake)){seen.add(e.fake);unique.push(e);}});
-  if(!unique.length) return '';
-  const lines=unique.slice(0,80).map(e=>'- '+e.label+' = '+e.fake+' | role: '+e.role+' | scope: '+e.scope+' | same-network group: '+e.group);
-  return '\n\nANONYMIZED ADDRESS CONTEXT:\nAll IP addresses listed below are fake placeholders created by NetWolf. The real IP mapping stays only in the user browser and is not available to you. Do not geolocate these IPs or infer ownership from the fake ranges. Use the labels, roles, and same-network groups to reason about routing, NAT, VPN, policy, and return-path issues.\n'+lines.join('\n')+'\nWhen giving the answer, refer to the fake IPs and labels, and explain what the user should check on the corresponding real systems locally.';
-}
-function nwAnonContextBlockForClipboard(){
-  if(!nwAnonAIContext||!Array.isArray(nwAnonAIContext.entries)||!nwAnonAIContext.entries.length) return '';
-  return nwAnonContextForText(nwAnonAIContext.entries.map(e=>e.fake).join(' ')).trim();
-}
 
 function renderBulkAnonTab(el){
   el.innerHTML=`
@@ -7211,7 +8896,6 @@ function renderBulkAnonTab(el){
         <div style="display:flex;align-items:center;gap:8px">
           <span style="font-size:11px;font-weight:700;color:var(--t2)">📤 Anonymized output</span>
           <button class="sbtn" id="bulkAnonCopyBtn" style="background:#15803D;font-size:10px;padding:3px 10px;margin-left:auto">📋 Copy</button>
-          <button class="sbtn" id="bulkAnonCopyAIBtn" style="background:var(--a);font-size:10px;padding:3px 10px">Copy for AI</button>
         </div>
         <pre id="bulkAnonOutput" style="flex:1;min-height:0;margin:0;background:#010409;color:#e6edf3;border-radius:6px;padding:12px;font-family:var(--mono);font-size:11.5px;white-space:pre-wrap;overflow-y:auto;border:1px solid var(--br);line-height:1.7;word-break:break-all">— Output will appear here —</pre>
       </div>
@@ -7348,8 +9032,6 @@ function renderBulkAnonTab(el){
     document.getElementById('bulkAnonOutput').textContent = result;
     _anonInput = raw;
     _anonOutput = result;
-    const aiContext = nwBuildAnonAIContext(raw,mappingRows);
-    nwSaveAnonAIContext(aiContext);
 
     // ── Mapping table ──
     if(mappingRows.length === 0){
@@ -7383,9 +9065,6 @@ function renderBulkAnonTab(el){
       });
       th+='</tbody></table>';
       th+=`<div style="margin-top:10px;font-size:11px;color:var(--t3)">${[...new Set(mappingRows.map(r=>r.real))].length} unique values replaced across ${mappingRows.length} occurrences.</div>`;
-      if(aiContext&&aiContext.entries&&aiContext.entries.length){
-        th+=`<div style="margin-top:8px;font-size:11px;color:var(--a);line-height:1.5">AI-safe context saved locally: ${aiContext.entries.length} anonymized IP label(s). AI Assistant will treat these fake IPs as placeholders and use role/network hints without seeing real IPs.</div>`;
-      }
       document.getElementById('bulkAnonMappingContainer').innerHTML=th;
       _anonMapping = th;
     }
@@ -7407,12 +9086,6 @@ function renderBulkAnonTab(el){
     navigator.clipboard.writeText(document.getElementById('bulkAnonOutput').textContent)
       .then(()=>showToast('✅ Copied to clipboard'));
   };
-  document.getElementById('bulkAnonCopyAIBtn').onclick = ()=>{
-    const out=document.getElementById('bulkAnonOutput').textContent;
-    const ctx=nwAnonContextBlockForClipboard();
-    const payload=ctx?out+'\n\n--- NETWOLF AI-SAFE CONTEXT ---\n'+ctx:out;
-    navigator.clipboard.writeText(payload).then(()=>showToast('Copied with AI-safe context'));
-  };
   document.getElementById('bulkAnonClearBtn').onclick = ()=>{
     _anonInput = '';
     _anonOutput = '';
@@ -7420,7 +9093,6 @@ function renderBulkAnonTab(el){
     document.getElementById('bulkAnonInput').value='';
     document.getElementById('bulkAnonOutput').textContent='— Output will appear here —';
     document.getElementById('bulkAnonMappingContainer').innerHTML='<div class="cnote">Run anonymization to see what was replaced.</div>';
-    nwSaveAnonAIContext(null);
   };
 }
 
@@ -12859,7 +14531,7 @@ function initSidebar(){
     {section:"System & Operations",items:["sysdiag","hwnpu","ha","logging","fguard","fmgr","wanopt","secfabric","cfgtransaction","fnsysctladv","cfgbackup"]},
     {section:"Switching & Wireless",items:["fortiswitch","fortiap"]},
     {section:"Diagnostics Tools",items:["analyze","advdiag","mostused","pkttools","dhcpdiag","subnetcalc","masking","bulkAnon"]},
-    {section:"AI Tools",items:["freeai","ai","claudechat"]},
+    {section:"AI Tools",items:["freeai","nwassistant","ai","claudechat"]},
     {section:"Cloud Learning",items:["azure"]},
     {section:"Reference",items:["ref","multivendor","hwref","devices"]},
     {section:"Builders & Utilities",items:["psmaker","topology","cfggen","swcfg","cfgmigrate","labsetup","security","liveconnect","emailgen"]},
@@ -12884,7 +14556,7 @@ function initSidebar(){
     "cfg-fortiswitch":"🔀 FortiSwitch Config","cfg-ztna":"🪪 ZTNA Config","cfg-netflow":"📈 NetFlow Config","netflow":"📈 NetFlow / sFlow",
     analyze:"🔎 Analyze Output",advdiag:"🔬 Advanced Diagnostics",mostused:"⭐ Most Used Tools",
     pkttools:"📡 Packet Tools",dhcpdiag:"📮 DHCP Diagnostics",subnetcalc:"🧮 Subnet Calculator",
-    masking:"🕶️ IP Masking",bulkAnon:"🧹 Bulk Anonymizer",freeai:"✨ AI Analyzer",
+    masking:"🕶️ IP Masking",bulkAnon:"🧹 Bulk Anonymizer",freeai:"✨ AI Analyzer",nwassistant:"🐺 NetWolf Assistant",
     ai:"💬 AI Assistant",claudechat:"🧠 Claude Chat",ref:"📚 Quick Reference",multivendor:"🔁 Multi-Vendor CLI",
     hwref:"🧱 Hardware Reference",devices:"🖥️ Device Catalog",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
     cfggen:"🧩 Config Generator",swcfg:"🔧 SW/Router Config",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
@@ -12944,6 +14616,7 @@ function globalSearchFn(query){
     {id:'masking',title:'IP Masking',match:'Tool: Mask individual IP addresses'},
     {id:'bulkAnon',title:'Bulk Anonymizer',match:'Tool: Bulk anonymize IPs and hostnames'},
     {id:'freeai',title:'AI CLI Analyzer',match:'Tool: AI-powered CLI analysis'},
+    {id:'nwassistant',title:'NetWolf Assistant',match:'Tool: guided FortiGate troubleshooting, local triage, AI deep analysis, VPN, NAT, policy, routing'},
     {id:'ai',title:'AI Assistant',match:'Tool: FortiGate assistant chat'},
     {id:'claudechat',title:'Claude Chat',match:'Tool: Claude Anthropic chat assistant'},
     {id:'ref',title:'Quick Reference',match:'Reference: Common CLI commands'},
@@ -13732,21 +15405,37 @@ function renderSecurityTab(el){
 
 function renderLiveConnect(el){
   el.innerHTML=`
-<div class="sh"><span class="stitle">🔌 FortiGate Live Connect</span><span class="sev info">REST API — Coming Soon</span></div>
+<div class="sh"><span class="stitle">🔌 FortiGate Live Connect</span><span class="sev good">Level 2 local agent ready</span></div>
 
 <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
-  Connect NetWolf directly to a live FortiGate using its built-in REST API. Pull real-time data — interface status,
-  VPN tunnels, routing table, DHCP leases and active sessions — without leaving the tool.
-  No third-party server involved. Your browser talks directly to the FortiGate.
+  Connect NetWolf to firewall evidence safely. Option 1 runs a local agent on the engineer/customer PC.
+  Option 2 runs the same agent on an internal MSP/NOC jump server. Both are designed for read-only checks first,
+  with no NetWolf cloud server in the path.
 </p>
 
-<!-- Coming Soon Banner -->
-<div style="background:rgba(88,166,255,.07);border:1px solid rgba(88,166,255,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
-  <span style="font-size:28px;flex-shrink:0;">🚧</span>
-  <div>
-    <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Live API integration is coming in a future update</div>
-    <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">This tab contains everything you need to prepare your FortiGate for the Live Connect feature.
-    Follow the setup steps below now so you are ready the moment it goes live.</div>
+<div style="background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
+  <span style="font-size:28px;flex-shrink:0;">🟢</span>
+    <div>
+    <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Local Level 2 agent created</div>
+    <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">Start <code>C:\netwolf-agent\start-local-agent.bat</code>, then use NetWolf Assistant → Level 2 Live Agent. Default mode is dry-run and local-only.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <a class="sbtn" href="netwolf-agent.zip" download style="text-decoration:none;background:#15803D">Download NetWolf Local Agent</a>
+      <a class="sbtn" href="netwolf-agent/README.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:var(--b3);border:1px solid var(--br);color:var(--t2)">Open Setup Guide</a>
+    </div>
+  </div>
+</div>
+
+<div class="cblock" style="margin-bottom:14px;">
+  <div class="chdr"><div class="chdr-l">🧭 Deployment Options</div></div>
+  <div class="cbody" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px">
+    <div style="border:1px solid var(--br);border-radius:8px;background:var(--b2);padding:12px">
+      <div style="font-size:13px;font-weight:800;color:var(--t);margin-bottom:6px">Option 1: Local agent</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.65">Best for one engineer laptop or one customer PC. The agent listens on <code>127.0.0.1:5051</code>, accepts only local browser requests, and starts in dry-run mode.</div>
+    </div>
+    <div style="border:1px solid var(--br);border-radius:8px;background:var(--b2);padding:12px">
+      <div style="font-size:13px;font-weight:800;color:var(--t);margin-bottom:6px">Option 2: Internal jump server</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.65">Best for MSP/NOC use. Run the same agent inside the customer/MSP network behind VPN or internal HTTPS. Do not expose the agent port to the public internet.</div>
+    </div>
   </div>
 </div>
 
@@ -14867,4 +16556,3 @@ function initAndRender(){try{
 </script>
 </body>
 </html>
-
