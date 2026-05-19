@@ -5422,149 +5422,65 @@ function nwAssistantRenderResult(title,findings,extra){
 function renderNetWolfAssistant(el){
   if(!document.getElementById('nwa-style')){
     const st=document.createElement('style');st.id='nwa-style';
-    st.textContent=[
-      '.nwa-shell{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.68fr);gap:14px;align-items:start}',
-      '.nwa-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:linear-gradient(135deg,rgba(29,158,117,.13),rgba(29,158,117,.04));border:1px solid rgba(29,158,117,.25);border-radius:10px;margin-bottom:12px}',
-      '.nwa-banner-left{display:flex;align-items:center;gap:12px}',
-      '.nwa-banner-ico{font-size:26px;line-height:1;flex-shrink:0}',
-      '.nwa-banner-title{font-size:15px;font-weight:900;color:var(--t);margin-bottom:2px}',
-      '.nwa-banner-sub{font-size:11px;color:var(--t2);line-height:1.5}',
-      '.nwa-badges{display:flex;flex-wrap:wrap;gap:6px}',
-      '.nwa-badge{font-size:10px;font-family:var(--mono);padding:3px 8px;border:1px solid var(--br);border-radius:999px;background:var(--b3);color:var(--t2)}',
-      '.nwa-mode-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-bottom:12px}',
-      '.nwa-mode-btn{border:1px solid var(--br);background:var(--b3);color:var(--t2);border-radius:8px;padding:8px 10px;text-align:left;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;line-height:1.2}',
-      '.nwa-mode-btn:hover,.nwa-mode-btn.active{border-color:var(--a);background:rgba(29,158,117,.1);color:var(--t)}',
-      '.nwa-mode-btn small{display:block;font-size:9.5px;color:var(--t3);font-weight:400;line-height:1.3;margin-top:1px}',
-      '.nwa-mode-ico{font-size:16px;flex-shrink:0;width:20px;text-align:center}',
-      '.nwa-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}',
-      '.nwa-field label{font-size:10px;color:var(--t3);font-family:var(--mono);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}',
-      '.nwa-field input,.nwa-field select,.nwa-field textarea{width:100%;background:var(--bg);border:1px solid var(--br);border-radius:7px;color:var(--t);padding:7px 10px;outline:none;font-size:12px}',
-      '.nwa-field textarea{font-family:var(--mono);font-size:12px;line-height:1.65;resize:vertical}',
-      '.nwa-field input:focus,.nwa-field select:focus,.nwa-field textarea:focus{border-color:var(--a)}',
-      '.nwa-inputs-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}',
-      '.nwa-textarea-wrap{margin-bottom:10px;position:relative}',
-      '.nwa-textarea-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}',
-      '.nwa-textarea-label span{font-size:10px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em}',
-      '.nwa-mask-toggle{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);cursor:pointer}',
-      '.nwa-mask-toggle input{accent-color:var(--a);width:12px;height:12px}',
-      '.nwa-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:10px;border-top:1px solid var(--br)}',
-      '.nwa-btn-primary{background:var(--a);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;transition:opacity .15s}',
-      '.nwa-btn-primary:hover{opacity:.88}',
-      '.nwa-btn-ai{background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;transition:opacity .15s}',
-      '.nwa-btn-ai:hover{opacity:.88}',
-      '.nwa-side{display:flex;flex-direction:column;gap:10px}',
-      '.nwa-pack-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}',
-      '.nwa-pack-title{font-size:12px;font-weight:800;color:var(--t)}',
-      '#nwa-hints{background:#0a0f18;border:1px solid #2f425f;border-radius:7px;padding:8px 10px;color:#dbeafe;font-size:11px;line-height:1.5;margin-bottom:8px}',
-      '#nwa-hints strong{color:#fff;font-weight:900}',
-      '.nwa-cmd-row{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid rgba(148,163,184,.14)}',
-      '.nwa-read-badge{flex-shrink:0;font-size:8px;font-weight:900;color:#04130a;background:#22c55e;border:1px solid #16a34a;border-radius:4px;padding:1px 4px;margin-top:2px;letter-spacing:.02em}',
-      '.nwa-cmd-code{display:block;min-width:0;color:#e5edf7;font-family:var(--mono);font-size:11px;line-height:1.4;word-break:break-word;white-space:pre-wrap}',
-      '.nwa-expand-cmds{width:100%;margin-top:6px;background:transparent;border:1px dashed #3b5778;color:#93c5fd;border-radius:6px;padding:5px 10px;font-size:10.5px;font-weight:700;cursor:pointer}',
-      '.nwa-expand-cmds:hover{border-color:var(--a);color:#fff;background:rgba(29,158,117,.08)}',
-      '.nwa-domain-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}',
-      '.nwa-domain-btn{border:1px solid rgba(47,66,95,.7);background:rgba(10,15,24,.7);color:#e2e8f0;border-radius:6px;padding:5px 8px;font-size:10px;font-weight:700;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .12s}',
-      '.nwa-domain-btn:hover{border-color:var(--a);background:rgba(29,158,117,.1);color:#fff}',
-      '.nwa-agent-status{font-size:11px;line-height:1.5;padding:8px 10px;border-radius:7px;border:1px solid var(--br);background:#0a0f18;color:var(--t2)}',
-      '.nwa-agent-status.ok{border-color:rgba(34,197,94,.45);color:#bbf7d0}',
-      '.nwa-agent-status.warn{border-color:rgba(234,179,8,.5);color:#fde68a}',
-      '.nwa-agent-status.bad{border-color:rgba(248,81,73,.45);color:#fecaca}',
-      '.nwa-agent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px}',
-      '.nwa-agent-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}',
-      '.nwa-agent-actions .sbtn,.nwa-agent-actions a{width:100%;text-align:center;justify-content:center;font-size:11px}',
-      '.nwa-agent-note{font-size:10px;color:var(--t3);line-height:1.5;margin-top:7px;padding:6px 8px;border-radius:6px;background:rgba(255,255,255,.03);border:1px solid var(--br)}',
-      '.nwa-agent-output{margin-top:8px;max-height:180px;overflow:auto;background:#050914;border:1px solid #24344e;border-radius:7px;padding:9px;color:#e5edf7;font-family:var(--mono);font-size:10.5px;line-height:1.45;white-space:pre-wrap}',
-      '@media(max-width:980px){.nwa-shell{grid-template-columns:1fr}.nwa-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}',
-      '@media(max-width:620px){.nwa-mode-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.nwa-controls,.nwa-inputs-row{grid-template-columns:1fr}.nwa-banner{flex-direction:column;align-items:flex-start;gap:8px}.nwa-agent-grid,.nwa-agent-actions{grid-template-columns:1fr}.nwa-domain-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}'
-    ].join('');
+    st.textContent='.nwa-hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,.8fr);gap:14px;margin-bottom:14px}.nwa-title{font-size:22px;font-weight:900;color:var(--t);margin-bottom:6px}.nwa-sub{font-size:12px;color:var(--t2);line-height:1.7}.nwa-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.nwa-badge{font-size:10px;font-family:var(--mono);padding:5px 9px;border:1px solid var(--br);border-radius:999px;background:var(--b3);color:var(--t2)}.nwa-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.75fr);gap:14px}.nwa-workflows,.nwa-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.nwa-workflow,.nwa-tool{border:1px solid var(--br);background:var(--b3);color:var(--t);border-radius:9px;padding:10px;text-align:left;cursor:pointer;display:flex;gap:9px;align-items:flex-start}.nwa-workflow:hover,.nwa-tool:hover{border-color:var(--a);background:color-mix(in srgb,var(--b3) 78%,var(--a))}.nwa-workflow b,.nwa-tool b{display:block;font-size:12px}.nwa-workflow small,.nwa-tool small{display:block;font-size:10px;color:var(--t3);line-height:1.45;margin-top:2px}.nwa-tool-ico{font-size:18px;width:24px;text-align:center;flex-shrink:0}.nwa-field label{font-size:10px;color:var(--t3);font-family:var(--mono);display:block;margin-bottom:4px;text-transform:uppercase}.nwa-field input,.nwa-field select,.nwa-field textarea{width:100%;background:var(--bg);border:1px solid var(--br);border-radius:7px;color:var(--t);padding:8px 10px;outline:none}.nwa-field textarea{font-family:var(--mono);font-size:12px;line-height:1.65;resize:vertical}.nwa-field input:focus,.nwa-field select:focus,.nwa-field textarea:focus{border-color:var(--a)}.nwa-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}#nwa-hints{background:#0a0f18;border:1px solid #2f425f;border-radius:8px;padding:10px 12px;color:#dbeafe!important}#nwa-hints strong{color:#ffffff!important;font-weight:900}#nwa-hints span{color:#dbeafe!important}.nwa-cmd-row{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(148,163,184,.22)}.nwa-read-badge{flex-shrink:0;font-family:var(--mono);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#052e16;background:#86efac;border:1px solid #22c55e;border-radius:999px;padding:3px 7px;margin-top:1px}.nwa-cmd-code{display:block;min-width:0;color:#f8fafc!important;background:#050914;border:1px solid #24344e;border-radius:6px;padding:6px 8px;font-size:11.5px;line-height:1.55;word-break:break-word;white-space:pre-wrap}@media(max-width:980px){.nwa-hero,.nwa-layout{grid-template-columns:1fr}.nwa-tools{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}}@media(max-width:620px){.nwa-title{font-size:18px}.nwa-sub{font-size:11px}.nwa-badges{gap:6px}.nwa-badge{font-size:9.5px;padding:4px 7px}.nwa-workflows,.nwa-tools{grid-template-columns:1fr}.nwa-workflow,.nwa-tool{padding:9px}.nwa-field input,.nwa-field select,.nwa-field textarea{font-size:12px;padding:9px}.nwa-field textarea{min-height:190px}.nwa-actions{display:grid;grid-template-columns:1fr;gap:8px}.nwa-actions .sbtn{width:100%;justify-content:center}.nwa-actions label{width:100%;line-height:1.45}.nwa-layout .cbody{padding:10px}.nwa-cmd-row{gap:7px}.nwa-read-badge{font-size:8.5px;padding:3px 6px}.nwa-cmd-code{font-size:11px;padding:6px}}';
+    st.textContent += '.nwa-shell{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(330px,.72fr);gap:14px;align-items:start}.nwa-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.nwa-section-kicker{font-size:10px;color:var(--a);font-family:var(--mono);font-weight:900;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}.nwa-section-title{font-size:17px;font-weight:900;color:var(--t)}.nwa-section-copy{font-size:11.5px;color:var(--t2);line-height:1.6;margin-top:4px}.nwa-side{display:flex;flex-direction:column;gap:10px}.nwa-focus-card{min-height:0}.nwa-focus-body{display:flex;flex-direction:column;gap:7px}.nwa-domain-list{display:flex!important;flex-wrap:wrap;gap:6px!important}.nwa-domain-btn{width:auto;text-align:left;background:#0a0f18!important;border:1px solid #2f425f!important;color:#f8fafc!important;font-size:10.5px!important;padding:6px 8px!important;border-radius:999px!important;justify-content:flex-start;line-height:1.2}.nwa-domain-btn:hover{border-color:var(--a)!important;background:#102033!important;color:#fff!important}.nwa-side .nwa-cmd-row{display:grid;grid-template-columns:20px minmax(0,1fr);gap:7px;align-items:center;padding:4px 0;border-bottom:1px solid rgba(148,163,184,.16)}.nwa-side .nwa-read-badge{font-size:8px;padding:1px 0;width:18px;text-align:center;border-radius:5px;background:#22c55e;color:#04130a;border-color:#16a34a;margin:0}.nwa-side .nwa-cmd-code{background:transparent;border:0;border-radius:0;padding:0;color:#e5edf7!important;font-size:11px;line-height:1.35}.nwa-expand-cmds{width:100%;margin-top:5px;background:transparent;border:1px dashed #3b5778;color:#dbeafe;border-radius:7px;padding:6px 10px;font-size:10.5px;font-weight:800;cursor:pointer}.nwa-expand-cmds:hover{border-color:var(--a);color:#fff;background:#102033}.nwa-agent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.nwa-agent-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.nwa-agent-actions .sbtn,.nwa-agent-actions a{width:100%;justify-content:center;text-align:center}.nwa-agent-status{font-size:11px;line-height:1.55;padding:8px 10px;border-radius:8px;border:1px solid var(--br);background:#0a0f18;color:var(--t2)}.nwa-agent-status.ok{border-color:rgba(34,197,94,.45);color:#bbf7d0}.nwa-agent-status.warn{border-color:rgba(234,179,8,.5);color:#fde68a}.nwa-agent-status.bad{border-color:rgba(248,81,73,.45);color:#fecaca}.nwa-agent-note{font-size:10.5px;color:var(--t3);line-height:1.55;margin-top:8px}.nwa-agent-output{margin-top:8px;max-height:180px;overflow:auto;background:#050914;border:1px solid #24344e;border-radius:7px;padding:9px;color:#e5edf7;font-family:var(--mono);font-size:10.5px;line-height:1.45;white-space:pre-wrap}.nwa-mini-card{border:1px solid var(--br);background:rgba(10,15,24,.65);border-radius:8px;padding:10px}.nwa-tool-compact{grid-template-columns:repeat(2,minmax(0,1fr))}.nwa-tool-compact .nwa-tool{padding:8px}.nwa-tool-compact .nwa-tool small{display:none}@media(min-width:981px){.nwa-layout{grid-template-columns:minmax(0,1.35fr) minmax(320px,.75fr)}}@media(max-width:980px){.nwa-shell{grid-template-columns:1fr}.nwa-side{display:grid;grid-template-columns:1fr;gap:10px}}@media(max-width:620px){.nwa-domain-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px!important}.nwa-domain-btn{width:100%;font-size:10.5px!important;padding:7px 8px!important;border-radius:8px!important}.nwa-side .nwa-cmd-row{padding:4px 0}.nwa-expand-cmds{padding:7px 10px}.nwa-agent-grid,.nwa-agent-actions,.nwa-tool-compact{grid-template-columns:1fr}.nwa-agent-output{max-height:150px}.nwa-head{display:block}.nwa-badges{margin-top:8px}}';
     document.head.appendChild(st);
   }
-
-  const modeIcons={triage:'🩺',explain:'📖',commands:'⌨️',config:'🧩',compare:'🔍',report:'📝',learn:'🎓'};
-
   el.innerHTML='<div class="nwa-shell">'
-    // ── MAIN COLUMN ──
-    +'<div>'
-    // Banner
-    +'<div class="nwa-banner">'
-    +'<div class="nwa-banner-left"><span class="nwa-banner-ico">🐺</span><div><div class="nwa-banner-title">NetWolf Assistant</div><div class="nwa-banner-sub">Triage incidents, explain CLI output, build config plans, and run Level 2 live checks — all without leaving the toolkit.</div></div></div>'
-    +'<div class="nwa-badges"><span class="nwa-badge">🟢 Local triage</span><span class="nwa-badge">⚡ Optional AI</span><span class="nwa-badge">🔌 Level 2 agent</span></div>'
+    +'<div class="nwa-main">'
+    +'<div class="cblock"><div class="cbody" style="padding:16px">'
+    +'<div class="nwa-head"><div><div class="nwa-section-kicker">NetWolf Assistant</div><div class="nwa-section-title">Assistant Workbench</div><div class="nwa-section-copy">Troubleshoot, explain outputs, build safe command packs, prepare config plans, write reports, and jump into the exact toolkit area.</div></div>'
+    +'<div class="nwa-badges"><span class="nwa-badge">Local triage</span><span class="nwa-badge">Optional AI</span><span class="nwa-badge">Level 2 agent</span></div></div>'
+    +'<div class="nwa-workflows" style="margin-bottom:12px">'
+    +Object.keys(NW_ASSISTANT_MODES).map(k=>'<button class="nwa-workflow" data-mode="'+k+'"><span class="nwa-tool-ico">'+(k==='triage'?'🩺':k==='explain'?'📖':k==='commands'?'⌨️':k==='config'?'🧩':k==='compare'?'🔍':k==='report'?'📝':'🎓')+'</span><span><b>'+escapeHtml(NW_ASSISTANT_MODES[k].label)+'</b><small>'+escapeHtml(NW_ASSISTANT_MODES[k].hint)+'</small></span></button>').join('')
     +'</div>'
-    // Mode strip
-    +'<div class="nwa-mode-strip">'
-    +Object.keys(NW_ASSISTANT_MODES).map(k=>'<button class="nwa-mode-btn" data-mode="'+k+'"><span class="nwa-mode-ico">'+modeIcons[k]+'</span><span><b style="font-size:11.5px">'+escapeHtml(NW_ASSISTANT_MODES[k].label)+'</b><small>'+escapeHtml(NW_ASSISTANT_MODES[k].hint)+'</small></span></button>').join('')
-    +'</div>'
-    // Controls row
-    +'<div class="cblock" style="margin-bottom:10px"><div class="cbody">'
-    +'<div class="nwa-controls">'
-    +'<div class="nwa-field"><label>Mode</label><select id="nwa-mode" onchange="nwAssistantModeHint()">'+nwAssistantModeOptions()+'</select></div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:10px">'
+    +'<div class="nwa-field"><label>Assistant mode</label><select id="nwa-mode" onchange="nwAssistantModeHint()">'+nwAssistantModeOptions()+'</select><div id="nwa-mode-hint" style="font-size:10px;color:var(--t3);line-height:1.45;margin-top:5px"></div></div>'
     +'<div class="nwa-field"><label>Problem domain</label><select id="nwa-kind" onchange="nwAssistantSetKind(this.value)">'+nwAssistantPackOptions()+'</select></div>'
     +'<div class="nwa-field"><label>Severity</label><select id="nwa-sev"><option>Production down</option><option selected>Service degraded</option><option>Investigation only</option><option>Lab / training</option></select></div>'
     +'</div>'
-    +'<div id="nwa-mode-hint" style="font-size:10.5px;color:var(--a);margin:-2px 0 8px;font-family:var(--mono);min-height:14px"></div>'
-    +'<div class="nwa-inputs-row">'
-    +'<div class="nwa-field"><label>Symptom / request</label><input id="nwa-symptom" placeholder="e.g. users cannot reach server behind NAT"></div>'
-    +'<div class="nwa-field"><label>Command you ran</label><input id="nwa-cmd" placeholder="diagnose debug flow / show firewall policy..."></div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:10px">'
+    +'<div class="nwa-field"><label>Symptom / request</label><input id="nwa-symptom" placeholder="Example: users cannot reach server behind NAT"></div>'
+    +'<div class="nwa-field"><label>Command you ran</label><input id="nwa-cmd" placeholder="diagnose debug flow / show firewall policy / get router..."></div>'
     +'</div>'
-    +'<div class="nwa-textarea-wrap">'
-    +'<div class="nwa-textarea-label"><span>CLI output · config · logs · change request</span><label class="nwa-mask-toggle"><input type="checkbox" id="nwa-mask" checked> auto-mask IPs before AI</label></div>'
-    +'<textarea id="nwa-input" rows="13" placeholder="Paste CLI output, config snippet, log lines, or describe what you need. Run Bulk Anonymizer first for customer data."></textarea>'
-    +'</div>'
+    +'<div class="nwa-field"><label>Paste output, config, logs, packet notes, or change request</label><textarea id="nwa-input" rows="15" placeholder="Paste CLI output, config, logs, packet capture notes, or describe what you want to build. Use Bulk Anonymizer first for customer/public data."></textarea></div>'
     +'<div class="nwa-actions">'
-    +'<button class="nwa-btn-primary" onclick="nwAssistantLocal()">🔍 Local Triage</button>'
-    +'<button class="nwa-btn-ai" onclick="nwAssistantAI()">✨ AI Deep Analyze</button>'
+    +'<label style="font-size:11px;color:var(--t2);display:flex;align-items:center;gap:6px"><input type="checkbox" id="nwa-mask" checked style="accent-color:var(--a)"> apply existing IP masks before AI</label>'
+    +'<button class="sbtn" onclick="nwAssistantLocal()">Local Triage</button>'
+    +'<button class="sbtn" onclick="nwAssistantAI()" style="background:linear-gradient(90deg,var(--a),var(--ad));font-weight:800">AI Deep Analyze</button>'
     +'<button class="sbtn" onclick="nwAssistantCopy()" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Copy Result</button>'
-    +'<button class="sbtn" onclick="nwAssistantClear()" style="background:rgba(248,81,73,.08);color:var(--r);border:1px solid rgba(248,81,73,.22)">Clear</button>'
-    +'</div>'
-    +'</div></div>'
-    +'<div id="nwa-output"></div>'
-    +'</div>'
-    // ── SIDEBAR ──
+    +'<button class="sbtn" onclick="nwAssistantClear()" style="background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.25)">Clear</button>'
+    +'</div></div></div><div id="nwa-output"></div></div>'
     +'<div class="nwa-side">'
-    // Command pack card
-    +'<div class="cblock"><div class="chdr"><div class="chdr-l" id="nwa-pack-title">VPN / IPsec</div><span class="cbadge ro">Read-only</span></div><div class="cbody">'
-    +'<div id="nwa-hints"></div>'
-    +'<div id="nwa-cmds"></div>'
-    +'</div></div>'
-    // Problem domain picker
-    +'<div class="cblock"><div class="chdr"><div class="chdr-l">Problem domains</div></div><div class="cbody" style="padding-bottom:10px">'
-    +'<div class="nwa-domain-grid">'
-    +Object.keys(NW_ASSISTANT_PACKS).map(k=>'<button class="nwa-domain-btn nwa-quick" data-kind="'+k+'">'+escapeHtml(NW_ASSISTANT_PACKS[k].label)+'</button>').join('')
-    +'</div>'
-    +'</div></div>'
-    // Level 2 agent card
-    +'<div class="cblock"><div class="chdr"><div class="chdr-l">🔌 Level 2 Live Agent</div><span class="cbadge ro">Local only</span></div><div class="cbody">'
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">Level 2 Live Agent</div><span class="cbadge ro">Local only</span></div><div class="cbody">'
     +'<div id="nwa-agent-status" class="nwa-agent-status warn">Agent not checked yet. Start <code>netwolf-agent</code>, then click Check Agent.</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Agent URL</label><input id="nwa-agent-url" value="http://127.0.0.1:5051"></div>'
-    +'<div class="nwa-agent-grid">'
+    +'<div class="nwa-agent-grid" style="margin-top:8px">'
     +'<div class="nwa-field"><label>Firewall host</label><input id="nwa-agent-host" placeholder="192.168.x.x"></div>'
     +'<div class="nwa-field"><label>SSH user</label><input id="nwa-agent-user" placeholder="readonly-admin"></div>'
     +'<div class="nwa-field"><label>SSH port</label><input id="nwa-agent-port" value="22"></div>'
     +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" placeholder="C:\\netwolf-agent\\key"></div>'
     +'</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Read-only check</label><select id="nwa-agent-check"><option value="system_health">System health</option><option value="vpn_ipsec">VPN / IPsec</option><option value="policy_nat">Policy / NAT / VIP</option><option value="sessions_ports">Sessions / Ports</option><option value="routing">Routing / SD-WAN</option><option value="ha_cluster">HA / Cluster</option><option value="dhcp_dns">DHCP / DNS</option><option value="security_profiles">Security profiles / Logs</option><option value="certificates">Certificates / TLS</option><option value="fortianalyzer">FortiAnalyzer / Logging</option></select></div>'
-    +'<div class="nwa-agent-actions">'
-    +'<button class="sbtn" onclick="nwAgentCheckStatus()">Check Agent</button>'
-    +'<button class="sbtn" onclick="nwAgentRunCheck()" style="background:#15803D">Dry-run Check</button>'
-    +'<button class="sbtn" onclick="nwAgentShowLogs()" style="background:#2563EB">Agent Logs</button>'
-    +'<button class="sbtn" onclick="nav(\'liveconnect\')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Live Connect</button>'
-    +'<a class="sbtn" href="netwolf-agent.zip" download style="text-decoration:none;background:#15803D">⬇ Download Agent</a>'
-    +'<a class="sbtn" href="netwolf-agent/README.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:var(--b3);border:1px solid var(--br);color:var(--t2)">Guide</a>'
-    +'</div>'
-    +'<div class="nwa-agent-note">⚠️ Dry-run mode only by default. The agent runs locally — no cloud APIs, no external calls unless you explicitly enable them.</div>'
+    +'<div class="nwa-agent-actions"><button class="sbtn" onclick="nwAgentCheckStatus()">Check Agent</button><button class="sbtn" onclick="nwAgentRunCheck()" style="background:#15803D">Dry-run Check</button><button class="sbtn" onclick="nwAgentShowLogs()" style="background:#2563EB">Agent Logs</button><button class="sbtn" onclick="nav(\'liveconnect\')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Live Connect</button><a class="sbtn" href="netwolf-agent.zip" download style="text-decoration:none;background:#15803D">Download NetWolf Agent</a><a class="sbtn" href="netwolf-agent/README.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:var(--b3);border:1px solid var(--br);color:var(--t2)">Guide</a></div>'
+    +'<div class="nwa-agent-note">Default mode is dry-run. The local agent does not call cloud APIs; AI analysis only happens if you copy/paste output and click an AI button.</div>'
     +'<pre id="nwa-agent-output" class="nwa-agent-output" style="display:none"></pre>'
     +'</div></div>'
-    +'</div>'
-    +'</div>';
-
-  document.querySelectorAll('.nwa-mode-btn').forEach(btn=>{
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">Problem domains</div></div><div class="cbody nwa-domain-list">'
+    +Object.keys(NW_ASSISTANT_PACKS).map(k=>'<button class="sbtn nwa-quick nwa-domain-btn" data-kind="'+k+'">'+escapeHtml(NW_ASSISTANT_PACKS[k].label)+'</button>').join('')
+    +'</div></div></div></div>';
+  document.querySelectorAll('.nwa-workflow').forEach(btn=>{
     btn.addEventListener('click',()=>{
-      document.querySelectorAll('.nwa-mode-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
       const mode=btn.getAttribute('data-mode')||'triage';
       const sel=document.getElementById('nwa-mode');
       if(sel) sel.value=mode;
       nwAssistantModeHint();
+    });
+  });
+  document.querySelectorAll('.nwa-tool').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const target=btn.getAttribute('data-tab');
+      if(target) nav(target);
     });
   });
   document.querySelectorAll('.nwa-quick').forEach(btn=>{
@@ -5574,13 +5490,8 @@ function renderNetWolfAssistant(el){
       if(sel) sel.value=k;
       nwAssistantCommandsExpanded=false;
       nwAssistantSetKind(k);
-      document.querySelectorAll('.nwa-domain-btn').forEach(b=>b.style.borderColor='');
-      btn.style.borderColor='var(--a)';
     });
   });
-  // activate first mode button
-  const firstMode=el.querySelector('.nwa-mode-btn');
-  if(firstMode) firstMode.classList.add('active');
   nwAssistantSetKind('vpn');
   nwAssistantModeHint();
 }
