@@ -5460,9 +5460,10 @@ function renderNetWolfAssistant(el){
     +'<div class="nwa-field"><label>SSH user</label><input id="nwa-agent-user" placeholder="readonly-admin"></div>'
     +'<div class="nwa-field"><label>SSH port</label><input id="nwa-agent-port" value="22"></div>'
     +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" placeholder="C:\\netwolf-agent\\key"></div>'
+    +'<div class="nwa-field"><label>Agent token (jump server only)</label><input id="nwa-agent-token" type="password" autocomplete="off" placeholder="Leave empty for local agent"></div>'
     +'</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Read-only check</label><select id="nwa-agent-check"><option value="system_health">System health</option><option value="vpn_ipsec">VPN / IPsec</option><option value="policy_nat">Policy / NAT / VIP</option><option value="sessions_ports">Sessions / Ports</option><option value="routing">Routing / SD-WAN</option><option value="ha_cluster">HA / Cluster</option><option value="dhcp_dns">DHCP / DNS</option><option value="security_profiles">Security profiles / Logs</option><option value="certificates">Certificates / TLS</option><option value="fortianalyzer">FortiAnalyzer / Logging</option></select></div>'
-    +'<div class="nwa-agent-actions"><button class="sbtn" onclick="nwAgentCheckStatus()">Check Agent</button><button class="sbtn" onclick="nwAgentRunCheck()" style="background:#15803D">Dry-run Check</button><button class="sbtn" onclick="nwAgentShowLogs()" style="background:#2563EB">Agent Logs</button><button class="sbtn" onclick="nav(\'liveconnect\')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Live Connect</button><a class="sbtn" href="netwolf-agent.zip" download style="text-decoration:none;background:#15803D">Download NetWolf Agent</a><a class="sbtn" href="netwolf-agent/README.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:var(--b3);border:1px solid var(--br);color:var(--t2)">Guide</a></div>'
+    +'<div class="nwa-agent-actions"><button class="sbtn" onclick="nwAgentCheckStatus()">Check Agent</button><button class="sbtn" onclick="nwAgentRunCheck()" style="background:#15803D">Dry-run Check</button><button class="sbtn" onclick="nwAgentShowLogs()" style="background:#2563EB">Agent Logs</button><button class="sbtn" onclick="nav(\'liveconnect\')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Live Connect</button><a class="sbtn" href="'+nwToolkitAssetUrl('/netwolf-agent.zip')+'" download style="text-decoration:none;background:#15803D">Download NetWolf Agent</a><a class="sbtn" href="'+nwToolkitAssetUrl('/guides/netwolf-agent-setup.html')+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:var(--b3);border:1px solid var(--br);color:var(--t2)">Guide</a></div>'
     +'<div class="nwa-agent-note">Default mode is dry-run. The local agent does not call cloud APIs; AI analysis only happens if you copy/paste output and click an AI button.</div>'
     +'<pre id="nwa-agent-output" class="nwa-agent-output" style="display:none"></pre>'
     +'</div></div>'
@@ -5499,6 +5500,16 @@ function nwAgentUrl(){
   const el=document.getElementById('nwa-agent-url');
   return (el&&el.value?el.value:'http://127.0.0.1:5051').replace(/\/+$/,'');
 }
+function nwToolkitAssetUrl(path){
+  if(location.protocol==='http:'||location.protocol==='https:') return location.origin+path;
+  return 'http://127.0.0.1:5050'+path;
+}
+function nwAgentHeaders(extra){
+  const headers=Object.assign({},extra||{});
+  const tok=document.getElementById('nwa-agent-token')?.value||'';
+  if(tok) headers['X-NetWolf-Agent-Token']=tok;
+  return headers;
+}
 function nwAgentStatus(text,state){
   const el=document.getElementById('nwa-agent-status');
   if(!el)return;
@@ -5520,7 +5531,7 @@ window.nwAgentCheckStatus=async function(){
     const state=data.commandExecutionEnabled?'ok':'warn';
     nwAgentStatus('Agent detected: '+escapeHtml(data.mode||'local')+' on '+escapeHtml(data.bind||'127.0.0.1')+':'+escapeHtml(String(data.port||5051))+'<br>Cloud egress: off. External API calls: off. Command execution: '+(data.commandExecutionEnabled?'enabled':'dry-run only')+'.',state);
     try{
-      const checks=await fetch(nwAgentUrl()+'/checks',{method:'GET',cache:'no-store'}).then(r=>r.json());
+      const checks=await fetch(nwAgentUrl()+'/checks',{method:'GET',cache:'no-store',headers:nwAgentHeaders()}).then(r=>r.json());
       const sel=document.getElementById('nwa-agent-check');
       if(sel&&checks.ok&&Array.isArray(checks.checks)){
         sel.innerHTML=checks.checks.map(c=>'<option value="'+escapeHtml(c.id)+'">'+escapeHtml(c.title)+'</option>').join('');
@@ -5544,7 +5555,7 @@ window.nwAgentRunCheck=async function(){
         sshKeyPath:document.getElementById('nwa-agent-key')?.value||''
       }
     };
-    const resp=await fetch(nwAgentUrl()+'/run-check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const resp=await fetch(nwAgentUrl()+'/run-check',{method:'POST',headers:nwAgentHeaders({'Content-Type':'application/json'}),body:JSON.stringify(body)});
     const data=await resp.json();
     if(!resp.ok||!data.ok)throw new Error((data.errors||[data.error||'Agent request failed']).join('\n'));
     const text='Level 2 dry-run: no firewall connection opened.\n\nCheck: '+data.check.title+'\nPurpose: '+data.check.description+'\n\nCommands the local agent would run:\n'+data.commands.map(c=>' - '+c).join('\n');
@@ -5559,7 +5570,7 @@ window.nwAgentRunCheck=async function(){
 window.nwAgentShowLogs=async function(){
   nwAgentOutput('Loading local agent logs...');
   try{
-    const resp=await fetch(nwAgentUrl()+'/logs?limit=30',{method:'GET',cache:'no-store'});
+    const resp=await fetch(nwAgentUrl()+'/logs?limit=30',{method:'GET',cache:'no-store',headers:nwAgentHeaders()});
     const data=await resp.json();
     if(!resp.ok||!data.ok)throw new Error(data.error||'Could not load logs');
     if(!data.logs.length){
@@ -15358,8 +15369,8 @@ function renderLiveConnect(el){
     <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Local Level 2 agent ready</div>
     <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">Download the agent, extract it, and run <code>start-local-agent.bat</code>. Then use NetWolf Assistant → Level 2 Live Agent. Default mode is dry-run and local-only.</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-      <a class="sbtn" href="netwolf-agent.zip" download style="text-decoration:none;background:#15803D">Download NetWolf Local Agent</a>
-      <a class="sbtn" href="netwolf-agent/README.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:var(--b3);border:1px solid var(--br);color:var(--t2)">Open Setup Guide</a>
+      <a class="sbtn" href="${nwToolkitAssetUrl('/netwolf-agent.zip')}" download style="text-decoration:none;background:#15803D">Download NetWolf Local Agent</a>
+      <a class="sbtn" href="${nwToolkitAssetUrl('/guides/netwolf-agent-setup.html')}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:var(--b3);border:1px solid var(--br);color:var(--t2)">Open Setup Guide</a>
     </div>
   </div>
 </div>
