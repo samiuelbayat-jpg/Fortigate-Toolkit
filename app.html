@@ -10,7 +10,7 @@
 <!-- SECURITY NOTE: unsafe-inline is required because this is a single-file app with inline scripts/styles.
      To remove it: split into separate .js/.css files and use a nonce or hash-based CSP.
      object-src none and base-uri self added to limit attack surface. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' http://127.0.0.1:5051 http://localhost:5051 https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' http://127.0.0.1:5051 http://localhost:5051 https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' http://127.0.0.1:5051 http://localhost:5051 https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app;">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
@@ -5510,6 +5510,38 @@ function nwAgentHeaders(extra){
   if(tok) headers['X-NetWolf-Agent-Token']=tok;
   return headers;
 }
+function nwAgentJsonp(path,params){
+  return new Promise((resolve,reject)=>{
+    const cb='nwAgentCb_'+Date.now()+'_'+Math.random().toString(16).slice(2);
+    const qs=new URLSearchParams(params||{});
+    qs.set('callback',cb);
+    const s=document.createElement('script');
+    let done=false;
+    const clean=()=>{delete window[cb];s.remove();};
+    window[cb]=(data)=>{done=true;clean();resolve(data);};
+    s.onerror=()=>{if(done)return;clean();reject(new Error('Local agent script fallback failed'));};
+    s.src=nwAgentUrl()+path+'?'+qs.toString();
+    document.head.appendChild(s);
+    setTimeout(()=>{if(done)return;clean();reject(new Error('Local agent script fallback timed out'));},5000);
+  });
+}
+function nwAgentApplyChecks(checks){
+  const sel=document.getElementById('nwa-agent-check');
+  if(sel&&checks&&checks.ok&&Array.isArray(checks.checks)){
+    sel.innerHTML=checks.checks.map(c=>'<option value="'+escapeHtml(c.id)+'">'+escapeHtml(c.title)+'</option>').join('');
+  }
+}
+function nwAgentShowHealth(data,via){
+  const state=data.commandExecutionEnabled?'ok':'warn';
+  nwAgentStatus('Agent detected: '+escapeHtml(data.mode||'local')+' on '+escapeHtml(data.bind||'127.0.0.1')+':'+escapeHtml(String(data.port||5051))+'<br>Cloud egress: off. External API calls: off. Command execution: '+(data.commandExecutionEnabled?'enabled':'dry-run only')+'.'+(via?'<br><span style="color:var(--t3)">Connection method: '+escapeHtml(via)+'</span>':''),state);
+}
+function nwAgentShowDryRun(data){
+  const text='Level 2 dry-run: no firewall connection opened.\n\nCheck: '+data.check.title+'\nPurpose: '+data.check.description+'\n\nCommands the local agent would run:\n'+data.commands.map(c=>' - '+c).join('\n');
+  nwAgentOutput(text);
+  const assistantInput=document.getElementById('nwa-input');
+  if(assistantInput&&!assistantInput.value.trim())assistantInput.value=text;
+  showToast('Level 2 dry-run ready');
+}
 function nwAgentStatus(text,state){
   const el=document.getElementById('nwa-agent-status');
   if(!el)return;
@@ -5528,17 +5560,20 @@ window.nwAgentCheckStatus=async function(){
     const resp=await fetch(nwAgentUrl()+'/health',{method:'GET',cache:'no-store'});
     const data=await resp.json();
     if(!resp.ok||!data.ok)throw new Error(data.error||'Agent health check failed');
-    const state=data.commandExecutionEnabled?'ok':'warn';
-    nwAgentStatus('Agent detected: '+escapeHtml(data.mode||'local')+' on '+escapeHtml(data.bind||'127.0.0.1')+':'+escapeHtml(String(data.port||5051))+'<br>Cloud egress: off. External API calls: off. Command execution: '+(data.commandExecutionEnabled?'enabled':'dry-run only')+'.',state);
+    nwAgentShowHealth(data,'fetch');
     try{
       const checks=await fetch(nwAgentUrl()+'/checks',{method:'GET',cache:'no-store',headers:nwAgentHeaders()}).then(r=>r.json());
-      const sel=document.getElementById('nwa-agent-check');
-      if(sel&&checks.ok&&Array.isArray(checks.checks)){
-        sel.innerHTML=checks.checks.map(c=>'<option value="'+escapeHtml(c.id)+'">'+escapeHtml(c.title)+'</option>').join('');
-      }
+      nwAgentApplyChecks(checks);
     }catch(_e){}
   }catch(e){
-    nwAgentStatus('Agent not reachable at <code>'+escapeHtml(nwAgentUrl())+'</code>.<br>Start <code>C:\\Users\\abaya\\Downloads\\netwolf-agent\\start-local-agent.bat</code>, reload the page, and try again.<br><span style="color:var(--t3)">Error: '+escapeHtml(e.message||String(e))+'</span>','bad');
+    try{
+      const data=await nwAgentJsonp('/health.js');
+      if(!data.ok)throw new Error(data.error||'Agent fallback failed');
+      nwAgentShowHealth(data,'fallback');
+      nwAgentApplyChecks(await nwAgentJsonp('/checks.js'));
+    }catch(e2){
+      nwAgentStatus('Agent not reachable at <code>'+escapeHtml(nwAgentUrl())+'</code>.<br>Start <code>C:\\Users\\abaya\\Downloads\\netwolf-agent\\start-local-agent.bat</code>, reload the page, and try again.<br><span style="color:var(--t3)">Fetch error: '+escapeHtml(e.message||String(e))+'<br>Fallback error: '+escapeHtml(e2.message||String(e2))+'</span>','bad');
+    }
   }
 };
 window.nwAgentRunCheck=async function(){
@@ -5558,13 +5593,15 @@ window.nwAgentRunCheck=async function(){
     const resp=await fetch(nwAgentUrl()+'/run-check',{method:'POST',headers:nwAgentHeaders({'Content-Type':'application/json'}),body:JSON.stringify(body)});
     const data=await resp.json();
     if(!resp.ok||!data.ok)throw new Error((data.errors||[data.error||'Agent request failed']).join('\n'));
-    const text='Level 2 dry-run: no firewall connection opened.\n\nCheck: '+data.check.title+'\nPurpose: '+data.check.description+'\n\nCommands the local agent would run:\n'+data.commands.map(c=>' - '+c).join('\n');
-    nwAgentOutput(text);
-    const assistantInput=document.getElementById('nwa-input');
-    if(assistantInput&&!assistantInput.value.trim())assistantInput.value=text;
-    showToast('Level 2 dry-run ready');
+    nwAgentShowDryRun(data);
   }catch(e){
-    nwAgentOutput('Agent check failed:\n'+e.message+'\n\nNothing was sent to AI or outside the browser.');
+    try{
+      const data=await nwAgentJsonp('/dry-run.js',{checkId:body.checkId,host:body.device.host,username:body.device.username,port:String(body.device.port)});
+      if(!data.ok)throw new Error((data.errors||[data.error||'Agent request failed']).join('\n'));
+      nwAgentShowDryRun(data);
+    }catch(e2){
+      nwAgentOutput('Agent check failed:\n'+e.message+'\n\nFallback also failed:\n'+e2.message+'\n\nNothing was sent to AI or outside the browser.');
+    }
   }
 };
 window.nwAgentShowLogs=async function(){
