@@ -5456,11 +5456,11 @@ function renderNetWolfAssistant(el){
     +'<div id="nwa-agent-status" class="nwa-agent-status warn">Agent not checked yet. Start <code>netwolf-agent</code>, then click Check Agent.</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Agent URL</label><input id="nwa-agent-url" value="http://127.0.0.1:5051"></div>'
     +'<div class="nwa-agent-grid" style="margin-top:8px">'
-    +'<div class="nwa-field"><label>Firewall host</label><input id="nwa-agent-host" placeholder="192.168.x.x"></div>'
-    +'<div class="nwa-field"><label>SSH user</label><input id="nwa-agent-user" placeholder="readonly-admin"></div>'
-    +'<div class="nwa-field"><label>SSH port</label><input id="nwa-agent-port" value="22"></div>'
-    +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" placeholder="C:\\netwolf-agent\\key"></div>'
-    +'<div class="nwa-field"><label>Agent token (jump server only)</label><input id="nwa-agent-token" type="password" autocomplete="off" placeholder="Leave empty for local agent"></div>'
+    +'<div class="nwa-field"><label>Firewall host</label><input id="nwa-agent-host" name="nw-device-address" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="192.168.x.x"></div>'
+    +'<div class="nwa-field"><label>SSH user</label><input id="nwa-agent-user" name="nw-device-operator" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="readonly-admin"></div>'
+    +'<div class="nwa-field"><label>SSH port</label><input id="nwa-agent-port" name="nw-device-port" autocomplete="off" inputmode="numeric" value="22"></div>'
+    +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" name="nw-device-keyfile" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="C:\\netwolf-agent\\key"></div>'
+    +'<div class="nwa-field"><label>Agent token (jump server only)</label><input id="nwa-agent-token" name="nw-agent-access-code" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" placeholder="Leave empty for local agent"></div>'
     +'</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Read-only check</label><select id="nwa-agent-check"><option value="system_health">System health</option><option value="vpn_ipsec">VPN / IPsec</option><option value="policy_nat">Policy / NAT / VIP</option><option value="sessions_ports">Sessions / Ports</option><option value="routing">Routing / SD-WAN</option><option value="ha_cluster">HA / Cluster</option><option value="dhcp_dns">DHCP / DNS</option><option value="security_profiles">Security profiles / Logs</option><option value="certificates">Certificates / TLS</option><option value="fortianalyzer">FortiAnalyzer / Logging</option></select></div>'
     +'<div class="nwa-agent-actions"><button class="sbtn" onclick="nwAgentCheckStatus()">Check Agent</button><button class="sbtn" onclick="nwAgentRunCheck()" style="background:#15803D">Dry-run Check</button><button class="sbtn" onclick="nwAgentShowLogs()" style="background:#2563EB">Agent Logs</button><button class="sbtn" onclick="nav(\'liveconnect\')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Live Connect</button><a class="sbtn" href="'+nwToolkitAssetUrl('/netwolf-agent.zip')+'" download style="text-decoration:none;background:#15803D">Download NetWolf Agent</a></div>'
@@ -5495,6 +5495,8 @@ function renderNetWolfAssistant(el){
   });
   nwAssistantSetKind('vpn');
   nwAssistantModeHint();
+  setTimeout(()=>['nwa-agent-host','nwa-agent-user','nwa-agent-key','nwa-agent-token'].forEach(id=>{const x=document.getElementById(id);if(x&&!x.dataset.userTouched)x.value='';}),80);
+  ['nwa-agent-host','nwa-agent-user','nwa-agent-key','nwa-agent-token'].forEach(id=>{const x=document.getElementById(id);if(x)x.addEventListener('input',()=>{x.dataset.userTouched='1';});});
 }
 function nwAgentUrl(){
   const el=document.getElementById('nwa-agent-url');
