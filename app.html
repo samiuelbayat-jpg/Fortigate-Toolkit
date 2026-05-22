@@ -7,11 +7,10 @@
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 <!-- SECURITY NOTE: unsafe-inline is required because this is a single-file app with inline scripts/styles.
      To remove it: split into separate .js/.css files and use a nonce or hash-based CSP.
      object-src none and base-uri self added to limit attack surface. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app wss:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' http://127.0.0.1:5051 http://localhost:5051 https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' http://127.0.0.1:5051 http://localhost:5051 https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app;">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
@@ -935,6 +934,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <div class="device-limit-actions">
       <button class="device-limit-primary" onclick="window.location.reload()">Check Again</button>
       <button class="device-limit-secondary" onclick="doLogout()">Logout</button>
+      <button class="device-limit-secondary" id="deviceLimitSubscribeBtn" onclick="window.open('https://netwolffortigate.com/#pricing','_blank')" style="display:none">Subscribe Now</button>
       <button class="device-limit-secondary" onclick="location.href='mailto:support@netwolffortigate.com?subject=NetWolf%20device%20limit%20request'">Contact Support</button>
     </div>
   </div>
@@ -1059,6 +1059,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
           <div class="tab-group-btns">
             <button class="tab" onclick="stab('freeai')" id="tab-freeai" title="AI CLI Analyzer">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">AI Analyzer</span>
+            </button>
+            <button class="tab" onclick="stab('nwassistant')" id="tab-nwassistant" title="NetWolf Assistant">
+              <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">NetWolf</span>
             </button>
             <button class="tab" onclick="stab('ai')" id="tab-ai" title="FortiGate AI Assistant (Groq)">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Assistant</span>
@@ -1258,7 +1261,7 @@ async function nwSubscriptionInfo(uid){
   const snap=await fbDB.ref('users/'+uid+'/subscription').once('value');
   const sub=snap.val()||{};
   const plan=String(sub.plan||sub.type||'monthly').toLowerCase();
-  const status=String(sub.status||'active').toLowerCase();
+  const status=String(sub.status||'').toLowerCase();
   const limit=Number(sub.deviceLimit||sub.devices||NW_PLAN_LIMITS[plan]||2);
   return {plan,status,limit};
 }
@@ -1301,16 +1304,35 @@ function nwShowDeviceLimit(info){
   const overlay=document.getElementById('deviceLimitOverlay');
   const txt=document.getElementById('deviceLimitText');
   const meta=document.getElementById('deviceLimitMeta');
+  const title=overlay?overlay.querySelector('.device-limit-title'):null;
+  const upgradeHint=document.getElementById('deviceUpgradeHint');
+  const deviceList=document.getElementById('deviceList');
   document.getElementById('toolkitContainer').style.display='none';
   document.getElementById('loginOverlay').style.display='none';
-  if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
-  if(meta) meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();
+  if(info.reason==='subscription'){
+    if(title) title.textContent='Subscription required';
+    if(txt) txt.innerHTML='This account does not have an active subscription.<br><br>'
+      +'Subscribe at <a href="https://netwolffortigate.com" style="color:var(--a)" target="_blank" rel="noopener noreferrer">netwolffortigate.com</a> to get full access to the NetWolf toolkit.';
+    if(meta) meta.style.display='none';
+    if(upgradeHint) upgradeHint.style.display='none';
+    if(deviceList) deviceList.style.display='none';
+    const subBtn=document.getElementById('deviceLimitSubscribeBtn');
+    if(subBtn) subBtn.style.display='';
+    const checkBtn=overlay?overlay.querySelector('.device-limit-primary'):null;
+    if(checkBtn) checkBtn.style.display='none';
+  }else{
+    if(title) title.textContent='Device limit reached';
+    if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
+    if(meta){meta.style.display='';meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();}
+    if(upgradeHint) upgradeHint.style.display='';
+    if(deviceList) deviceList.style.display='';
+    nwRenderDeviceList(info);
+  }
   if(overlay) overlay.style.display='flex';
-  nwRenderDeviceList(info);
 }
 async function nwEnsureDeviceAllowed(user){
   const info=await nwSubscriptionInfo(user.uid);
-  if(info.status && !['active','trialing','paid','manual'].includes(info.status)){
+  if(!['active','trialing','paid','manual'].includes(info.status)){
     return {allowed:false,reason:'subscription',...info,activeCount:0};
   }
   const fp=await nwDeviceFingerprint();
@@ -1395,7 +1417,15 @@ fbAuth.onAuthStateChanged(function(user){
       ]).then(([termsSnap,statusSnap])=>{
         const hasAcceptedTerms=termsSnap.val()===true;
         const subscriptionStatus=String(statusSnap.val()||'').toLowerCase();
-        const hasActiveSubscription=['active','trialing'].includes(subscriptionStatus);
+        const hasActiveSubscription=['active','trialing','paid','manual'].includes(subscriptionStatus);
+        if(!hasActiveSubscription){
+          // No active subscription — should have been caught by device gate, but block here too
+          document.getElementById('toolkitContainer').style.display='none';
+          document.getElementById('loginOverlay').style.display='flex';
+          const e=document.getElementById('loginError');
+          if(e){e.textContent='No active subscription found. Please subscribe at netwolffortigate.com to access the toolkit.';e.style.display='block';}
+          return;
+        }
         if(hasAcceptedTerms||hasActiveSubscription){
           if(!hasAcceptedTerms&&hasActiveSubscription){
             _userRef.child('terms_accepted').set(true).catch(()=>{});
@@ -4349,7 +4379,7 @@ function hasHighRisk(cmds){return cmds.some(c=>cmdSafety(c)==='danger');}
 function hasCaution(cmds){return cmds.some(c=>cmdSafety(c)==='caution');}
 
 let cur='vpn',tab='guide',chat=[],loading=false;
-const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','liveconnect','emailgen','swcfg','devices']);
+const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','liveconnect','emailgen','swcfg','devices']);
 function normalizeTab(t){return VALID_TABS.has(t)?t:'guide';}
 let freeAIPrompt='',freeAIHistory=[];
 
@@ -4461,6 +4491,7 @@ function nav(id){
 function stab(t){t=normalizeTab(t);tab=t;localStorage.setItem('nw_tab',t);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');if(t!=='guide'){document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+t))document.getElementById('cat-'+t).classList.add('active');}else{document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+cur))document.getElementById('cat-'+cur).classList.add('active');}render();}
 function esc(s){return String(s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
 function fmt(t){t=t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
+function safeFmt(t){return fmt(t).replace(/<(?!\/?(?:pre|code|strong|br|span)\b)[^>]+>/gi,'');}
 function copyAll(btn,key,idx){const step=D[cur].steps?D[cur].steps[idx]:D[cur].sections[idx];const cmds=(step.cmds||[]).filter(c=>!c.startsWith('('));navigator.clipboard.writeText(cmds.join('\n')).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy all',1500);});}
 function copyRef(btn,ci,si){navigator.clipboard.writeText(QREF[ci].cmds[si]).then(()=>{btn.textContent='✓';setTimeout(()=>btn.textContent='Copy',1200);});}
 function askAI(q){stab('ai');setTimeout(()=>{const i=document.getElementById('chi');if(i){i.value=q;i.focus();}},50);}
@@ -4476,6 +4507,7 @@ function upgradeTabIcons(){
     'tab-topology':'<circle cx="6" cy="7" r="3"></circle><circle cx="18" cy="7" r="3"></circle><circle cx="12" cy="18" r="3"></circle><path d="M8.5 9.5 11 15"></path><path d="m15.5 9.5-2.5 5.5"></path><path d="M9 7h6"></path>',
     'tab-pkttools':'<path d="M4 10h16"></path><path d="M4 14h16"></path><path d="m7 7-3 3 3 3"></path><path d="m17 11 3 3-3 3"></path>',
     'tab-freeai':'<path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Z"></path><path d="M19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z"></path>',
+    'tab-nwassistant':'<path d="M12 2 5 5v6c0 5 3.6 8.6 7 11 3.4-2.4 7-6 7-11V5l-7-3Z"></path><path d="M8.5 12h7"></path><path d="M10 9.5h4"></path><path d="M9.5 15.5h5"></path>',
     'tab-ai':'<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"></path><path d="M8 10h8"></path><path d="M8 13h5"></path>',
     'tab-claudechat':'<path d="M12 4a7 7 0 0 0-7 7v2a5 5 0 0 0 5 5h4a5 5 0 0 0 5-5v-2a7 7 0 0 0-7-7Z"></path><path d="M9 11h.01"></path><path d="M15 11h.01"></path><path d="M9 15c1.5 1 4.5 1 6 0"></path>',
     'tab-masking':'<path d="M3 12s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6Z"></path><path d="M4 4l16 16"></path>',
@@ -4541,17 +4573,6 @@ portfwd:{t:'Port forwarding / VIP troubleshooting',s:'med',type:'trouble',chips:
 {t:'Dual-side sniffer to confirm forwarding',note:'Capture on both WAN and LAN to see if packet is being forwarded.',cmds:["diagnose sniffer packet <WAN> 'host <EXT_IP> and port <PORT>' 4 30 l","diagnose sniffer packet <LAN> 'host <SERVER_IP> and port <PORT>' 4 30 l"]},
 {t:'Hairpin NAT (internal to VIP)',note:'Internal clients accessing VIP by external IP need a hairpin policy.',cmds:['(Policy: srcintf=lan dstintf=lan dst=<VIP_OBJ> nat=enable)','diagnose debug flow filter addr <CLIENT_IP>','diagnose debug flow trace start 10','diagnose debug enable']},
 {t:'VIP group for multiple ports',note:'Use VIP groups when forwarding multiple ports to same server.',cmds:['show firewall vipgrp','show firewall vip']}
-]},
-wanmig:{t:'WAN Migration — Pre-Investigation',s:'high',type:'checklist',chips:['WAN replacement','ISP change','5G cutover','Fiber migration','Interface swap','IP change'],steps:[
-{t:'1. Interface overview',note:'Map all interfaces, IPs, and link states before any change.',cmds:['get system interface physical','show system interface','show system interface wan1','show system interface wan2']},
-{t:'2. Routing table snapshot',note:'Document active routing table and all static routes.',cmds:['get router info routing-table all','show router static','get router info routing-table details 0.0.0.0']},
-{t:'3. Firewall policies referencing WAN',note:'Find every policy that uses the current WAN interface.',cmds:['show firewall policy | grep -f wan1','show firewall policy | grep -f wan2','show firewall policy','get firewall policy']},
-{t:'4. NAT, VIPs and IP pools',note:'List all VIPs and SNAT pools — these bind to the WAN IP and must be updated after cutover.',cmds:['show firewall vip','show firewall ippool']},
-{t:'5. SD-WAN config',note:'Check if WAN is an SD-WAN member. FortiOS 7.x vs 6.x command differs.',cmds:['show system sdwan','show system virtual-wan-link']},
-{t:'6. DNS and link monitor',note:'DNS servers and link health monitors may reference the WAN interface or gateway.',cmds:['show system dns','show system link-monitor']},
-{t:'7. Active sessions on WAN interface',note:'Snapshot live session count on WAN before cutover — expect drop during migration.',cmds:['diagnose netlink interface list wan1','diagnose sys session filter devid <IFINDEX>','diagnose sys session list']},
-{t:'8. Verify new WAN connectivity',note:'After cutover — confirm routing, ping, and DNS resolve via new interface.',cmds:['get system interface physical','get router info routing-table all','execute ping 8.8.8.8','execute ping-options source <NEW_WAN_IP>','execute ping 8.8.8.8','execute nslookup name google.com']},
-{t:'9. Post-migration policy and VIP check',note:'Confirm policies and VIPs reference new WAN interface and IP.',cmds:['get firewall policy','show firewall vip','show firewall ippool','diagnose sys session clear']}
 ]},
 sdwan:{t:'SD-WAN troubleshooting',s:'med',type:'trouble',chips:['Wrong link used','Health check failing','Rule not matching','SLA not met','Failover not happening','Load balance issue'],steps:[
 {t:'Check member status and SLA',note:'Shows which links are passing/failing thresholds.',cmds:['get router info sdwan health-check','diagnose sys sdwan member list','diagnose sys sdwan intf-sla-log']},
@@ -4936,7 +4957,7 @@ function render(){const el=document.getElementById('mc');
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+escapeHtml(cur)+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -5274,6 +5295,404 @@ async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loadi
     chat.push({role:'assistant',content:msg});
   }
   loading=false;render();}
+
+const NW_ASSISTANT_PACKS={
+  vpn:{label:'VPN / IPsec',color:'high',symptoms:'Phase 1 down, Phase 2 down, tunnel up but traffic not passing, negotiation errors',cmds:['get vpn ipsec tunnel summary','diagnose vpn tunnel list','diagnose vpn ike gateway list','diagnose debug reset','diagnose vpn ike log-filter name <PHASE1_NAME>','diagnose debug application ike -1','diagnose debug enable','diagnose debug disable','diagnose debug reset'],keys:['NO_PROPOSAL_CHOSEN','AUTH_FAILED','peer SA proposal not match','no matching gateway','phase1','phase2','dpd','ike']},
+  policy:{label:'Policy / NAT',color:'warn',symptoms:'Traffic denied, wrong policy hit, NAT missing, VIP not working, no policy matched',cmds:['diagnose firewall iprope lookup <SRC_IP> <DST_IP> <DST_PORT> <PROTO>','show firewall policy','show firewall vip','show firewall central-snat-map','diagnose sys session filter clear','diagnose sys session filter src <SRC_IP>','diagnose sys session filter dst <DST_IP>','diagnose sys session list'],keys:['iprope','policy','deny','accept','nat','snat','dnat','vip','no matching policy']},
+  routing:{label:'Routing / SD-WAN',color:'warn',symptoms:'No route, wrong egress interface, SD-WAN picks wrong member, asymmetric path',cmds:['get router info routing-table all','diagnose ip route get <DST_IP>','diagnose sys sdwan service','diagnose sys sdwan member','diagnose sys sdwan health-check','get router info bgp summary','get router info ospf neighbor'],keys:['no route','route','gateway','sdwan','member','blackhole','rpf','reverse path']},
+  sslvpn:{label:'SSL VPN',color:'high',symptoms:'Login failure, tunnel connects but no access, portal issue, web mode issue, MFA/cert problem',cmds:['get vpn ssl monitor','diagnose vpn ssl list','diagnose vpn ssl statistics','diagnose debug application sslvpn -1','diagnose debug application fnbamd -1','diagnose debug enable','diagnose debug disable','diagnose debug reset'],keys:['sslvpn','ssl vpn','fnbamd','portal','realm','ldap','radius','mfa','certificate']},
+  dhcp:{label:'DHCP / DNS',color:'info',symptoms:'Clients not getting IP, wrong DNS/gateway, rogue DHCP, lease conflicts',cmds:['execute dhcp lease-list','diagnose ip dhcp server list','diagnose debug application dhcps -1','diagnose debug enable','diagnose debug disable','diagnose debug reset','get system dns','diagnose test application dnsproxy 6'],keys:['dhcp','lease','discover','offer','request','ack','dns','dnsproxy']},
+  performance:{label:'Performance / CPU',color:'high',symptoms:'High CPU, high memory, slow traffic, conserve mode, drops, NPU offload problems',cmds:['get system performance status','diagnose sys top 2 20','diagnose hardware sysinfo memory','diagnose hardware deviceinfo nic <INTERFACE>','diagnose npu np6 session-stats','diagnose sys session stat','get system status'],keys:['cpu','memory','conserve','drops','errors','npu','offload','latency']},
+  ha:{label:'HA / Cluster',color:'warn',symptoms:'HA failover, split brain, out of sync, heartbeat issue, session pickup issue',cmds:['get system ha status','diagnose sys ha status','diagnose sys ha checksum show','diagnose sys ha dump-by group','execute ha manage <INDEX>','get system performance status'],keys:['ha','cluster','sync','heartbeat','failover','primary','secondary','checksum']},
+  security:{label:'Security Profiles / Logs',color:'warn',symptoms:'UTM blocks traffic, IPS/AV/WebFilter denies, app control issue, log explains block',cmds:['show firewall policy <POLICY_ID>','show firewall profile-protocol-options','show antivirus profile','show ips sensor','show webfilter profile','execute log filter category 1','execute log display'],keys:['ips','virus','webfilter','blocked','utm','profile','threat','signature','category']},
+  sniffer:{label:'Packet Capture / Wireshark',color:'info',symptoms:'Need proof traffic arrives/leaves, SYN without SYN-ACK, resets, retransmissions, port reachability',cmds:['diagnose sniffer packet any "host <SRC_IP> and host <DST_IP>" 4 100 l','diagnose debug flow filter addr <SRC_IP>','diagnose debug flow filter daddr <DST_IP>','diagnose debug flow trace start 20','diagnose debug enable','diagnose debug disable','diagnose debug reset'],keys:['syn','syn-ack','rst','icmp','retransmission','sniffer','pcap','wireshark','packet']},
+  auth:{label:'Authentication / LDAP / RADIUS',color:'warn',symptoms:'Admin login fails, SSL VPN auth fails, LDAP/RADIUS timeout, MFA issue, group mismatch',cmds:['diagnose test authserver ldap <SERVER> <USER> <PASSWORD>','diagnose test authserver radius <SERVER> <USER> <PASSWORD>','diagnose debug application fnbamd -1','diagnose debug enable','diagnose debug disable','show user ldap','show user radius','show user group'],keys:['ldap','radius','fnbamd','mfa','token','group','auth','invalid password','timeout']},
+  certificates:{label:'Certificates / TLS',color:'warn',symptoms:'Certificate warning, expired cert, SSL inspection issue, admin GUI cert problem, VPN cert error',cmds:['get vpn certificate local details','show vpn certificate local','show vpn certificate ca','diagnose vpn certificate local list','show firewall ssl-ssh-profile','get system status'],keys:['certificate','cert','expired','ssl','tls','ca','issuer','subject','inspection']},
+  logging:{label:'Logging / FortiAnalyzer',color:'info',symptoms:'Logs missing, FAZ disconnected, wrong log category, traffic log not visible, disk logging issue',cmds:['get log fortianalyzer setting','diagnose test application miglogd 20','diagnose test application miglogd 6','execute log filter category 0','execute log display','show log setting','show log fortianalyzer setting'],keys:['log','faz','fortianalyzer','miglogd','logging','disk','traffic log','event log']},
+  config:{label:'Config / Change Plan',color:'warn',symptoms:'Need a safe change plan, compare config, build config, migrate setting, rollback checklist',cmds:['show full-configuration','show system global','execute backup config flash <FILE_NAME>','diagnose sys config lock-info','execute revision list config','execute restore config flash <FILE_NAME>'],keys:['config','change','backup','rollback','revision','migrate','object','policy']},
+  switching:{label:'FortiSwitch / FortiAP',color:'info',symptoms:'Switch port down, VLAN issue, managed FortiSwitch offline, AP offline, WiFi clients failing',cmds:['get switch-controller managed-switch','diagnose switch-controller switch-info all','show switch-controller managed-switch','diagnose wireless-controller wlac -c wtp','get wireless-controller wtp','show wireless-controller vap'],keys:['fortiswitch','fortiap','switch','vlan','ssid','wifi','wtp','poe','managed-switch']},
+  ztna:{label:'ZTNA / Proxy / VIP',color:'warn',symptoms:'ZTNA access proxy fails, HTTPS publishing issue, VIP not matching, proxy auth issue',cmds:['show firewall proxy-policy','show firewall access-proxy','show firewall vip','diagnose wad user list','diagnose debug application wad -1','diagnose debug enable','diagnose debug disable'],keys:['ztna','proxy','access-proxy','vip','wad','saml','portal','published']}
+};
+
+const NW_ASSISTANT_MODES={
+  triage:{label:'Triage incident',hint:'Find likely root cause and next safe checks.'},
+  explain:{label:'Explain output',hint:'Explain pasted CLI/log output in plain engineer language.'},
+  commands:{label:'Find commands',hint:'Generate the best read-only commands for the selected problem.'},
+  config:{label:'Build config plan',hint:'Create a careful config/change plan with rollback.'},
+  compare:{label:'Compare / audit config',hint:'Find risk, missing pieces, or bad practice in pasted config.'},
+  report:{label:'Customer report',hint:'Create a short professional status/update message.'},
+  learn:{label:'Teach me',hint:'Explain what is happening and how to troubleshoot it next time.'}
+};
+
+const NW_ASSISTANT_TOOLKIT=[
+  {id:'pkttools',icon:'📦',title:'Packet Tools',desc:'Debug flow, packet walk, traceroute, Wireshark helper'},
+  {id:'mostused',icon:'⭐',title:'Most Used',desc:'Daily troubleshooting generators'},
+  {id:'analyze',icon:'🔎',title:'Analyze Output',desc:'Paste CLI output for general analysis'},
+  {id:'cfggen',icon:'🧩',title:'Config Generator',desc:'Build FortiGate config templates'},
+  {id:'cfgmigrate',icon:'🔀',title:'Config Migrator',desc:'Replace fields and migrate configs'},
+  {id:'swcfg',icon:'🔧',title:'SW/Router Config',desc:'Switch/router/firewall config builder'},
+  {id:'security',icon:'🛡️',title:'Security',desc:'Privacy, safe usage, and risk notes'},
+  {id:'bulkAnon',icon:'🧹',title:'Anonymizer',desc:'Mask IPs and hostnames before AI'},
+  {id:'multivendor',icon:'🌐',title:'Multi-Vendor CLI',desc:'Cisco, Juniper, Palo Alto, Aruba and more'},
+  {id:'devices',icon:'🖥️',title:'Device Catalog',desc:'Firewall, router, switch catalog'},
+  {id:'topology',icon:'🕸️',title:'Topology',desc:'Draw or plan the network path'},
+  {id:'labsetup',icon:'🧪',title:'Lab Setup',desc:'Build and test in a lab first'}
+];
+
+function nwAssistantPackOptions(){
+  return Object.keys(NW_ASSISTANT_PACKS).map(k=>'<option value="'+k+'">'+NW_ASSISTANT_PACKS[k].label+'</option>').join('');
+}
+let nwAssistantCommandsExpanded=false;
+function nwAssistantCommandHtml(kind){
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const visible=nwAssistantCommandsExpanded?pack.cmds:pack.cmds.slice(0,4);
+  let html=visible.map(c=>'<div class="nwa-cmd-row"><span class="nwa-read-badge">R</span><code class="nwa-cmd-code">'+escapeHtml(c)+'</code></div>').join('');
+  if(pack.cmds.length>4){
+    html+='<button class="nwa-expand-cmds" onclick="nwAssistantToggleCommands()">'+(nwAssistantCommandsExpanded?'Show less':'Show all '+pack.cmds.length+' commands')+'</button>';
+  }
+  return html;
+}
+function nwAssistantMaskIfNeeded(text){
+  const doMask=document.getElementById('nwa-mask')&&document.getElementById('nwa-mask').checked;
+  return doMask?maskTextStandalone(text):text;
+}
+function nwAssistantSetKind(kind){
+  if(window.event&&window.event.type==='change') nwAssistantCommandsExpanded=false;
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const hints=document.getElementById('nwa-hints');
+  const cmds=document.getElementById('nwa-cmds');
+  const title=document.getElementById('nwa-pack-title');
+  if(title) title.textContent=pack.label;
+  if(hints) hints.innerHTML='<strong>Typical signs:</strong><br><span>'+escapeHtml(pack.symptoms)+'</span>';
+  if(cmds) cmds.innerHTML=nwAssistantCommandHtml(kind);
+}
+window.nwAssistantToggleCommands=function(){
+  nwAssistantCommandsExpanded=!nwAssistantCommandsExpanded;
+  const kind=document.getElementById('nwa-kind')?.value||'vpn';
+  nwAssistantSetKind(kind);
+};
+function nwAssistantModeOptions(){
+  return Object.keys(NW_ASSISTANT_MODES).map(k=>'<option value="'+k+'">'+NW_ASSISTANT_MODES[k].label+'</option>').join('');
+}
+function nwAssistantToolkitHtml(){
+  return NW_ASSISTANT_TOOLKIT.map(t=>'<button class="nwa-tool" data-tab="'+t.id+'" title="'+escapeHtml(t.desc)+'">'
+    +'<span class="nwa-tool-ico">'+t.icon+'</span><span><b>'+escapeHtml(t.title)+'</b><small>'+escapeHtml(t.desc)+'</small></span></button>').join('');
+}
+function nwAssistantModeHint(){
+  const mode=document.getElementById('nwa-mode')?.value||'triage';
+  const box=document.getElementById('nwa-mode-hint');
+  if(box) box.textContent=(NW_ASSISTANT_MODES[mode]||NW_ASSISTANT_MODES.triage).hint;
+}
+function nwAssistantLocalFindings(kind,text,symptom,cmd){
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const low=(text+' '+symptom+' '+cmd).toLowerCase();
+  const findings=[];
+  const add=(sev,title,why,next)=>findings.push({sev,title,why,next});
+  if(!text.trim()) add('warn','No device output pasted','The assistant can still suggest commands, but real diagnosis needs CLI output or logs.','Run the green read-only commands for '+pack.label+' and paste the result.');
+  if(/\b(no policy matched|iprope.*fail|implicit deny|policy-0|action=deny|denied by forward policy)\b/i.test(text)) add('danger','Policy deny detected','The output suggests traffic is hitting an implicit deny or a deny policy.','Check policy order, source/destination interface, address objects, service, schedule, and NAT setting.');
+  if(/\b(no route|find a route.*fail|reverse path|rpf|blackhole)\b/i.test(text)) add('danger','Routing or reverse-path problem','FortiGate may not know the return path or may reject traffic because the reverse route is wrong.','Run `diagnose ip route get <DST_IP>` and verify static/dynamic routes and SD-WAN rules.');
+  if(/\b(no_proposal_chosen|proposal.*mismatch|peer sa proposal not match|auth_failed|authentication failed|psk|pre-shared)\b/i.test(text)) add('danger','VPN negotiation mismatch','IKE/IPsec proposals, PSK, authentication, ID, or peer settings may not match.','Compare phase1/phase2 encryption, DH/PFS, lifetime, local/remote IDs, NAT-T, and PSK on both peers.');
+  if(/\b(phase 1.*down|phase1.*down|phase 2.*down|phase2.*down|no matching gateway|delete sa)\b/i.test(text)) add('warn','VPN phase issue','The tunnel is not fully established or SAs are being removed.','Filter IKE debug to the tunnel and reproduce once, then inspect the first error before repeated retries.');
+  if(/\b(conserve mode|memory.*low|cpu.*9\d|cpu.*100|high cpu|miglogd|ipsengine|wad)\b/i.test(text)) add('danger','System resource pressure','High CPU, memory pressure, or conserve mode can affect inspection and forwarding.','Check top processes, memory, sessions, UTM load, and recent config or traffic changes.');
+  if(/\b(retransmission|duplicate ack|lost segment|syn.*retrans|reset|rst)\b/i.test(text)) add('warn','Packet-level symptoms found','The capture/log hints at retransmissions, resets, or missing replies.','Use Packet Tools > Wireshark Helper and capture both ingress and egress sides if possible.');
+  if(/\b(dhcp|discover|offer|request|ack|lease|dnsproxy|server failed)\b/i.test(low)) add('info','DHCP/DNS path relevant','The symptoms mention client address assignment or name resolution.','Check DHCP lease list, DHCP debug, DNS proxy status, and whether policy allows DNS to the configured resolver.');
+  if(/\b(blocked|ips|virus|webfilter|application control|utm|signature)\b/i.test(text)) add('warn','Security profile may be blocking','A UTM/security profile may be making the final allow/deny decision after policy match.','Check forward traffic logs and the policy security profiles. Temporarily test with a lab-safe policy change only if approved.');
+  const matched=pack.keys.filter(k=>low.includes(k.toLowerCase())).slice(0,6);
+  if(matched.length) add('info','Matched '+pack.label+' keywords','Found: '+matched.join(', ')+'.','Use the command pack on the right to collect focused evidence.');
+  if(!findings.length) add('info','No obvious red flags found','The pasted output did not contain the common failure signatures I check locally.','Use AI Deep Analyze or paste more complete output: command, symptom, source/destination, and timestamp.');
+  return findings;
+}
+function nwAssistantRenderResult(title,findings,extra){
+  const color={danger:'#f85149',warn:'#d29922',info:'#58a6ff',safe:'#3fb950'};
+  let html='<div class="cblock" style="margin-top:14px"><div class="chdr"><div class="chdr-l">'+escapeHtml(title)+'</div><span class="cbadge ro">Level 1</span></div><div class="cbody">';
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px">';
+  findings.forEach(f=>{
+    const c=color[f.sev]||color.info;
+    html+='<div style="padding:11px 12px;border-radius:8px;background:rgba(255,255,255,.035);border-left:3px solid '+c+';font-size:12px;line-height:1.65">'
+      +'<div style="font-weight:800;color:'+c+';margin-bottom:4px">'+escapeHtml(f.title)+'</div>'
+      +'<div style="color:var(--t2);margin-bottom:6px">'+escapeHtml(f.why)+'</div>'
+      +'<div style="color:var(--t)"><strong>Next:</strong> '+escapeHtml(f.next)+'</div></div>';
+  });
+  html+='</div>';
+  if(extra) html+='<pre id="nwa-result-text" style="margin-top:12px;background:#0a0e14;color:#c9d1d9;font-family:var(--mono);font-size:12px;padding:14px;border-radius:8px;white-space:pre-wrap;line-height:1.75">'+escapeHtml(extra)+'</pre>';
+  html+='</div></div>';
+  const out=document.getElementById('nwa-output');
+  if(out) out.innerHTML=html;
+}
+function renderNetWolfAssistant(el){
+  if(!document.getElementById('nwa-style')){
+    const st=document.createElement('style');st.id='nwa-style';
+    st.textContent='.nwa-hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,.8fr);gap:14px;margin-bottom:14px}.nwa-title{font-size:22px;font-weight:900;color:var(--t);margin-bottom:6px}.nwa-sub{font-size:12px;color:var(--t2);line-height:1.7}.nwa-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.nwa-badge{font-size:10px;font-family:var(--mono);padding:5px 9px;border:1px solid var(--br);border-radius:999px;background:var(--b3);color:var(--t2)}.nwa-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.75fr);gap:14px}.nwa-workflows,.nwa-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.nwa-workflow,.nwa-tool{border:1px solid var(--br);background:var(--b3);color:var(--t);border-radius:9px;padding:10px;text-align:left;cursor:pointer;display:flex;gap:9px;align-items:flex-start}.nwa-workflow:hover,.nwa-tool:hover{border-color:var(--a);background:color-mix(in srgb,var(--b3) 78%,var(--a))}.nwa-workflow b,.nwa-tool b{display:block;font-size:12px}.nwa-workflow small,.nwa-tool small{display:block;font-size:10px;color:var(--t3);line-height:1.45;margin-top:2px}.nwa-tool-ico{font-size:18px;width:24px;text-align:center;flex-shrink:0}.nwa-field label{font-size:10px;color:var(--t3);font-family:var(--mono);display:block;margin-bottom:4px;text-transform:uppercase}.nwa-field input,.nwa-field select,.nwa-field textarea{width:100%;background:var(--bg);border:1px solid var(--br);border-radius:7px;color:var(--t);padding:8px 10px;outline:none}.nwa-field textarea{font-family:var(--mono);font-size:12px;line-height:1.65;resize:vertical}.nwa-field input:focus,.nwa-field select:focus,.nwa-field textarea:focus{border-color:var(--a)}.nwa-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}#nwa-hints{background:#0a0f18;border:1px solid #2f425f;border-radius:8px;padding:10px 12px;color:#dbeafe!important}#nwa-hints strong{color:#ffffff!important;font-weight:900}#nwa-hints span{color:#dbeafe!important}.nwa-cmd-row{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(148,163,184,.22)}.nwa-read-badge{flex-shrink:0;font-family:var(--mono);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#052e16;background:#86efac;border:1px solid #22c55e;border-radius:999px;padding:3px 7px;margin-top:1px}.nwa-cmd-code{display:block;min-width:0;color:#f8fafc!important;background:#050914;border:1px solid #24344e;border-radius:6px;padding:6px 8px;font-size:11.5px;line-height:1.55;word-break:break-word;white-space:pre-wrap}@media(max-width:980px){.nwa-hero,.nwa-layout{grid-template-columns:1fr}.nwa-tools{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}}@media(max-width:620px){.nwa-title{font-size:18px}.nwa-sub{font-size:11px}.nwa-badges{gap:6px}.nwa-badge{font-size:9.5px;padding:4px 7px}.nwa-workflows,.nwa-tools{grid-template-columns:1fr}.nwa-workflow,.nwa-tool{padding:9px}.nwa-field input,.nwa-field select,.nwa-field textarea{font-size:12px;padding:9px}.nwa-field textarea{min-height:190px}.nwa-actions{display:grid;grid-template-columns:1fr;gap:8px}.nwa-actions .sbtn{width:100%;justify-content:center}.nwa-actions label{width:100%;line-height:1.45}.nwa-layout .cbody{padding:10px}.nwa-cmd-row{gap:7px}.nwa-read-badge{font-size:8.5px;padding:3px 6px}.nwa-cmd-code{font-size:11px;padding:6px}}';
+    st.textContent += '.nwa-shell{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(330px,.72fr);gap:14px;align-items:start}.nwa-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.nwa-section-kicker{font-size:10px;color:var(--a);font-family:var(--mono);font-weight:900;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}.nwa-section-title{font-size:17px;font-weight:900;color:var(--t)}.nwa-section-copy{font-size:11.5px;color:var(--t2);line-height:1.6;margin-top:4px}.nwa-side{display:flex;flex-direction:column;gap:10px}.nwa-focus-card{min-height:0}.nwa-focus-body{display:flex;flex-direction:column;gap:7px}.nwa-domain-list{display:flex!important;flex-wrap:wrap;gap:6px!important}.nwa-domain-btn{width:auto;text-align:left;background:#0a0f18!important;border:1px solid #2f425f!important;color:#f8fafc!important;font-size:10.5px!important;padding:6px 8px!important;border-radius:999px!important;justify-content:flex-start;line-height:1.2}.nwa-domain-btn:hover{border-color:var(--a)!important;background:#102033!important;color:#fff!important}.nwa-side .nwa-cmd-row{display:grid;grid-template-columns:20px minmax(0,1fr);gap:7px;align-items:center;padding:4px 0;border-bottom:1px solid rgba(148,163,184,.16)}.nwa-side .nwa-read-badge{font-size:8px;padding:1px 0;width:18px;text-align:center;border-radius:5px;background:#22c55e;color:#04130a;border-color:#16a34a;margin:0}.nwa-side .nwa-cmd-code{background:transparent;border:0;border-radius:0;padding:0;color:#e5edf7!important;font-size:11px;line-height:1.35}.nwa-expand-cmds{width:100%;margin-top:5px;background:transparent;border:1px dashed #3b5778;color:#dbeafe;border-radius:7px;padding:6px 10px;font-size:10.5px;font-weight:800;cursor:pointer}.nwa-expand-cmds:hover{border-color:var(--a);color:#fff;background:#102033}.nwa-agent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.nwa-agent-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.nwa-agent-actions .sbtn,.nwa-agent-actions a{width:100%;justify-content:center;text-align:center}.nwa-agent-status{font-size:11px;line-height:1.55;padding:8px 10px;border-radius:8px;border:1px solid var(--br);background:#0a0f18;color:var(--t2)}.nwa-agent-status.ok{border-color:rgba(34,197,94,.45);color:#bbf7d0}.nwa-agent-status.warn{border-color:rgba(234,179,8,.5);color:#fde68a}.nwa-agent-status.bad{border-color:rgba(248,81,73,.45);color:#fecaca}.nwa-agent-note{font-size:10.5px;color:var(--t3);line-height:1.55;margin-top:8px}.nwa-agent-output{margin-top:8px;max-height:180px;overflow:auto;background:#050914;border:1px solid #24344e;border-radius:7px;padding:9px;color:#e5edf7;font-family:var(--mono);font-size:10.5px;line-height:1.45;white-space:pre-wrap}.nwa-mini-card{border:1px solid var(--br);background:rgba(10,15,24,.65);border-radius:8px;padding:10px}.nwa-tool-compact{grid-template-columns:repeat(2,minmax(0,1fr))}.nwa-tool-compact .nwa-tool{padding:8px}.nwa-tool-compact .nwa-tool small{display:none}@media(min-width:981px){.nwa-layout{grid-template-columns:minmax(0,1.35fr) minmax(320px,.75fr)}}@media(max-width:980px){.nwa-shell{grid-template-columns:1fr}.nwa-side{display:grid;grid-template-columns:1fr;gap:10px}}@media(max-width:620px){.nwa-domain-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px!important}.nwa-domain-btn{width:100%;font-size:10.5px!important;padding:7px 8px!important;border-radius:8px!important}.nwa-side .nwa-cmd-row{padding:4px 0}.nwa-expand-cmds{padding:7px 10px}.nwa-agent-grid,.nwa-agent-actions,.nwa-tool-compact{grid-template-columns:1fr}.nwa-agent-output{max-height:150px}.nwa-head{display:block}.nwa-badges{margin-top:8px}}';
+    document.head.appendChild(st);
+  }
+  el.innerHTML='<div class="nwa-shell">'
+    +'<div class="nwa-main">'
+    +'<div class="cblock"><div class="cbody" style="padding:16px">'
+    +'<div class="nwa-head"><div><div class="nwa-section-kicker">NetWolf Assistant</div><div class="nwa-section-title">Assistant Workbench</div><div class="nwa-section-copy">Troubleshoot, explain outputs, build safe command packs, prepare config plans, write reports, and jump into the exact toolkit area.</div></div>'
+    +'<div class="nwa-badges"><span class="nwa-badge">Local triage</span><span class="nwa-badge">Optional AI</span><span class="nwa-badge">Level 2 agent</span></div></div>'
+    +'<div class="nwa-workflows" style="margin-bottom:12px">'
+    +Object.keys(NW_ASSISTANT_MODES).map(k=>'<button class="nwa-workflow" data-mode="'+k+'"><span class="nwa-tool-ico">'+(k==='triage'?'🩺':k==='explain'?'📖':k==='commands'?'⌨️':k==='config'?'🧩':k==='compare'?'🔍':k==='report'?'📝':'🎓')+'</span><span><b>'+escapeHtml(NW_ASSISTANT_MODES[k].label)+'</b><small>'+escapeHtml(NW_ASSISTANT_MODES[k].hint)+'</small></span></button>').join('')
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:10px">'
+    +'<div class="nwa-field"><label>Assistant mode</label><select id="nwa-mode" onchange="nwAssistantModeHint()">'+nwAssistantModeOptions()+'</select><div id="nwa-mode-hint" style="font-size:10px;color:var(--t3);line-height:1.45;margin-top:5px"></div></div>'
+    +'<div class="nwa-field"><label>Problem domain</label><select id="nwa-kind" onchange="nwAssistantSetKind(this.value)">'+nwAssistantPackOptions()+'</select></div>'
+    +'<div class="nwa-field"><label>Severity</label><select id="nwa-sev"><option>Production down</option><option selected>Service degraded</option><option>Investigation only</option><option>Lab / training</option></select></div>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:10px">'
+    +'<div class="nwa-field"><label>Symptom / request</label><input id="nwa-symptom" placeholder="Example: users cannot reach server behind NAT"></div>'
+    +'<div class="nwa-field"><label>Command you ran</label><input id="nwa-cmd" placeholder="diagnose debug flow / show firewall policy / get router..."></div>'
+    +'</div>'
+    +'<div class="nwa-field"><label>Paste output, config, logs, packet notes, or change request</label><textarea id="nwa-input" rows="15" placeholder="Paste CLI output, config, logs, packet capture notes, or describe what you want to build. Use Bulk Anonymizer first for customer/public data."></textarea></div>'
+    +'<div class="nwa-actions">'
+    +'<label style="font-size:11px;color:var(--t2);display:flex;align-items:center;gap:6px"><input type="checkbox" id="nwa-mask" checked style="accent-color:var(--a)"> apply existing IP masks before AI</label>'
+    +'<button class="sbtn" onclick="nwAssistantLocal()">Local Triage</button>'
+    +'<button class="sbtn" onclick="nwAssistantAI()" style="background:linear-gradient(90deg,var(--a),var(--ad));font-weight:800">AI Deep Analyze</button>'
+    +'<button class="sbtn" onclick="nwAssistantCopy()" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Copy Result</button>'
+    +'<button class="sbtn" onclick="nwAssistantClear()" style="background:rgba(248,81,73,.1);color:var(--r);border:1px solid rgba(248,81,73,.25)">Clear</button>'
+    +'</div></div></div><div id="nwa-output"></div></div>'
+    +'<div class="nwa-side">'
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">Level 2 Live Agent</div><span class="cbadge ro">Local only</span></div><div class="cbody">'
+    +'<div id="nwa-agent-status" class="nwa-agent-status warn">Agent not checked yet. Start <code>netwolf-agent</code>, then click Check Agent.</div>'
+    +'<div class="nwa-field" style="margin-top:8px"><label>Agent URL</label><input id="nwa-agent-url" value="http://127.0.0.1:5051"></div>'
+    +'<div class="nwa-agent-grid" style="margin-top:8px">'
+    +'<div class="nwa-field"><label>Firewall host</label><input id="nwa-agent-host" name="nw-device-address" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="192.168.x.x"></div>'
+    +'<div class="nwa-field"><label>SSH user</label><input id="nwa-agent-user" name="nw-device-operator" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="readonly-admin"></div>'
+    +'<div class="nwa-field"><label>SSH port</label><input id="nwa-agent-port" name="nw-device-port" autocomplete="off" inputmode="numeric" value="22"></div>'
+    +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" name="nw-device-keyfile" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="C:\\netwolf-agent\\key"></div>'
+    +'<div class="nwa-field"><label>Agent token (jump server only)</label><input id="nwa-agent-token" name="nw-agent-access-code" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" placeholder="Leave empty for local agent"></div>'
+    +'</div>'
+    +'<div class="nwa-field" style="margin-top:8px"><label>Read-only check</label><select id="nwa-agent-check"><option value="system_health">System health</option><option value="vpn_ipsec">VPN / IPsec</option><option value="policy_nat">Policy / NAT / VIP</option><option value="sessions_ports">Sessions / Ports</option><option value="routing">Routing / SD-WAN</option><option value="ha_cluster">HA / Cluster</option><option value="dhcp_dns">DHCP / DNS</option><option value="security_profiles">Security profiles / Logs</option><option value="certificates">Certificates / TLS</option><option value="fortianalyzer">FortiAnalyzer / Logging</option></select></div>'
+    +'<div class="nwa-agent-actions"><button class="sbtn" onclick="nwAgentCheckStatus()">Check Agent</button><button class="sbtn" onclick="nwAgentRunCheck()" style="background:#15803D">Dry-run Check</button><button class="sbtn" onclick="nwAgentShowLogs()" style="background:#2563EB">Agent Logs</button><button class="sbtn" onclick="nav(\'liveconnect\')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Live Connect</button><a class="sbtn" href="'+nwToolkitAssetUrl('/netwolf-agent.zip')+'" download style="text-decoration:none;background:#15803D">Download NetWolf Agent</a></div>'
+    +'<div class="nwa-agent-note">Default mode is dry-run. The local agent does not call cloud APIs; AI analysis only happens if you copy/paste output and click an AI button.</div>'
+    +'<pre id="nwa-agent-output" class="nwa-agent-output" style="display:none"></pre>'
+    +'</div></div>'
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">Problem domains</div></div><div class="cbody nwa-domain-list">'
+    +Object.keys(NW_ASSISTANT_PACKS).map(k=>'<button class="sbtn nwa-quick nwa-domain-btn" data-kind="'+k+'">'+escapeHtml(NW_ASSISTANT_PACKS[k].label)+'</button>').join('')
+    +'</div></div></div></div>';
+  document.querySelectorAll('.nwa-workflow').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const mode=btn.getAttribute('data-mode')||'triage';
+      const sel=document.getElementById('nwa-mode');
+      if(sel) sel.value=mode;
+      nwAssistantModeHint();
+    });
+  });
+  document.querySelectorAll('.nwa-tool').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const target=btn.getAttribute('data-tab');
+      if(target) nav(target);
+    });
+  });
+  document.querySelectorAll('.nwa-quick').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const k=btn.getAttribute('data-kind')||'vpn';
+      const sel=document.getElementById('nwa-kind');
+      if(sel) sel.value=k;
+      nwAssistantCommandsExpanded=false;
+      nwAssistantSetKind(k);
+    });
+  });
+  nwAssistantSetKind('vpn');
+  nwAssistantModeHint();
+  setTimeout(()=>['nwa-agent-host','nwa-agent-user','nwa-agent-key','nwa-agent-token'].forEach(id=>{const x=document.getElementById(id);if(x&&!x.dataset.userTouched)x.value='';}),80);
+  ['nwa-agent-host','nwa-agent-user','nwa-agent-key','nwa-agent-token'].forEach(id=>{const x=document.getElementById(id);if(x)x.addEventListener('input',()=>{x.dataset.userTouched='1';});});
+}
+function nwAgentUrl(){
+  const el=document.getElementById('nwa-agent-url');
+  return ((el&&el.value?el.value:'http://127.0.0.1:5051').trim()||'http://127.0.0.1:5051').replace(/\/+$/,'');
+}
+function nwToolkitAssetUrl(path){
+  if(location.protocol==='http:'||location.protocol==='https:') return location.origin+path;
+  return 'http://127.0.0.1:5050'+path;
+}
+function nwAgentHeaders(extra){
+  const headers=Object.assign({},extra||{});
+  const tok=document.getElementById('nwa-agent-token')?.value||'';
+  if(tok) headers['X-NetWolf-Agent-Token']=tok;
+  return headers;
+}
+function nwAgentJsonp(path,params){
+  return new Promise((resolve,reject)=>{
+    const cb='nwAgentCb_'+Date.now()+'_'+Math.random().toString(16).slice(2);
+    const qs=new URLSearchParams(params||{});
+    qs.set('callback',cb);
+    const s=document.createElement('script');
+    let done=false;
+    const clean=()=>{delete window[cb];s.remove();};
+    window[cb]=(data)=>{done=true;clean();resolve(data);};
+    s.onerror=()=>{if(done)return;clean();reject(new Error('Local agent script fallback failed'));};
+    s.src=nwAgentUrl()+path+'?'+qs.toString();
+    document.head.appendChild(s);
+    setTimeout(()=>{if(done)return;clean();reject(new Error('Local agent script fallback timed out'));},5000);
+  });
+}
+function nwAgentApplyChecks(checks){
+  const sel=document.getElementById('nwa-agent-check');
+  if(sel&&checks&&checks.ok&&Array.isArray(checks.checks)){
+    sel.innerHTML=checks.checks.map(c=>'<option value="'+escapeHtml(c.id)+'">'+escapeHtml(c.title)+'</option>').join('');
+  }
+}
+function nwAgentShowHealth(data,via){
+  const state=data.commandExecutionEnabled?'ok':'warn';
+  nwAgentStatus('Agent detected: '+escapeHtml(data.mode||'local')+' on '+escapeHtml(data.bind||'127.0.0.1')+':'+escapeHtml(String(data.port||5051))+'<br>Cloud egress: off. External API calls: off. Command execution: '+(data.commandExecutionEnabled?'enabled':'dry-run only')+'.'+(via?'<br><span style="color:var(--t3)">Connection method: '+escapeHtml(via)+'</span>':''),state);
+}
+function nwAgentShowDryRun(data){
+  const text='Level 2 dry-run: no firewall connection opened.\n\nCheck: '+data.check.title+'\nPurpose: '+data.check.description+'\n\nCommands the local agent would run:\n'+data.commands.map(c=>' - '+c).join('\n');
+  nwAgentOutput(text);
+  const assistantInput=document.getElementById('nwa-input');
+  if(assistantInput&&!assistantInput.value.trim())assistantInput.value=text;
+  showToast('Level 2 dry-run ready');
+}
+function nwAgentStatus(text,state){
+  const el=document.getElementById('nwa-agent-status');
+  if(!el)return;
+  el.className='nwa-agent-status '+(state||'warn');
+  el.innerHTML=text;
+}
+function nwAgentOutput(text){
+  const el=document.getElementById('nwa-agent-output');
+  if(!el)return;
+  el.style.display='block';
+  el.textContent=text;
+}
+window.nwAgentCheckStatus=async function(){
+  nwAgentStatus('Checking local agent...','warn');
+  try{
+    const resp=await fetch(nwAgentUrl()+'/health',{method:'GET',cache:'no-store'});
+    const data=await resp.json();
+    if(!resp.ok||!data.ok)throw new Error(data.error||'Agent health check failed');
+    nwAgentShowHealth(data,'fetch');
+    try{
+      const checks=await fetch(nwAgentUrl()+'/checks',{method:'GET',cache:'no-store',headers:nwAgentHeaders()}).then(r=>r.json());
+      nwAgentApplyChecks(checks);
+    }catch(_e){}
+  }catch(e){
+    try{
+      const data=await nwAgentJsonp('/health.js');
+      if(!data.ok)throw new Error(data.error||'Agent fallback failed');
+      nwAgentShowHealth(data,'fallback');
+      nwAgentApplyChecks(await nwAgentJsonp('/checks.js'));
+    }catch(e2){
+      nwAgentStatus('Agent not reachable at <code>'+escapeHtml(nwAgentUrl())+'</code>.<br>Start <code>C:\\Users\\abaya\\Downloads\\netwolf-agent\\start-local-agent.bat</code>, reload the page, and try again.<br><span style="color:var(--t3)">Fetch error: '+escapeHtml(e.message||String(e))+'<br>Fallback error: '+escapeHtml(e2.message||String(e2))+'</span>','bad');
+    }
+  }
+};
+window.nwAgentRunCheck=async function(){
+  const out=document.getElementById('nwa-agent-output');
+  if(out){out.style.display='block';out.textContent='Preparing safe dry-run request...';}
+  try{
+    const body={
+      checkId:document.getElementById('nwa-agent-check')?.value||'system_health',
+      dryRun:true,
+      device:{
+        host:document.getElementById('nwa-agent-host')?.value||'',
+        username:document.getElementById('nwa-agent-user')?.value||'',
+        port:Number(document.getElementById('nwa-agent-port')?.value||22),
+        sshKeyPath:document.getElementById('nwa-agent-key')?.value||''
+      }
+    };
+    const resp=await fetch(nwAgentUrl()+'/run-check',{method:'POST',headers:nwAgentHeaders({'Content-Type':'application/json'}),body:JSON.stringify(body)});
+    const data=await resp.json();
+    if(!resp.ok||!data.ok)throw new Error((data.errors||[data.error||'Agent request failed']).join('\n'));
+    nwAgentShowDryRun(data);
+  }catch(e){
+    try{
+      const data=await nwAgentJsonp('/dry-run.js',{checkId:body.checkId,host:body.device.host,username:body.device.username,port:String(body.device.port)});
+      if(!data.ok)throw new Error((data.errors||[data.error||'Agent request failed']).join('\n'));
+      nwAgentShowDryRun(data);
+    }catch(e2){
+      nwAgentOutput('Agent check failed:\n'+e.message+'\n\nFallback also failed:\n'+e2.message+'\n\nNothing was sent to AI or outside the browser.');
+    }
+  }
+};
+window.nwAgentShowLogs=async function(){
+  nwAgentOutput('Loading local agent logs...');
+  try{
+    const resp=await fetch(nwAgentUrl()+'/logs?limit=30',{method:'GET',cache:'no-store',headers:nwAgentHeaders()});
+    const data=await resp.json();
+    if(!resp.ok||!data.ok)throw new Error(data.error||'Could not load logs');
+    if(!data.logs.length){
+      nwAgentOutput('No agent logs yet.\n\nRun a Dry-run Check first, then click Agent Logs again.');
+      return;
+    }
+    const text='Local NetWolf Agent Logs\nSecrets and command output are not logged.\n\n'
+      +data.logs.map(l=>{
+        return [
+          l.at||'<time unknown>',
+          'action='+(l.action||''),
+          'check='+(l.checkId||''),
+          'host='+(l.host||''),
+          'user='+(l.username||''),
+          'commands='+(l.commandCount||0),
+          'dryRun='+(l.dryRun?'yes':'no')
+        ].join(' | ');
+      }).join('\n');
+    nwAgentOutput(text);
+  }catch(e){
+    nwAgentOutput('Could not load agent logs:\n'+e.message+'\n\nMake sure the local agent is running.');
+  }
+};
+window.nwAssistantLocal=function(){
+  const kind=document.getElementById('nwa-kind').value;
+  const mode=document.getElementById('nwa-mode')?.value||'triage';
+  const text=document.getElementById('nwa-input').value||'';
+  const symptom=document.getElementById('nwa-symptom').value||'';
+  const cmd=document.getElementById('nwa-cmd').value||'';
+  const findings=nwAssistantLocalFindings(kind,text,symptom,cmd);
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const modeInfo=NW_ASSISTANT_MODES[mode]||NW_ASSISTANT_MODES.triage;
+  const summary='Assistant mode: '+modeInfo.label+'\nProblem type: '+pack.label+'\nSymptom/request: '+(symptom||'<not provided>')+'\nCommand: '+(cmd||'<not provided>')+'\n\nSuggested evidence to collect:\n'+pack.cmds.map(c=>' - '+c).join('\n')+'\n\nUseful toolkit tabs:\n - Packet Tools for flow/sniffer/Wireshark work\n - Config Generator for new config\n - Bulk Anonymizer before sending customer data to AI\n - Security tab for privacy and safe-use notes';
+  nwAssistantRenderResult('Local triage result',findings,summary);
+};
+window.nwAssistantAI=async function(){
+  const kind=document.getElementById('nwa-kind').value;
+  const mode=document.getElementById('nwa-mode')?.value||'triage';
+  const modeInfo=NW_ASSISTANT_MODES[mode]||NW_ASSISTANT_MODES.triage;
+  const pack=NW_ASSISTANT_PACKS[kind]||NW_ASSISTANT_PACKS.vpn;
+  const raw=document.getElementById('nwa-input').value||'';
+  const symptom=document.getElementById('nwa-symptom').value||'';
+  const cmd=document.getElementById('nwa-cmd').value||'';
+  const sev=document.getElementById('nwa-sev').value||'';
+  const key=_loadKey('claude_key')||_loadKey('groq_key');
+  if(!key){showToast('Set Groq or Claude key first');nwAssistantLocal();return;}
+  const text=nwAssistantMaskIfNeeded(raw);
+  const out=document.getElementById('nwa-output');
+  if(out) out.innerHTML='<div class="cblock" style="margin-top:14px"><div class="cbody" style="color:var(--t2)">Analyzing with NetWolf Assistant...</div></div>';
+  const prompt='You are NetWolf Assistant, a senior FortiGate/FortiOS troubleshooting assistant inside the NetWolf toolkit. This is Level 1: you only analyze pasted data, suggest next steps, and point to toolkit areas; you do not claim live access.\\n\\n'
+    +'Assistant mode: '+modeInfo.label+' - '+modeInfo.hint+'\\nProblem type: '+pack.label+'\\nSeverity: '+sev+'\\nSymptom/request: '+symptom+'\\nCommand user ran: '+cmd+'\\n\\n'
+    +'Pasted output/config/log:\\n'+text+'\\n\\n'
+    +'Return a practical network-engineer answer. Adapt to the selected mode. Always include:\\n'
+    +'1. Verdict with color: GREEN safe/working, YELLOW needs attention, RED likely root cause or risky change.\\n'
+    +'2. Evidence found from the pasted text. Quote short snippets only.\\n'
+    +'3. Exact next read-only FortiGate commands, ordered safely.\\n'
+    +'4. Which NetWolf toolkit tab to use next: Packet Tools, Config Generator, Config Migrator, Multi-Vendor CLI, Topology, Bulk Anonymizer, Security, Lab Setup, Device Catalog, or Analyze Output.\\n'
+    +'5. If config/change is requested, provide a change plan, rollback plan, and risk color.\\n'
+    +'6. What to paste back next.\\n'
+    +'Avoid destructive commands unless clearly labelled RED. Be complete but not wordy.';
+  try{
+    let reply='';
+    if(key.startsWith('sk-ant-')){
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1800,system:'You are NetWolf Assistant for FortiGate troubleshooting. Be precise, safe, and practical.',messages:[{role:'user',content:prompt}]})});
+      const data=await resp.json(); if(data.error) throw new Error(data.error.message); reply=data.content[0].text;
+    }else{
+      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1800,messages:[{role:'system',content:'You are NetWolf Assistant for FortiGate troubleshooting. Be precise, safe, and practical.'},{role:'user',content:prompt}]})});
+      const data=await resp.json(); if(data.error) throw new Error(data.error.message); reply=data.choices[0].message.content;
+    }
+    nwAssistantRenderResult('AI deep analysis',nwAssistantLocalFindings(kind,raw,symptom,cmd),reply);
+  }catch(e){
+    nwAssistantRenderResult('AI error - local fallback',nwAssistantLocalFindings(kind,raw,symptom,cmd),'AI request failed: '+e.message+'\\n\\nLocal command pack remains available on the right.');
+  }
+};
+window.nwAssistantCopy=function(){
+  const txt=document.getElementById('nwa-result-text');
+  if(!txt){showToast('No result to copy yet');return;}
+  navigator.clipboard.writeText(txt.textContent).then(()=>showToast('Copied!'));
+};
+window.nwAssistantClear=function(){
+  ['nwa-input','nwa-symptom','nwa-cmd'].forEach(id=>{const x=document.getElementById(id);if(x)x.value='';});
+  const out=document.getElementById('nwa-output'); if(out) out.innerHTML='';
+};
 
 function renderAnalyze(el){el.innerHTML='<div style="margin-bottom:10px;"><div style="font-size:15px;font-weight:700;">Paste CLI output for AI analysis</div><div style="font-size:12px;color:var(--t2);">Mask IPs before sending.</div></div><div style="display:flex;gap:8px;margin-bottom:8px;"><select id="acat" style="font-size:12px;padding:6px;background:var(--b2);"><option value="">-- Context --</option>'+Object.keys(D).map(k=>'<option value="'+k+'">'+D[k].t+'</option>').join('')+'</select><input type="text" id="acmd" placeholder="Command you ran" style="flex:1;font-size:12px;padding:6px;background:var(--bg);"/></div><textarea id="aout" placeholder="Paste raw FortiGate CLI output..." style="width:100%;height:160px;font-family:var(--mono);font-size:12px;padding:12px;background:var(--bg);color:var(--g);border:1px solid var(--br);border-radius:8px;"></textarea><div id="ares" style="margin-top:12px;"></div>';}
 
@@ -6982,7 +7401,7 @@ end`
         respDiv.innerHTML=fmt(_rt);
         // Save to persistent history
         const _ts = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-        freeAIHistory.unshift({ts:_ts, prompt:prompt, response:fmt(_rt)});
+        freeAIHistory.unshift({ts:_ts, prompt:prompt, response:safeFmt(_rt)});
         // Rebuild history div
         const _hd = document.getElementById('groqHistory');
         if(_hd){
@@ -14097,11 +14516,11 @@ function initSidebar(){
   let categories=[
     {section:"VPN & Remote Access",items:["vpn","ssl","ztna","cert","auth"]},
     {section:"Firewall & Traffic",items:["policy","portfwd","session","sniffer","debug","utm","trafficshaping","sip"]},
-    {section:"Network & Routing",items:["wanmig","sdwan","routing","routing3","pbr","vlan","intervdom","ipv6","dhcp","ntp","snmp","netflow"]},
+    {section:"Network & Routing",items:["sdwan","routing","routing3","pbr","vlan","intervdom","ipv6","dhcp","ntp","snmp","netflow"]},
     {section:"System & Operations",items:["sysdiag","hwnpu","ha","logging","fguard","fmgr","wanopt","secfabric","cfgtransaction","fnsysctladv","cfgbackup"]},
     {section:"Switching & Wireless",items:["fortiswitch","fortiap"]},
     {section:"Diagnostics Tools",items:["analyze","advdiag","mostused","pkttools","dhcpdiag","subnetcalc","masking","bulkAnon"]},
-    {section:"AI Tools",items:["freeai","ai","claudechat"]},
+    {section:"AI Tools",items:["freeai","nwassistant","ai","claudechat"]},
     {section:"Cloud Learning",items:["azure"]},
     {section:"Reference",items:["ref","multivendor","hwref","devices"]},
     {section:"Builders & Utilities",items:["psmaker","topology","cfggen","swcfg","cfgmigrate","labsetup","security","liveconnect","emailgen"]},
@@ -14109,7 +14528,7 @@ function initSidebar(){
   ];
   let labelMap={
     vpn:"🔐 VPN / IPsec",ssl:"🛡️ SSL VPN",policy:"📜 Policy / NAT",portfwd:"🚪 Port Forwarding",
-    wanmig:"🔄 WAN Migration",sdwan:"🛰️ SD-WAN",routing:"🧭 Routing",vlan:"🔌 VLAN / Interface",intervdom:"🏛️ Inter-VDOM",
+    sdwan:"🛰️ SD-WAN",routing:"🧭 Routing",vlan:"🔌 VLAN / Interface",intervdom:"🏛️ Inter-VDOM",
     ha:"🔁 HA / Cluster",auth:"🔑 Auth / LDAP",utm:"🛡️ UTM / App",cert:"📄 Certificates",
     dhcp:"📮 DHCP / DNS",fguard:"☁️ FortiGuard",sniffer:"🔎 Sniffer",debug:"🧪 Debug Flow",
     session:"📊 Session Table",sysdiag:"🩺 System Diagnostics",hwnpu:"🧱 Hardware & NPU",
@@ -14126,7 +14545,7 @@ function initSidebar(){
     "cfg-fortiswitch":"🔀 FortiSwitch Config","cfg-ztna":"🪪 ZTNA Config","cfg-netflow":"📈 NetFlow Config","netflow":"📈 NetFlow / sFlow",
     analyze:"🔎 Analyze Output",advdiag:"🔬 Advanced Diagnostics",mostused:"⭐ Most Used Tools",
     pkttools:"📡 Packet Tools",dhcpdiag:"📮 DHCP Diagnostics",subnetcalc:"🧮 Subnet Calculator",
-    masking:"🕶️ IP Masking",bulkAnon:"🧹 Bulk Anonymizer",freeai:"✨ AI Analyzer",
+    masking:"🕶️ IP Masking",bulkAnon:"🧹 Bulk Anonymizer",freeai:"✨ AI Analyzer",nwassistant:"🐺 NetWolf Assistant",
     ai:"💬 AI Assistant",claudechat:"🧠 Claude Chat",ref:"📚 Quick Reference",multivendor:"🔁 Multi-Vendor CLI",
     hwref:"🧱 Hardware Reference",devices:"🖥️ Device Catalog",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
     cfggen:"🧩 Config Generator",swcfg:"🔧 SW/Router Config",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
@@ -14186,6 +14605,7 @@ function globalSearchFn(query){
     {id:'masking',title:'IP Masking',match:'Tool: Mask individual IP addresses'},
     {id:'bulkAnon',title:'Bulk Anonymizer',match:'Tool: Bulk anonymize IPs and hostnames'},
     {id:'freeai',title:'AI CLI Analyzer',match:'Tool: AI-powered CLI analysis'},
+    {id:'nwassistant',title:'NetWolf Assistant',match:'Tool: guided FortiGate troubleshooting, local triage, AI deep analysis, VPN, NAT, policy, routing'},
     {id:'ai',title:'AI Assistant',match:'Tool: FortiGate assistant chat'},
     {id:'claudechat',title:'Claude Chat',match:'Tool: Claude Anthropic chat assistant'},
     {id:'ref',title:'Quick Reference',match:'Reference: Common CLI commands'},
@@ -14974,21 +15394,36 @@ function renderSecurityTab(el){
 
 function renderLiveConnect(el){
   el.innerHTML=`
-<div class="sh"><span class="stitle">🔌 FortiGate Live Connect</span><span class="sev info">REST API — Coming Soon</span></div>
+<div class="sh"><span class="stitle">🔌 FortiGate Live Connect</span><span class="sev good">Level 2 local agent ready</span></div>
 
 <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.7">
-  Connect NetWolf directly to a live FortiGate using its built-in REST API. Pull real-time data — interface status,
-  VPN tunnels, routing table, DHCP leases and active sessions — without leaving the tool.
-  No third-party server involved. Your browser talks directly to the FortiGate.
+  Connect NetWolf to firewall evidence safely. Option 1 runs a local agent on the engineer/customer PC.
+  Option 2 runs the same agent on an internal MSP/NOC jump server. Both are designed for read-only checks first,
+  with no NetWolf cloud server in the path.
 </p>
 
-<!-- Coming Soon Banner -->
-<div style="background:rgba(88,166,255,.07);border:1px solid rgba(88,166,255,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
-  <span style="font-size:28px;flex-shrink:0;">🚧</span>
-  <div>
-    <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Live API integration is coming in a future update</div>
-    <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">This tab contains everything you need to prepare your FortiGate for the Live Connect feature.
-    Follow the setup steps below now so you are ready the moment it goes live.</div>
+<div style="background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
+  <span style="font-size:28px;flex-shrink:0;">🟢</span>
+    <div>
+    <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Local Level 2 agent ready</div>
+    <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">Download the agent, extract it, and run <code>start-local-agent.bat</code>. Then use NetWolf Assistant → Level 2 Live Agent. Default mode is dry-run and local-only.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <a class="sbtn" href="${nwToolkitAssetUrl('/netwolf-agent.zip')}" download style="text-decoration:none;background:#15803D">Download NetWolf Local Agent</a>
+    </div>
+  </div>
+</div>
+
+<div class="cblock" style="margin-bottom:14px;">
+  <div class="chdr"><div class="chdr-l">🧭 Deployment Options</div></div>
+  <div class="cbody" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px">
+    <div style="border:1px solid var(--br);border-radius:8px;background:var(--b2);padding:12px">
+      <div style="font-size:13px;font-weight:800;color:var(--t);margin-bottom:6px">Option 1: Local agent</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.65">Best for one engineer laptop or one customer PC. The agent listens on <code>127.0.0.1:5051</code>, accepts only local browser requests, and starts in dry-run mode.</div>
+    </div>
+    <div style="border:1px solid var(--br);border-radius:8px;background:var(--b2);padding:12px">
+      <div style="font-size:13px;font-weight:800;color:var(--t);margin-bottom:6px">Option 2: Internal jump server</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.65">Best for MSP/NOC use. Run the same agent inside the customer/MSP network behind VPN or internal HTTPS. Do not expose the agent port to the public internet.</div>
+    </div>
   </div>
 </div>
 
@@ -16061,6 +16496,26 @@ function renderMostUsed(el){
 }
 window.showLandingThenInit=function(){
   initAndRender(); // load the toolkit in background
+  // Show post-payment welcome if redirected from Stripe
+  if(new URLSearchParams(location.search).get('payment')==='success'){
+    history.replaceState(null,'',location.pathname); // clean URL
+    var user=fbAuth.currentUser;
+    var name=user?(user.displayName||(user.email?user.email.split('@')[0]:'Engineer')):'Engineer';
+    var modal=document.createElement('div');
+    modal.id='paymentSuccessModal';
+    modal.style.cssText='position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);padding:18px';
+    modal.innerHTML='<div style="width:min(480px,96vw);background:var(--b2);border:1px solid rgba(29,158,117,.4);border-radius:18px;padding:36px 32px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)">'
+      +'<div style="width:64px;height:64px;border-radius:50%;background:rgba(29,158,117,.12);border:2px solid var(--a);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px">✅</div>'
+      +'<div style="font-size:22px;font-weight:900;color:var(--t);margin-bottom:10px">Welcome to NetWolf, '+escapeHtml(name)+'!</div>'
+      +'<div style="font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:8px">Your subscription is active. You now have full access to the NetWolf toolkit.</div>'
+      +'<div style="font-size:12px;color:var(--t3);margin-bottom:28px">A confirmation email will arrive shortly. Your device has been registered.</div>'
+      +'<button onclick="document.getElementById(\'paymentSuccessModal\').remove();sessionStorage.setItem(\'nw_landing_seen\',\'1\');var o=document.getElementById(\'landingOverlay\');if(o)o.style.display=\'block\';" '
+      +'style="background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:10px;padding:13px 32px;font-size:15px;font-weight:800;cursor:pointer;width:100%">'
+      +'Open NetWolf Toolkit →</button>'
+      +'</div>';
+    document.body.appendChild(modal);
+    return; // don't show landing overlay yet — button will trigger it
+  }
   // Only show landing on first login of this browser session, not on refresh
   var alreadySeen=sessionStorage.getItem('nw_landing_seen');
   if(alreadySeen) return; // skip landing on refresh/tab restore
@@ -16109,4 +16564,3 @@ function initAndRender(){try{
 </script>
 </body>
 </html>
-
