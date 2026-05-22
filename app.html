@@ -1137,6 +1137,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('security')" id="tab-security" title="Security & Privacy">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Security</span>
             </button>
+            <button class="tab" onclick="stab('passgen')" id="tab-passgen" title="Password Generator">
+              <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Passwords</span>
+            </button>
             <button class="tab" onclick="stab('liveconnect')" id="tab-liveconnect" title="FortiGate Live Connect">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Live</span>
             </button>
@@ -4379,7 +4382,7 @@ function hasHighRisk(cmds){return cmds.some(c=>cmdSafety(c)==='danger');}
 function hasCaution(cmds){return cmds.some(c=>cmdSafety(c)==='caution');}
 
 let cur='vpn',tab='guide',chat=[],loading=false;
-const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','liveconnect','emailgen','swcfg','devices']);
+const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','passgen','liveconnect','emailgen','swcfg','devices']);
 function normalizeTab(t){return VALID_TABS.has(t)?t:'guide';}
 let freeAIPrompt='',freeAIHistory=[];
 
@@ -4522,6 +4525,7 @@ function upgradeTabIcons(){
     'tab-cfgmigrate':'<path d="M4 7h12"></path><path d="m13 4 3 3-3 3"></path><path d="M20 17H8"></path><path d="m11 14-3 3 3 3"></path>',
     'tab-labsetup':'<path d="M10 3v5l-5 9a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 17l-5-9V3"></path><path d="M8 3h8"></path>',
     'tab-security':'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path><path d="m9.5 12 1.7 1.7 3.8-4"></path>',
+    'tab-passgen':'<rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path><path d="M8 16h.01"></path><path d="M12 16h.01"></path><path d="M16 16h.01"></path>',
     'tab-liveconnect':'<path d="M4 12h4l2-5 4 10 2-5h4"></path><circle cx="12" cy="12" r="9"></circle>',
     'tab-emailgen':'<path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path>',
     'tab-swcfg':'<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.8 1.8 0 0 0 .4 2l.1.1-2.8 2.8-.1-.1a1.8 1.8 0 0 0-2-.4 1.8 1.8 0 0 0-1 1.6V21h-4v-.1a1.8 1.8 0 0 0-1-1.6 1.8 1.8 0 0 0-2 .4l-.1.1-2.8-2.8.1-.1a1.8 1.8 0 0 0 .4-2 1.8 1.8 0 0 0-1.6-1H3v-4h.1a1.8 1.8 0 0 0 1.6-1 1.8 1.8 0 0 0-.4-2l-.1-.1 2.8-2.8.1.1a1.8 1.8 0 0 0 2 .4 1.8 1.8 0 0 0 1-1.6V3h4v.1a1.8 1.8 0 0 0 1 1.6 1.8 1.8 0 0 0 2-.4l.1-.1 2.8 2.8-.1.1a1.8 1.8 0 0 0-.4 2 1.8 1.8 0 0 0 1.6 1h.1v4h-.1a1.8 1.8 0 0 0-1.6 1Z"></path>',
@@ -4957,7 +4961,7 @@ function render(){const el=document.getElementById('mc');
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+escapeHtml(cur)+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='passgen')renderPasswordGenerator(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -14549,7 +14553,7 @@ function initSidebar(){
     ai:"💬 AI Assistant",claudechat:"🧠 Claude Chat",ref:"📚 Quick Reference",multivendor:"🔁 Multi-Vendor CLI",
     hwref:"🧱 Hardware Reference",devices:"🖥️ Device Catalog",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
     cfggen:"🧩 Config Generator",swcfg:"🔧 SW/Router Config",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
-    security:"🛡️ Security & Privacy",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
+    security:"🛡️ Security & Privacy",passgen:"🔐 Password Generator",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
     azure:"☁️ Azure Scripting"
   };
   let html='';
@@ -14617,6 +14621,7 @@ function globalSearchFn(query){
     {id:'cfgmigrate',title:'Config Migrator',match:'Tool: Migrate and replace config fields'},
     {id:'labsetup',title:'Lab Setup Guide',match:'Tool: Lab build guide'},
     {id:'security',title:'Security & Privacy',match:'Tool: Privacy and safety information'},
+    {id:'passgen',title:'Password Generator',match:'Tool: strong passwords passphrases wifi keys api tokens pins batch multi user credentials'},
     {id:'liveconnect',title:'Live Connect',match:'Tool: FortiGate live connection'},
     {id:'emailgen',title:'Customer Email Generator',match:'Tool: Customer email drafting'},
     {id:'azure',title:'Azure Scripting',match:'Learning: Microsoft Azure PowerShell, Azure CLI, networking and security scripts'}
@@ -14995,6 +15000,102 @@ function renderDHCPDiag(el){el.innerHTML=`
     document.getElementById('rogue-cmd').textContent=lines.join('\n');
     document.getElementById('rogue-out').style.display='block';
   };
+}
+
+function pgRand(max){
+  const a=new Uint32Array(1);
+  const lim=Math.floor(4294967296/max)*max;
+  do{crypto.getRandomValues(a);}while(a[0]>=lim);
+  return a[0]%max;
+}
+function pgPick(s){return s[pgRand(s.length)];}
+function pgShuffle(chars){
+  const a=chars.split('');
+  for(let i=a.length-1;i>0;i--){const j=pgRand(i+1);const t=a[i];a[i]=a[j];a[j]=t;}
+  return a.join('');
+}
+const PG_WORDS='atlas cipher delta ember falcon granite harbor ivory juniper kinetic lunar matrix nebula oak pixel quartz river silver summit timber ultra vector winter xenon yellow zephyr'.split(' ');
+function pgPassword(o){
+  const lower='abcdefghjkmnpqrstuvwxyz', upper='ABCDEFGHJKLMNPQRSTUVWXYZ', nums='23456789', sym='!@#$%^&*_-+=?';
+  let sets=[]; if(o.lower)sets.push(lower); if(o.upper)sets.push(upper); if(o.nums)sets.push(nums); if(o.sym)sets.push(sym);
+  if(!sets.length)sets=[lower,upper,nums];
+  let all=sets.join(''), out=sets.map(pgPick).join('');
+  while(out.length<o.len)out+=pgPick(all);
+  return pgShuffle(out);
+}
+function pgPassphrase(words,sep,cap,num){
+  let arr=[]; for(let i=0;i<words;i++){let w=PG_WORDS[pgRand(PG_WORDS.length)]; if(cap)w=w[0].toUpperCase()+w.slice(1); arr.push(w);}
+  let out=arr.join(sep||'-'); if(num)out+=sep+String(10+pgRand(90)); return out;
+}
+function pgToken(len){const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';let s='nw_';while(s.length<len)s+=pgPick(chars);return s;}
+function pgPin(len){let s='';while(s.length<len)s+=String(pgRand(10));return s;}
+function pgScore(v){
+  const classes=[/[a-z]/,/[A-Z]/,/[0-9]/,/[^A-Za-z0-9]/].filter(r=>r.test(v)).length;
+  let score=Math.min(100,Math.round(v.length*3.5+classes*12));
+  if(v.length>=20)score=Math.min(100,score+10);
+  return score;
+}
+function pgGenerate(){
+  const profile=document.getElementById('pg-profile').value;
+  const len=Math.max(4,Math.min(128,Number(document.getElementById('pg-len').value||20)));
+  const count=Math.max(1,Math.min(100,Number(document.getElementById('pg-count').value||10)));
+  const names=(document.getElementById('pg-names').value||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  let rows=[];
+  for(let i=0;i<count;i++){
+    let value='';
+    if(profile==='phrase')value=pgPassphrase(Math.max(3,Math.min(5,Math.round(len/6))),'-',true,true);
+    else if(profile==='wifi')value=pgPassword({len:Math.max(16,len),lower:true,upper:true,nums:true,sym:false});
+    else if(profile==='pin')value=pgPin(Math.max(6,Math.min(16,len)));
+    else if(profile==='token')value=pgToken(Math.max(24,len));
+    else value=pgPassword({len,lower:true,upper:true,nums:true,sym:true});
+    rows.push({label:names[i]||('item-'+String(i+1).padStart(2,'0')),value,score:pgScore(value)});
+  }
+  const out=document.getElementById('pg-output');
+  out.innerHTML=rows.map((r,i)=>'<div class="pg-row"><span class="pg-label">'+escapeHtml(r.label)+'</span><code>'+escapeHtml(r.value)+'</code><button class="pg-copy" title="Copy password" onclick="pgCopyOne('+i+')">⧉</button></div>').join('');
+  window.pgLast=rows;
+}
+function pgCopyOne(i){
+  const row=(window.pgLast||[])[i];
+  if(!row){showToast('Generate first');return;}
+  navigator.clipboard.writeText(row.value).then(()=>showToast('Copied'));
+}
+function pgCopyAll(){
+  const txt=(window.pgLast||[]).map(r=>r.label+': '+r.value).join('\n');
+  if(!txt){showToast('Generate first');return;}
+  navigator.clipboard.writeText(txt).then(()=>showToast('All passwords copied'));
+}
+function pgExportCsv(){
+  const rows=window.pgLast||[]; if(!rows.length){showToast('Generate first');return;}
+  const csv='label,password,strength\\n'+rows.map(r=>'"'+r.label.replace(/"/g,'""')+'","'+r.value.replace(/"/g,'""')+'",'+r.score).join('\\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='netwolf-passwords.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+function pgSetProfile(v,btn){
+  document.getElementById('pg-profile').value=v;
+  document.querySelectorAll('.pg-profile button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(v==='pin')document.getElementById('pg-len').value=8;
+  else if(v==='phrase')document.getElementById('pg-len').value=18;
+  else if(v==='token')document.getElementById('pg-len').value=24;
+  else document.getElementById('pg-len').value=16;
+  pgGenerate();
+}
+function renderPasswordGenerator(el){
+  el.innerHTML=`<style>.pg-box{max-width:760px}.pg-top{display:grid;grid-template-columns:150px 76px 76px auto;gap:7px;align-items:end}.pg-field label{display:block;font-size:9px;color:var(--t3);font-family:var(--mono);margin-bottom:3px;text-transform:uppercase}.pg-field input,.pg-field select{width:100%;height:34px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);padding:0 8px;font-size:12px}.pg-actions{display:flex;gap:6px;align-items:center}.pg-actions .sbtn{height:34px;padding:0 10px;font-size:11px;white-space:nowrap}.pg-advanced{margin:8px 0}.pg-advanced summary{cursor:pointer;color:var(--t2);font-size:11px;font-weight:700}.pg-names{width:100%;min-height:44px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);padding:7px;font-size:11px;resize:vertical;margin-top:6px}.pg-output{border:1px solid var(--br);border-radius:7px;overflow:hidden;background:rgba(5,9,20,.5)}.pg-row{display:grid;grid-template-columns:82px minmax(0,1fr) 32px;gap:7px;align-items:center;padding:5px 7px;border-bottom:1px solid var(--br)}.pg-row:last-child{border-bottom:0}.pg-row code{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#dbeafe;background:transparent;border:0;padding:0;font-size:12px}.pg-label{font-size:10px;color:var(--t3);font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pg-copy{width:28px;height:28px;border-radius:6px;border:1px solid var(--br);background:#111827;color:#dbeafe;cursor:pointer;font-size:13px;line-height:1}.pg-copy:hover{border-color:var(--a);color:#fff}.pg-note{font-size:10px;color:var(--t3);line-height:1.35;margin-top:7px}@media(max-width:700px){.pg-box{max-width:none}.pg-top{grid-template-columns:1fr 74px 74px}.pg-actions{grid-column:1/-1;flex-wrap:wrap}.pg-actions .sbtn{flex:1}.pg-row{grid-template-columns:64px minmax(0,1fr) 32px}}</style>
+  <div class="sh"><span class="stitle">🔐 Password Generator</span><span class="sev good">local only</span></div>
+  <div class="cblock pg-box"><div class="cbody">
+    <div class="pg-top">
+      <div class="pg-field"><label>Type</label><select id="pg-profile" onchange="pgSetProfile(this.value)">
+        <option value="strong">Strong</option><option value="phrase">Phrase</option><option value="wifi">Wi-Fi</option><option value="token">Token</option><option value="pin">PIN</option>
+      </select></div>
+      <div class="pg-field"><label>Length</label><input id="pg-len" type="number" min="4" max="128" value="16"></div>
+      <div class="pg-field"><label>Count</label><input id="pg-count" type="number" min="1" max="100" value="3"></div>
+      <div class="pg-actions"><button class="sbtn" onclick="pgGenerate()">Generate</button><button class="sbtn" onclick="pgCopyAll()" style="background:#2563EB">Copy all</button><button class="sbtn" onclick="pgExportCsv()" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">CSV</button></div>
+    </div>
+    <details class="pg-advanced"><summary>Optional labels</summary><textarea id="pg-names" class="pg-names" placeholder="admin-firewall&#10;wifi-guest&#10;noc-readonly"></textarea></details>
+    <div id="pg-output" class="pg-output"><div style="color:var(--t3);font-size:12px;padding:12px">Choose a profile and click Generate.</div></div>
+    <div class="pg-note">Local browser generation only. Nothing is saved or sent.</div>
+  </div></div>`;
+  pgGenerate();
 }
 
 function renderSecurityTab(el){
