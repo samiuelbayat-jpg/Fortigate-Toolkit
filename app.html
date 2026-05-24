@@ -910,7 +910,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <input class="login-input" type="email" id="loginEmail" placeholder="Your email address" onkeydown="if(event.key==='Enter')document.getElementById('loginPassword').focus()">
     <input class="login-input" type="password" id="loginPassword" placeholder="Password" onkeydown="if(event.key==='Enter')window.doLogin()">
     <button class="login-btn" id="loginSubmitBtn" onclick="window.doLogin()">Login</button>
-    <button class="login-forgot" id="loginForgotBtn">Forgot password?</button>
+    <button class="login-forgot" id="loginForgotBtn" type="button" onclick="window.doForgotPassword()">Forgot password?</button>
     <div id="loginError" class="login-error"></div>
     <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07);text-align:center">
       <div style="font-size:11px;color:rgba(255,255,255,.3);line-height:1.7">
@@ -4366,12 +4366,25 @@ window.doLogout=function doLogout(){
 
 /* ══ FORGOT PASSWORD ══ */
 window.doForgotPassword=function doForgotPassword(){
-  const email=document.getElementById('loginEmail').value.trim();
+  const emailEl=document.getElementById('loginEmail');
   const errEl=document.getElementById('loginError');
-  if(!email){errEl.style.color='var(--r)';errEl.textContent='Enter your email first, then click Forgot password.';return;}
+  const btn=document.getElementById('loginForgotBtn');
+  const email=(emailEl&&emailEl.value?emailEl.value:'').trim();
+  if(!errEl)return;
+  errEl.style.color='var(--r)';
+  if(!email){errEl.textContent='Enter your email first, then click Forgot password.';if(emailEl)emailEl.focus();return;}
+  if(!fbAuth||typeof fbAuth.sendPasswordResetEmail!=='function'){
+    errEl.textContent='Password reset is not available because Firebase Auth did not load.';
+    return;
+  }
+  if(btn){btn.disabled=true;btn.textContent='Sending reset email...';}
   fbAuth.sendPasswordResetEmail(email)
-    .then(()=>{errEl.style.color='var(--g)';errEl.textContent='✓ Reset email sent! Check your inbox.';})
-    .catch(()=>{errEl.style.color='var(--r)';errEl.textContent='Could not send reset email. Check the address.';});
+    .then(()=>{errEl.style.color='var(--g)';errEl.textContent='Reset email sent. Check your inbox and spam folder.';})
+    .catch(err=>{
+      const codes={'auth/invalid-email':'Please enter a valid email address.','auth/user-not-found':'No account found with this email.','auth/too-many-requests':'Too many reset attempts. Please wait and try again.','auth/network-request-failed':'Network error. Check your internet connection and try again.'};
+      errEl.style.color='var(--r)';errEl.textContent=codes[err&&err.code]||('Could not send reset email: '+((err&&err.message)||'Unknown error'));
+    })
+    .finally(()=>{if(btn){btn.disabled=false;btn.textContent='Forgot password?';}});
 }
 
 /* ══ TERMS MODAL ══ */
