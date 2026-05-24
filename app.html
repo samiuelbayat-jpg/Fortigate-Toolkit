@@ -7,11 +7,10 @@
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
-<!-- Local agent uses http://127.0.0.1:5051, so do not force upgrade-insecure-requests here. -->
 <!-- SECURITY NOTE: unsafe-inline is required because this is a single-file app with inline scripts/styles.
      To remove it: split into separate .js/.css files and use a nonce or hash-based CSP.
      object-src none and base-uri self added to limit attack surface. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' http://127.0.0.1:5051 http://localhost:5051 https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' http://127.0.0.1:5051 http://localhost:5051 http://127.0.0.1:5052 http://localhost:5052 https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app wss:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' http://127.0.0.1:5051 http://localhost:5051 https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' http://127.0.0.1:5051 http://localhost:5051 http://127.0.0.1:5052 http://localhost:5052 https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app;">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
@@ -134,12 +133,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .sbtn:hover{background:var(--ad)}
 .kst{font-size:11px;white-space:nowrap}
 .layout{display:grid;grid-template-columns:240px 1fr;flex:1;overflow:hidden;min-height:0}
-.sidebar{background:var(--railBg);border-right:1px solid var(--themeLine);padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;height:100%;box-shadow:8px 0 24px rgba(0,0,0,.12)}
-.slbl{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;padding:10px 10px 4px}
-.cb{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;font-size:13px;cursor:pointer;border:none;background:none;width:100%;text-align:left;color:var(--t2);transition:all .1s}
+.sidebar{background:var(--railBg);border-right:1px solid var(--themeLine);padding:8px 7px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;height:100%;box-shadow:8px 0 24px rgba(0,0,0,.12)}
+.slbl{font-size:9.5px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;padding:8px 9px 3px;line-height:1.15}.slbl span{display:block;font-size:9px;letter-spacing:0;text-transform:none;font-weight:500;color:var(--t3);opacity:.86;margin-top:2px;line-height:1.15}
+.cb{display:flex;align-items:center;gap:7px;padding:5px 9px;border-radius:6px;font-size:12px;line-height:1.2;cursor:pointer;border:none;background:none;width:100%;text-align:left;color:var(--t2);transition:all .1s}
 .cb:hover{background:var(--b3);color:var(--t)}
-.cb.active{background:rgba(29,158,117,.15);color:var(--a);font-weight:700;border-left:2px solid var(--a);padding-left:8px}
-.cb .ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
+.cb.active{background:rgba(29,158,117,.15);color:var(--a);font-weight:700;border-left:2px solid var(--a);padding-left:7px}
+.cb .ic{font-size:12px;width:15px;text-align:center;flex-shrink:0}
 .main{display:flex;flex-direction:column;overflow:hidden;flex:1;min-height:0}
 .tabs{display:flex;gap:10px;border-bottom:1px solid var(--themeLine);padding:9px 12px 10px;background:var(--chromeBg);overflow-x:auto;flex-shrink:0;scrollbar-width:thin;scrollbar-color:var(--themeLine) transparent;-webkit-overflow-scrolling:touch;align-items:stretch;box-shadow:inset 0 -1px 0 rgba(255,255,255,.04)}
 .tab{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 10px;font-size:11px;cursor:pointer;border:1px solid transparent;background:transparent;color:var(--t2);border-radius:6px;white-space:nowrap;transition:background .16s,color .16s,border-color .16s,box-shadow .16s;flex-shrink:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:0;min-width:auto;min-height:32px}
@@ -179,9 +178,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:1
 .chdr-l{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--t)}
 .snum{width:20px;height:20px;border-radius:50%;background:rgba(29,158,117,.2);color:var(--a);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .cbody{padding:12px 14px}
-.clines{font-family:var(--mono);font-size:12px;line-height:1.8;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;color:var(--g)}
+.clines{font-family:var(--mono);font-size:12px;line-height:1.3;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;color:var(--g)}
 .clines span{display:block;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere}
-.cnote{font-size:12px;color:var(--t2);margin-top:8px;line-height:1.6;border-left:2px solid var(--br);padding-left:8px}
+.cnote{font-size:12px;color:var(--t2);margin-top:8px;line-height:1.5;border-left:2px solid var(--br);padding-left:8px}.cdesc{font-size:12px;color:var(--t2);line-height:1.45;margin:0 0 8px;padding:7px 9px;border-radius:6px;background:rgba(88,166,255,.06);border-left:2px solid var(--a)}
 .cwarn{font-size:12px;color:var(--y);margin-bottom:8px;line-height:1.6;padding:8px;border-radius:4px;background:rgba(210,153,34,.07);border-left:2px solid var(--y)}
 .cdanger{font-size:12px;color:var(--r);margin-bottom:8px;line-height:1.6;padding:8px;border-radius:4px;background:rgba(248,81,73,.07);border-left:2px solid var(--r)}
 .cbadge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;white-space:nowrap}
@@ -941,6 +940,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <div class="device-limit-actions">
       <button class="device-limit-primary" onclick="window.location.reload()">Check Again</button>
       <button class="device-limit-secondary" onclick="doLogout()">Logout</button>
+      <button class="device-limit-secondary" id="deviceLimitSubscribeBtn" onclick="window.open('https://netwolffortigate.com/#pricing','_blank')" style="display:none">Subscribe Now</button>
       <button class="device-limit-secondary" onclick="location.href='mailto:support@netwolffortigate.com?subject=NetWolf%20device%20limit%20request'">Contact Support</button>
     </div>
   </div>
@@ -1273,7 +1273,7 @@ async function nwSubscriptionInfo(uid){
   const snap=await fbDB.ref('users/'+uid+'/subscription').once('value');
   const sub=snap.val()||{};
   const plan=String(sub.plan||sub.type||'monthly').toLowerCase();
-  const status=String(sub.status||'active').toLowerCase();
+  const status=String(sub.status||'').toLowerCase();
   const limit=Number(sub.deviceLimit||sub.devices||NW_PLAN_LIMITS[plan]||2);
   return {plan,status,limit};
 }
@@ -1316,16 +1316,35 @@ function nwShowDeviceLimit(info){
   const overlay=document.getElementById('deviceLimitOverlay');
   const txt=document.getElementById('deviceLimitText');
   const meta=document.getElementById('deviceLimitMeta');
+  const title=overlay?overlay.querySelector('.device-limit-title'):null;
+  const upgradeHint=document.getElementById('deviceUpgradeHint');
+  const deviceList=document.getElementById('deviceList');
   document.getElementById('toolkitContainer').style.display='none';
   document.getElementById('loginOverlay').style.display='none';
-  if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
-  if(meta) meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();
+  if(info.reason==='subscription'){
+    if(title) title.textContent='Subscription required';
+    if(txt) txt.innerHTML='This account does not have an active subscription.<br><br>'
+      +'Subscribe at <a href="https://netwolffortigate.com" style="color:var(--a)" target="_blank" rel="noopener noreferrer">netwolffortigate.com</a> to get full access to the NetWolf toolkit.';
+    if(meta) meta.style.display='none';
+    if(upgradeHint) upgradeHint.style.display='none';
+    if(deviceList) deviceList.style.display='none';
+    const subBtn=document.getElementById('deviceLimitSubscribeBtn');
+    if(subBtn) subBtn.style.display='';
+    const checkBtn=overlay?overlay.querySelector('.device-limit-primary'):null;
+    if(checkBtn) checkBtn.style.display='none';
+  }else{
+    if(title) title.textContent='Device limit reached';
+    if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
+    if(meta){meta.style.display='';meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();}
+    if(upgradeHint) upgradeHint.style.display='';
+    if(deviceList) deviceList.style.display='';
+    nwRenderDeviceList(info);
+  }
   if(overlay) overlay.style.display='flex';
-  nwRenderDeviceList(info);
 }
 async function nwEnsureDeviceAllowed(user){
   const info=await nwSubscriptionInfo(user.uid);
-  if(info.status && !['active','trialing','paid','manual'].includes(info.status)){
+  if(!['active','trialing','paid','manual'].includes(info.status)){
     return {allowed:false,reason:'subscription',...info,activeCount:0};
   }
   const fp=await nwDeviceFingerprint();
@@ -1410,7 +1429,15 @@ fbAuth.onAuthStateChanged(function(user){
       ]).then(([termsSnap,statusSnap])=>{
         const hasAcceptedTerms=termsSnap.val()===true;
         const subscriptionStatus=String(statusSnap.val()||'').toLowerCase();
-        const hasActiveSubscription=['active','trialing'].includes(subscriptionStatus);
+        const hasActiveSubscription=['active','trialing','paid','manual'].includes(subscriptionStatus);
+        if(!hasActiveSubscription){
+          // No active subscription — should have been caught by device gate, but block here too
+          document.getElementById('toolkitContainer').style.display='none';
+          document.getElementById('loginOverlay').style.display='flex';
+          const e=document.getElementById('loginError');
+          if(e){e.textContent='No active subscription found. Please subscribe at netwolffortigate.com to access the toolkit.';e.style.display='block';}
+          return;
+        }
         if(hasAcceptedTerms||hasActiveSubscription){
           if(!hasAcceptedTerms&&hasActiveSubscription){
             _userRef.child('terms_accepted').set(true).catch(()=>{});
@@ -4476,6 +4503,7 @@ function nav(id){
 function stab(t){t=normalizeTab(t);tab=t;localStorage.setItem('nw_tab',t);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');if(t!=='guide'){document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+t))document.getElementById('cat-'+t).classList.add('active');}else{document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+cur))document.getElementById('cat-'+cur).classList.add('active');}render();}
 function esc(s){return String(s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
 function fmt(t){t=t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
+function safeFmt(t){return fmt(t).replace(/<(?!\/?(?:pre|code|strong|br|span)\b)[^>]+>/gi,'');}
 function copyAll(btn,key,idx){const step=D[cur].steps?D[cur].steps[idx]:D[cur].sections[idx];const cmds=(step.cmds||[]).filter(c=>!c.startsWith('('));navigator.clipboard.writeText(cmds.join('\n')).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy all',1500);});}
 function groqClearHistory(){
   freeAIHistory=[];
@@ -4759,10 +4787,10 @@ wanopt:{t:'WAN Optimization',s:'med',type:'trouble',chips:['Tunnel not establish
 {t:'4. SD-WAN firewall policy',cmds:['config firewall policy','edit 1','set name LAN-TO-SDWAN','set srcintf lan','set dstintf virtual-wan-link','set srcaddr all','set dstaddr all','set action accept','set nat enable','set logtraffic all','next','end']}
 ]},
 'cfg-ha':{t:'HA Active-Passive cluster',s:'info',type:'config',sections:[
-{t:'1. Configure HA on primary unit',icon:'🔄',warn:'HA sync will overwrite secondary config.',cmds:['config system ha','set mode a-p','set group-name CLUSTER-01','set group-id 1','set password <HA_PASSWORD>','set priority 200','set hbdev ha1 50 ha2 50','set session-sync-dev ha1 ha2','set override enable','end']},
-{t:'2. Configure HA on secondary unit',cmds:['config system ha','set mode a-p','set group-name CLUSTER-01','set group-id 1','set password <HA_PASSWORD>','set priority 100','set hbdev ha1 50 ha2 50','end']},
-{t:'3. Verify cluster formation',cmds:['get system ha status','diagnose sys ha status','diagnose sys ha checksum show']},
-{t:'4. Per-unit management IPs',cmds:['config system ha','set ha-mgmt-status enable','config ha-mgmt-interfaces','edit 1','set interface mgmt','set gateway <MGMT_GW>','end','end']},
+{t:'1. Configure HA on primary unit',icon:'🔄',warn:'HA sync will overwrite secondary config.',desc:'Builds the main HA member. This unit receives the higher priority, so it should become primary when the cluster forms.',cmds:['config system ha','set mode a-p','set group-name CLUSTER-01','set group-id 1','set password <HA_PASSWORD>','set priority 200','set hbdev ha1 50 ha2 50','set session-sync-dev ha1 ha2','set override enable','end']},
+{t:'2. Configure HA on secondary unit',desc:'Adds the second firewall to the same HA group with lower priority. Use the same group name, group ID, heartbeat ports, and password.',cmds:['config system ha','set mode a-p','set group-name CLUSTER-01','set group-id 1','set password <HA_PASSWORD>','set priority 100','set hbdev ha1 50 ha2 50','end']},
+{t:'3. Verify cluster formation',desc:'Checks if both firewalls joined the same cluster, which unit is primary, and whether the config checksum matches.',cmds:['get system ha status','diagnose sys ha status','diagnose sys ha checksum show']},
+{t:'4. Per-unit management IPs',desc:'Keeps separate management access to each firewall, even when they are operating as one HA cluster.',cmds:['config system ha','set ha-mgmt-status enable','config ha-mgmt-interfaces','edit 1','set interface mgmt','set gateway <MGMT_GW>','end','end']},
 {t:'5. Test manual failover',warn:'Brief traffic interruption expected.',cmds:['execute ha failover set 1','get system ha status','execute ha failover unset 1','diagnose sys ha reset-uptime']}
 ]},
 'cfg-intervdom':{t:'Inter-VDOM routing',s:'info',type:'config',sections:[
@@ -5013,7 +5041,7 @@ function renderGuide(el,d){
   el.querySelector('#troubleOutputClearBtn').onclick=()=>{el.querySelector('#troubleOutputInput').value='';el.querySelector('#troubleOutputDisplay').innerText='— Output will appear here —';};
 }
 
-function renderCfg(el,d){let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev info">Config Guide</span></div>';d.sections.forEach((s,i)=>{const real=s.cmds.filter(c=>!c.startsWith('('));const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':'';h+='<div class="cblock '+risk+'"><div class="chdr"><div class="chdr-l"><span style="margin-right:4px">'+(s.icon||'📄')+'</span>'+s.t+'</div><div style="display:flex;gap:6px;">'+(risk==='danger'?'<span class="cbadge danger">⚠️ service impact</span>':risk==='warn'?'<span class="cbadge caution">⚠️ config change</span>':'')+'<button class="copybtn" onclick="copyAll(this,\''+cur+'\','+i+')">Copy all</button></div></div><div class="cbody">'+(s.warn?'<div class="cdanger">⚠️ '+s.warn+'</div>':'')+'<div class="clines">'+s.cmds.map(c=>{if(c.startsWith('('))return'<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>\n';const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';return'<span style="color:'+col+'">'+esc(c)+'</span>\n';}).join('')+'</div>'+(s.note?'<div class="cnote">'+s.note+'</div>':'')+'</div></div>';});el.innerHTML=h;}
+function renderCfg(el,d){let h='<div class="sh"><span class="stitle">'+d.t+'</span><span class="sev info">Config Guide</span></div>';d.sections.forEach((s,i)=>{const real=s.cmds.filter(c=>!c.startsWith('('));const risk=hasHighRisk(real)?'danger':hasCaution(real)?'warn':'';h+='<div class="cblock '+risk+'"><div class="chdr"><div class="chdr-l"><span style="margin-right:4px">'+(s.icon||'📄')+'</span>'+s.t+'</div><div style="display:flex;gap:6px;">'+(risk==='danger'?'<span class="cbadge danger">⚠️ service impact</span>':risk==='warn'?'<span class="cbadge caution">⚠️ config change</span>':'')+'<button class="copybtn" onclick="copyAll(this,\''+cur+'\','+i+')">Copy all</button></div></div><div class="cbody">'+(s.warn?'<div class="cdanger">⚠️ '+s.warn+'</div>':'')+(s.desc?'<div class="cdesc">'+esc(s.desc)+'</div>':'')+'<div class="clines">'+s.cmds.map(c=>{if(c.startsWith('('))return'<span style="color:var(--t3);font-style:italic">'+esc(c)+'</span>';const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';return'<span style="color:'+col+'">'+esc(c)+'</span>';}).join('')+'</div>'+(s.note?'<div class="cnote">'+s.note+'</div>':'')+'</div></div>';});el.innerHTML=h;}
 
 function renderRef(el){let h='<div class="rgrid">';QREF.forEach((s,ci)=>{h+='<div class="cblock"><div class="chdr"><span style="font-weight:700;font-size:13px;">'+s.cat+'</span></div><div class="cbody">';s.cmds.forEach((c,si)=>{const sv=cmdSafety(c);let col='var(--g)';if(sv==='danger')col='var(--r)';else if(sv==='caution')col='var(--y)';h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--br);"><span style="font-family:var(--mono);font-size:11px;color:'+col+';">'+esc(c)+'</span><button class="copybtn" style="margin-left:8px;" onclick="copyRef(this,'+ci+','+si+')">Copy</button></div>';});h+='</div></div>';});h+='</div>';el.innerHTML=h;}
 
@@ -5468,10 +5496,10 @@ function renderNetWolfAssistant(el){
     +'<div id="nwa-agent-status" class="nwa-agent-status warn">Agent not checked yet. Start <code>netwolf-agent</code>, then click Check Agent.</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Agent URL</label><input id="nwa-agent-url" value="http://127.0.0.1:5051"></div>'
     +'<div class="nwa-agent-grid" style="margin-top:8px">'
-    +'<div class="nwa-field"><label>Firewall host</label><input id="nwa-agent-host" name="nw-device-address" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="192.168.1.1"></div>'
+    +'<div class="nwa-field"><label>Firewall host</label><input id="nwa-agent-host" name="nw-device-address" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="192.168.x.x"></div>'
     +'<div class="nwa-field"><label>SSH user</label><input id="nwa-agent-user" name="nw-device-operator" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="readonly-admin"></div>'
     +'<div class="nwa-field"><label>SSH port</label><input id="nwa-agent-port" name="nw-device-port" autocomplete="off" inputmode="numeric" value="22"></div>'
-    +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" name="nw-device-keyfile" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="C:\\\\Users\\\\...\\\\fortigate_key"></div>'
+    +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" name="nw-device-keyfile" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="C:\\netwolf-agent\\key"></div>'
     +'<div class="nwa-field"><label>Agent token (jump server only)</label><input id="nwa-agent-token" name="nw-agent-access-code" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" placeholder="Leave empty for local agent"></div>'
     +'</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Read-only check</label><select id="nwa-agent-check"><option value="system_health">System health</option><option value="vpn_ipsec">VPN / IPsec</option><option value="policy_nat">Policy / NAT / VIP</option><option value="sessions_ports">Sessions / Ports</option><option value="routing">Routing / SD-WAN</option><option value="ha_cluster">HA / Cluster</option><option value="dhcp_dns">DHCP / DNS</option><option value="security_profiles">Security profiles / Logs</option><option value="certificates">Certificates / TLS</option><option value="fortianalyzer">FortiAnalyzer / Logging</option></select></div>'
@@ -5479,7 +5507,6 @@ function renderNetWolfAssistant(el){
     +'<div class="nwa-agent-note">Default mode is dry-run. The local agent does not call cloud APIs; AI analysis only happens if you copy/paste output and click an AI button.</div>'
     +'<pre id="nwa-agent-output" class="nwa-agent-output" style="display:none"></pre>'
     +'</div></div>'
-    +'<div class="cblock"><div class="chdr"><div class="chdr-l">Toolkit shortcuts</div></div><div class="cbody"><div class="nwa-tools nwa-tool-compact">'+nwAssistantToolkitHtml()+'</div></div></div>'
     +'<div class="cblock"><div class="chdr"><div class="chdr-l">Problem domains</div></div><div class="cbody nwa-domain-list">'
     +Object.keys(NW_ASSISTANT_PACKS).map(k=>'<button class="sbtn nwa-quick nwa-domain-btn" data-kind="'+k+'">'+escapeHtml(NW_ASSISTANT_PACKS[k].label)+'</button>').join('')
     +'</div></div></div></div>';
@@ -7414,7 +7441,7 @@ end`
         respDiv.innerHTML=fmt(_rt);
         // Save to persistent history
         const _ts = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-        freeAIHistory.unshift({ts:_ts, prompt:prompt, response:fmt(_rt)});
+        freeAIHistory.unshift({ts:_ts, prompt:prompt, response:safeFmt(_rt)});
         // Rebuild history div
         const _hd = document.getElementById('groqHistory');
         if(_hd){
@@ -14567,7 +14594,7 @@ function initSidebar(){
   };
   let html='';
   for(let cat of categories){
-    html+=`<div class="slbl">${cat.section}</div>`;
+    html+=`<div class="slbl">${cat.section}${cat.section==='Config Guides'?'<span>Ready-to-use FortiGate setup playbooks</span>':cat.section==='Builders & Utilities'?'<span>Generators, monitoring and workflow tools</span>':''}</div>`;
     for(let id of cat.items){
       const active=(D[id]?cur===id:tab===id);
       html+=`<button class="cb ${active?'active':''}" onclick="nav('${id}')" id="cat-${id}">${labelMap[id]||id}</button>`;
@@ -15598,8 +15625,8 @@ function renderLiveConnect(el){
 <div style="background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
   <span style="font-size:28px;flex-shrink:0;">🟢</span>
     <div>
-    <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Local Level 2 agent created</div>
-    <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">Start <code>C:\Users\abaya\Downloads\netwolf-agent\start-local-agent.bat</code>, then use NetWolf Assistant → Level 2 Live Agent. Default mode is dry-run and local-only.</div>
+    <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Local Level 2 agent ready</div>
+    <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">Download the agent, extract it, and run <code>start-local-agent.bat</code>. Then use NetWolf Assistant → Level 2 Live Agent. Default mode is dry-run and local-only.</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
       <a class="sbtn" href="${nwToolkitAssetUrl('/netwolf-agent.zip')}" download style="text-decoration:none;background:#15803D">Download NetWolf Local Agent</a>
     </div>
@@ -16689,6 +16716,26 @@ function renderMostUsed(el){
 }
 window.showLandingThenInit=function(){
   initAndRender(); // load the toolkit in background
+  // Show post-payment welcome if redirected from Stripe
+  if(new URLSearchParams(location.search).get('payment')==='success'){
+    history.replaceState(null,'',location.pathname); // clean URL
+    var user=fbAuth.currentUser;
+    var name=user?(user.displayName||(user.email?user.email.split('@')[0]:'Engineer')):'Engineer';
+    var modal=document.createElement('div');
+    modal.id='paymentSuccessModal';
+    modal.style.cssText='position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);padding:18px';
+    modal.innerHTML='<div style="width:min(480px,96vw);background:var(--b2);border:1px solid rgba(29,158,117,.4);border-radius:18px;padding:36px 32px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)">'
+      +'<div style="width:64px;height:64px;border-radius:50%;background:rgba(29,158,117,.12);border:2px solid var(--a);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px">✅</div>'
+      +'<div style="font-size:22px;font-weight:900;color:var(--t);margin-bottom:10px">Welcome to NetWolf, '+escapeHtml(name)+'!</div>'
+      +'<div style="font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:8px">Your subscription is active. You now have full access to the NetWolf toolkit.</div>'
+      +'<div style="font-size:12px;color:var(--t3);margin-bottom:28px">A confirmation email will arrive shortly. Your device has been registered.</div>'
+      +'<button onclick="document.getElementById(\'paymentSuccessModal\').remove();sessionStorage.setItem(\'nw_landing_seen\',\'1\');var o=document.getElementById(\'landingOverlay\');if(o)o.style.display=\'block\';" '
+      +'style="background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:10px;padding:13px 32px;font-size:15px;font-weight:800;cursor:pointer;width:100%">'
+      +'Open NetWolf Toolkit →</button>'
+      +'</div>';
+    document.body.appendChild(modal);
+    return; // don't show landing overlay yet — button will trigger it
+  }
   // Only show landing on first login of this browser session, not on refresh
   var alreadySeen=sessionStorage.getItem('nw_landing_seen');
   if(alreadySeen) return; // skip landing on refresh/tab restore
