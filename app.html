@@ -7,10 +7,11 @@
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
+<!-- Local agent uses http://127.0.0.1:5051, so do not force upgrade-insecure-requests here. -->
 <!-- SECURITY NOTE: unsafe-inline is required because this is a single-file app with inline scripts/styles.
      To remove it: split into separate .js/.css files and use a nonce or hash-based CSP.
      object-src none and base-uri self added to limit attack surface. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' http://127.0.0.1:5051 http://localhost:5051 https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' http://127.0.0.1:5051 http://localhost:5051 https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://apis.google.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://api.groq.com https://content.fortinet.com https://*.firebasedatabase.app; frame-src https://embed.diagrams.net https://app.diagrams.net; script-src 'self' 'unsafe-inline' http://127.0.0.1:5051 http://localhost:5051 https://www.gstatic.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; img-src 'self' data: https:; connect-src 'self' http://127.0.0.1:5051 http://localhost:5051 http://127.0.0.1:5052 http://localhost:5052 https://api.groq.com https://api.anthropic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://*.firebasedatabase.app wss://*.firebasedatabase.app wss:;">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22bg%22%20cx%3D%2235%25%22%20cy%3D%2225%25%22%20r%3D%2275%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%238CFFD8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2245%25%22%20stop-color%3D%22%231D9E75%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23063D2D%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23052E22%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2228%22%20fill%3D%22url(%23bg)%22%3E%0A%20%20%20%20%3Canimate%20attributeName%3D%22r%22%20values%3D%2227%3B29%3B27%22%20dur%3D%222.6s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2229%22%20fill%3D%22none%22%20stroke%3D%22%23BFFFF0%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%2222%2010%22%20opacity%3D%22.95%22%3E%0A%20%20%20%20%3CanimateTransform%20attributeName%3D%22transform%22%20type%3D%22rotate%22%20from%3D%220%2032%2032%22%20to%3D%22360%2032%2032%22%20dur%3D%224s%22%20repeatCount%3D%22indefinite%22%2F%3E%0A%20%20%3C%2Fcircle%3E%0A%20%20%3Ctext%20x%3D%2232%22%20y%3D%2247%22%20text-anchor%3D%22middle%22%20font-size%3D%2238%22%20font-family%3D%22Apple%20Color%20Emoji%2C%20Segoe%20UI%20Emoji%2C%20Noto%20Color%20Emoji%2C%20sans-serif%22%3E%F0%9F%90%BA%3C%2Ftext%3E%0A%3C%2Fsvg%3E">
@@ -940,7 +941,6 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
     <div class="device-limit-actions">
       <button class="device-limit-primary" onclick="window.location.reload()">Check Again</button>
       <button class="device-limit-secondary" onclick="doLogout()">Logout</button>
-      <button class="device-limit-secondary" id="deviceLimitSubscribeBtn" onclick="window.open('https://netwolffortigate.com/#pricing','_blank')" style="display:none">Subscribe Now</button>
       <button class="device-limit-secondary" onclick="location.href='mailto:support@netwolffortigate.com?subject=NetWolf%20device%20limit%20request'">Contact Support</button>
     </div>
   </div>
@@ -1146,6 +1146,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('passgen')" id="tab-passgen" title="Password Generator">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Passwords</span>
             </button>
+            <button class="tab" onclick="stab('monitoring')" id="tab-monitoring" title="Monitoring / Zabbix">
+              <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Monitoring</span>
+            </button>
             <button class="tab" onclick="stab('liveconnect')" id="tab-liveconnect" title="FortiGate Live Connect">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Live</span>
             </button>
@@ -1270,7 +1273,7 @@ async function nwSubscriptionInfo(uid){
   const snap=await fbDB.ref('users/'+uid+'/subscription').once('value');
   const sub=snap.val()||{};
   const plan=String(sub.plan||sub.type||'monthly').toLowerCase();
-  const status=String(sub.status||'').toLowerCase();
+  const status=String(sub.status||'active').toLowerCase();
   const limit=Number(sub.deviceLimit||sub.devices||NW_PLAN_LIMITS[plan]||2);
   return {plan,status,limit};
 }
@@ -1313,35 +1316,16 @@ function nwShowDeviceLimit(info){
   const overlay=document.getElementById('deviceLimitOverlay');
   const txt=document.getElementById('deviceLimitText');
   const meta=document.getElementById('deviceLimitMeta');
-  const title=overlay?overlay.querySelector('.device-limit-title'):null;
-  const upgradeHint=document.getElementById('deviceUpgradeHint');
-  const deviceList=document.getElementById('deviceList');
   document.getElementById('toolkitContainer').style.display='none';
   document.getElementById('loginOverlay').style.display='none';
-  if(info.reason==='subscription'){
-    if(title) title.textContent='Subscription required';
-    if(txt) txt.innerHTML='This account does not have an active subscription.<br><br>'
-      +'Subscribe at <a href="https://netwolffortigate.com" style="color:var(--a)" target="_blank" rel="noopener noreferrer">netwolffortigate.com</a> to get full access to the NetWolf toolkit.';
-    if(meta) meta.style.display='none';
-    if(upgradeHint) upgradeHint.style.display='none';
-    if(deviceList) deviceList.style.display='none';
-    const subBtn=document.getElementById('deviceLimitSubscribeBtn');
-    if(subBtn) subBtn.style.display='';
-    const checkBtn=overlay?overlay.querySelector('.device-limit-primary'):null;
-    if(checkBtn) checkBtn.style.display='none';
-  }else{
-    if(title) title.textContent='Device limit reached';
-    if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
-    if(meta){meta.style.display='';meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();}
-    if(upgradeHint) upgradeHint.style.display='';
-    if(deviceList) deviceList.style.display='';
-    nwRenderDeviceList(info);
-  }
+  if(txt) txt.textContent='Your '+info.plan+' plan allows '+info.limit+' registered device'+(info.limit===1?'':'s')+'. This login looks like a new device.';
+  if(meta) meta.innerHTML='Plan: '+info.plan+'<br>Allowed devices: '+info.limit+'<br>Currently active: '+info.activeCount+'<br>This device: '+nwDeviceLabel();
   if(overlay) overlay.style.display='flex';
+  nwRenderDeviceList(info);
 }
 async function nwEnsureDeviceAllowed(user){
   const info=await nwSubscriptionInfo(user.uid);
-  if(!['active','trialing','paid','manual'].includes(info.status)){
+  if(info.status && !['active','trialing','paid','manual'].includes(info.status)){
     return {allowed:false,reason:'subscription',...info,activeCount:0};
   }
   const fp=await nwDeviceFingerprint();
@@ -1426,15 +1410,7 @@ fbAuth.onAuthStateChanged(function(user){
       ]).then(([termsSnap,statusSnap])=>{
         const hasAcceptedTerms=termsSnap.val()===true;
         const subscriptionStatus=String(statusSnap.val()||'').toLowerCase();
-        const hasActiveSubscription=['active','trialing','paid','manual'].includes(subscriptionStatus);
-        if(!hasActiveSubscription){
-          // No active subscription — should have been caught by device gate, but block here too
-          document.getElementById('toolkitContainer').style.display='none';
-          document.getElementById('loginOverlay').style.display='flex';
-          const e=document.getElementById('loginError');
-          if(e){e.textContent='No active subscription found. Please subscribe at netwolffortigate.com to access the toolkit.';e.style.display='block';}
-          return;
-        }
+        const hasActiveSubscription=['active','trialing'].includes(subscriptionStatus);
         if(hasAcceptedTerms||hasActiveSubscription){
           if(!hasAcceptedTerms&&hasActiveSubscription){
             _userRef.child('terms_accepted').set(true).catch(()=>{});
@@ -4388,7 +4364,7 @@ function hasHighRisk(cmds){return cmds.some(c=>cmdSafety(c)==='danger');}
 function hasCaution(cmds){return cmds.some(c=>cmdSafety(c)==='caution');}
 
 let cur='vpn',tab='guide',chat=[],loading=false;
-const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','passgen','liveconnect','emailgen','swcfg','devices']);
+const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','passgen','monitoring','liveconnect','emailgen','swcfg','devices']);
 function normalizeTab(t){return VALID_TABS.has(t)?t:'guide';}
 let freeAIPrompt='',freeAIHistory=[];
 
@@ -4500,7 +4476,6 @@ function nav(id){
 function stab(t){t=normalizeTab(t);tab=t;localStorage.setItem('nw_tab',t);document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(document.getElementById('tab-'+t))document.getElementById('tab-'+t).classList.add('active');if(t!=='guide'){document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+t))document.getElementById('cat-'+t).classList.add('active');}else{document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));if(document.getElementById('cat-'+cur))document.getElementById('cat-'+cur).classList.add('active');}render();}
 function esc(s){return String(s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
 function fmt(t){t=t.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});return t.replace(/```([\s\S]*?)```/g,'<pre>$1</pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
-function safeFmt(t){return fmt(t).replace(/<(?!\/?(?:pre|code|strong|br|span)\b)[^>]+>/gi,'');}
 function copyAll(btn,key,idx){const step=D[cur].steps?D[cur].steps[idx]:D[cur].sections[idx];const cmds=(step.cmds||[]).filter(c=>!c.startsWith('('));navigator.clipboard.writeText(cmds.join('\n')).then(()=>{btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy all',1500);});}
 function groqClearHistory(){
   freeAIHistory=[];
@@ -4542,6 +4517,7 @@ function upgradeTabIcons(){
     'tab-labsetup':'<path d="M10 3v5l-5 9a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 17l-5-9V3"></path><path d="M8 3h8"></path>',
     'tab-security':'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path><path d="m9.5 12 1.7 1.7 3.8-4"></path>',
     'tab-passgen':'<rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path><path d="M8 16h.01"></path><path d="M12 16h.01"></path><path d="M16 16h.01"></path>',
+    'tab-monitoring':'<path d="M3 3v18h18"></path><path d="M7 15l3-3 3 2 5-7"></path><circle cx="7" cy="15" r="1"></circle><circle cx="10" cy="12" r="1"></circle><circle cx="13" cy="14" r="1"></circle><circle cx="18" cy="7" r="1"></circle>',
     'tab-liveconnect':'<path d="M4 12h4l2-5 4 10 2-5h4"></path><circle cx="12" cy="12" r="9"></circle>',
     'tab-emailgen':'<path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path>',
     'tab-swcfg':'<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.8 1.8 0 0 0 .4 2l.1.1-2.8 2.8-.1-.1a1.8 1.8 0 0 0-2-.4 1.8 1.8 0 0 0-1 1.6V21h-4v-.1a1.8 1.8 0 0 0-1-1.6 1.8 1.8 0 0 0-2 .4l-.1.1-2.8-2.8.1-.1a1.8 1.8 0 0 0 .4-2 1.8 1.8 0 0 0-1.6-1H3v-4h.1a1.8 1.8 0 0 0 1.6-1 1.8 1.8 0 0 0-.4-2l-.1-.1 2.8-2.8.1.1a1.8 1.8 0 0 0 2 .4 1.8 1.8 0 0 0 1-1.6V3h4v.1a1.8 1.8 0 0 0 1 1.6 1.8 1.8 0 0 0 2-.4l.1-.1 2.8 2.8-.1.1a1.8 1.8 0 0 0-.4 2 1.8 1.8 0 0 0 1.6 1h.1v4h-.1a1.8 1.8 0 0 0-1.6 1Z"></path>',
@@ -4980,7 +4956,7 @@ const QREF=[
 function render(){const el=document.getElementById('mc');
   // Toggle chat-fill class so chat tabs fill the full content area
   const chatTabs=['ai','claudechat','masking','bulkAnon','topology'];
-  const wideTabs=['analyze','freeai','nwassistant','liveconnect','emailgen','mostused','advdiag','pkttools','cfggen','cfgmigrate','swcfg','psmaker'];
+  const wideTabs=['analyze','freeai','nwassistant','monitoring','liveconnect','emailgen','mostused','advdiag','pkttools','cfggen','cfgmigrate','swcfg','psmaker'];
   el.classList.toggle('chat-fill', chatTabs.includes(tab));
   el.classList.toggle('wide-tool', wideTabs.includes(tab));
   if(tab==='topology'){
@@ -4993,7 +4969,7 @@ function render(){const el=document.getElementById('mc');
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+escapeHtml(cur)+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='passgen')renderPasswordGenerator(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='passgen')renderPasswordGenerator(el);else if(tab==='monitoring')renderMonitoringTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -5492,10 +5468,10 @@ function renderNetWolfAssistant(el){
     +'<div id="nwa-agent-status" class="nwa-agent-status warn">Agent not checked yet. Start <code>netwolf-agent</code>, then click Check Agent.</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Agent URL</label><input id="nwa-agent-url" value="http://127.0.0.1:5051"></div>'
     +'<div class="nwa-agent-grid" style="margin-top:8px">'
-    +'<div class="nwa-field"><label>Firewall host</label><input id="nwa-agent-host" name="nw-device-address" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="192.168.x.x"></div>'
+    +'<div class="nwa-field"><label>Firewall host</label><input id="nwa-agent-host" name="nw-device-address" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="192.168.1.1"></div>'
     +'<div class="nwa-field"><label>SSH user</label><input id="nwa-agent-user" name="nw-device-operator" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="readonly-admin"></div>'
     +'<div class="nwa-field"><label>SSH port</label><input id="nwa-agent-port" name="nw-device-port" autocomplete="off" inputmode="numeric" value="22"></div>'
-    +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" name="nw-device-keyfile" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="C:\\netwolf-agent\\key"></div>'
+    +'<div class="nwa-field"><label>SSH key path</label><input id="nwa-agent-key" name="nw-device-keyfile" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="C:\\\\Users\\\\...\\\\fortigate_key"></div>'
     +'<div class="nwa-field"><label>Agent token (jump server only)</label><input id="nwa-agent-token" name="nw-agent-access-code" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" placeholder="Leave empty for local agent"></div>'
     +'</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Read-only check</label><select id="nwa-agent-check"><option value="system_health">System health</option><option value="vpn_ipsec">VPN / IPsec</option><option value="policy_nat">Policy / NAT / VIP</option><option value="sessions_ports">Sessions / Ports</option><option value="routing">Routing / SD-WAN</option><option value="ha_cluster">HA / Cluster</option><option value="dhcp_dns">DHCP / DNS</option><option value="security_profiles">Security profiles / Logs</option><option value="certificates">Certificates / TLS</option><option value="fortianalyzer">FortiAnalyzer / Logging</option></select></div>'
@@ -5503,6 +5479,7 @@ function renderNetWolfAssistant(el){
     +'<div class="nwa-agent-note">Default mode is dry-run. The local agent does not call cloud APIs; AI analysis only happens if you copy/paste output and click an AI button.</div>'
     +'<pre id="nwa-agent-output" class="nwa-agent-output" style="display:none"></pre>'
     +'</div></div>'
+    +'<div class="cblock"><div class="chdr"><div class="chdr-l">Toolkit shortcuts</div></div><div class="cbody"><div class="nwa-tools nwa-tool-compact">'+nwAssistantToolkitHtml()+'</div></div></div>'
     +'<div class="cblock"><div class="chdr"><div class="chdr-l">Problem domains</div></div><div class="cbody nwa-domain-list">'
     +Object.keys(NW_ASSISTANT_PACKS).map(k=>'<button class="sbtn nwa-quick nwa-domain-btn" data-kind="'+k+'">'+escapeHtml(NW_ASSISTANT_PACKS[k].label)+'</button>').join('')
     +'</div></div></div></div>';
@@ -7437,7 +7414,7 @@ end`
         respDiv.innerHTML=fmt(_rt);
         // Save to persistent history
         const _ts = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-        freeAIHistory.unshift({ts:_ts, prompt:prompt, response:safeFmt(_rt)});
+        freeAIHistory.unshift({ts:_ts, prompt:prompt, response:fmt(_rt)});
         // Rebuild history div
         const _hd = document.getElementById('groqHistory');
         if(_hd){
@@ -14559,7 +14536,7 @@ function initSidebar(){
     {section:"AI Tools",items:["freeai","nwassistant","ai","claudechat"]},
     {section:"Cloud Learning",items:["azure"]},
     {section:"Reference",items:["ref","multivendor","hwref","devices"]},
-    {section:"Builders & Utilities",items:["psmaker","topology","cfggen","swcfg","cfgmigrate","labsetup","security","liveconnect","emailgen"]},
+    {section:"Builders & Utilities",items:["psmaker","topology","cfggen","swcfg","cfgmigrate","labsetup","security","monitoring","liveconnect","emailgen"]},
     {section:"Config Guides",items:["cfg-init","cfg-vdom","cfg-ipsec","cfg-sslvpn","cfg-sdwan","cfg-ha","cfg-intervdom","cfg-portfwd","cfg-ospfbgp","cfg-sec","cfg-fortiswitch","cfg-ztna","cfg-netflow"]}
   ];
   let labelMap={
@@ -14585,7 +14562,7 @@ function initSidebar(){
     ai:"💬 AI Assistant",claudechat:"🧠 Claude Chat",ref:"📚 Quick Reference",multivendor:"🔁 Multi-Vendor CLI",
     hwref:"🧱 Hardware Reference",devices:"🖥️ Device Catalog",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
     cfggen:"🧩 Config Generator",swcfg:"🔧 SW/Router Config",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
-    security:"🛡️ Security & Privacy",passgen:"🔐 Password Generator",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
+    security:"🛡️ Security & Privacy",passgen:"🔐 Password Generator",monitoring:"📈 Monitoring / Zabbix",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
     azure:"☁️ Azure Scripting"
   };
   let html='';
@@ -15525,6 +15502,89 @@ function renderSecurityTab(el){
 </div>`;
 }
 
+function zbxUseDemo(){
+  const u=document.getElementById('zbx-url'),t=document.getElementById('zbx-token');
+  if(u)u.value='http://127.0.0.1:5052';
+  if(t)t.value='demo-token';
+  localStorage.setItem('netwolf_zabbix_url','http://127.0.0.1:5052');
+  localStorage.setItem('netwolf_zabbix_token','demo-token');
+  zbxSetStatus('Local demo API selected. Click Test, Problems, or Hosts.','warn');
+}
+function zbxSaveSettings(){
+  const url=document.getElementById('zbx-url')?.value.trim()||'';
+  const token=document.getElementById('zbx-token')?.value.trim()||'';
+  if(url)localStorage.setItem('netwolf_zabbix_url',url);else localStorage.removeItem('netwolf_zabbix_url');
+  if(token)localStorage.setItem('netwolf_zabbix_token',token);else localStorage.removeItem('netwolf_zabbix_token');
+  showToast('Zabbix settings saved locally');
+}
+function zbxClearSettings(){
+  localStorage.removeItem('netwolf_zabbix_url');localStorage.removeItem('netwolf_zabbix_token');
+  const u=document.getElementById('zbx-url'),t=document.getElementById('zbx-token');if(u)u.value='';if(t)t.value='';
+  showToast('Zabbix settings cleared');
+}
+async function zbxApi(method,params){
+  const url=(document.getElementById('zbx-url')?.value||localStorage.getItem('netwolf_zabbix_url')||'').replace(/\/$/,'');
+  const token=document.getElementById('zbx-token')?.value||localStorage.getItem('netwolf_zabbix_token')||'';
+  if(!url||!token)throw new Error('Enter Zabbix URL and API token first.');
+  const endpoint=url.endsWith('/api_jsonrpc.php')?url:(url+'/api_jsonrpc.php');
+  const resp=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});
+  const data=await resp.json();
+  if(data.error)throw new Error(data.error.data||data.error.message||'Zabbix API error');
+  return data.result;
+}
+function zbxSetStatus(text,state){const el=document.getElementById('zbx-status');if(el){el.className='zbx-status '+(state||'warn');el.innerHTML=text;}}
+async function zbxTestConnection(){zbxSetStatus('Testing Zabbix API connection...','warn');try{const v=await zbxApi('apiinfo.version',{});zbxSetStatus('Connected to Zabbix API. Version: <strong>'+escapeHtml(v)+'</strong>','ok');}catch(e){zbxSetStatus('Connection failed: '+escapeHtml(e.message),'bad');}}
+async function zbxLoadProblems(){const out=document.getElementById('zbx-output');if(out)out.innerHTML='<div class="zbx-empty">Loading active problems...</div>';try{const rows=await zbxApi('problem.get',{output:['eventid','name','severity','clock'],selectHosts:['host','name'],sortfield:['eventid'],sortorder:'DESC',recent:true,limit:20});zbxRenderProblems(rows||[]);}catch(e){if(out)out.innerHTML='<div class="cdanger">'+escapeHtml(e.message)+'</div>';}}
+async function zbxLoadHosts(){const out=document.getElementById('zbx-output');if(out)out.innerHTML='<div class="zbx-empty">Loading monitored hosts...</div>';try{const rows=await zbxApi('host.get',{output:['hostid','host','name','status'],selectInterfaces:['ip','dns','type','main'],selectGroups:['name'],monitored_hosts:true,limit:50,sortfield:'name'});zbxRenderHosts(rows||[]);}catch(e){if(out)out.innerHTML='<div class="cdanger">'+escapeHtml(e.message)+'</div>';}}
+function zbxSeverity(n){return ['Not classified','Information','Warning','Average','High','Disaster'][Number(n)||0]||'Unknown';}
+function zbxDashboardHeader(mode,rows){
+  const total=rows.length;
+  const disaster=rows.filter(r=>Number(r.severity)>=5).length;
+  const high=rows.filter(r=>Number(r.severity)===4).length;
+  const warn=rows.filter(r=>Number(r.severity)>=2&&Number(r.severity)<4).length;
+  const ok=mode==='hosts'?rows.filter(r=>String(r.status)==='0').length:Math.max(0,total-disaster-high-warn);
+  return '<div class="zbx-dash-head"><div><div class="zbx-kicker">Zabbix view</div><div class="zbx-title">'+(mode==='hosts'?'Monitored hosts':'Active problems')+'</div></div><div class="zbx-mini-tabs"><span class="active">Overview</span><span>Problems</span><span>Hosts</span></div></div>'
+    +'<div class="zbx-tiles">'
+    +'<div class="zbx-tile ok"><b>'+ok+'</b><span>'+(mode==='hosts'?'Monitored':'OK / Info')+'</span></div>'
+    +'<div class="zbx-tile warn"><b>'+warn+'</b><span>Warning / Average</span></div>'
+    +'<div class="zbx-tile high"><b>'+high+'</b><span>High</span></div>'
+    +'<div class="zbx-tile bad"><b>'+disaster+'</b><span>Disaster</span></div>'
+    +'</div>';
+}
+function zbxAge(clock){const s=Math.max(1,Math.floor(Date.now()/1000)-Number(clock||0));if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';}
+function zbxRenderProblems(rows){
+  const out=document.getElementById('zbx-output');
+  if(!rows.length){out.innerHTML=zbxDashboardHeader('problems',[])+'<div class="zbx-empty good">No active problems returned by Zabbix.</div>';return;}
+  out.innerHTML=zbxDashboardHeader('problems',rows)+'<div class="zbx-table"><div class="zbx-thead"><span>Severity</span><span>Problem</span><span>Host</span><span>Age</span></div>'
+    +rows.map(r=>{const sev=Number(r.severity)||0;const cls=sev>=5?'bad':sev>=4?'high':sev>=2?'warn':'ok';const host=(r.hosts&&r.hosts[0]&&(r.hosts[0].name||r.hosts[0].host))||'Unknown host';const dt=new Date(Number(r.clock)*1000).toLocaleString();return '<div class="zbx-tr '+cls+'"><span class="zbx-sev">'+escapeHtml(zbxSeverity(sev))+'</span><span><b>'+escapeHtml(r.name||'Problem')+'</b><small>Started '+escapeHtml(dt)+'</small></span><span>'+escapeHtml(host)+'</span><span>'+escapeHtml(zbxAge(r.clock))+'</span></div>';}).join('')+'</div>';
+}
+function zbxRenderHosts(rows){
+  const out=document.getElementById('zbx-output');
+  if(!rows.length){out.innerHTML=zbxDashboardHeader('hosts',[])+'<div class="zbx-empty">No monitored hosts returned by Zabbix.</div>';return;}
+  out.innerHTML=zbxDashboardHeader('hosts',rows)+'<div class="zbx-host-grid">'+rows.map(r=>{const iface=(r.interfaces&&r.interfaces[0])||{};const groups=(r.groups||[]).map(g=>g.name).join(', ');const enabled=String(r.status)==='0';return '<div class="zbx-host-card '+(enabled?'ok':'warn')+'"><div class="zbx-host-top"><b>'+escapeHtml(r.name||r.host)+'</b><span>'+(enabled?'Monitored':'Disabled')+'</span></div><div class="zbx-host-meta"><div>Host</div><strong>'+escapeHtml(r.host)+'</strong><div>Address</div><strong>'+escapeHtml(iface.ip||iface.dns||'no interface')+'</strong><div>Groups</div><strong>'+escapeHtml(groups||'no group')+'</strong></div></div>';}).join('')+'</div>';
+}
+function zbxDemo(){zbxRenderProblems([{name:'WAN interface packet loss above threshold',severity:4,clock:Math.floor(Date.now()/1000)-420,hosts:[{name:'SITE-FW-01'}]},{name:'IPsec tunnel to branch is down',severity:5,clock:Math.floor(Date.now()/1000)-960,hosts:[{name:'BRANCH-FW-02'}]},{name:'Switch uplink interface down',severity:3,clock:Math.floor(Date.now()/1000)-1800,hosts:[{name:'CORE-SW-01'}]}]);zbxSetStatus('Demo data shown. Real mode uses your Zabbix API token and URL only.','warn');}
+function renderMonitoringTab(el){
+  const url=localStorage.getItem('netwolf_zabbix_url')||'';
+  const tok=localStorage.getItem('netwolf_zabbix_token')||'';
+  el.innerHTML=`<style>.zbx-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.8fr);gap:14px}.zbx-flow{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:8px;margin-top:10px}.zbx-step{border:1px solid var(--br);background:var(--b2);border-radius:8px;padding:10px;font-size:11px;color:var(--t2);line-height:1.45}.zbx-step b{display:block;color:var(--t);font-size:12px;margin-bottom:3px}.zbx-field label{display:block;font-size:10px;color:var(--t3);font-family:var(--mono);text-transform:uppercase;margin-bottom:4px}.zbx-field input{width:100%;background:var(--bg);border:1px solid var(--br);border-radius:7px;color:var(--t);padding:8px 10px}.zbx-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.zbx-status{border:1px solid var(--br);border-radius:8px;background:#0a0f18;color:var(--t2);padding:9px 11px;font-size:11.5px;line-height:1.55;margin-top:10px}.zbx-status.ok{border-color:rgba(34,197,94,.45);color:#bbf7d0}.zbx-status.warn{border-color:rgba(234,179,8,.5);color:#fde68a}.zbx-status.bad{border-color:rgba(248,81,73,.45);color:#fecaca}.zbx-dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.zbx-kicker{font-size:10px;color:var(--t3);font-family:var(--mono);text-transform:uppercase}.zbx-title{font-size:17px;color:var(--t);font-weight:900}.zbx-mini-tabs{display:flex;gap:4px;background:var(--bg);border:1px solid var(--br);border-radius:7px;padding:3px}.zbx-mini-tabs span{font-size:10px;color:var(--t3);padding:4px 8px;border-radius:5px}.zbx-mini-tabs .active{background:#d40000;color:white}.zbx-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}.zbx-tile{border:1px solid var(--br);border-top:3px solid var(--a);background:var(--b2);border-radius:7px;padding:9px}.zbx-tile b{display:block;font-size:22px;color:var(--t);line-height:1}.zbx-tile span{font-size:10px;color:var(--t3);text-transform:uppercase}.zbx-tile.ok{border-top-color:#22c55e}.zbx-tile.warn{border-top-color:#eab308}.zbx-tile.high{border-top-color:#f97316}.zbx-tile.bad{border-top-color:#ef4444}.zbx-table{border:1px solid var(--br);border-radius:8px;overflow:hidden;background:var(--b2)}.zbx-thead,.zbx-tr{display:grid;grid-template-columns:118px minmax(0,1.5fr) minmax(120px,.8fr) 60px;gap:8px;align-items:center}.zbx-thead{background:#d40000;color:white;font-size:10px;font-family:var(--mono);text-transform:uppercase;padding:8px 10px}.zbx-tr{padding:9px 10px;border-top:1px solid var(--br);font-size:12px;color:var(--t2)}.zbx-tr b{display:block;color:var(--t);font-size:12px}.zbx-tr small{display:block;color:var(--t3);font-size:10px;margin-top:2px}.zbx-sev{font-size:10px;font-weight:900;text-transform:uppercase;border-radius:4px;padding:4px 6px;text-align:center;background:var(--b3)}.zbx-tr.ok .zbx-sev{color:#86efac}.zbx-tr.warn .zbx-sev{color:#fde68a}.zbx-tr.high .zbx-sev{color:#fed7aa}.zbx-tr.bad .zbx-sev{background:#ef4444;color:#fff}.zbx-host-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.zbx-host-card{border:1px solid var(--br);border-left:4px solid #22c55e;background:var(--b2);border-radius:8px;padding:11px}.zbx-host-card.warn{border-left-color:#eab308}.zbx-host-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.zbx-host-top b{color:var(--t);font-size:13px}.zbx-host-top span{font-size:10px;color:#86efac;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);border-radius:999px;padding:3px 7px}.zbx-host-meta{display:grid;grid-template-columns:70px minmax(0,1fr);gap:5px;font-size:11px}.zbx-host-meta div{color:var(--t3);font-family:var(--mono)}.zbx-host-meta strong{color:var(--t2);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zbx-empty{border:1px dashed var(--br);border-radius:8px;padding:18px;text-align:center;color:var(--t3);font-size:12px}.zbx-empty.good{color:#bbf7d0;border-color:rgba(34,197,94,.35)}@media(max-width:980px){.zbx-grid{grid-template-columns:1fr}.zbx-flow{grid-template-columns:1fr 1fr}}@media(max-width:620px){.zbx-flow{grid-template-columns:1fr}.zbx-tiles{grid-template-columns:1fr 1fr}.zbx-thead{display:none}.zbx-tr{grid-template-columns:1fr}.zbx-mini-tabs{display:none}}</style>
+  <div class="sh"><span class="stitle">📈 Monitoring / Zabbix</span><span class="sev good">read-only integration</span></div>
+  <div class="zbx-grid"><div>
+    <div class="cblock"><div class="chdr"><div class="chdr-l">How It Works</div></div><div class="cbody"><div style="font-size:12px;color:var(--t2);line-height:1.75">NetWolf does not monitor devices by itself. Zabbix monitors real devices with SNMP, ICMP, agents, templates, proxies, and triggers. NetWolf reads the Zabbix API and shows a clean NOC view for firewall, router, switch, VPN, WAN, and service health.</div><div class="zbx-flow"><div class="zbx-step"><b>1. Device</b>Firewall, switch, router, server, VPN, WAN link.</div><div class="zbx-step"><b>2. Zabbix</b>Collects SNMP/ICMP/API/agent data and creates triggers.</div><div class="zbx-step"><b>3. API token</b>Read-only user token with limited permissions.</div><div class="zbx-step"><b>4. NetWolf</b>Reads problems, hosts, groups, and status.</div><div class="zbx-step"><b>5. NOC view</b>Green, yellow, red operational overview.</div></div></div></div>
+    <div class="cblock" style="margin-top:14px"><div class="chdr"><div class="chdr-l">Safe Setup Rules</div></div><div class="cbody" style="font-size:12px;color:var(--t2);line-height:1.75"><div class="cnote"><strong>Allowed:</strong> Zabbix API integration is intended for third-party tools. Use your own Zabbix server and a read-only API token.</div><ul style="margin:10px 0 0 18px;padding:0"><li>Use a dedicated read-only Zabbix user.</li><li>Limit the user to the correct customer/site host groups.</li><li>Do not expose Zabbix API publicly unless protected by VPN, HTTPS, firewall allowlist, and MFA.</li><li>For MSP/NOC, preferred path is NetWolf -> local/jump agent -> internal Zabbix API.</li><li>Do not call this an official Zabbix product or use Zabbix branding as your own.</li></ul></div></div>
+    <div class="cblock" style="margin-top:14px"><div class="chdr"><div class="chdr-l">Read-only API Setup</div></div><div class="cbody"><pre class="clines">1. In Zabbix, create user group: NetWolf Read Only
+2. Give access only to required host groups
+3. Create user: netwolf-api-readonly
+4. Assign role with read-only API permissions
+5. Create API token for that user
+6. Paste URL and token here
+7. Test connection
+8. Load Problems or Hosts</pre><div class="cnote">The token is stored only in this browser localStorage. For shared NOC computers, clear it after use.</div></div></div>
+  </div><div>
+    <div class="cblock"><div class="chdr"><div class="chdr-l">Zabbix Connection</div></div><div class="cbody"><div class="zbx-field"><label>Zabbix URL</label><input id="zbx-url" value="${escapeHtml(url)}" placeholder="https://zabbix.example.com/zabbix"></div><div class="zbx-field" style="margin-top:8px"><label>API token</label><input id="zbx-token" type="password" value="${escapeHtml(tok)}" autocomplete="off" placeholder="Paste read-only API token"></div><div class="zbx-actions"><a class="sbtn" href="/monitoring.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:#0F766E;text-align:center">Open standalone dashboard</a><button class="sbtn" onclick="zbxUseDemo()" style="background:#7C3AED">Use local demo</button><button class="sbtn" onclick="zbxSaveSettings()">Save local</button><button class="sbtn" onclick="zbxTestConnection()" style="background:#2563EB">Test</button><button class="sbtn" onclick="zbxLoadProblems()" style="background:#15803D">Problems</button><button class="sbtn" onclick="zbxLoadHosts()">Hosts</button><button class="sbtn" onclick="zbxDemo()" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Demo</button><button class="sbtn" onclick="zbxClearSettings()" style="background:#991B1B">Clear</button></div><div id="zbx-status" class="zbx-status warn">Not connected. For testing, start the local demo server and click Use local demo.</div></div></div>
+    <div class="cblock" style="margin-top:14px"><div class="chdr"><div class="chdr-l">Monitoring Output</div></div><div class="cbody"><div id="zbx-output" class="zbx-empty">Click Demo, Problems, or Hosts.</div></div></div>
+  </div></div>`;
+}
 function renderLiveConnect(el){
   el.innerHTML=`
 <div class="sh"><span class="stitle">🔌 FortiGate Live Connect</span><span class="sev good">Level 2 local agent ready</span></div>
@@ -15538,8 +15598,8 @@ function renderLiveConnect(el){
 <div style="background:rgba(29,158,117,.07);border:1px solid rgba(29,158,117,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;">
   <span style="font-size:28px;flex-shrink:0;">🟢</span>
     <div>
-    <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Local Level 2 agent ready</div>
-    <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">Download the agent, extract it, and run <code>start-local-agent.bat</code>. Then use NetWolf Assistant → Level 2 Live Agent. Default mode is dry-run and local-only.</div>
+    <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px;">Local Level 2 agent created</div>
+    <div style="font-size:11.5px;color:var(--t2);line-height:1.6;">Start <code>C:\Users\abaya\Downloads\netwolf-agent\start-local-agent.bat</code>, then use NetWolf Assistant → Level 2 Live Agent. Default mode is dry-run and local-only.</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
       <a class="sbtn" href="${nwToolkitAssetUrl('/netwolf-agent.zip')}" download style="text-decoration:none;background:#15803D">Download NetWolf Local Agent</a>
     </div>
@@ -16629,26 +16689,6 @@ function renderMostUsed(el){
 }
 window.showLandingThenInit=function(){
   initAndRender(); // load the toolkit in background
-  // Show post-payment welcome if redirected from Stripe
-  if(new URLSearchParams(location.search).get('payment')==='success'){
-    history.replaceState(null,'',location.pathname); // clean URL
-    var user=fbAuth.currentUser;
-    var name=user?(user.displayName||(user.email?user.email.split('@')[0]:'Engineer')):'Engineer';
-    var modal=document.createElement('div');
-    modal.id='paymentSuccessModal';
-    modal.style.cssText='position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);padding:18px';
-    modal.innerHTML='<div style="width:min(480px,96vw);background:var(--b2);border:1px solid rgba(29,158,117,.4);border-radius:18px;padding:36px 32px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)">'
-      +'<div style="width:64px;height:64px;border-radius:50%;background:rgba(29,158,117,.12);border:2px solid var(--a);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px">✅</div>'
-      +'<div style="font-size:22px;font-weight:900;color:var(--t);margin-bottom:10px">Welcome to NetWolf, '+escapeHtml(name)+'!</div>'
-      +'<div style="font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:8px">Your subscription is active. You now have full access to the NetWolf toolkit.</div>'
-      +'<div style="font-size:12px;color:var(--t3);margin-bottom:28px">A confirmation email will arrive shortly. Your device has been registered.</div>'
-      +'<button onclick="document.getElementById(\'paymentSuccessModal\').remove();sessionStorage.setItem(\'nw_landing_seen\',\'1\');var o=document.getElementById(\'landingOverlay\');if(o)o.style.display=\'block\';" '
-      +'style="background:linear-gradient(90deg,var(--a),var(--ad));color:#fff;border:none;border-radius:10px;padding:13px 32px;font-size:15px;font-weight:800;cursor:pointer;width:100%">'
-      +'Open NetWolf Toolkit →</button>'
-      +'</div>';
-    document.body.appendChild(modal);
-    return; // don't show landing overlay yet — button will trigger it
-  }
   // Only show landing on first login of this browser session, not on refresh
   var alreadySeen=sessionStorage.getItem('nw_landing_seen');
   if(alreadySeen) return; // skip landing on refresh/tab restore
