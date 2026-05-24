@@ -59,6 +59,23 @@ function demoProblems() {
   ];
 }
 
+function demoItems() {
+  return [
+    { itemid: '30001', name: 'CPU utilization', lastvalue: '38', units: '%', lastclock: nowMinus(45), hosts: [{ host: 'site-fw-01', name: 'SITE-FW-01' }] },
+    { itemid: '30002', name: 'Memory utilization', lastvalue: '64', units: '%', lastclock: nowMinus(50), hosts: [{ host: 'site-fw-01', name: 'SITE-FW-01' }] },
+    { itemid: '30003', name: 'Disk storage utilization', lastvalue: '71', units: '%', lastclock: nowMinus(70), hosts: [{ host: 'site-fw-01', name: 'SITE-FW-01' }] },
+    { itemid: '30004', name: 'System uptime', lastvalue: '1814400', units: 's', lastclock: nowMinus(65), hosts: [{ host: 'site-fw-01', name: 'SITE-FW-01' }] },
+    { itemid: '30005', name: 'WAN interface traffic in', lastvalue: '28400000', units: 'bps', lastclock: nowMinus(40), hosts: [{ host: 'site-fw-01', name: 'SITE-FW-01' }] },
+    { itemid: '30006', name: 'WAN interface traffic out', lastvalue: '17600000', units: 'bps', lastclock: nowMinus(40), hosts: [{ host: 'site-fw-01', name: 'SITE-FW-01' }] },
+    { itemid: '30007', name: 'CPU utilization', lastvalue: '22', units: '%', lastclock: nowMinus(35), hosts: [{ host: 'core-sw-01', name: 'CORE-SW-01' }] },
+    { itemid: '30008', name: 'Memory utilization', lastvalue: '58', units: '%', lastclock: nowMinus(36), hosts: [{ host: 'core-sw-01', name: 'CORE-SW-01' }] },
+    { itemid: '30009', name: 'Uplink interface traffic', lastvalue: '926000000', units: 'bps', lastclock: nowMinus(38), hosts: [{ host: 'core-sw-01', name: 'CORE-SW-01' }] },
+    { itemid: '30010', name: 'CPU utilization', lastvalue: '81', units: '%', lastclock: nowMinus(55), hosts: [{ host: 'branch-rtr-01', name: 'BRANCH-RTR-01' }] },
+    { itemid: '30011', name: 'Memory utilization', lastvalue: '76', units: '%', lastclock: nowMinus(57), hosts: [{ host: 'branch-rtr-01', name: 'BRANCH-RTR-01' }] },
+    { itemid: '30012', name: 'Tunnel interface traffic', lastvalue: '8600000', units: 'bps', lastclock: nowMinus(42), hosts: [{ host: 'branch-rtr-01', name: 'BRANCH-RTR-01' }] }
+  ];
+}
+
 function send(res, status, body, type = 'application/json') {
   res.writeHead(status, {
     'Content-Type': type,
@@ -82,6 +99,9 @@ function handleRpc(payload) {
   }
   if (method === 'host.get') {
     return { jsonrpc: '2.0', result: demoHosts, id };
+  }
+  if (method === 'item.get') {
+    return { jsonrpc: '2.0', result: demoItems(), id };
   }
 
   return {
@@ -108,7 +128,8 @@ const server = http.createServer((req, res) => {
       'Implemented JSON-RPC methods:',
       '- apiinfo.version',
       '- problem.get',
-      '- host.get'
+      '- host.get',
+      '- item.get'
     ].join('\n'), 'text/plain; charset=utf-8');
   }
 

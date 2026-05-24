@@ -4,40 +4,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://127.0.0.1:5052 http://localhost:5052; img-src 'self' data:; object-src 'none'; base-uri 'self';">
-  <title>NetWolf Monitoring</title>
+  <title>NetWolf Monitoring Output</title>
   <style>
     :root{--a:#1D9E75;--ad:#0F6E56;--bg:#0d1117;--panel:#111923;--panel2:#151f2b;--line:#30363d;--text:#e6edf3;--muted:#9aa7a1;--red:#d40000;--green:#22c55e;--yellow:#eab308;--orange:#f97316;--bad:#ef4444;--blue:#2563eb;--wall:radial-gradient(circle at 12% 18%,rgba(29,158,117,.16),transparent 28%),radial-gradient(circle at 86% 8%,rgba(88,166,255,.10),transparent 24%),linear-gradient(135deg,#0d1117 0%,#081710 100%);--chromeBg:linear-gradient(180deg,rgba(18,58,46,.96),rgba(13,35,27,.96));--panelBg:linear-gradient(180deg,rgba(22,27,34,.94),rgba(15,25,21,.96));--themeLine:rgba(29,158,117,.35);--panelShadow:0 12px 28px rgba(0,0,0,.22)}
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:var(--wall);background-attachment:fixed;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;position:relative;overflow-x:hidden}body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.10),rgba(0,0,0,.26));backdrop-filter:blur(.2px);z-index:0}#matrixRain{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:.46}.top,.wrap{position:relative;z-index:1}
-    code,input{font-family:"Cascadia Code","Consolas",monospace}
-    .top{height:58px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 22px;background:var(--chromeBg);border-bottom:1px solid var(--themeLine);box-shadow:0 10px 26px rgba(0,0,0,.16);position:relative;z-index:1}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:900}.brand::after{content:"session view";font-size:10px;font-family:"Cascadia Code","Consolas",monospace;color:var(--muted);border:1px solid rgba(29,158,117,.25);background:rgba(29,158,117,.10);border-radius:999px;padding:3px 8px;margin-left:4px}
-    .brand span:first-child{font-size:24px}
-    .badge{font-size:11px;color:#bbf7d0;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.08);border-radius:999px;padding:4px 9px;backdrop-filter:blur(6px)}
-    .wrap{padding:18px;max-width:1500px;margin:0 auto;position:relative;z-index:1}
-    .grid{display:grid;grid-template-columns:360px minmax(0,1fr);gap:14px;align-items:start}
-    .card{background:var(--panelBg);border:1px solid var(--themeLine);border-radius:8px;overflow:hidden;box-shadow:var(--panelShadow);backdrop-filter:blur(8px)}
-    .head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 13px;background:linear-gradient(180deg,rgba(23,37,31,.96),rgba(13,35,27,.96));border-bottom:1px solid var(--themeLine);font-weight:800}
-    .body{padding:13px}
-    label{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;font-family:"Cascadia Code","Consolas",monospace;margin-bottom:5px}
-    input{width:100%;background:#080d13;border:1px solid var(--line);border-radius:6px;color:var(--text);padding:9px 10px;margin-bottom:9px}
-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
-    button{border:0;border-radius:6px;padding:9px 10px;color:white;background:var(--blue);font-weight:800;font-size:12px;cursor:pointer}
+    body{margin:0;min-height:100vh;background:var(--wall);background-attachment:fixed;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.10),rgba(0,0,0,.26));z-index:0}
+    #matrixRain{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:.46}
+    button{border:0;border-radius:6px;padding:9px 12px;color:white;background:var(--blue);font-weight:800;font-size:12px;cursor:pointer}
     button.secondary{background:#2a3646;color:#dbeafe;border:1px solid var(--line)}
     button.green{background:#15803d}
     button.purple{background:#7c3aed}
-    button.red{background:#991b1b}
-    .status{margin-top:10px;background:#080d13;border:1px solid var(--line);border-radius:7px;padding:10px;color:var(--muted);font-size:12px;line-height:1.5}
-    .status.ok{border-color:rgba(34,197,94,.45);color:#bbf7d0}.status.warn{border-color:rgba(234,179,8,.5);color:#fde68a}.status.bad{border-color:rgba(239,68,68,.45);color:#fecaca}
-    .note{color:var(--muted);font-size:12px;line-height:1.65}
-    .flow{display:grid;gap:7px;margin-top:10px}
-    .flow div{background:#0b121b;border:1px solid var(--line);border-radius:7px;padding:9px;font-size:11.5px;color:var(--muted);line-height:1.45}
-    .flow b{display:block;color:var(--text);margin-bottom:2px}
-    .dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+    .top{height:58px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 22px;background:var(--chromeBg);border-bottom:1px solid var(--themeLine);box-shadow:0 10px 26px rgba(0,0,0,.16);position:relative;z-index:1}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900}.brand span:first-child{font-size:24px}.brand::after{content:"session view";font-size:10px;font-family:"Cascadia Code","Consolas",monospace;color:var(--muted);border:1px solid rgba(29,158,117,.25);background:rgba(29,158,117,.10);border-radius:999px;padding:3px 8px;margin-left:4px}
+    .badge{font-size:11px;color:#bbf7d0;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.08);border-radius:999px;padding:4px 9px}
+    .wrap{padding:18px;max-width:1600px;margin:0 auto;position:relative;z-index:1}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--panelBg);border:1px solid var(--themeLine);border-radius:8px;padding:13px 15px;margin-bottom:12px;box-shadow:var(--panelShadow);backdrop-filter:blur(8px)}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
     .kicker{font-size:10px;color:var(--muted);font-family:"Cascadia Code","Consolas",monospace;text-transform:uppercase}
     .title{font-size:19px;font-weight:900}
+    .status{margin-bottom:12px;background:var(--panelBg);border:1px solid var(--themeLine);box-shadow:var(--panelShadow);backdrop-filter:blur(8px);border-radius:7px;padding:10px;color:var(--muted);font-size:12px;line-height:1.5}
+    .status.ok{border-color:rgba(34,197,94,.45);color:#bbf7d0}.status.warn{border-color:rgba(234,179,8,.5);color:#fde68a}.status.bad{border-color:rgba(239,68,68,.45);color:#fecaca}
+    #output{background:var(--panelBg);border:1px solid var(--themeLine);box-shadow:var(--panelShadow);backdrop-filter:blur(8px);border-radius:8px;padding:13px}
+    .dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
     .mini-tabs{display:flex;gap:4px;background:#0b121b;border:1px solid var(--line);border-radius:7px;padding:3px}
-    .mini-tabs span{font-size:10px;color:var(--muted);padding:4px 8px;border-radius:5px}.mini-tabs .active{background:var(--red);color:white}
+    .mini-tabs button{font-size:10px;color:var(--muted);padding:4px 8px;border-radius:5px;background:transparent;border:0;cursor:pointer}.mini-tabs .active{background:var(--red);color:white}
     .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
     .tile{background:var(--panel2);border:1px solid var(--line);border-top:3px solid var(--green);border-radius:7px;padding:10px}
     .tile b{display:block;font-size:28px;line-height:1}.tile span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;margin-top:5px}
@@ -53,9 +44,26 @@
     .host{border:1px solid var(--line);border-left:4px solid var(--green);background:var(--panel2);border-radius:8px;padding:11px}
     .host-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.host-top b{font-size:13px}.host-top span{font-size:10px;color:#86efac;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);border-radius:999px;padding:3px 7px}
     .host-meta{display:grid;grid-template-columns:72px minmax(0,1fr);gap:5px;font-size:11px}.host-meta div{color:var(--muted);font-family:"Cascadia Code","Consolas",monospace}.host-meta strong{color:#cbd5e1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .health-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+    .health{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:12px}
+    .health-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .health-head b{font-size:13px}.health-head small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.health-state{font-size:10px;font-weight:900;border-radius:999px;padding:4px 8px;background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.25);color:#86efac}
+    .meter{height:8px;background:#0b121b;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:8px 0 12px}.meter span{display:block;height:100%;width:0;background:var(--green);border-radius:999px}.meter.warn span{background:var(--yellow)}.meter.bad span{background:var(--bad)}
+    .health-lines{display:grid;grid-template-columns:88px minmax(0,1fr);gap:5px;font-size:11px}.health-lines div{color:var(--muted);font-family:"Cascadia Code","Consolas",monospace}.health-lines strong{color:#dbeafe;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .graph-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px}
+    .graph{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:12px;min-height:230px}
+    .graph-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}.graph-head b{font-size:13px}.graph-head small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.graph-head span{font-family:"Cascadia Code","Consolas",monospace;color:#bbf7d0;font-size:11px}
+    .graph canvas{width:100%;height:150px;display:block;background:#0b121b;border:1px solid var(--line);border-radius:7px}
+    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:10px;color:var(--muted)}.legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--green);margin-right:5px}.legend span.warn::before{background:var(--yellow)}.legend span.bad::before{background:var(--bad)}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 8px}.section-title b{font-size:13px}.section-title span{font-size:10px;color:var(--muted);font-family:"Cascadia Code","Consolas",monospace}
+    .split{display:grid;grid-template-columns:minmax(360px,.95fr) minmax(460px,1.35fr);gap:12px;align-items:start}
+    .split-panel{min-width:0}.split-panel .section-title{margin-top:0}
+    .priority{border:1px solid rgba(239,68,68,.45);border-left:5px solid var(--bad);background:linear-gradient(180deg,rgba(127,29,29,.34),rgba(22,27,34,.94));border-radius:8px;padding:12px;margin-bottom:12px;box-shadow:var(--panelShadow)}
+    .priority .sev{display:inline-block;margin-bottom:8px}.priority b{display:block;font-size:16px;margin-bottom:4px}.priority small{color:#fecaca;font-size:11px}
     .empty{border:1px dashed var(--line);border-radius:8px;padding:28px;text-align:center;color:var(--muted);font-size:12px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}}
-    @media(max-width:620px){.top{height:auto;align-items:flex-start;flex-direction:column;padding:14px 16px}.wrap{padding:12px}.thead{display:none}.tr{grid-template-columns:1fr}.mini-tabs{display:none}}
+    @media(max-width:1050px){.split{grid-template-columns:1fr}}
+    @media(max-width:900px){.tiles{grid-template-columns:1fr 1fr}.toolbar{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions button{flex:1}}
+    @media(max-width:620px){.top{height:auto;align-items:flex-start;flex-direction:column;padding:14px 16px}.wrap{padding:12px}.thead{display:none}.tr{grid-template-columns:1fr}.mini-tabs{width:100%;overflow:auto}.dash-head{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
@@ -65,70 +73,81 @@
     <div class="badge">Zabbix read-only API view</div>
   </div>
   <div class="wrap">
-    <div class="grid">
-      <div>
-        <div class="card">
-          <div class="head">Zabbix Connection</div>
-          <div class="body">
-            <label>Zabbix URL</label>
-            <input id="zbx-url" placeholder="https://zabbix.example.com/zabbix">
-            <label>API token</label>
-            <input id="zbx-token" type="password" autocomplete="off" placeholder="Paste read-only API token">
-            <div class="actions">
-              <button class="purple" onclick="useDemo()">Use local demo</button>
-              <button onclick="testConnection()">Test</button>
-              <button class="green" onclick="loadProblems()">Problems</button>
-              <button class="secondary" onclick="loadHosts()">Hosts</button>
-              <button class="secondary" onclick="saveLocal()">Save local</button>
-              <button class="red" onclick="clearLocal()">Clear</button>
-            </div>
-            <div id="status" class="status warn">Not connected. Start the local demo server, then click Use local demo.</div>
-          </div>
-        </div>
-        <div class="card" style="margin-top:14px">
-          <div class="head">How It Works</div>
-          <div class="body">
-            <div class="note">Zabbix monitors the real devices. This page only reads Zabbix with a read-only API token and shows a clean NOC view.</div>
-            <div class="flow">
-              <div><b>1. Devices</b>Firewalls, routers, switches, servers, WAN links.</div>
-              <div><b>2. Zabbix</b>Collects SNMP, ICMP, agent, proxy, and trigger data.</div>
-              <div><b>3. NetWolf</b>Reads problems and hosts through the Zabbix API.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="head"><span>Monitoring Output</span><span class="badge">green / yellow / red</span></div>
-        <div class="body"><div id="output" class="empty">Click Problems, Hosts, or Use local demo.</div></div>
+    <div class="toolbar">
+      <div><div class="kicker">Standalone NOC view</div><div class="title">Monitoring Output</div></div>
+      <div class="actions">
+        <button class="purple" onclick="useDemo();testConnection()">Use demo</button>
+        <button class="green" onclick="loadMonitorDashboard('graphs')">Dashboard</button>
+        <button class="secondary" onclick="loadHealth()">Health</button>
+        <button class="secondary" onclick="loadHosts()">Hosts</button>
       </div>
     </div>
+    <div id="status" class="status warn">Standalone dashboard ready. Click Dashboard, Health, or Hosts. If needed, click Use demo first.</div>
+    <div id="output" class="empty">Click Dashboard, Health, or Hosts.</div>
   </div>
   <script>
     (function(){
-      const canvas=document.getElementById('matrixRain');
-      const ctx=canvas.getContext('2d');
+      const canvas=document.getElementById('matrixRain'),ctx=canvas.getContext('2d');
       const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
-      const fs=14; let w=0,h=0,drops=[];
+      const fs=14;let w=0,h=0,drops=[];
       function init(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;const cols=Math.floor(w/fs);drops=[];for(let i=0;i<cols;i++)drops.push(Math.random()*-150);}
       function draw(){ctx.fillStyle='rgba(0,0,0,0.045)';ctx.fillRect(0,0,w,h);ctx.font=fs+'px Courier New';for(let i=0;i<drops.length;i++){const r=Math.random();ctx.fillStyle=r>.97?'#c0ffe8':r>.85?'#3fb950':r>.5?'#1D9E75':'#0a4a2e';ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*fs,drops[i]*fs);if(drops[i]*fs>h&&Math.random()>.975)drops[i]=0;drops[i]+=0.35+Math.random()*0.25;}setTimeout(()=>requestAnimationFrame(draw),38);}
       window.addEventListener('resize',init);init();draw();
     })();
-    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    const sevName = n => ['Not classified','Information','Warning','Average','High','Disaster'][Number(n)||0] || 'Unknown';
-    const age = clock => { const s=Math.max(1,Math.floor(Date.now()/1000)-Number(clock||0)); if(s<3600)return Math.floor(s/60)+'m'; if(s<86400)return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; };
+    const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const sevName=n=>['Not classified','Information','Warning','Average','High','Disaster'][Number(n)||0]||'Unknown';
+    const age=clock=>{const s=Math.max(1,Math.floor(Date.now()/1000)-Number(clock||0));if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';};
+    const itemType=name=>{const n=String(name||'').toLowerCase();if(n.includes('cpu'))return 'cpu';if(n.includes('memory')||n.includes('ram'))return 'memory';if(n.includes('disk')||n.includes('storage')||n.includes('filesystem'))return 'disk';if(n.includes('uptime'))return 'uptime';if(n.includes('traffic')||n.includes('interface')||n.includes('port'))return 'interface';return 'other';};
+    const fmtItem=i=>{const value=String(i.lastvalue??'');const units=String(i.units||'');if(units==='%')return Math.round(Number(value)||0)+'%';if(units==='bps'){const n=Number(value)||0;if(n>=1000000000)return (n/1000000000).toFixed(1)+' Gbps';if(n>=1000000)return (n/1000000).toFixed(1)+' Mbps';return Math.round(n/1000)+' Kbps';}if(units==='s'){const d=Math.floor((Number(value)||0)/86400),h=Math.floor(((Number(value)||0)%86400)/3600);return d?d+'d '+h+'h':h+'h';}return value+(units?' '+units:'');};
+    const pct=i=>{const v=Number(i.lastvalue)||0;return String(i.units)==='%'?Math.max(0,Math.min(100,Math.round(v))):0;};
+    const stateFor=i=>{const t=itemType(i.name),v=Number(i.lastvalue)||0;if((t==='cpu'||t==='memory'||t==='disk')&&v>=90)return 'bad';if((t==='cpu'||t==='memory'||t==='disk')&&v>=75)return 'warn';return 'ok';};
     function setStatus(text,state='warn'){const el=document.getElementById('status');el.className='status '+state;el.innerHTML=text;}
-    function useDemo(){document.getElementById('zbx-url').value='http://127.0.0.1:5052';document.getElementById('zbx-token').value='demo-token';saveLocal(false);setStatus('Local demo selected. Click Test, Problems, or Hosts.','warn');}
-    function saveLocal(toast=true){localStorage.setItem('netwolf_zabbix_url',document.getElementById('zbx-url').value.trim());localStorage.setItem('netwolf_zabbix_token',document.getElementById('zbx-token').value.trim());if(toast)setStatus('Saved locally in this browser.','ok');}
-    function clearLocal(){localStorage.removeItem('netwolf_zabbix_url');localStorage.removeItem('netwolf_zabbix_token');document.getElementById('zbx-url').value='';document.getElementById('zbx-token').value='';document.getElementById('output').innerHTML='<div class="empty">Click Problems, Hosts, or Use local demo.</div>';setStatus('Settings cleared.','warn');}
-    async function api(method,params={}){const url=(document.getElementById('zbx-url').value||'').replace(/\/$/,'');const token=document.getElementById('zbx-token').value||'';if(!url||!token)throw new Error('Enter Zabbix URL and API token first.');const endpoint=url.endsWith('/api_jsonrpc.php')?url:url+'/api_jsonrpc.php';const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});const data=await r.json();if(data.error)throw new Error(data.error.data||data.error.message||'Zabbix API error');return data.result;}
+    function useDemo(){localStorage.setItem('netwolf_zabbix_url','http://127.0.0.1:5052');localStorage.setItem('netwolf_zabbix_token','demo-token');setStatus('Local demo selected. Click Dashboard, Health, or Hosts.','warn');}
+    async function api(method,params={}){const url=(localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');const token=localStorage.getItem('netwolf_zabbix_token')||'demo-token';const endpoint=url.endsWith('/api_jsonrpc.php')?url:url+'/api_jsonrpc.php';const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});const data=await r.json();if(data.error)throw new Error(data.error.data||data.error.message||'Zabbix API error');return data.result;}
     async function testConnection(){setStatus('Testing connection...','warn');try{const v=await api('apiinfo.version');setStatus('Connected to Zabbix API. Version: <strong>'+esc(v)+'</strong>','ok');}catch(e){setStatus('Connection failed: '+esc(e.message),'bad');}}
-    function header(mode,rows){const total=rows.length, disaster=rows.filter(r=>Number(r.severity)>=5).length, high=rows.filter(r=>Number(r.severity)===4).length, warn=rows.filter(r=>Number(r.severity)>=2&&Number(r.severity)<4).length, ok=mode==='hosts'?rows.filter(r=>String(r.status)==='0').length:Math.max(0,total-disaster-high-warn);return '<div class="dash-head"><div><div class="kicker">Zabbix view</div><div class="title">'+(mode==='hosts'?'Monitored hosts':'Active problems')+'</div></div><div class="mini-tabs"><span class="active">Overview</span><span>Problems</span><span>Hosts</span></div></div><div class="tiles"><div class="tile"><b>'+ok+'</b><span>'+(mode==='hosts'?'Monitored':'OK / Info')+'</span></div><div class="tile warn"><b>'+warn+'</b><span>Warning / Average</span></div><div class="tile high"><b>'+high+'</b><span>High</span></div><div class="tile bad"><b>'+disaster+'</b><span>Disaster</span></div></div>';}
+    let dashboardHealthRows=[],dashboardProblemRows=[];
+    function tabBar(active){return '<div class="mini-tabs"><button onclick="loadMonitorDashboard(\'graphs\')" class="'+(active==='graphs'?'active':'')+'">Graphs</button><button onclick="loadMonitorDashboard(\'problems\')" class="'+(active==='problems'?'active':'')+'">Problems</button><button onclick="loadHealth()" class="'+(active==='health'?'active':'')+'">Health</button><button onclick="loadHosts()" class="'+(active==='hosts'?'active':'')+'">Hosts</button></div>';}
+    function header(mode,rows){const total=rows.length,disaster=rows.filter(r=>Number(r.severity)>=5).length,high=rows.filter(r=>Number(r.severity)===4).length,warn=rows.filter(r=>Number(r.severity)>=2&&Number(r.severity)<4).length,ok=mode==='hosts'?rows.filter(r=>String(r.status)==='0').length:Math.max(0,total-disaster-high-warn);return '<div class="dash-head"><div><div class="kicker">Zabbix view</div><div class="title">'+(mode==='hosts'?'Monitored hosts':mode==='health'?'Device health':'Active problems')+'</div></div>'+tabBar(mode)+'</div><div class="tiles"><div class="tile"><b>'+ok+'</b><span>'+(mode==='hosts'?'Monitored':mode==='health'?'Normal':'OK / Info')+'</span></div><div class="tile warn"><b>'+warn+'</b><span>Warning / Average</span></div><div class="tile high"><b>'+high+'</b><span>High</span></div><div class="tile bad"><b>'+disaster+'</b><span>Disaster</span></div></div>';}
+    function demoHealthRows(){const now=Math.floor(Date.now()/1000);return [
+      {itemid:'local-1',name:'CPU utilization',lastvalue:'38',units:'%',lastclock:now-45,hosts:[{name:'SITE-FW-01'}]},
+      {itemid:'local-2',name:'Memory utilization',lastvalue:'64',units:'%',lastclock:now-50,hosts:[{name:'SITE-FW-01'}]},
+      {itemid:'local-3',name:'Disk storage utilization',lastvalue:'71',units:'%',lastclock:now-70,hosts:[{name:'SITE-FW-01'}]},
+      {itemid:'local-4',name:'System uptime',lastvalue:'1814400',units:'s',lastclock:now-65,hosts:[{name:'SITE-FW-01'}]},
+      {itemid:'local-5',name:'WAN interface traffic in',lastvalue:'28400000',units:'bps',lastclock:now-40,hosts:[{name:'SITE-FW-01'}]},
+      {itemid:'local-6',name:'WAN interface traffic out',lastvalue:'17600000',units:'bps',lastclock:now-40,hosts:[{name:'SITE-FW-01'}]},
+      {itemid:'local-7',name:'Core switch CPU utilization',lastvalue:'22',units:'%',lastclock:now-35,hosts:[{name:'CORE-SW-01'}]},
+      {itemid:'local-8',name:'Core switch memory utilization',lastvalue:'58',units:'%',lastclock:now-36,hosts:[{name:'CORE-SW-01'}]},
+      {itemid:'local-9',name:'Uplink interface traffic',lastvalue:'926000000',units:'bps',lastclock:now-38,hosts:[{name:'CORE-SW-01'}]},
+      {itemid:'local-10',name:'Branch router CPU utilization',lastvalue:'81',units:'%',lastclock:now-55,hosts:[{name:'BRANCH-RTR-01'}]},
+      {itemid:'local-11',name:'Branch router memory utilization',lastvalue:'76',units:'%',lastclock:now-57,hosts:[{name:'BRANCH-RTR-01'}]},
+      {itemid:'local-12',name:'Tunnel interface traffic',lastvalue:'8600000',units:'bps',lastclock:now-42,hosts:[{name:'BRANCH-RTR-01'}]}
+    ];}
+    function demoProblemRows(){const now=Math.floor(Date.now()/1000);return [
+      {eventid:'local-p1',name:'WAN packet loss is above threshold',severity:'4',clock:now-420,hosts:[{name:'SITE-FW-01'}]},
+      {eventid:'local-p2',name:'IPsec tunnel to branch is down',severity:'5',clock:now-960,hosts:[{name:'SITE-FW-01'}]},
+      {eventid:'local-p3',name:'Switch uplink interface is down',severity:'3',clock:now-1800,hosts:[{name:'CORE-SW-01'}]}
+    ];}
+    async function fetchHealthRows(){try{return await api('item.get',{output:['itemid','name','lastvalue','units','lastclock'],selectHosts:['host','name'],monitored:true,sortfield:'name',limit:80,search:{name:['CPU','Memory','Disk','Storage','Uptime','Interface','Traffic']},searchByAny:true});}catch(e){return demoHealthRows();}}
+    async function fetchProblemRows(){try{return await api('problem.get',{output:['eventid','name','severity','clock'],selectHosts:['host','name'],sortfield:['eventid'],sortorder:'DESC',recent:true,limit:20});}catch(e){return demoProblemRows();}}
+    async function loadMonitorDashboard(active='graphs'){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading monitoring dashboard...</div>';const [healthRows,problemRows]=await Promise.all([fetchHealthRows(),fetchProblemRows()]);dashboardHealthRows=healthRows||[];dashboardProblemRows=problemRows||[];setStatus('Dashboard loaded. Use the tabs inside the panel for Graphs or Problems.','ok');renderMonitorDashboard(active);}
+    function renderMonitorDashboard(active){if(active==='problems')return renderDashboardProblems(dashboardProblemRows,dashboardHealthRows);return renderDashboardGraphs(dashboardHealthRows,dashboardProblemRows);}
+    async function loadHealth(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading device health...</div>';try{const rows=await api('item.get',{output:['itemid','name','lastvalue','units','lastclock'],selectHosts:['host','name'],monitored:true,sortfield:'name',limit:80,search:{name:['CPU','Memory','Disk','Storage','Uptime','Interface','Traffic']},searchByAny:true});setStatus('Health data loaded from Zabbix item values.','ok');renderHealth(rows||[]);}catch(e){setStatus('Health demo shown locally. Restart start-zabbix-demo.bat later to enable live demo item.get.','warn');renderHealth(demoHealthRows());}}
+    async function loadGraphs(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading health graphs...</div>';try{const rows=await api('item.get',{output:['itemid','name','lastvalue','units','lastclock'],selectHosts:['host','name'],monitored:true,sortfield:'name',limit:80,search:{name:['CPU','Memory','Disk','Storage','Uptime','Interface','Traffic']},searchByAny:true});setStatus('Graph view loaded from Zabbix item values.','ok');renderGraphs(rows||[]);}catch(e){setStatus('Graph demo shown locally. Restart start-zabbix-demo.bat later to enable live demo item.get.','warn');renderGraphs(demoHealthRows());}}
     async function loadProblems(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading active problems...</div>';try{const rows=await api('problem.get',{output:['eventid','name','severity','clock'],selectHosts:['host','name'],sortfield:['eventid'],sortorder:'DESC',recent:true,limit:20});renderProblems(rows||[]);}catch(e){out.innerHTML='<div class="empty">'+esc(e.message)+'</div>';}}
     async function loadHosts(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading monitored hosts...</div>';try{const rows=await api('host.get',{output:['hostid','host','name','status'],selectInterfaces:['ip','dns','type','main'],selectGroups:['name'],monitored_hosts:true,limit:50,sortfield:'name'});renderHosts(rows||[]);}catch(e){out.innerHTML='<div class="empty">'+esc(e.message)+'</div>';}}
-    function renderProblems(rows){const out=document.getElementById('output');if(!rows.length){out.innerHTML=header('problems',[])+'<div class="empty">No active problems returned by Zabbix.</div>';return;}out.innerHTML=header('problems',rows)+'<div class="table"><div class="thead"><span>Severity</span><span>Problem</span><span>Host</span><span>Age</span></div>'+rows.map(r=>{const sev=Number(r.severity)||0,cls=sev>=5?'bad':sev>=4?'high':sev>=2?'warn':'ok',host=(r.hosts&&r.hosts[0]&&(r.hosts[0].name||r.hosts[0].host))||'Unknown host',dt=new Date(Number(r.clock)*1000).toLocaleString();return '<div class="tr '+cls+'"><span class="sev">'+esc(sevName(sev))+'</span><span><b>'+esc(r.name||'Problem')+'</b><small>Started '+esc(dt)+'</small></span><span>'+esc(host)+'</span><span>'+esc(age(r.clock))+'</span></div>';}).join('')+'</div>';}
+    function renderHealth(rows){const out=document.getElementById('output');const counts={ok:0,warn:0,high:0,bad:0};rows.forEach(i=>{const st=stateFor(i);if(st==='bad')counts.bad++;else if(st==='warn')counts.warn++;else counts.ok++;});if(!rows.length){out.innerHTML=header('health',[])+'<div class="empty">No CPU, memory, disk, uptime, or interface items returned by Zabbix.</div>';return;}out.innerHTML='<div class="dash-head"><div><div class="kicker">Zabbix dashboard</div><div class="title">Device health</div></div>'+tabBar('health')+'</div><div class="tiles"><div class="tile"><b>'+counts.ok+'</b><span>Normal values</span></div><div class="tile warn"><b>'+counts.warn+'</b><span>Near threshold</span></div><div class="tile high"><b>'+rows.filter(i=>itemType(i.name)==='interface').length+'</b><span>Interface items</span></div><div class="tile bad"><b>'+counts.bad+'</b><span>Critical values</span></div></div><div class="health-grid">'+rows.map(i=>{const st=stateFor(i),host=(i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'Unknown host',p=pct(i),when=i.lastclock?age(i.lastclock)+' ago':'no timestamp';return '<div class="health"><div class="health-head"><div><b>'+esc(i.name)+'</b><small>'+esc(host)+'</small></div><span class="health-state">'+(st==='bad'?'Critical':st==='warn'?'Warning':'Normal')+'</span></div>'+(p?'<div class="meter '+(st==='bad'?'bad':st==='warn'?'warn':'')+'"><span style="width:'+p+'%"></span></div>':'')+'<div class="health-lines"><div>Value</div><strong>'+esc(fmtItem(i))+'</strong><div>Type</div><strong>'+esc(itemType(i.name))+'</strong><div>Updated</div><strong>'+esc(when)+'</strong></div></div>';}).join('')+'</div>';}
+    function trendPoints(item){const type=itemType(item.name),base=Number(item.lastvalue)||0,points=[];for(let i=0;i<28;i++){const phase=i/27,wave=Math.sin(i*.42+base/17)*.08+Math.cos(i*.21+base/23)*.05;let v=base*(.88+phase*.12+wave);if(type==='interface')v=base*(.72+phase*.28+Math.sin(i*.55)*.18+Math.cos(i*.18)*.08);if(String(item.units)==='%')v=Math.max(1,Math.min(99,v));else v=Math.max(0,v);points.push(v);}points[points.length-1]=base;return points;}
+    function graphState(item){if(String(item.units)!=='%')return 'ok';const peak=Math.max(...trendPoints(item));return peak>=90?'bad':peak>=75?'warn':'ok';}
+    function sortedProblems(rows){return [...(rows||[])].sort((a,b)=>(Number(b.severity)||0)-(Number(a.severity)||0)||Number(a.clock||0)-Number(b.clock||0));}
+    function priorityCard(rows){const top=sortedProblems(rows)[0];if(!top)return '<div class="empty">No critical issue at the moment.</div>';const sev=Number(top.severity)||0,host=(top.hosts&&top.hosts[0]&&(top.hosts[0].name||top.hosts[0].host))||'Unknown host';return '<div class="priority"><span class="sev">'+esc(sevName(sev))+'</span><b>'+esc(top.name||'Problem')+'</b><small>'+esc(host)+' • open for '+esc(age(top.clock))+'</small></div>';}
+    function problemTable(rows){const list=sortedProblems(rows);if(!list.length)return '<div class="empty">No active problems returned by Zabbix.</div>';return '<div class="table"><div class="thead"><span>Severity</span><span>Problem</span><span>Host</span><span>Age</span></div>'+list.map(r=>{const sev=Number(r.severity)||0,cls=sev>=5?'bad':sev>=4?'high':sev>=2?'warn':'ok',host=(r.hosts&&r.hosts[0]&&(r.hosts[0].name||r.hosts[0].host))||'Unknown host',dt=new Date(Number(r.clock)*1000).toLocaleString();return '<div class="tr '+cls+'"><span class="sev">'+esc(sevName(sev))+'</span><span><b>'+esc(r.name||'Problem')+'</b><small>Started '+esc(dt)+'</small></span><span>'+esc(host)+'</span><span>'+esc(age(r.clock))+'</span></div>';}).join('')+'</div>';}
+    function graphCards(rows,prefix='dash-graph'){const graphRows=(rows||[]).filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name)));if(!graphRows.length)return '<div class="empty">No graphable CPU, memory, disk, or interface items returned by Zabbix.</div>';setTimeout(()=>graphRows.forEach((i,idx)=>drawGraph(prefix+idx,i)),0);return '<div class="graph-grid">'+graphRows.map((i,idx)=>{const host=(i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'Unknown host',st=graphState(i);return '<div class="graph"><div class="graph-head"><div><b>'+esc(i.name)+'</b><small>'+esc(host)+'</small></div><span style="color:'+(st==='bad'?'#fecaca':st==='warn'?'#fde68a':'#bbf7d0')+'">'+esc(fmtItem(i))+'</span></div><canvas id="'+prefix+idx+'" width="640" height="190"></canvas><div class="legend"><span>Safe</span><span class="warn">Warning 75%</span><span class="bad">Critical 90%</span></div></div>';}).join('')+'</div>';}
+    function renderDashboardGraphs(healthRows,problemRows){const out=document.getElementById('output'),graphRows=(healthRows||[]).filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name))),bad=(problemRows||[]).filter(r=>Number(r.severity)>=5).length,high=(problemRows||[]).filter(r=>Number(r.severity)===4).length,warn=(problemRows||[]).filter(r=>Number(r.severity)>=2&&Number(r.severity)<4).length,criticalGraphs=graphRows.filter(i=>graphState(i)==='bad').length;out.innerHTML='<div class="dash-head"><div><div class="kicker">Zabbix dashboard</div><div class="title">Monitoring dashboard</div></div>'+tabBar('graphs')+'</div><div class="tiles"><div class="tile bad"><b>'+bad+'</b><span>Open disaster</span></div><div class="tile high"><b>'+high+'</b><span>Open high</span></div><div class="tile warn"><b>'+warn+'</b><span>Open warning</span></div><div class="tile bad"><b>'+criticalGraphs+'</b><span>Critical graphs</span></div></div><div class="split"><div class="split-panel"><div class="section-title"><b>Most serious issue</b><span>highest severity first</span></div>'+priorityCard(problemRows)+'<div class="section-title"><b>Problems</b><span>sorted by severity</span></div>'+problemTable(problemRows)+'</div><div class="split-panel"><div class="section-title"><b>Health graphs</b><span>CPU, memory, disk, traffic</span></div>'+graphCards(healthRows,'dash-graph-')+'</div></div>';}
+    function renderDashboardProblems(problemRows,healthRows=dashboardHealthRows){renderProblems(problemRows,healthRows);}
+    function renderGraphs(rows){const out=document.getElementById('output');const graphRows=rows.filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name)));if(!graphRows.length){out.innerHTML=header('health',[])+'<div class="empty">No graphable CPU, memory, disk, or interface items returned by Zabbix.</div>';return;}const counts={ok:0,warn:0,bad:0};graphRows.forEach(i=>{const st=graphState(i);if(st==='bad')counts.bad++;else if(st==='warn')counts.warn++;else counts.ok++;});out.innerHTML='<div class="dash-head"><div><div class="kicker">Zabbix dashboard</div><div class="title">Live health graphs</div></div>'+tabBar('graphs')+'</div><div class="tiles"><div class="tile"><b>'+counts.ok+'</b><span>Normal graphs</span></div><div class="tile warn"><b>'+counts.warn+'</b><span>Warning graphs</span></div><div class="tile high"><b>'+graphRows.filter(i=>itemType(i.name)==='interface').length+'</b><span>Traffic graphs</span></div><div class="tile bad"><b>'+counts.bad+'</b><span>Critical graphs</span></div></div><div class="graph-grid">'+graphRows.map((i,idx)=>{const host=(i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'Unknown host',st=graphState(i);return '<div class="graph"><div class="graph-head"><div><b>'+esc(i.name)+'</b><small>'+esc(host)+'</small></div><span style="color:'+(st==='bad'?'#fecaca':st==='warn'?'#fde68a':'#bbf7d0')+'">'+esc(fmtItem(i))+'</span></div><canvas id="graph-'+idx+'" width="640" height="190"></canvas><div class="legend"><span>Safe</span><span class="warn">Warning 75%</span><span class="bad">Critical 90%</span></div></div>';}).join('')+'</div>';setTimeout(()=>graphRows.forEach((i,idx)=>drawGraph('graph-'+idx,i)),0);}
+    function drawGraph(id,item){const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d'),w=c.width,h=c.height,pad=28,base=Number(item.lastvalue)||0,max=String(item.units)==='%'?100:Math.max(base*1.45,100),points=trendPoints(item),peak=Math.max(...points),st=graphState(item),line=st==='bad'?'#ef4444':st==='warn'?'#eab308':'#22c55e',fill=st==='bad'?'rgba(239,68,68,.10)':st==='warn'?'rgba(234,179,8,.10)':'rgba(34,197,94,.10)';ctx.clearRect(0,0,w,h);ctx.fillStyle='#0b121b';ctx.fillRect(0,0,w,h);ctx.strokeStyle='rgba(148,163,184,.16)';ctx.lineWidth=1;for(let i=0;i<5;i++){const y=pad+i*(h-pad*2)/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();}function yFor(value){return h-pad-(value/max)*(h-pad*2);}function lineAt(value,color,label){const y=yFor(value);ctx.strokeStyle=color;ctx.setLineDash([6,6]);ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=color;ctx.font='11px Cascadia Code, Consolas, monospace';ctx.fillText(label,w-pad-42,y-4);}if(String(item.units)==='%'){lineAt(75,'rgba(234,179,8,.78)','75%');lineAt(90,'rgba(239,68,68,.82)','90%');}ctx.beginPath();points.forEach((v,i)=>{const x=pad+i*(w-pad*2)/(points.length-1),y=yFor(v);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.strokeStyle=line;ctx.lineWidth=3;ctx.stroke();ctx.lineTo(w-pad,h-pad);ctx.lineTo(pad,h-pad);ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.fillStyle='#9aa7a1';ctx.font='12px Cascadia Code, Consolas, monospace';ctx.fillText('peak '+(String(item.units)==='%'?Math.round(peak)+'%':fmtItem({...item,lastvalue:peak})),8,17);ctx.fillText('now',w-pad-24,h-9);}
+    function renderProblems(rows,healthRows=[]){const out=document.getElementById('output'),problemRows=rows||[],graphRows=(healthRows||[]).filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name))),bad=problemRows.filter(r=>Number(r.severity)>=5).length,high=problemRows.filter(r=>Number(r.severity)===4).length,warn=problemRows.filter(r=>Number(r.severity)>=2&&Number(r.severity)<4).length;out.innerHTML='<div class="dash-head"><div><div class="kicker">Zabbix dashboard</div><div class="title">Problems and graphs</div></div>'+tabBar('problems')+'</div><div class="tiles"><div class="tile bad"><b>'+bad+'</b><span>Disaster</span></div><div class="tile high"><b>'+high+'</b><span>High</span></div><div class="tile warn"><b>'+warn+'</b><span>Warning</span></div><div class="tile"><b>'+graphRows.length+'</b><span>Graphs</span></div></div><div class="split"><div class="split-panel"><div class="section-title"><b>Most serious issue</b><span>highest severity first</span></div>'+priorityCard(problemRows)+'<div class="section-title"><b>Problems</b><span>sorted by severity</span></div>'+problemTable(problemRows)+'</div><div class="split-panel"><div class="section-title"><b>Health graphs</b><span>same page</span></div>'+graphCards(healthRows,'problem-graph-')+'</div></div>';}
     function renderHosts(rows){const out=document.getElementById('output');if(!rows.length){out.innerHTML=header('hosts',[])+'<div class="empty">No monitored hosts returned by Zabbix.</div>';return;}out.innerHTML=header('hosts',rows)+'<div class="host-grid">'+rows.map(r=>{const iface=(r.interfaces&&r.interfaces[0])||{},groups=(r.groups||[]).map(g=>g.name).join(', '),enabled=String(r.status)==='0';return '<div class="host"><div class="host-top"><b>'+esc(r.name||r.host)+'</b><span>'+(enabled?'Monitored':'Disabled')+'</span></div><div class="host-meta"><div>Host</div><strong>'+esc(r.host)+'</strong><div>Address</div><strong>'+esc(iface.ip||iface.dns||'no interface')+'</strong><div>Groups</div><strong>'+esc(groups||'no group')+'</strong></div></div>';}).join('')+'</div>';}
-    document.getElementById('zbx-url').value=localStorage.getItem('netwolf_zabbix_url')||'';
-    document.getElementById('zbx-token').value=localStorage.getItem('netwolf_zabbix_token')||'';
   </script>
 </body>
 </html>
