@@ -36,8 +36,8 @@
     .table{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
     .thead,.tr{display:grid;grid-template-columns:120px minmax(0,1.5fr) minmax(130px,.8fr) 70px;gap:8px;align-items:center}
     .thead{background:var(--red);color:white;font-size:10px;font-family:"Cascadia Code","Consolas",monospace;text-transform:uppercase;padding:8px 10px}
-    .tr{padding:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
-    .tr b{display:block;color:var(--text);font-size:12.5px}.tr small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+    .tr{padding:7px 8px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+    .tr b{display:block;color:var(--text);font-size:12px}.tr small{display:block;color:var(--muted);font-size:9.5px;margin-top:1px}
     .sev{font-size:10px;font-weight:900;text-transform:uppercase;border-radius:4px;padding:4px 6px;text-align:center;background:#0b121b}
     .tr.warn .sev{color:#fde68a}.tr.high .sev{color:#fed7aa}.tr.bad .sev{background:var(--bad);color:#fff}
     .host-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
@@ -55,11 +55,11 @@
     .graph-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}.graph-head b{font-size:13px}.graph-head small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.graph-head span{font-family:"Cascadia Code","Consolas",monospace;color:#bbf7d0;font-size:11px}
     .graph canvas{width:100%;height:150px;display:block;background:#0b121b;border:1px solid var(--line);border-radius:7px}
     .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:10px;color:var(--muted)}.legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--green);margin-right:5px}.legend span.warn::before{background:var(--yellow)}.legend span.bad::before{background:var(--bad)}
-    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 0 8px}.section-title b{font-size:13px}.section-title span{font-size:10px;color:var(--muted);font-family:"Cascadia Code","Consolas",monospace}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 6px}.section-title b{font-size:13px}.section-title span{font-size:10px;color:var(--muted);font-family:"Cascadia Code","Consolas",monospace}
     .split{display:grid;grid-template-columns:minmax(360px,.95fr) minmax(460px,1.35fr);gap:12px;align-items:start}
     .split-panel{min-width:0}.split-panel .section-title{margin-top:0}
-    .priority{border:1px solid rgba(239,68,68,.45);border-left:5px solid var(--bad);background:linear-gradient(180deg,rgba(127,29,29,.34),rgba(22,27,34,.94));border-radius:8px;padding:12px;margin-bottom:12px;box-shadow:var(--panelShadow)}
-    .priority .sev{display:inline-block;margin-bottom:8px}.priority b{display:block;font-size:16px;margin-bottom:4px}.priority small{color:#fecaca;font-size:11px}
+    .priority{border:1px solid rgba(239,68,68,.45);border-left:5px solid var(--bad);background:linear-gradient(180deg,rgba(127,29,29,.34),rgba(22,27,34,.94));border-radius:8px;padding:10px;margin-bottom:9px;box-shadow:var(--panelShadow)}
+    .priority .sev{display:inline-block;margin-bottom:5px}.priority b{display:block;font-size:15px;margin-bottom:3px}.priority small{color:#fecaca;font-size:10.5px}
     .check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}.check{border:1px solid var(--line);background:var(--panel2);border-left:4px solid var(--green);border-radius:8px;padding:11px}.check.warn{border-left-color:var(--yellow)}.check.bad{border-left-color:var(--bad)}.check b{display:block;font-size:13px;margin-bottom:6px}.check p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}.check strong{color:var(--text)}.check-list{margin:8px 0 0 0;padding:0;list-style:none}.check-list li{font-size:11px;color:var(--muted);padding:4px 0;border-top:1px solid rgba(148,163,184,.12)}
     .empty{border:1px dashed var(--line);border-radius:8px;padding:28px;text-align:center;color:var(--muted);font-size:12px}
     @media(max-width:1050px){.split{grid-template-columns:1fr}}
@@ -108,8 +108,8 @@
     const pct=i=>{const v=Number(i.lastvalue)||0;return String(i.units)==='%'?Math.max(0,Math.min(100,Math.round(v))):0;};
     const stateFor=i=>{const t=itemType(i.name),v=Number(i.lastvalue)||0;if((t==='cpu'||t==='memory'||t==='disk')&&v>=90)return 'bad';if((t==='cpu'||t==='memory'||t==='disk')&&v>=75)return 'warn';return 'ok';};
     function setStatus(text,state='warn'){const el=document.getElementById('status');el.className='status '+state;el.innerHTML=text;}
-    function useDemo(){localStorage.setItem('netwolf_zabbix_url','http://127.0.0.1:5052');localStorage.setItem('netwolf_zabbix_token','demo-token');setStatus('Local demo selected. Click Dashboard, Setup Check, Health, or Hosts.','warn');}
-    async function api(method,params={}){const url=(localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');const token=localStorage.getItem('netwolf_zabbix_token')||'demo-token';const endpoint=url.endsWith('/api_jsonrpc.php')?url:url+'/api_jsonrpc.php';const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});const data=await r.json();if(data.error)throw new Error(data.error.data||data.error.message||'Zabbix API error');return data.result;}
+    function useDemo(){localStorage.setItem('netwolf_zabbix_url','http://127.0.0.1:5052');localStorage.removeItem('netwolf_zabbix_token');setStatus('Local demo selected. No token is stored for demo mode. Click Dashboard, Setup Check, Health, or Hosts.','warn');}
+    async function api(method,params={}){const url=(localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');const token=localStorage.getItem('netwolf_zabbix_token')||'';const endpoint=url.endsWith('/api_jsonrpc.php')?url:url+'/api_jsonrpc.php';const headers={'Content-Type':'application/json'};if(token)headers.Authorization='Bearer '+token;const r=await fetch(endpoint,{method:'POST',headers,body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});const data=await r.json();if(data.error)throw new Error(data.error.data||data.error.message||'Zabbix API error');return data.result;}
     async function testConnection(){setStatus('Testing connection...','warn');try{const v=await api('apiinfo.version');setStatus('Connected to Zabbix API. Version: <strong>'+esc(v)+'</strong>','ok');}catch(e){setStatus('Connection failed: '+esc(e.message),'bad');}}
     let dashboardHealthRows=[],dashboardProblemRows=[];
     function tabBar(active){return '<div class="mini-tabs"><button onclick="loadMonitorDashboard()" class="'+(active==='dashboard'?'active':'')+'">Dashboard</button><button onclick="loadSetupCheck()" class="'+(active==='check'?'active':'')+'">Setup Check</button><button onclick="loadHealth()" class="'+(active==='health'?'active':'')+'">Health</button><button onclick="loadHosts()" class="'+(active==='hosts'?'active':'')+'">Hosts</button></div>';}

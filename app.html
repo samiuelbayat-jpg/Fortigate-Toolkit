@@ -907,8 +907,8 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
   <div class="login-card">
     <div class="login-logo">🐺 Net<span>Wolf</span></div>
     <div class="login-sub">FortiGate Pro Toolkit — Sign in to continue</div>
-    <input class="login-input" type="email" id="loginEmail" placeholder="Your email address" onkeydown="if(event.key==='Enter')document.getElementById('loginPassword').focus()">
-    <input class="login-input" type="password" id="loginPassword" placeholder="Password" onkeydown="if(event.key==='Enter')window.doLogin()">
+    <input class="login-input" type="email" id="loginEmail" name="netwolf-login-email" placeholder="Your email address" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" onkeydown="if(event.key==='Enter')document.getElementById('loginPassword').focus()">
+    <input class="login-input" type="password" id="loginPassword" name="netwolf-login-pass" placeholder="Password" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" onkeydown="if(event.key==='Enter')window.doLogin()">
     <button class="login-btn" id="loginSubmitBtn" onclick="window.doLogin()">Login</button>
     <button class="login-forgot" id="loginForgotBtn" type="button" onclick="window.doForgotPassword()">Forgot password?</button>
     <div id="loginError" class="login-error"></div>
@@ -2803,7 +2803,7 @@ function renderCLISim(el){
         'get router info ospf neighbor':'OSPF process 0:\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.168.2.1       1   Full/DR           00:00:30   192.168.2.1     port3\n172.16.0.1        1   Full/BDR          00:00:37   172.16.0.1      port4',
         'get router info bgp summary':'BGP router identifier 10.0.0.1, local AS number 65001\nBGP table version is 14\n\nNeighbor        V         AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n10.0.0.2        4      65002    1423    1419       14    0    0 9d12h34m       12\n10.0.0.3        4      65003     987     991       14    0    0 3d08h11m        8',
         'get vpn ipsec tunnel summary':'\'SITE-B-VPN\' 10.0.0.2:0 selectors(total,up): 2/2 rx(pkt,err): 14523/0 tx(pkt,err): 13891/0\n\'SITE-C-VPN\' 10.0.0.3:0 selectors(total,up): 1/1 rx(pkt,err): 8234/0 tx(pkt,err): 7891/0',
-        'get vpn ssl monitor':'SSL VPN Login Users:\n Index   User   Group   Auth Type   Timeout   From\n 0       jdoe   VPN-USERS   1(1)        28800     203.0.113.50\n 1       asmith VPN-USERS   1(1)        28800     198.51.100.12',
+        'get vpn ssl monitor':'SSL VPN Login Users:\n Index   User   Group   Auth Type   Timeout   From\n 0       USER_A   VPN-USERS   1(1)        28800     203.0.113.50\n 1       USER_B VPN-USERS   1(1)        28800     198.51.100.12',
         'get system arp':'Address          Age(min)  Hardware Addr      Interface\n192.168.1.1      0         00:1a:2b:3c:4d:5e  port2\n192.168.1.100    2         00:1a:2b:3c:4d:6f  port2\n192.168.2.1      0         00:1a:2b:3c:4e:5e  port3\n203.0.113.1      0         00:1a:2b:3c:4f:5e  port1',
         'diagnose sys session stat':'session table: total 1842 tcp 1243 udp 534 icmp 18 other 47\nnudge session table total 0\nexpected session table: total 0\nnp session table total 0',
         'diagnose sys df':'Filesystem            Size  Used Avail Use% Mounted on\n/dev/mmcblk0p3        1.9G  876M  924M  49% /\ntmpfs                 7.8G     0  7.8G   0% /dev/shm',
@@ -4775,7 +4775,7 @@ wanopt:{t:'WAN Optimization',s:'med',type:'trouble',chips:['Tunnel not establish
 {t:'1. Enable VDOM mode',icon:'🏛️',warn:'Requires reboot to activate.',cmds:['config system global','set vdom-mode multi-vdom','end','execute reboot']},
 {t:'2. Create new VDOMs',cmds:['config vdom','edit VDOM-TENANT-A','next','edit VDOM-TENANT-B','next','end']},
 {t:'3. Assign interfaces to VDOMs',cmds:['config system interface','edit port2','set vdom VDOM-TENANT-A','set ip 10.10.0.1 255.255.255.0','set allowaccess ping','end']},
-{t:'4. Per-VDOM admin account',cmds:['config global','config system admin','edit tenant-a-admin','set vdom VDOM-TENANT-A','set accprofile prof_admin','set password <PASSWORD>','end','end']},
+{t:'4. Per-VDOM admin account',cmds:['config global','config system admin','edit tenant-a-admin','set vdom VDOM-TENANT-A','set accprofile prof_admin','set password REPLACE_WITH_PASSWORD','end','end']},
 {t:'5. Switch VDOM context in CLI',cmds:['config vdom','edit <VDOM_NAME>','get system status','end','config global']}
 ]},
 'cfg-ipsec':{t:'IPsec site-to-site VPN',s:'info',type:'config',sections:[
@@ -4788,7 +4788,7 @@ wanopt:{t:'WAN Optimization',s:'med',type:'trouble',chips:['Tunnel not establish
 'cfg-sslvpn':{t:'SSL VPN full config',s:'info',type:'config',sections:[
 {t:'1. SSL VPN portal',icon:'💻',cmds:['config vpn ssl web portal','edit tunnel-portal','set tunnel-mode enable','set split-tunneling enable','set split-tunneling-routing-address LAN-SUBNET','set dns-server1 10.0.0.1','set dns-server2 8.8.8.8','next','end']},
 {t:'2. SSL VPN settings',cmds:['config vpn ssl settings','set servercert <CERT_NAME>','set tunnel-ip-pools SSLVPN-POOL','set port 10443','set source-interface wan1','set default-portal tunnel-portal','config authentication-rule','edit 1','set groups SSLVPN-USERS','set portal tunnel-portal','end','end']},
-{t:'3. LDAP server config',cmds:['config user ldap','edit CORP-LDAP','set server 10.0.1.10','set cnid sAMAccountName','set dn DC=corp,DC=local','set type regular','set username CN=svc-fgt,OU=SVC,DC=corp,DC=local','set password <SVC_PASSWORD>','end']},
+{t:'3. LDAP server config',cmds:['config user ldap','edit CORP-LDAP','set server 10.0.1.10','set cnid sAMAccountName','set dn DC=corp,DC=local','set type regular','set username CN=SVC_ACCOUNT,OU=SVC,DC=corp,DC=local','set password <SVC_PASSWORD>','end']},
 {t:'4. User group with LDAP member',cmds:['config user group','edit SSLVPN-USERS','set member CORP-LDAP','config match','edit 1','set server-name CORP-LDAP','set group-name CN=VPN-Users,OU=Groups,DC=corp,DC=local','end','end']},
 {t:'5. IP pool for tunnel clients',cmds:['config firewall address','edit SSLVPN-POOL','set type iprange','set start-ip 10.200.0.10','set end-ip 10.200.0.100','next','end']},
 {t:'6. Firewall policy for SSL VPN traffic',cmds:['config firewall policy','edit 20','set name SSL-VPN-TO-LAN','set srcintf ssl.root','set dstintf lan','set srcaddr SSLVPN-POOL','set dstaddr LAN-SUBNET','set action accept','set service ALL','set logtraffic all','next','end']}
@@ -5359,7 +5359,7 @@ const NW_ASSISTANT_PACKS={
   ha:{label:'HA / Cluster',color:'warn',symptoms:'HA failover, split brain, out of sync, heartbeat issue, session pickup issue',cmds:['get system ha status','diagnose sys ha status','diagnose sys ha checksum show','diagnose sys ha dump-by group','execute ha manage <INDEX>','get system performance status'],keys:['ha','cluster','sync','heartbeat','failover','primary','secondary','checksum']},
   security:{label:'Security Profiles / Logs',color:'warn',symptoms:'UTM blocks traffic, IPS/AV/WebFilter denies, app control issue, log explains block',cmds:['show firewall policy <POLICY_ID>','show firewall profile-protocol-options','show antivirus profile','show ips sensor','show webfilter profile','execute log filter category 1','execute log display'],keys:['ips','virus','webfilter','blocked','utm','profile','threat','signature','category']},
   sniffer:{label:'Packet Capture / Wireshark',color:'info',symptoms:'Need proof traffic arrives/leaves, SYN without SYN-ACK, resets, retransmissions, port reachability',cmds:['diagnose sniffer packet any "host <SRC_IP> and host <DST_IP>" 4 100 l','diagnose debug flow filter addr <SRC_IP>','diagnose debug flow filter daddr <DST_IP>','diagnose debug flow trace start 20','diagnose debug enable','diagnose debug disable','diagnose debug reset'],keys:['syn','syn-ack','rst','icmp','retransmission','sniffer','pcap','wireshark','packet']},
-  auth:{label:'Authentication / LDAP / RADIUS',color:'warn',symptoms:'Admin login fails, SSL VPN auth fails, LDAP/RADIUS timeout, MFA issue, group mismatch',cmds:['diagnose test authserver ldap <SERVER> <USER> <PASSWORD>','diagnose test authserver radius <SERVER> <USER> <PASSWORD>','diagnose debug application fnbamd -1','diagnose debug enable','diagnose debug disable','show user ldap','show user radius','show user group'],keys:['ldap','radius','fnbamd','mfa','token','group','auth','invalid password','timeout']},
+  auth:{label:'Authentication / LDAP / RADIUS',color:'warn',symptoms:'Admin login fails, SSL VPN auth fails, LDAP/RADIUS timeout, MFA issue, group mismatch',cmds:['diagnose test authserver ldap <SERVER> <USER> REPLACE_WITH_PASSWORD','diagnose test authserver radius <SERVER> <USER> REPLACE_WITH_PASSWORD','diagnose debug application fnbamd -1','diagnose debug enable','diagnose debug disable','show user ldap','show user radius','show user group'],keys:['ldap','radius','fnbamd','mfa','token','group','auth','invalid password','timeout']},
   certificates:{label:'Certificates / TLS',color:'warn',symptoms:'Certificate warning, expired cert, SSL inspection issue, admin GUI cert problem, VPN cert error',cmds:['get vpn certificate local details','show vpn certificate local','show vpn certificate ca','diagnose vpn certificate local list','show firewall ssl-ssh-profile','get system status'],keys:['certificate','cert','expired','ssl','tls','ca','issuer','subject','inspection']},
   logging:{label:'Logging / FortiAnalyzer',color:'info',symptoms:'Logs missing, FAZ disconnected, wrong log category, traffic log not visible, disk logging issue',cmds:['get log fortianalyzer setting','diagnose test application miglogd 20','diagnose test application miglogd 6','execute log filter category 0','execute log display','show log setting','show log fortianalyzer setting'],keys:['log','faz','fortianalyzer','miglogd','logging','disk','traffic log','event log']},
   config:{label:'Config / Change Plan',color:'warn',symptoms:'Need a safe change plan, compare config, build config, migrate setting, rollback checklist',cmds:['show full-configuration','show system global','execute backup config flash <FILE_NAME>','diagnose sys config lock-info','execute revision list config','execute restore config flash <FILE_NAME>'],keys:['config','change','backup','rollback','revision','migrate','object','policy']},
@@ -5870,7 +5870,7 @@ function renderFreeAITab(el){
   <div id="groqKeyPanel" style="display:none;flex-direction:column;gap:8px;background:var(--b2);border:1px solid var(--br);border-radius:10px;padding:12px 14px;margin-bottom:12px">
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <span style="font-size:11px;font-weight:600;color:var(--t2);white-space:nowrap">🔑 ${freeAIProvider==='claude'?'Claude':'Groq'} Key</span>
-      <input type="password" id="groqApiKeyInput" placeholder="${freeAIProvider==='claude'?'sk-ant-...':'gsk_...'}" value="${escapeHtml(freeAIProvider==='claude'?claudeApiKeyFree:groqApiKeyFree)}"
+      <input type="password" id="groqApiKeyInput" placeholder="${freeAIProvider==='claude'?'sk-ant-...':'gsk_...'}" value="" autocomplete="new-password" data-lpignore="true" data-1p-ignore="true"
         style="flex:1;min-width:160px;background:var(--bg);border:1px solid var(--br);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--t);font-family:var(--mono);outline:none">
       <button class="sbtn" id="saveGroqKeyBtn" style="white-space:nowrap;padding:6px 14px">💾 Save</button>
       <button class="sbtn" id="clearGroqKeyBtn" style="white-space:nowrap;padding:6px 14px;background:#B91C1C">🗑️ Clear Key</button>
@@ -6122,21 +6122,21 @@ index=5 ifname=port3 ip=10.10.1.105 mac=00:1a:2b:3c:4e:70 state=00000004 retry=0
 index=5 ifname=port3 ip=10.10.1.105 mac=aa:bb:cc:dd:ee:ff state=00000004 retry=0 ref=1 use=3`,
 
     ldap_locked:
-`diagnose test authserver ldap CORP-LDAP jdoe Passw0rd!
-authenticate 'jdoe' against 'CORP-LDAP' succeeded!
+`diagnose test authserver ldap CORP-LDAP USER_A REPLACE_WITH_PASSWORD
+authenticate 'USER_A' against 'CORP-LDAP' succeeded!
 Group membership(s) - CN=VPN-USERS,OU=Groups,DC=corp,DC=local
                     - CN=All-Staff,OU=Groups,DC=corp,DC=local
 
-diagnose test authserver ldap CORP-LDAP hacker WrongPass
-authenticate 'hacker' against 'CORP-LDAP' failed!
+diagnose test authserver ldap CORP-LDAP USER_UNKNOWN REPLACE_WITH_PASSWORD
+authenticate 'USER_UNKNOWN' against 'CORP-LDAP' failed!
 Error: 49 (Invalid credentials)
 
-diagnose test authserver ldap CORP-LDAP svc-fgt ServicePass123
-authenticate 'svc-fgt' against 'CORP-LDAP' failed!
+diagnose test authserver ldap CORP-LDAP SVC_ACCOUNT REPLACE_WITH_PASSWORD
+authenticate 'SVC_ACCOUNT' against 'CORP-LDAP' failed!
 Error: 775 (Account locked out)
 
-diagnose test authserver ldap CORP-LDAP bwilson Summer2024!
-authenticate 'bwilson' against 'CORP-LDAP' failed!
+diagnose test authserver ldap CORP-LDAP USER_C REPLACE_WITH_PASSWORD
+authenticate 'USER_C' against 'CORP-LDAP' failed!
 Error: 532 (Password expired)`,
 
     session_nat:
@@ -6233,8 +6233,8 @@ stat: rxp=4823441 txp=3912847 rxb=3241887432 txb=2891234123
 `get vpn ssl monitor
 SSL VPN Login Users:
 Index   User      Group       Auth Type   Timeout   From
-0       jdoe      VPN-USERS   1(1)        28800     203.0.113.50
-1       asmith    VPN-USERS   1(1)        28800     198.51.100.12
+0       USER_A      VPN-USERS   1(1)        28800     203.0.113.50
+1       USER_B    VPN-USERS   1(1)        28800     198.51.100.12
 
 SSL VPN statistics:
   SSL handshake failed        :          14
@@ -6244,7 +6244,7 @@ SSL VPN statistics:
 
 diagnose vpn ssl list
 name=SSLVPN-USERS, type=1, status=2
-  user=bwilson, src=192.0.2.55, dst=10.200.0.15, idx=2
+  user=USER_C, src=192.0.2.55, dst=10.200.0.15, idx=2
   last_error=peer certificate verify failed
 
 diagnose debug application sslvpn -1
@@ -6370,7 +6370,7 @@ show firewall policy 612
 `get vpn ssl monitor
 SSL VPN Login Users:
 Index   User      Group       From          Tunnel IP
-0       jdoe      VPN-USERS   203.0.113.50  10.200.0.11
+0       USER_A      VPN-USERS   203.0.113.50  10.200.0.11
 
 -- User reports: can reach VPN resources but internet stops working --
 
@@ -7034,16 +7034,16 @@ Average sessions: 24820 sessions in 1 minute
 -- 4. Upgrade RAM or hardware if sustained --`,
 
     radius_timeout:
-`diagnose test authserver radius CORP-RADIUS pap jdoe Passw0rd!
+`diagnose test authserver radius CORP-RADIUS pap USER_A REPLACE_WITH_PASSWORD
 Connect to server 10.0.0.20:1812...
 timeout (5000ms) — no response
 
 diagnose debug application fnbamd -1
 diagnose debug enable
 
-fnbamd: start radius auth for user jdoe
+fnbamd: start radius auth for user USER_A
 fnbamd: connect to 10.0.0.20:1812 (UDP)
-fnbamd: sent Access-Request for jdoe
+fnbamd: sent Access-Request for USER_A
 fnbamd: waiting for response (timeout=5000ms)
 fnbamd: no response from 10.0.0.20:1812 — timeout
 fnbamd: trying secondary 10.0.0.21:1812
@@ -7060,7 +7060,7 @@ PING 10.0.0.20: 100% packet loss
 `diagnose firewall auth list
 Total auth sessions: 12
 
--- jdoe NOT in list despite being logged into domain --
+-- USER_A NOT in list despite being logged into domain --
 
 get user fsso
 Server: FSSO-AGENT  10.0.0.15:8000
@@ -7071,9 +7071,9 @@ diagnose debug authd fsso -1
 diagnose debug enable
 
 fsso: received logon event from 10.0.0.15
-fsso: user=CORP\jdoe ip=10.10.1.100 groups=Domain Users
+fsso: user=CORP\USER_A ip=10.10.1.100 groups=Domain Users
 fsso: group lookup: CN=VPN-USERS not in user group list
-fsso: user jdoe matched no FSSO group — skipping
+fsso: user USER_A matched no FSSO group — skipping
 
 -- Root cause: FSSO group "Domain Users" not mapped to FortiGate group --
 config user group
@@ -7092,7 +7092,7 @@ end`,
 `diagnose debug application fnbamd -1
 diagnose debug enable
 
-fnbamd: start 2FA auth for user jdoe
+fnbamd: start 2FA auth for user USER_A
 fnbamd: primary auth (LDAP) succeeded
 fnbamd: sending OTP request to FortiToken Mobile
 fnbamd: waiting for OTP response (timeout=60s)
@@ -8665,11 +8665,11 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
       ['Set identity and management basics','Set hostname, DNS lookup behavior, domain name, and an encrypted enable secret.','hostname SW-ACCESS-01\nno ip domain-lookup\nip domain-name lab.local\nenable secret <ENABLE_SECRET>','caution'],
       ['Create VLANs and management SVI','Create user/server VLANs, then add an SVI so the switch can be managed by IP.','vlan 10\n name USERS\nvlan 20\n name SERVERS\ninterface vlan 10\n ip address 10.10.10.2 255.255.255.0\n no shutdown','caution'],
       ['Configure access and trunk ports','Access ports carry one VLAN. Trunks carry multiple VLANs between switches, firewalls, or routers.','interface GigabitEthernet1/0/10\n description USER-PORT\n switchport mode access\n switchport access vlan 10\n spanning-tree portfast\n spanning-tree bpduguard enable\ninterface GigabitEthernet1/0/48\n description UPLINK\n switchport mode trunk\n switchport trunk allowed vlan 10,20','caution'],
-      ['Add default gateway and SSH admin','Layer 2 switches need a default gateway for management traffic. SSH gives secure remote CLI access.','ip default-gateway 10.10.10.1\nusername admin privilege 15 secret <PASSWORD>\ncrypto key generate rsa modulus 2048\nip ssh version 2\nline vty 0 4\n login local\n transport input ssh','caution'],
+      ['Add default gateway and SSH admin','Layer 2 switches need a default gateway for management traffic. SSH gives secure remote CLI access.','ip default-gateway 10.10.10.1\nusername admin privilege 15 secret REPLACE_WITH_PASSWORD\ncrypto key generate rsa modulus 2048\nip ssh version 2\nline vty 0 4\n login local\n transport input ssh','caution'],
       ['Verify and save','Check VLANs, trunks, management IP, neighbors, then save startup configuration.','show vlan brief\nshow interfaces trunk\nshow ip interface brief\nshow cdp neighbors\ncopy running-config startup-config','ro']
     ],router:[
       ['Enter configuration mode','Start from a clean global configuration context.','configure terminal','caution'],
-      ['Set hostname and secure access','Basic identity and SSH management for a router or L3 switch.','hostname RTR-EDGE-01\nno ip domain-lookup\nip domain-name lab.local\nusername admin privilege 15 secret <PASSWORD>\ncrypto key generate rsa modulus 2048\nip ssh version 2','caution'],
+      ['Set hostname and secure access','Basic identity and SSH management for a router or L3 switch.','hostname RTR-EDGE-01\nno ip domain-lookup\nip domain-name lab.local\nusername admin privilege 15 secret REPLACE_WITH_PASSWORD\ncrypto key generate rsa modulus 2048\nip ssh version 2','caution'],
       ['Configure routed interfaces','Assign IPs to WAN/LAN routed interfaces and bring them up.','interface GigabitEthernet0/0\n description WAN\n ip address <WAN_IP> <WAN_MASK>\n no shutdown\ninterface GigabitEthernet0/1\n description LAN\n ip address <LAN_GW_IP> <LAN_MASK>\n no shutdown','caution'],
       ['Add routing','Use a default route for internet/upstream and specific routes for internal networks.','ip route 0.0.0.0 0.0.0.0 <UPSTREAM_GW>\nip route <REMOTE_NET> <MASK> <NEXT_HOP>','caution'],
       ['Optional dynamic routing','Advertise connected networks with OSPF when multiple routers exchange routes.','router ospf 10\n router-id <ROUTER_ID>\n network <LAN_NET> <WILDCARD> area 0\n network <TRANSIT_NET> <WILDCARD> area 0','caution'],
@@ -8677,7 +8677,7 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
     ]},
     aruba:{name:'ArubaOS-CX',switch:[
       ['Enter configuration mode','ArubaOS-CX uses a Cisco-like config mode but different interface and VLAN syntax.','configure terminal','caution'],
-      ['Set identity and admin access','Name the switch, create an admin user, and enable SSH management.','hostname SW-ACCESS-01\nuser admin group administrators password plaintext <PASSWORD>\nssh server vrf mgmt','caution'],
+      ['Set identity and admin access','Name the switch, create an admin user, and enable SSH management.','hostname SW-ACCESS-01\nuser admin group administrators password plaintext REPLACE_WITH_PASSWORD\nssh server vrf mgmt','caution'],
       ['Create VLANs and SVI','Create VLANs and add an IP interface for management or routing.','vlan 10\n name USERS\nvlan 20\n name SERVERS\ninterface vlan 10\n ip address 10.10.10.2/24\n no shutdown','caution'],
       ['Configure access and trunk ports','Use access VLAN for endpoints and trunk allowed VLANs for uplinks.','interface 1/1/10\n description USER-PORT\n no shutdown\n vlan access 10\n spanning-tree port-type admin-edge\n spanning-tree bpdu-guard\ninterface 1/1/48\n description UPLINK\n no shutdown\n vlan trunk native 10\n vlan trunk allowed 10,20','caution'],
       ['Add default route or gateway','If routing is enabled, use an IP route. For management VRF, use the management gateway design.','ip route 0.0.0.0/0 <NEXT_HOP>','caution'],
@@ -8687,7 +8687,7 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
       ['Configure routed/SVI interfaces','Use VLAN interfaces for gateway routing, or routed physical interfaces where supported.','vlan 10\n name USERS\ninterface vlan 10\n ip address 10.10.10.1/24\n no shutdown\ninterface vlan 20\n ip address 10.10.20.1/24\n no shutdown','caution'],
       ['Create static routes','Add upstream default route and any remote network routes.','ip route 0.0.0.0/0 <UPSTREAM_GW>\nip route <REMOTE_PREFIX> <NEXT_HOP>','caution'],
       ['Optional OSPF','Advertise local prefixes into OSPF for routed campus designs.','router ospf 10\n router-id <ROUTER_ID>\n area 0.0.0.0\ninterface vlan 10\n ip ospf 10 area 0.0.0.0','caution'],
-      ['Secure management','Use local admin/SSH and avoid insecure management exposure.','ssh server vrf default\nuser admin group administrators password plaintext <PASSWORD>','caution'],
+      ['Secure management','Use local admin/SSH and avoid insecure management exposure.','ssh server vrf default\nuser admin group administrators password plaintext REPLACE_WITH_PASSWORD','caution'],
       ['Verify and save','Check route table, OSPF neighbors, and reachability.','show ip route\nshow ip ospf neighbor\nping <DESTINATION> source <SOURCE_IP>\nwrite memory','ro']
     ]},
     huawei:{name:'Huawei VRP',switch:[
@@ -8695,14 +8695,14 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
       ['Set identity and management','Set hostname, create VLAN interface, and prepare management IP.','sysname SW-ACCESS-01\nvlan 10\ndescription USERS\ninterface Vlanif10\n ip address 10.10.10.2 255.255.255.0','caution'],
       ['Configure access ports','Set endpoint-facing ports as access and place them in the correct VLAN.','interface GigabitEthernet0/0/10\n description USER-PORT\n port link-type access\n port default vlan 10\n stp edged-port enable','caution'],
       ['Configure trunk uplink','Trunks carry multiple VLANs toward aggregation, router, or firewall.','interface GigabitEthernet0/0/48\n description UPLINK\n port link-type trunk\n port trunk allow-pass vlan 10 20\n port trunk pvid vlan 10','caution'],
-      ['Secure SSH access','Create local user and allow SSH on VTY lines.','aaa\n local-user admin password cipher <PASSWORD>\n local-user admin privilege level 15\n local-user admin service-type ssh\nuser-interface vty 0 4\n authentication-mode aaa\n protocol inbound ssh','caution'],
+      ['Secure SSH access','Create local user and allow SSH on VTY lines.','aaa\n local-user admin password cipher REPLACE_WITH_PASSWORD\n local-user admin privilege level 15\n local-user admin service-type ssh\nuser-interface vty 0 4\n authentication-mode aaa\n protocol inbound ssh','caution'],
       ['Verify and save','Display VLAN, interface, neighbors, then save.','display vlan\ndisplay ip interface brief\ndisplay lldp neighbor brief\nsave','ro']
     ],router:[
       ['Enter system view','Start global configuration.','system-view','caution'],
       ['Set identity and routed interfaces','Configure router name and interface IPs.','sysname RTR-EDGE-01\ninterface GigabitEthernet0/0/0\n description WAN\n ip address <WAN_IP> <MASK>\n undo shutdown\ninterface GigabitEthernet0/0/1\n description LAN\n ip address <LAN_GW_IP> <MASK>\n undo shutdown','caution'],
       ['Add static routing','Default route sends unknown destinations upstream.','ip route-static 0.0.0.0 0.0.0.0 <UPSTREAM_GW>\nip route-static <REMOTE_NET> <MASK> <NEXT_HOP>','caution'],
       ['Optional OSPF','Create OSPF process, area, and advertise networks.','ospf 10 router-id <ROUTER_ID>\n area 0.0.0.0\n  network <LAN_NET> <WILDCARD>','caution'],
-      ['Secure management','Use AAA local users and SSH-only VTY access.','aaa\n local-user admin password cipher <PASSWORD>\n local-user admin privilege level 15\n local-user admin service-type ssh\nuser-interface vty 0 4\n authentication-mode aaa\n protocol inbound ssh','caution'],
+      ['Secure management','Use AAA local users and SSH-only VTY access.','aaa\n local-user admin password cipher REPLACE_WITH_PASSWORD\n local-user admin privilege level 15\n local-user admin service-type ssh\nuser-interface vty 0 4\n authentication-mode aaa\n protocol inbound ssh','caution'],
       ['Verify and save','Confirm routes, OSPF peers, and connectivity.','display ip routing-table\ndisplay ospf peer\nping -a <SOURCE_IP> <DESTINATION>\nsave','ro']
     ]},
     fortigate:{name:'FortiGate / FortiOS',switch:[
@@ -8932,7 +8932,7 @@ function renderBulkAnonTab(el){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;min-height:0">
       <div style="display:flex;flex-direction:column;gap:6px;min-height:0">
         <div style="font-size:11px;font-weight:700;color:var(--t2)">📥 Input — paste CLI output</div>
-        <textarea id="bulkAnonInput" placeholder="Paste FortiGate CLI output here...&#10;&#10;Example:&#10;  set remote-gw 203.0.113.5&#10;  set psksecret MySecret123&#10;  set username admin&#10;  MAC: aa:bb:cc:dd:ee:ff" style="flex:1;min-height:0;width:100%;background:#010409;color:#e6edf3;font-family:var(--mono);font-size:11.5px;border:1px solid var(--br);border-radius:6px;padding:10px;resize:none;outline:none;line-height:1.7;box-sizing:border-box"></textarea>
+        <textarea id="bulkAnonInput" placeholder="Paste FortiGate CLI output here...&#10;&#10;Example:&#10;  set remote-gw 203.0.113.5&#10;  set psksecret REPLACE_WITH_PSK&#10;  set username admin&#10;  MAC: aa:bb:cc:dd:ee:ff" style="flex:1;min-height:0;width:100%;background:#010409;color:#e6edf3;font-family:var(--mono);font-size:11.5px;border:1px solid var(--br);border-radius:6px;padding:10px;resize:none;outline:none;line-height:1.7;box-sizing:border-box"></textarea>
       </div>
       <div style="display:flex;flex-direction:column;gap:6px;min-height:0">
         <div style="display:flex;align-items:center;gap:8px">
@@ -9499,7 +9499,7 @@ function setCfgType(type, btn){
       ${inp('sslvpn_lan','LAN subnet allowed (CIDR)','192.168.1.0/24','192.168.1.0/24')}
       ${inp('ldap_server','LDAP server IP','10.0.1.10')}
       ${inp('ldap_dn','LDAP base DN','DC=corp,DC=local','DC=corp,DC=local')}
-      ${inp('ldap_user','LDAP bind username','CN=svc-fgt,OU=SVC,DC=corp,DC=local')}
+      ${inp('ldap_user','LDAP bind username','CN=SVC_ACCOUNT,OU=SVC,DC=corp,DC=local')}
       ${inp('ldap_pass','LDAP bind password','LdapPass123')}
       ${inp('vpn_group','AD group for VPN access','CN=VPN-Users,OU=Groups,DC=corp,DC=local')}
       ${inp('wan_intf_ssl','WAN interface','wan1','wan1')}`,
@@ -9614,7 +9614,7 @@ function generateConfig(){
 
   if(type==='initial'){
     const hostname=g('hostname')||'FGT-SITE-01';
-    const adminPass=g('admin_pass')||'Admin@123';
+    const adminPass=g('admin_pass')||'REPLACE_WITH_ADMIN_PASSWORD';
     const adminPort=g('admin_port')||'8443';
     const mgmtCidr=g('mgmt_ip')||'10.0.0.1/24';
     const mgmtIp=cidrToIp(mgmtCidr);
@@ -9752,7 +9752,7 @@ end`;
     const name=g('tunnel_name')||'VPN-TO-SITE-B';
     const wanIntf=g('wan_intf')||'wan1';
     const peerIp=g('peer_ip')||'198.51.100.5';
-    const psk=g('psk')||'ChangeMe123!';
+    const psk=g('psk')||'REPLACE_WITH_STRONG_PASSWORD';
     const ikeVer=gs('ike_ver')||'2';
     const p1Proposal=gs('p1_proposal')||'aes256-sha256';
     const p2Proposal=gs('p2_proposal')||'aes256-sha256';
@@ -9894,7 +9894,7 @@ end`;
     const lanMask=cidrToMask(lanSubnet);
     const ldapServer=g('ldap_server')||'10.0.1.10';
     const ldapDn=g('ldap_dn')||'DC=corp,DC=local';
-    const ldapUser=g('ldap_user')||'CN=svc-fgt,OU=SVC,DC=corp,DC=local';
+    const ldapUser=g('ldap_user')||'CN=SVC_ACCOUNT,OU=SVC,DC=corp,DC=local';
     const ldapPass=g('ldap_pass')||'LdapPass123';
     const vpnGroup=g('vpn_group')||'CN=VPN-Users,OU=Groups,DC=corp,DC=local';
     const wanIntf=g('wan_intf_ssl')||'wan1';
@@ -11128,7 +11128,7 @@ function setCfgType(type, btn){
       ${inp('sslvpn_lan','LAN subnet allowed (CIDR)','192.168.1.0/24','192.168.1.0/24')}
       ${inp('ldap_server','LDAP server IP','10.0.1.10')}
       ${inp('ldap_dn','LDAP base DN','DC=corp,DC=local','DC=corp,DC=local')}
-      ${inp('ldap_user','LDAP bind username','CN=svc-fgt,OU=SVC,DC=corp,DC=local')}
+      ${inp('ldap_user','LDAP bind username','CN=SVC_ACCOUNT,OU=SVC,DC=corp,DC=local')}
       ${inp('ldap_pass','LDAP bind password','LdapPass123')}
       ${inp('vpn_group','AD group for VPN access','CN=VPN-Users,OU=Groups,DC=corp,DC=local')}
       ${inp('wan_intf_ssl','WAN interface','wan1','wan1')}`,
@@ -11243,7 +11243,7 @@ function generateConfig(){
 
   if(type==='initial'){
     const hostname=g('hostname')||'FGT-SITE-01';
-    const adminPass=g('admin_pass')||'Admin@123';
+    const adminPass=g('admin_pass')||'REPLACE_WITH_ADMIN_PASSWORD';
     const adminPort=g('admin_port')||'8443';
     const mgmtCidr=g('mgmt_ip')||'10.0.0.1/24';
     const mgmtIp=cidrToIp(mgmtCidr);
@@ -11381,7 +11381,7 @@ end`;
     const name=g('tunnel_name')||'VPN-TO-SITE-B';
     const wanIntf=g('wan_intf')||'wan1';
     const peerIp=g('peer_ip')||'198.51.100.5';
-    const psk=g('psk')||'ChangeMe123';
+    const psk=g('psk')||'REPLACE_WITH_STRONG_PASSWORD';
     const ikeVer=gs('ike_ver')||'2';
     const proposal=gs('proposal')||'aes256-sha256';
     const dhgrp=gs('dhgrp')||'14';
@@ -11492,7 +11492,7 @@ end
     const lanMask=cidrToMask(lanSubnet);
     const ldapServer=g('ldap_server')||'10.0.1.10';
     const ldapDn=g('ldap_dn')||'DC=corp,DC=local';
-    const ldapUser=g('ldap_user')||'CN=svc-fgt,OU=SVC,DC=corp,DC=local';
+    const ldapUser=g('ldap_user')||'CN=SVC_ACCOUNT,OU=SVC,DC=corp,DC=local';
     const ldapPass=g('ldap_pass')||'LdapPass123';
     const vpnGroup=g('vpn_group')||'CN=VPN-Users,OU=Groups,DC=corp,DC=local';
     const wanIntf=g('wan_intf_ssl')||'wan1';
@@ -12863,7 +12863,7 @@ end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div>
         set proposal aes256-sha256
         set dhgrp 14
         set remote-gw 10.0.0.2
-        set psksecret "NetWolf@Lab123!"
+        set psksecret "REPLACE_WITH_PSK"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div>`,
         },
@@ -12890,7 +12890,7 @@ end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div>
         set proposal aes256-sha256
         set dhgrp 14
         set remote-gw 10.0.0.1
-        set psksecret "NetWolf@Lab123!"
+        set psksecret "REPLACE_WITH_PSK"
     next
 end<button class="lab-cmd-copy" onclick="labCopyBlock(this)">Copy</button></div></div><div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#e3b341;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;background:#e3b34118;border-radius:4px 4px 0 0;border:1px solid #e3b34140;border-bottom:none;display:inline-block">PHASE 2 — ENCRYPTION DOMAIN (FGT-SITE-B)</div><div class="lab-cmd-block" style="border-radius:0 6px 6px 6px;margin-bottom:0">config vpn ipsec phase2-interface
     edit "SITE-B-TO-A-P2"
@@ -13887,14 +13887,14 @@ function renderSwCfg(el){
       router:'Use a convention like RTR-[LOCATION]-[NUMBER]. Example: RTR-EDGE-HQ-01',
     }[swType]);
     h+=inp('domain','Domain Name','company.local','company.local','Used for SSH key generation and DNS. Match your Active Directory domain.');
-    h+=inp('enable_pass',{cisco:'Enable Secret Password',aruba:'Admin Password',juniper:'Root Password',fortiswitch:'Admin Password'}[swVendor],'StrongPass123!','',{
+    h+=inp('enable_pass',{cisco:'Enable Secret Password',aruba:'Admin Password',juniper:'Root Password',fortiswitch:'Admin Password'}[swVendor],'REPLACE_WITH_PASSWORD','',{
       cisco:'The "enable secret" password. Required to enter privileged mode and make config changes. This is the most critical password on a Cisco device.',
       aruba:'AOS-CX uses role-based access — no enable mode. This is the administrator account password.',
       juniper:'Root (superuser) password for the device. Junos requires this before committing any config.',
       fortiswitch:'Admin account password for GUI and CLI access.',
     }[swVendor]);
     h+=inp('ssh_user','Admin Username','admin','admin','Local admin account for SSH access.');
-    h+=inp('ssh_pass','Admin Password','StrongPass123!','','Minimum 12 characters. Use mixed case, numbers and symbols. In production also configure RADIUS/TACACS+ for centralised auth.');
+    h+=inp('ssh_pass','Admin Password','REPLACE_WITH_PASSWORD','','Minimum 12 characters. Use mixed case, numbers and symbols. In production also configure RADIUS/TACACS+ for centralised auth.');
 
     // ── MANAGEMENT (all types) ───────────────────────────────
     const mgmtDesc={
@@ -14025,7 +14025,7 @@ function renderSwCfg(el){
             {v:'yes',l:'Yes — require RADIUS authentication before granting access'},
           ],'no','802.1X: before a device gets network access, it must authenticate via a RADIUS server (username/password or certificate). Prevents any unauthorised device from just plugging in. Requires RADIUS server (Cisco ISE, Windows NPS, FreeRADIUS).');
           h+=inp('radius_ip','RADIUS Server IP','10.0.0.10','','Your RADIUS server IP. Used for 802.1X authentication and AAA login to the switch itself.');
-          h+=inp('radius_key','RADIUS Shared Secret','RadiusSecret123','','Password shared between switch and RADIUS server. Must match on both sides exactly.');
+          h+=inp('radius_key','RADIUS Shared Secret','REPLACE_WITH_RADIUS_SECRET','','Password shared between switch and RADIUS server. Must match on both sides exactly.');
           h+=sel('dhcp_snoop','DHCP Snooping',[
             {v:'yes',l:'Yes — block rogue DHCP servers on access ports'},
             {v:'no',l:'No'},
@@ -14078,7 +14078,7 @@ function renderSwCfg(el){
         {v:'yes',l:'Yes — enable for NMS polling'},
         {v:'no',l:'No'},
       ],'yes','Allows PRTG, Zabbix, LibreNMS, SolarWinds to monitor interface stats, CPU, memory and receive alerts. SNMPv2c uses a community string as password. SNMPv3 (more secure) is recommended for production.');
-      h+=inp('snmp_community','SNMP Community String (Read-Only)','NetWolf-RO','NetWolf-RO','Read-only password for your NMS. Never use "public" or "private". Keep consistent across all devices.');
+      h+=inp('snmp_community','SNMP Community String (Read-Only)','REPLACE_WITH_SNMP_RO_COMMUNITY','REPLACE_WITH_SNMP_RO_COMMUNITY','Read-only password for your NMS. Never use "public" or "private". Keep consistent across all devices.');
       h+=inp('snmp_manager','NMS Server IP','10.0.0.5','','Only this IP can poll SNMP. Your monitoring server — PRTG, Zabbix, LibreNMS, SolarWinds.');
     }
 
@@ -14090,7 +14090,7 @@ function renderSwCfg(el){
     if(!out) return;
     const v=gv, hostname=v('hostname')||'SW-01', domain=v('domain')||'company.local';
     const mgmtVlan=v('mgmt_vlan')||'10', mgmtIp=v('mgmt_ip'), mgmtMask=v('mgmt_mask')||'255.255.255.0', mgmtGw=v('mgmt_gw');
-    const ntp=v('ntp'), syslog=v('syslog'), enablePass=v('enable_pass')||'ChangeMe123!', sshUser=v('ssh_user')||'admin', sshPass=v('ssh_pass')||'ChangeMe123!';
+    const ntp=v('ntp'), syslog=v('syslog'), enablePass=v('enable_pass')||'REPLACE_WITH_STRONG_PASSWORD', sshUser=v('ssh_user')||'admin', sshPass=v('ssh_pass')||'REPLACE_WITH_STRONG_PASSWORD';
     const vlanList=v('vlan_list')||'10:Management,20:Users,30:Servers', accessPorts=v('access_ports'), accessVlan=v('access_vlan')||'20';
     const trunkPorts=v('trunk_ports'), trunkAllowed=v('trunk_allowed')||'10,20,30', nativeVlan=v('native_vlan')||'1';
     const defRoute=v('default_route'), routingProto=v('routing_proto')||'static';
@@ -14100,7 +14100,7 @@ function renderSwCfg(el){
     const dhcpSnoop=v('dhcp_snoop')||'yes', dai=v('dai')||'yes', sshOnly=v('ssh_only')||'yes', banner=v('banner')||'yes';
     const bannerText=v('banner_text')||'AUTHORIZED ACCESS ONLY\nThis system is monitored. Unauthorized access is prohibited.';
     const poe=v('poe')||'no', stacking=v('stacking')||'no', stackId=v('stack_id')||'1';
-    const lldp=v('lldp')||'yes', snmp=v('snmp')||'yes', snmpComm=v('snmp_community')||'NetWolf-RO', snmpMgr=v('snmp_manager');
+    const lldp=v('lldp')||'yes', snmp=v('snmp')||'yes', snmpComm=v('snmp_community')||'REPLACE_WITH_SNMP_RO_COMMUNITY', snmpMgr=v('snmp_manager');
     // Router-specific fields
     const wanInterface=v('wan_interface'), wanIp=v('wan_ip'), wanMask=v('wan_mask')||'255.255.255.252', wanGw=v('wan_gw');
     const lanInterface=v('lan_interface'), lanIp=v('lan_ip'), lanMask=v('lan_mask')||'255.255.255.0';
@@ -14140,8 +14140,8 @@ ${bannerText}
 ^`:''}
 
 ! ── LOCAL USER & AUTHENTICATION ──────────────
-username ${sshUser||'admin'} privilege 15 secret 0 ${sshPass||'ChangeMe123!'}
-enable secret 0 ${enablePass||'ChangeMe123!'}
+username ${sshUser||'admin'} privilege 15 secret 0 ${sshPass||'REPLACE_WITH_STRONG_PASSWORD'}
+enable secret 0 ${enablePass||'REPLACE_WITH_STRONG_PASSWORD'}
 aaa new-model
 aaa authentication login default local
 aaa authorization exec default local
@@ -14282,7 +14282,7 @@ no cdp run
 dot1x system-auth-control
 radius server RADIUS-SRV
  address ipv4 ${radiusIp} auth-port 1812 acct-port 1813
- key ${radiusKey||'secret'}
+ key ${radiusKey||'REPLACE_WITH_RADIUS_SECRET'}
 !\n`;
           if(accessPorts) cfg+=`interface range ${accessPorts}\n authentication port-control auto\n dot1x pae authenticator\n!\n`;
         }
@@ -14324,7 +14324,7 @@ hostname ${hostname}
 `;
       if(banner==='yes') cfg+=`\nbanner motd "${bannerText}"\n`;
 
-      cfg+=`\n# ── LOCAL USER ────────────────────────────────\nuser ${sshUser||'admin'} password plaintext ${sshPass||'ChangeMe123!'} role administrators\n`;
+      cfg+=`\n# ── LOCAL USER ────────────────────────────────\nuser ${sshUser||'admin'} password plaintext ${sshPass||'REPLACE_WITH_STRONG_PASSWORD'} role administrators\n`;
 
       if(swCfgType==='full'||swCfgType==='vlan'){
         cfg+=`\n# ── VLANs ─────────────────────────────────────\n`;
@@ -14379,9 +14379,9 @@ hostname ${hostname}
 # ═══════════════════════════════════════════════
 set system host-name ${hostname}
 set system domain-name ${domain}
-set system root-authentication plain-text-password-value ${enablePass||'ChangeMe123!'}
+set system root-authentication plain-text-password-value ${enablePass||'REPLACE_WITH_STRONG_PASSWORD'}
 set system login user ${sshUser||'admin'} class super-user
-set system login user ${sshUser||'admin'} authentication plain-text-password-value ${sshPass||'ChangeMe123!'}
+set system login user ${sshUser||'admin'} authentication plain-text-password-value ${sshPass||'REPLACE_WITH_STRONG_PASSWORD'}
 set system services ssh protocol-version v2
 set system services ssh max-sessions-per-connection 4
 set system services netconf ssh
@@ -14469,7 +14469,7 @@ end
 # ── ADMIN ACCOUNT ─────────────────────────────
 config system admin
   edit "${sshUser||'admin'}"
-    set password ${sshPass||'ChangeMe123!'}
+    set password ${sshPass||'REPLACE_WITH_STRONG_PASSWORD'}
     set accprofile "super_admin"
     set ssh-public-key1 ""
   next
@@ -15545,10 +15545,10 @@ function renderSecurityTab(el){
 function zbxUseDemo(){
   const u=document.getElementById('zbx-url'),t=document.getElementById('zbx-token');
   if(u)u.value='http://127.0.0.1:5052';
-  if(t)t.value='demo-token';
+  if(t)t.value='';
   localStorage.setItem('netwolf_zabbix_url','http://127.0.0.1:5052');
-  localStorage.setItem('netwolf_zabbix_token','demo-token');
-  zbxSetStatus('Local demo API selected. Click Test, Problems, or Hosts.','warn');
+  localStorage.removeItem('netwolf_zabbix_token');
+  zbxSetStatus('Local demo API selected. No token is stored for demo mode. Click Test, Problems, or Hosts.','warn');
 }
 function zbxSaveSettings(){
   const url=document.getElementById('zbx-url')?.value.trim()||'';
@@ -15621,7 +15621,7 @@ function renderMonitoringTab(el){
 7. Test connection
 8. Load Problems or Hosts</pre><div class="cnote">The token is stored only in this browser localStorage. For shared NOC computers, clear it after use.</div></div></div>
   </div><div>
-    <div class="cblock"><div class="chdr"><div class="chdr-l">Zabbix Connection</div></div><div class="cbody"><div class="zbx-field"><label>Zabbix URL</label><input id="zbx-url" name="netwolf-zbx-endpoint" value="${escapeHtml(url)}" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" placeholder="https://zabbix.example.com/zabbix"></div><div class="zbx-field" style="margin-top:8px"><label>API token</label><input id="zbx-token" name="netwolf-zbx-api-bearer" type="password" value="${escapeHtml(tok)}" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" readonly onfocus="this.removeAttribute('readonly')" placeholder="Paste read-only API token"></div><div class="zbx-actions"><a class="sbtn" href="/monitoring.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:#0F766E;text-align:center">Open standalone dashboard</a><button class="sbtn" onclick="zbxUseDemo()" style="background:#7C3AED">Use local demo</button><button class="sbtn" onclick="zbxSaveSettings()">Save local</button><button class="sbtn" onclick="zbxTestConnection()" style="background:#2563EB">Test</button><button class="sbtn" onclick="zbxLoadProblems()" style="background:#15803D">Problems</button><button class="sbtn" onclick="zbxLoadHosts()">Hosts</button><button class="sbtn" onclick="zbxDemo()" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Demo</button><button class="sbtn" onclick="zbxClearSettings()" style="background:#991B1B">Clear</button></div><div id="zbx-status" class="zbx-status warn">Not connected. For testing, start the local demo server and click Use local demo.</div></div></div>
+    <div class="cblock"><div class="chdr"><div class="chdr-l">Zabbix Connection</div></div><div class="cbody"><div class="zbx-field"><label>Zabbix URL</label><input id="zbx-url" name="netwolf-zbx-endpoint" value="${escapeHtml(url)}" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" placeholder="https://zabbix.example.com/zabbix"></div><div class="zbx-field" style="margin-top:8px"><label>API token</label><input id="zbx-token" name="netwolf-zbx-api-bearer" type="password" value="" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" readonly onfocus="this.removeAttribute('readonly')" placeholder="Paste read-only API token; saved token stays hidden"></div><div class="zbx-actions"><a class="sbtn" href="/monitoring.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:#0F766E;text-align:center">Open standalone dashboard</a><button class="sbtn" onclick="zbxUseDemo()" style="background:#7C3AED">Use local demo</button><button class="sbtn" onclick="zbxSaveSettings()">Save local</button><button class="sbtn" onclick="zbxTestConnection()" style="background:#2563EB">Test</button><button class="sbtn" onclick="zbxLoadProblems()" style="background:#15803D">Problems</button><button class="sbtn" onclick="zbxLoadHosts()">Hosts</button><button class="sbtn" onclick="zbxDemo()" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Demo</button><button class="sbtn" onclick="zbxClearSettings()" style="background:#991B1B">Clear</button></div><div id="zbx-status" class="zbx-status warn">Not connected. For testing, start the local demo server and click Use local demo.</div></div></div>
     <div class="cblock" style="margin-top:14px"><div class="chdr"><div class="chdr-l">Monitoring Output</div></div><div class="cbody"><div id="zbx-output" class="zbx-empty">Click Demo, Problems, or Hosts.</div></div></div>
   </div></div>`;
 }
