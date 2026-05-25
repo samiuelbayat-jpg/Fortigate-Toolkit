@@ -3,183 +3,682 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://127.0.0.1:5052 http://localhost:5052; img-src 'self' data:; object-src 'none'; base-uri 'self';">
-  <title>NetWolf Monitoring Output</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://127.0.0.1:5052 http://localhost:5052 https:; img-src 'self' data:; object-src 'none'; base-uri 'self';">
+  <title>NetWolf — Zabbix Monitor</title>
   <style>
-    :root{--a:#1D9E75;--ad:#0F6E56;--bg:#0d1117;--panel:#111923;--panel2:#151f2b;--line:#30363d;--text:#e6edf3;--muted:#9aa7a1;--red:#d40000;--green:#22c55e;--yellow:#eab308;--orange:#f97316;--bad:#ef4444;--blue:#2563eb;--wall:radial-gradient(circle at 12% 18%,rgba(29,158,117,.16),transparent 28%),radial-gradient(circle at 86% 8%,rgba(88,166,255,.10),transparent 24%),linear-gradient(135deg,#0d1117 0%,#081710 100%);--chromeBg:linear-gradient(180deg,rgba(18,58,46,.96),rgba(13,35,27,.96));--panelBg:linear-gradient(180deg,rgba(22,27,34,.94),rgba(15,25,21,.96));--themeLine:rgba(29,158,117,.35);--panelShadow:0 12px 28px rgba(0,0,0,.22)}
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:var(--wall);background-attachment:fixed;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
-    body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.10),rgba(0,0,0,.26));z-index:0}
-    #matrixRain{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0;opacity:.46}
-    button{border:0;border-radius:6px;padding:9px 12px;color:white;background:var(--blue);font-weight:800;font-size:12px;cursor:pointer}
-    button.secondary{background:#2a3646;color:#dbeafe;border:1px solid var(--line)}
-    button.green{background:#15803d}
-    button.purple{background:#7c3aed}
-    .top{height:58px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 22px;background:var(--chromeBg);border-bottom:1px solid var(--themeLine);box-shadow:0 10px 26px rgba(0,0,0,.16);position:relative;z-index:1}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:900}.brand span:first-child{font-size:24px}.brand::after{content:"session view";font-size:10px;font-family:"Cascadia Code","Consolas",monospace;color:var(--muted);border:1px solid rgba(29,158,117,.25);background:rgba(29,158,117,.10);border-radius:999px;padding:3px 8px;margin-left:4px}
-    .badge{font-size:11px;color:#bbf7d0;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.08);border-radius:999px;padding:4px 9px}
-    .wrap{padding:18px;max-width:1600px;margin:0 auto;position:relative;z-index:1}
-    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--panelBg);border:1px solid var(--themeLine);border-radius:8px;padding:13px 15px;margin-bottom:12px;box-shadow:var(--panelShadow);backdrop-filter:blur(8px)}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .kicker{font-size:10px;color:var(--muted);font-family:"Cascadia Code","Consolas",monospace;text-transform:uppercase}
-    .title{font-size:19px;font-weight:900}
-    .status{margin-bottom:12px;background:var(--panelBg);border:1px solid var(--themeLine);box-shadow:var(--panelShadow);backdrop-filter:blur(8px);border-radius:7px;padding:10px;color:var(--muted);font-size:12px;line-height:1.5}
-    .status.ok{border-color:rgba(34,197,94,.45);color:#bbf7d0}.status.warn{border-color:rgba(234,179,8,.5);color:#fde68a}.status.bad{border-color:rgba(239,68,68,.45);color:#fecaca}
-    #output{background:var(--panelBg);border:1px solid var(--themeLine);box-shadow:var(--panelShadow);backdrop-filter:blur(8px);border-radius:8px;padding:13px}
-    .dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-    .mini-tabs{display:flex;gap:4px;background:#0b121b;border:1px solid var(--line);border-radius:7px;padding:3px}
-    .mini-tabs button{font-size:10px;color:var(--muted);padding:4px 8px;border-radius:5px;background:transparent;border:0;cursor:pointer}.mini-tabs .active{background:var(--red);color:white}
-    .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
-    .tile{background:var(--panel2);border:1px solid var(--line);border-top:3px solid var(--green);border-radius:7px;padding:10px}
-    .tile b{display:block;font-size:28px;line-height:1}.tile span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;margin-top:5px}
-    .tile.warn{border-top-color:var(--yellow)}.tile.high{border-top-color:var(--orange)}.tile.bad{border-top-color:var(--bad)}
-    .table{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
-    .thead,.tr{display:grid;grid-template-columns:120px minmax(0,1.5fr) minmax(130px,.8fr) 70px;gap:8px;align-items:center}
-    .thead{background:var(--red);color:white;font-size:10px;font-family:"Cascadia Code","Consolas",monospace;text-transform:uppercase;padding:8px 10px}
-    .tr{padding:7px 8px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
-    .tr b{display:block;color:var(--text);font-size:12px}.tr small{display:block;color:var(--muted);font-size:9.5px;margin-top:1px}
-    .sev{font-size:10px;font-weight:900;text-transform:uppercase;border-radius:4px;padding:4px 6px;text-align:center;background:#0b121b}
-    .tr.warn .sev{color:#fde68a}.tr.high .sev{color:#fed7aa}.tr.bad .sev{background:var(--bad);color:#fff}
-    .host-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
-    .host{border:1px solid var(--line);border-left:4px solid var(--green);background:var(--panel2);border-radius:8px;padding:11px}
-    .host-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.host-top b{font-size:13px}.host-top span{font-size:10px;color:#86efac;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);border-radius:999px;padding:3px 7px}
-    .host-meta{display:grid;grid-template-columns:72px minmax(0,1fr);gap:5px;font-size:11px}.host-meta div{color:var(--muted);font-family:"Cascadia Code","Consolas",monospace}.host-meta strong{color:#cbd5e1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .health-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
-    .health{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:12px}
-    .health-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
-    .health-head b{font-size:13px}.health-head small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.health-state{font-size:10px;font-weight:900;border-radius:999px;padding:4px 8px;background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.25);color:#86efac}
-    .meter{height:8px;background:#0b121b;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:8px 0 12px}.meter span{display:block;height:100%;width:0;background:var(--green);border-radius:999px}.meter.warn span{background:var(--yellow)}.meter.bad span{background:var(--bad)}
-    .health-lines{display:grid;grid-template-columns:88px minmax(0,1fr);gap:5px;font-size:11px}.health-lines div{color:var(--muted);font-family:"Cascadia Code","Consolas",monospace}.health-lines strong{color:#dbeafe;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .graph-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px}
-    .graph{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:12px;min-height:230px}
-    .graph-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}.graph-head b{font-size:13px}.graph-head small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.graph-head span{font-family:"Cascadia Code","Consolas",monospace;color:#bbf7d0;font-size:11px}
-    .graph canvas{width:100%;height:150px;display:block;background:#0b121b;border:1px solid var(--line);border-radius:7px}
-    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:10px;color:var(--muted)}.legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--green);margin-right:5px}.legend span.warn::before{background:var(--yellow)}.legend span.bad::before{background:var(--bad)}
-    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 6px}.section-title b{font-size:13px}.section-title span{font-size:10px;color:var(--muted);font-family:"Cascadia Code","Consolas",monospace}
-    .split{display:grid;grid-template-columns:minmax(360px,.95fr) minmax(460px,1.35fr);gap:12px;align-items:start}
-    .split-panel{min-width:0}.split-panel .section-title{margin-top:0}
-    .priority{border:1px solid rgba(239,68,68,.45);border-left:5px solid var(--bad);background:linear-gradient(180deg,rgba(127,29,29,.34),rgba(22,27,34,.94));border-radius:8px;padding:10px;margin-bottom:9px;box-shadow:var(--panelShadow)}
-    .priority .sev{display:inline-block;margin-bottom:5px}.priority b{display:block;font-size:15px;margin-bottom:3px}.priority small{color:#fecaca;font-size:10.5px}
-    .check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}.check{border:1px solid var(--line);background:var(--panel2);border-left:4px solid var(--green);border-radius:8px;padding:11px}.check.warn{border-left-color:var(--yellow)}.check.bad{border-left-color:var(--bad)}.check b{display:block;font-size:13px;margin-bottom:6px}.check p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}.check strong{color:var(--text)}.check-list{margin:8px 0 0 0;padding:0;list-style:none}.check-list li{font-size:11px;color:var(--muted);padding:4px 0;border-top:1px solid rgba(148,163,184,.12)}
-    .empty{border:1px dashed var(--line);border-radius:8px;padding:28px;text-align:center;color:var(--muted);font-size:12px}
-    @media(max-width:1050px){.split{grid-template-columns:1fr}}
-    @media(max-width:900px){.tiles{grid-template-columns:1fr 1fr}.toolbar{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions button{flex:1}}
-    @media(max-width:620px){.top{height:auto;align-items:flex-start;flex-direction:column;padding:14px 16px}.wrap{padding:12px}.thead{display:none}.tr{grid-template-columns:1fr}.mini-tabs{width:100%;overflow:auto}.dash-head{align-items:flex-start;flex-direction:column}}
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --zbx-bg:#1f2839;
+      --zbx-sidebar:#1a2233;
+      --zbx-topbar:#d84910;
+      --zbx-panel:#252f42;
+      --zbx-panel2:#1e2737;
+      --zbx-border:#2e3c55;
+      --zbx-border2:#3a4d6a;
+      --zbx-text:#c8d3e0;
+      --zbx-muted:#6b8099;
+      --zbx-blue:#3b9bdd;
+      --zbx-green:#22c55e;
+      --zbx-yellow:#f59e0b;
+      --zbx-red:#e45959;
+      --zbx-orange:#f97316;
+    }
+    html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--zbx-bg);color:var(--zbx-text);font-size:13px;line-height:1.4}
+
+    /* ── TOP BAR ── */
+    #topbar{
+      height:46px;background:var(--zbx-topbar);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 16px;position:fixed;top:0;left:0;right:0;z-index:100;
+      box-shadow:0 2px 8px rgba(0,0,0,.4);
+    }
+    .tb-left{display:flex;align-items:center;gap:14px}
+    .tb-logo{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+    .tb-logo span{font-size:11px;background:rgba(255,255,255,.18);padding:2px 7px;border-radius:3px;font-weight:600;letter-spacing:.5px}
+    .tb-nav{display:flex;gap:2px}
+    .tb-nav a{color:rgba(255,255,255,.8);font-size:12px;padding:5px 10px;border-radius:3px;cursor:pointer;text-decoration:none;white-space:nowrap}
+    .tb-nav a:hover,.tb-nav a.act{background:rgba(255,255,255,.15);color:#fff}
+    .tb-right{display:flex;align-items:center;gap:10px}
+    .tb-status{font-size:11px;padding:3px 10px;border-radius:3px;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.8)}
+    .tb-status.ok{border-color:rgba(34,197,94,.6);color:#86efac;background:rgba(34,197,94,.1)}
+    .tb-status.warn{border-color:rgba(245,158,11,.5);color:#fcd34d;background:rgba(245,158,11,.08)}
+    .tb-status.bad{border-color:rgba(228,89,89,.5);color:#fca5a5;background:rgba(228,89,89,.08)}
+
+    /* ── LAYOUT ── */
+    #layout{display:flex;padding-top:46px;min-height:100vh}
+
+    /* ── SIDEBAR ── */
+    #sidebar{
+      width:200px;flex-shrink:0;background:var(--zbx-sidebar);
+      border-right:1px solid var(--zbx-border);
+      position:fixed;top:46px;bottom:0;left:0;overflow-y:auto;z-index:50;
+    }
+    .sb-section{padding:10px 0}
+    .sb-heading{font-size:9px;font-weight:700;color:var(--zbx-muted);text-transform:uppercase;letter-spacing:.8px;padding:6px 14px 4px}
+    .sb-item{display:flex;align-items:center;gap:9px;padding:7px 14px;cursor:pointer;color:var(--zbx-muted);font-size:12px;transition:all .15s;border-left:3px solid transparent}
+    .sb-item:hover{background:rgba(59,155,221,.08);color:var(--zbx-text);border-left-color:transparent}
+    .sb-item.active{background:rgba(59,155,221,.12);color:#7ecfff;border-left-color:var(--zbx-blue);font-weight:600}.sb-item.active .sb-icon svg{stroke:#7ecfff}.sb-item:hover .sb-icon svg{stroke:var(--zbx-text)}
+    .sb-icon{width:16px;text-align:center;flex-shrink:0;display:flex;align-items:center;justify-content:center}.sb-icon svg{stroke:var(--zbx-muted);transition:stroke .15s}
+    .sb-divider{height:1px;background:var(--zbx-border);margin:6px 0}
+
+    /* ── MAIN CONTENT ── */
+    #main{margin-left:200px;flex:1;padding:16px;min-width:0}
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--zbx-muted);margin-bottom:12px}
+    .breadcrumb span{color:var(--zbx-muted)}
+    .breadcrumb b{color:var(--zbx-text)}
+
+    /* ── PAGE HEADER ── */
+    .page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px}
+    .page-title{font-size:18px;font-weight:700;color:#e8eef5}
+    .page-actions{display:flex;gap:6px}
+
+    /* ── ZBX BUTTONS ── */
+    .zbtn{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:5px 12px;border-radius:3px;border:1px solid var(--zbx-border2);background:var(--zbx-panel);color:var(--zbx-text);cursor:pointer;font-family:inherit;transition:all .15s}
+    .zbtn:hover{background:var(--zbx-panel2);border-color:var(--zbx-blue);color:#7ecfff}
+    .zbtn.primary{background:var(--zbx-blue);border-color:var(--zbx-blue);color:#fff;font-weight:600}
+    .zbtn.primary:hover{background:#2d7ab3;border-color:#2d7ab3}
+    .zbtn.danger{background:#7a2020;border-color:#a03030;color:#fca5a5}
+    .zbtn.success{background:#166534;border-color:#16a34a;color:#86efac}
+
+    /* ── FILTER BAR ── */
+    .filter-bar{background:var(--zbx-panel);border:1px solid var(--zbx-border);border-radius:4px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .filter-bar label{font-size:11px;color:var(--zbx-muted)}
+    .filter-bar select,.filter-bar input{background:#131d2e;border:1px solid var(--zbx-border2);color:var(--zbx-text);font-size:12px;padding:4px 8px;border-radius:3px;outline:none;font-family:inherit}
+    .filter-bar select:focus,.filter-bar input:focus{border-color:var(--zbx-blue)}
+
+    /* ── STAT TILES (Zabbix summary bar) ── */
+    /* Zabbix problem severity strip */
+    .stat-row{display:flex;gap:1px;margin-bottom:14px;background:var(--zbx-border);border-radius:4px;overflow:hidden;border:1px solid var(--zbx-border)}
+    .stat-cell{flex:1;background:var(--zbx-panel2);padding:10px 14px;text-align:center;cursor:pointer;transition:background .15s}
+    .stat-cell:hover{background:#2a3650}
+    .stat-cell b{display:block;font-size:22px;font-weight:700;line-height:1;color:#e8eef5}
+    .stat-cell span{display:block;font-size:10px;color:var(--zbx-muted);text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
+    .stat-cell.disaster b{color:#e45959}.stat-cell.high b{color:#f97316}
+    .stat-cell.warn b{color:#f59e0b}.stat-cell.info b{color:#60a5fa}
+    .stat-cell.ok b{color:#22c55e}
+    /* Problem severity strip (top of dashboard) */
+    .psev-strip{display:flex;gap:1px;margin-bottom:14px;border-radius:4px;overflow:hidden;border:1px solid var(--zbx-border)}
+    .psev-block{flex:1;padding:0;cursor:pointer;transition:filter .15s;min-width:0}
+    .psev-block:hover{filter:brightness(1.12)}
+    .psev-block.disaster{background:#8b0000}
+    .psev-block.high{background:#8b3a00}
+    .psev-block.average{background:#7a5c00}
+    .psev-block.warning{background:#3a5c00}
+    .psev-block.info{background:#0a3a7a}
+    .psev-block.nodata{background:#2a2a3a}
+    .psev-block.ok-block{background:#14532d}
+    .psev-hdr{padding:5px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.3)}
+    .psev-hdr-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:rgba(255,255,255,.9)}
+    .psev-count{font-size:18px;font-weight:800;color:#fff;line-height:1;padding:6px 10px 4px}
+    .psev-list{padding:0 10px 6px;font-size:10px;color:rgba(255,255,255,.65);line-height:1.5;min-height:30px}
+    .psev-list div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    /* Host overview cards */
+    .host-overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-bottom:14px}
+    .hov-card{background:var(--zbx-panel);border:1px solid var(--zbx-border);border-radius:4px;padding:10px 14px;display:flex;align-items:center;gap:12px}
+    .hov-icon{width:24px;height:24px;line-height:1;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+    .hov-info b{display:block;font-size:20px;font-weight:800;color:#e8eef5;line-height:1}
+    .hov-info span{font-size:10px;color:var(--zbx-muted);text-transform:uppercase;letter-spacing:.3px;margin-top:2px;display:block}
+    .hov-bar{height:3px;border-radius:1px;margin-top:6px;background:var(--zbx-border)}
+    .hov-bar-fill{height:100%;border-radius:1px;background:var(--zbx-blue)}
+
+    /* ── PANEL / WIDGET ── */
+    .panel{background:var(--zbx-panel);border:1px solid var(--zbx-border);border-radius:4px;margin-bottom:14px}
+    .panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--zbx-border);background:var(--zbx-panel2)}
+    .panel-title{font-size:12px;font-weight:700;color:#9ab4cc;text-transform:uppercase;letter-spacing:.4px}
+    .panel-body{padding:12px}
+
+    /* ── PROBLEMS TABLE ── */
+    .ztable{width:100%;border-collapse:collapse;font-size:12px}
+    .ztable th{background:#131d2e;color:var(--zbx-muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:7px 10px;border-bottom:1px solid var(--zbx-border2);text-align:left;white-space:nowrap;cursor:pointer}
+    .ztable th:hover{color:var(--zbx-text)}
+    .ztable td{padding:7px 10px;border-bottom:1px solid rgba(46,60,85,.5);vertical-align:middle;color:var(--zbx-text)}
+    .ztable tbody tr:hover{background:rgba(59,155,221,.05)}
+    .ztable tbody tr:last-child td{border-bottom:0}
+
+    /* ── SEVERITY BADGES ── */
+    .sev-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.3px}
+    .sev-disaster{background:#7a1f1f;color:#fca5a5;border:1px solid #a03030}
+    .sev-high{background:#7a3a10;color:#fdba74;border:1px solid #a05020}
+    .sev-average{background:#6b5010;color:#fcd34d;border:1px solid #8a6810}
+    .sev-warning{background:#3b4a10;color:#d9f99d;border:1px solid #5a7010}
+    .sev-info{background:#1a3060;color:#93c5fd;border:1px solid #2a4090}
+    .sev-ok{background:#14532d;color:#86efac;border:1px solid #16803d}
+
+    /* ── AVAILABILITY DOTS ── */
+    .avail-dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:2px}
+    .avail-dot.on{background:#22c55e}
+    .avail-dot.off{background:#374151}
+    .avail-dot.err{background:#e45959}
+    .avail-label{font-size:9px;color:var(--zbx-muted);font-family:monospace}
+
+    /* ── HOST/GROUP TAGS ── */
+    .zh-group{display:inline-block;font-size:10px;padding:1px 6px;background:rgba(59,155,221,.08);border:1px solid rgba(59,155,221,.2);border-radius:2px;color:#60a5fa;margin:1px 1px 1px 0}
+    .zh-ip{font-family:Consolas,monospace;font-size:11px;color:var(--zbx-muted)}
+    .zh-name{font-weight:600;color:#7ecfff}
+    .zh-host{font-size:10px;color:var(--zbx-muted);font-family:Consolas,monospace;margin-top:1px}
+
+    /* ── ENABLED/DISABLED BADGE ── */
+    .status-badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:2px;text-transform:uppercase}
+    .status-badge.on{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.3)}
+    .status-badge.off{background:rgba(107,114,128,.1);color:#6b7280;border:1px solid rgba(107,114,128,.25)}
+
+    /* ── GRAPH GRID ── */
+    .graph-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:12px}
+    .graph-panel{background:var(--zbx-panel);border:1px solid var(--zbx-border);border-radius:4px;overflow:hidden}
+    .graph-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--zbx-panel2);border-bottom:1px solid var(--zbx-border)}
+    .graph-panel-title{font-size:11px;font-weight:700;color:var(--zbx-text)}
+    .graph-panel-host{font-size:10px;color:var(--zbx-muted);margin-left:6px}
+    .graph-panel-val{font-size:11px;font-family:Consolas,monospace;font-weight:700}
+    .graph-wrap{background:#0d1117;width:100%;display:block}
+    .graph-footer{display:flex;align-items:center;padding:5px 10px;background:var(--zbx-panel2);border-top:1px solid var(--zbx-border);font-size:10px;color:var(--zbx-muted);min-height:26px;gap:6px}
+
+    /* ── LATEST DATA ── */
+    .ldata-host-block{margin-bottom:2px}
+    .ldata-host-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#131d2e;border:1px solid var(--zbx-border);border-radius:3px 3px 0 0;cursor:pointer}
+    .ldata-host-name{font-weight:700;color:#7ecfff;font-size:12px}
+    .ldata-host-count{font-size:10px;color:var(--zbx-muted);font-family:monospace;margin-left:auto}
+    .ldata-thead{display:grid;grid-template-columns:minmax(0,2.2fr) 90px 150px 75px 80px;padding:5px 10px;background:#0f1822;border:1px solid var(--zbx-border);border-top:0;font-size:10px;color:var(--zbx-muted);text-transform:uppercase;letter-spacing:.3px;font-family:monospace}
+    .ldata-row{display:grid;grid-template-columns:minmax(0,2.2fr) 90px 150px 75px 80px;padding:5px 10px;border:1px solid var(--zbx-border);border-top:0;align-items:center}
+    .ldata-row:hover{background:rgba(59,155,221,.04)}
+    .ldata-row:last-child{border-radius:0 0 3px 3px}
+    .ldata-name{display:flex;align-items:center;gap:6px;font-size:11.5px;overflow:hidden}
+    .ldata-name-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .ldata-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+    .ldata-muted{font-size:11px;color:var(--zbx-muted);font-family:monospace}
+    .ldata-val{font-size:12px;font-weight:700;font-family:Consolas,monospace}
+    .ldata-bar-wrap{height:4px;background:#1e2d3d;border-radius:1px;overflow:hidden;width:70px;margin-top:3px}
+    .ldata-bar-fill{height:100%;border-radius:1px}
+    .ldata-graph-btn{font-size:10px;color:var(--zbx-blue);cursor:pointer;font-family:monospace;padding:2px 7px;border:1px solid var(--zbx-border2);border-radius:2px;background:transparent;white-space:nowrap;transition:all .15s}
+    .ldata-graph-btn:hover{background:rgba(59,155,221,.1);border-color:var(--zbx-blue)}
+    .ldata-inline{border:1px solid var(--zbx-border);border-top:0;background:#0d1117}
+    .ldata-inline canvas{display:block;width:100%!important}
+
+    /* ── PRIORITY PROBLEM CARD ── */
+    .problem-top{background:rgba(228,89,89,.08);border:1px solid rgba(228,89,89,.3);border-left:4px solid #e45959;border-radius:3px;padding:10px 12px;margin-bottom:10px}
+    .problem-top .sev-line{margin-bottom:4px}
+    .problem-top b{display:block;font-size:13px;color:#fca5a5;margin-bottom:3px}
+    .problem-top small{font-size:10px;color:var(--zbx-muted)}
+
+    /* ── SPLIT VIEW ── */
+    .split{display:grid;grid-template-columns:minmax(340px,.9fr) minmax(400px,1.2fr);gap:14px;align-items:start}
+
+    /* ── SETUP CHECK ── */
+    .check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+    .check-card{background:var(--zbx-panel);border:1px solid var(--zbx-border);border-left:3px solid var(--zbx-green);border-radius:3px;padding:11px}
+    .check-card.warn{border-left-color:var(--zbx-yellow)}
+    .check-card.bad{border-left-color:var(--zbx-red)}
+    .check-card b{display:block;font-size:12px;color:var(--zbx-text);margin-bottom:5px}
+    .check-card p{font-size:11px;color:var(--zbx-muted);line-height:1.45;margin:0}
+    .check-card ul{list-style:none;margin:7px 0 0;padding:0}
+    .check-card ul li{font-size:11px;color:var(--zbx-muted);padding:3px 0;border-top:1px solid rgba(46,60,85,.5)}
+
+    /* ── EMPTY STATE ── */
+    .zblank{border:1px dashed var(--zbx-border2);border-radius:4px;padding:32px;text-align:center;color:var(--zbx-muted);font-size:12px}
+
+    /* ── MISC ── */
+    .section-label{font-size:10px;font-weight:700;color:var(--zbx-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+    @media(max-width:900px){
+      #sidebar{display:none}
+      #main{margin-left:0}
+      .split{grid-template-columns:1fr}
+      .stat-row{flex-wrap:wrap}
+    }
   </style>
 </head>
 <body>
-  <canvas id="matrixRain"></canvas>
-  <div class="top">
-    <div class="brand"><span>🐺</span><span>NetWolf Monitoring</span></div>
-    <div class="badge">Zabbix read-only API view</div>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">🐺 NetWolf <span>ZABBIX</span></div>
+    <nav class="tb-nav">
+      <a onclick="loadMonitorDashboard()">Monitoring</a>
+      <a onclick="loadHosts()">Configuration</a>
+      <a onclick="loadSetupCheck()">Reports</a>
+    </nav>
   </div>
-  <div class="wrap">
-    <div class="toolbar">
-      <div><div class="kicker">Standalone NOC view</div><div class="title">Monitoring Output</div></div>
-      <div class="actions">
-        <button class="purple" onclick="useDemo();testConnection()">Use demo</button>
-        <button class="green" onclick="loadMonitorDashboard('graphs')">Dashboard</button>
-        <button class="secondary" onclick="loadSetupCheck()">Setup Check</button>
-        <button class="secondary" onclick="loadHealth()">Health</button>
-        <button class="secondary" onclick="loadHosts()">Hosts</button>
+  <div class="tb-right">
+    <span id="status" class="tb-status warn">Not connected</span>
+    <button class="zbtn primary" onclick="useDemo();testConnection()">Demo</button>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div id="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sb-section">
+      <div class="sb-heading">Monitoring</div>
+      <div class="sb-item active" id="nav-dashboard" onclick="navTo('dashboard',loadMonitorDashboard)">
+        <span class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>Dashboard
+      </div>
+      <div class="sb-item" id="nav-problems" onclick="navTo('problems',loadProblems)">
+        <span class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Problems
+      </div>
+      <div class="sb-item" id="nav-graphs" onclick="navTo('graphs',loadGraphs)">
+        <span class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>Graphs
+      </div>
+      <div class="sb-item" id="nav-health" onclick="navTo('health',loadHealth)">
+        <span class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>Latest data
       </div>
     </div>
-    <div id="status" class="status warn">Standalone dashboard ready. Click Dashboard, Setup Check, Health, or Hosts. If needed, click Use demo first.</div>
-    <div id="output" class="empty">
-      <div style="margin-bottom:12px">Click Dashboard, Setup Check, Health, or Hosts.</div>
-      <button class="green" onclick="loadSetupCheck()">Setup Check</button>
-      <button class="secondary" onclick="loadMonitorDashboard('graphs')">Dashboard</button>
+    <div class="sb-divider"></div>
+    <div class="sb-section">
+      <div class="sb-heading">Configuration</div>
+      <div class="sb-item" id="nav-hosts" onclick="navTo('hosts',loadHosts)">
+        <span class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Hosts
+      </div>
+      <div class="sb-item" id="nav-check" onclick="navTo('check',loadSetupCheck)">
+        <span class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Setup check
+      </div>
     </div>
-  </div>
-  <script>
-    (function(){
-      const canvas=document.getElementById('matrixRain'),ctx=canvas.getContext('2d');
-      const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*アイウエオカキクケコサシスセソタチツテト';
-      const fs=14;let w=0,h=0,drops=[];
-      function init(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;const cols=Math.floor(w/fs);drops=[];for(let i=0;i<cols;i++)drops.push(Math.random()*-150);}
-      function draw(){ctx.fillStyle='rgba(0,0,0,0.045)';ctx.fillRect(0,0,w,h);ctx.font=fs+'px Courier New';for(let i=0;i<drops.length;i++){const r=Math.random();ctx.fillStyle=r>.97?'#c0ffe8':r>.85?'#3fb950':r>.5?'#1D9E75':'#0a4a2e';ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*fs,drops[i]*fs);if(drops[i]*fs>h&&Math.random()>.975)drops[i]=0;drops[i]+=0.35+Math.random()*0.25;}setTimeout(()=>requestAnimationFrame(draw),38);}
-      window.addEventListener('resize',init);init();draw();
-    })();
-    const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    const sevName=n=>['Not classified','Information','Warning','Average','High','Disaster'][Number(n)||0]||'Unknown';
-    const age=clock=>{const s=Math.max(1,Math.floor(Date.now()/1000)-Number(clock||0));if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';};
-    const itemType=name=>{const n=String(name||'').toLowerCase();if(n.includes('cpu'))return 'cpu';if(n.includes('memory')||n.includes('ram'))return 'memory';if(n.includes('disk')||n.includes('storage')||n.includes('filesystem'))return 'disk';if(n.includes('uptime'))return 'uptime';if(n.includes('traffic')||n.includes('interface')||n.includes('port'))return 'interface';return 'other';};
-    const fmtItem=i=>{const value=String(i.lastvalue??'');const units=String(i.units||'');if(units==='%')return Math.round(Number(value)||0)+'%';if(units==='bps'){const n=Number(value)||0;if(n>=1000000000)return (n/1000000000).toFixed(1)+' Gbps';if(n>=1000000)return (n/1000000).toFixed(1)+' Mbps';return Math.round(n/1000)+' Kbps';}if(units==='s'){const d=Math.floor((Number(value)||0)/86400),h=Math.floor(((Number(value)||0)%86400)/3600);return d?d+'d '+h+'h':h+'h';}return value+(units?' '+units:'');};
-    const pct=i=>{const v=Number(i.lastvalue)||0;return String(i.units)==='%'?Math.max(0,Math.min(100,Math.round(v))):0;};
-    const stateFor=i=>{const t=itemType(i.name),v=Number(i.lastvalue)||0;if((t==='cpu'||t==='memory'||t==='disk')&&v>=90)return 'bad';if((t==='cpu'||t==='memory'||t==='disk')&&v>=75)return 'warn';return 'ok';};
-    function setStatus(text,state='warn'){const el=document.getElementById('status');el.className='status '+state;el.innerHTML=text;}
-    function useDemo(){localStorage.setItem('netwolf_zabbix_url','http://127.0.0.1:5052');localStorage.removeItem('netwolf_zabbix_token');setStatus('Local demo selected. No token is stored for demo mode. Click Dashboard, Setup Check, Health, or Hosts.','warn');}
-    async function api(method,params={}){const url=(localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');const token=localStorage.getItem('netwolf_zabbix_token')||'';const endpoint=url.endsWith('/api_jsonrpc.php')?url:url+'/api_jsonrpc.php';const headers={'Content-Type':'application/json'};if(token)headers.Authorization='Bearer '+token;const r=await fetch(endpoint,{method:'POST',headers,body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});const data=await r.json();if(data.error)throw new Error(data.error.data||data.error.message||'Zabbix API error');return data.result;}
-    async function testConnection(){setStatus('Testing connection...','warn');try{const v=await api('apiinfo.version');setStatus('Connected to Zabbix API. Version: <strong>'+esc(v)+'</strong>','ok');}catch(e){setStatus('Connection failed: '+esc(e.message),'bad');}}
-    let dashboardHealthRows=[],dashboardProblemRows=[];
-    function tabBar(active){return '<div class="mini-tabs"><button onclick="loadMonitorDashboard()" class="'+(active==='dashboard'?'active':'')+'">Dashboard</button><button onclick="loadSetupCheck()" class="'+(active==='check'?'active':'')+'">Setup Check</button><button onclick="loadHealth()" class="'+(active==='health'?'active':'')+'">Health</button><button onclick="loadHosts()" class="'+(active==='hosts'?'active':'')+'">Hosts</button></div>';}
-    function header(mode,rows){const total=rows.length,disaster=rows.filter(r=>Number(r.severity)>=5).length,high=rows.filter(r=>Number(r.severity)===4).length,warn=rows.filter(r=>Number(r.severity)>=2&&Number(r.severity)<4).length,ok=mode==='hosts'?rows.filter(r=>String(r.status)==='0').length:Math.max(0,total-disaster-high-warn);return '<div class="dash-head"><div><div class="kicker">Zabbix view</div><div class="title">'+(mode==='hosts'?'Monitored hosts':mode==='health'?'Device health':'Active problems')+'</div></div>'+tabBar(mode)+'</div><div class="tiles"><div class="tile"><b>'+ok+'</b><span>'+(mode==='hosts'?'Monitored':mode==='health'?'Normal':'OK / Info')+'</span></div><div class="tile warn"><b>'+warn+'</b><span>Warning / Average</span></div><div class="tile high"><b>'+high+'</b><span>High</span></div><div class="tile bad"><b>'+disaster+'</b><span>Disaster</span></div></div>';}
-    function demoHealthRows(){const now=Math.floor(Date.now()/1000);return [
-      {itemid:'local-1',name:'CPU utilization',lastvalue:'38',units:'%',lastclock:now-45,hosts:[{name:'SITE-FW-01'}]},
-      {itemid:'local-2',name:'Memory utilization',lastvalue:'64',units:'%',lastclock:now-50,hosts:[{name:'SITE-FW-01'}]},
-      {itemid:'local-3',name:'Disk storage utilization',lastvalue:'71',units:'%',lastclock:now-70,hosts:[{name:'SITE-FW-01'}]},
-      {itemid:'local-4',name:'System uptime',lastvalue:'1814400',units:'s',lastclock:now-65,hosts:[{name:'SITE-FW-01'}]},
-      {itemid:'local-5',name:'WAN interface traffic in',lastvalue:'28400000',units:'bps',lastclock:now-40,hosts:[{name:'SITE-FW-01'}]},
-      {itemid:'local-6',name:'WAN interface traffic out',lastvalue:'17600000',units:'bps',lastclock:now-40,hosts:[{name:'SITE-FW-01'}]},
-      {itemid:'local-7',name:'Core switch CPU utilization',lastvalue:'22',units:'%',lastclock:now-35,hosts:[{name:'CORE-SW-01'}]},
-      {itemid:'local-8',name:'Core switch memory utilization',lastvalue:'58',units:'%',lastclock:now-36,hosts:[{name:'CORE-SW-01'}]},
-      {itemid:'local-9',name:'Uplink interface traffic',lastvalue:'926000000',units:'bps',lastclock:now-38,hosts:[{name:'CORE-SW-01'}]},
-      {itemid:'local-10',name:'Branch router CPU utilization',lastvalue:'81',units:'%',lastclock:now-55,hosts:[{name:'BRANCH-RTR-01'}]},
-      {itemid:'local-11',name:'Branch router memory utilization',lastvalue:'76',units:'%',lastclock:now-57,hosts:[{name:'BRANCH-RTR-01'}]},
-      {itemid:'local-12',name:'Tunnel interface traffic',lastvalue:'8600000',units:'bps',lastclock:now-42,hosts:[{name:'BRANCH-RTR-01'}]}
-    ];}
-    function demoProblemRows(){const now=Math.floor(Date.now()/1000);return [
-      {eventid:'local-p1',name:'WAN packet loss is above threshold',severity:'4',clock:now-420,hosts:[{name:'SITE-FW-01'}]},
-      {eventid:'local-p2',name:'IPsec tunnel to branch is down',severity:'5',clock:now-960,hosts:[{name:'SITE-FW-01'}]},
-      {eventid:'local-p3',name:'Switch uplink interface is down',severity:'3',clock:now-1800,hosts:[{name:'CORE-SW-01'}]}
-    ];}
-    function demoTriggerRows(){return [
-      {triggerid:'t1',description:'High CPU utilization',priority:'4',hosts:[{name:'SITE-FW-01'}]},
-      {triggerid:'t2',description:'Interface down',priority:'5',hosts:[{name:'CORE-SW-01'}]},
-      {triggerid:'t3',description:'Memory utilization high',priority:'3',hosts:[{name:'BRANCH-RTR-01'}]}
-    ];}
-    function demoHostRows(){return [
-      {hostid:'10101',host:'site-fw-01',name:'SITE-FW-01',status:'0',interfaces:[{ip:'192.0.2.10'}],groups:[{name:'Firewalls'},{name:'Customer Demo'}]},
-      {hostid:'10102',host:'core-sw-01',name:'CORE-SW-01',status:'0',interfaces:[{ip:'192.0.2.20'}],groups:[{name:'Switches'},{name:'Customer Demo'}]},
-      {hostid:'10103',host:'branch-rtr-01',name:'BRANCH-RTR-01',status:'0',interfaces:[{ip:'192.0.2.30'}],groups:[{name:'Routers'},{name:'Customer Demo'}]}
-    ];}
-    async function fetchHealthRows(){try{return await api('item.get',{output:['itemid','name','lastvalue','units','lastclock'],selectHosts:['host','name'],monitored:true,sortfield:'name',limit:80,search:{name:['CPU','Memory','Disk','Storage','Uptime','Interface','Traffic']},searchByAny:true});}catch(e){return demoHealthRows();}}
-    async function fetchProblemRows(){try{return await api('problem.get',{output:['eventid','name','severity','clock'],selectHosts:['host','name'],sortfield:['eventid'],sortorder:'DESC',recent:true,limit:20});}catch(e){return demoProblemRows();}}
-    async function fetchHostRows(){try{return await api('host.get',{output:['hostid','host','name','status'],selectInterfaces:['ip','dns','type','main'],selectGroups:['name'],monitored_hosts:true,limit:200,sortfield:'name'});}catch(e){return demoHostRows();}}
-    async function fetchTriggerRows(){try{return await api('trigger.get',{output:['triggerid','description','priority','status','state'],selectHosts:['host','name'],monitored:true,limit:200,sortfield:'priority',sortorder:'DESC'});}catch(e){return demoTriggerRows();}}
-    async function fetchAllItemRows(){try{return await api('item.get',{output:['itemid','name','lastvalue','units','lastclock','state','status'],selectHosts:['host','name'],monitored:true,limit:500,sortfield:'name'});}catch(e){return demoHealthRows();}}
-    async function loadMonitorDashboard(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading monitoring dashboard...</div>';const [healthRows,problemRows]=await Promise.all([fetchHealthRows(),fetchProblemRows()]);dashboardHealthRows=healthRows||[];dashboardProblemRows=problemRows||[];setStatus('Dashboard loaded. Problems and graphs are shown together.','ok');renderMonitorDashboard();}
-    function renderMonitorDashboard(){return renderDashboardGraphs(dashboardHealthRows,dashboardProblemRows);}
-    async function loadHealth(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading device health...</div>';try{const rows=await api('item.get',{output:['itemid','name','lastvalue','units','lastclock'],selectHosts:['host','name'],monitored:true,sortfield:'name',limit:80,search:{name:['CPU','Memory','Disk','Storage','Uptime','Interface','Traffic']},searchByAny:true});setStatus('Health data loaded from Zabbix item values.','ok');renderHealth(rows||[]);}catch(e){setStatus('Health demo shown locally. Restart start-zabbix-demo.bat later to enable live demo item.get.','warn');renderHealth(demoHealthRows());}}
-    async function loadGraphs(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading health graphs...</div>';try{const rows=await api('item.get',{output:['itemid','name','lastvalue','units','lastclock'],selectHosts:['host','name'],monitored:true,sortfield:'name',limit:80,search:{name:['CPU','Memory','Disk','Storage','Uptime','Interface','Traffic']},searchByAny:true});setStatus('Graph view loaded from Zabbix item values.','ok');renderGraphs(rows||[]);}catch(e){setStatus('Graph demo shown locally. Restart start-zabbix-demo.bat later to enable live demo item.get.','warn');renderGraphs(demoHealthRows());}}
-    async function loadProblems(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading active problems...</div>';try{const rows=await api('problem.get',{output:['eventid','name','severity','clock'],selectHosts:['host','name'],sortfield:['eventid'],sortorder:'DESC',recent:true,limit:20});renderProblems(rows||[]);}catch(e){out.innerHTML='<div class="empty">'+esc(e.message)+'</div>';}}
-    async function loadHosts(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Loading monitored hosts...</div>';try{const rows=await api('host.get',{output:['hostid','host','name','status'],selectInterfaces:['ip','dns','type','main'],selectGroups:['name'],monitored_hosts:true,limit:50,sortfield:'name'});renderHosts(rows||[]);}catch(e){out.innerHTML='<div class="empty">'+esc(e.message)+'</div>';}}
-    async function loadSetupCheck(){const out=document.getElementById('output');out.innerHTML='<div class="empty">Checking Zabbix setup readiness...</div>';const [hosts,items,triggers,problems]=await Promise.all([fetchHostRows(),fetchAllItemRows(),fetchTriggerRows(),fetchProblemRows()]);setStatus('Setup check completed. Green is ready, yellow needs attention, red blocks useful monitoring.','ok');renderSetupCheck(hosts||[],items||[],triggers||[],problems||[]);}
-    function renderHealth(rows){const out=document.getElementById('output');const counts={ok:0,warn:0,high:0,bad:0};rows.forEach(i=>{const st=stateFor(i);if(st==='bad')counts.bad++;else if(st==='warn')counts.warn++;else counts.ok++;});if(!rows.length){out.innerHTML=header('health',[])+'<div class="empty">No CPU, memory, disk, uptime, or interface items returned by Zabbix.</div>';return;}out.innerHTML='<div class="dash-head"><div><div class="kicker">Zabbix dashboard</div><div class="title">Device health</div></div>'+tabBar('health')+'</div><div class="tiles"><div class="tile"><b>'+counts.ok+'</b><span>Normal values</span></div><div class="tile warn"><b>'+counts.warn+'</b><span>Near threshold</span></div><div class="tile high"><b>'+rows.filter(i=>itemType(i.name)==='interface').length+'</b><span>Interface items</span></div><div class="tile bad"><b>'+counts.bad+'</b><span>Critical values</span></div></div><div class="health-grid">'+rows.map(i=>{const st=stateFor(i),host=(i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'Unknown host',p=pct(i),when=i.lastclock?age(i.lastclock)+' ago':'no timestamp';return '<div class="health"><div class="health-head"><div><b>'+esc(i.name)+'</b><small>'+esc(host)+'</small></div><span class="health-state">'+(st==='bad'?'Critical':st==='warn'?'Warning':'Normal')+'</span></div>'+(p?'<div class="meter '+(st==='bad'?'bad':st==='warn'?'warn':'')+'"><span style="width:'+p+'%"></span></div>':'')+'<div class="health-lines"><div>Value</div><strong>'+esc(fmtItem(i))+'</strong><div>Type</div><strong>'+esc(itemType(i.name))+'</strong><div>Updated</div><strong>'+esc(when)+'</strong></div></div>';}).join('')+'</div>';}
-    function hostNameFromItem(i){return (i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'Unknown host';}
-    function checkCard(level,title,body,items=[]){return '<div class="check '+level+'"><b>'+esc(title)+'</b><p>'+body+'</p>'+(items.length?'<ul class="check-list">'+items.slice(0,8).map(x=>'<li>'+esc(x)+'</li>').join('')+(items.length>8?'<li>+'+(items.length-8)+' more</li>':'')+'</ul>':'')+'</div>';}
-    function renderSetupCheck(hosts,items,triggers,problems){const out=document.getElementById('output');const groups=[...new Set(hosts.flatMap(h=>(h.groups||[]).map(g=>g.name)))];const enabledHosts=hosts.filter(h=>String(h.status)==='0');const unsupported=items.filter(i=>String(i.state)==='1'||String(i.status)!=='0');const typesByHost={};items.forEach(i=>{const h=hostNameFromItem(i);if(!typesByHost[h])typesByHost[h]=new Set();const t=itemType(i.name);if(t!=='other')typesByHost[h].add(t);});const missingHealth=enabledHosts.map(h=>{const name=h.name||h.host,set=typesByHost[name]||new Set(),missing=['cpu','memory','interface'].filter(t=>!set.has(t));return missing.length?name+': missing '+missing.join(', '):'';}).filter(Boolean);const hostsWithoutTriggers=enabledHosts.map(h=>{const name=h.name||h.host;return triggers.some(t=>(t.hosts||[]).some(th=>(th.name||th.host)===name))?'':name;}).filter(Boolean);const ready=hosts.length&&items.length&&triggers.length&&!missingHealth.length&&!unsupported.length;const warnCount=(missingHealth.length?1:0)+(hostsWithoutTriggers.length?1:0)+(unsupported.length?1:0);out.innerHTML='<div class="dash-head"><div><div class="kicker">Zabbix readiness</div><div class="title">Setup Check</div></div>'+tabBar('check')+'</div><div class="tiles"><div class="tile"><b>'+enabledHosts.length+'</b><span>Monitored hosts</span></div><div class="tile '+(items.length?'':'bad')+'"><b>'+items.length+'</b><span>Visible items</span></div><div class="tile '+(triggers.length?'':'bad')+'"><b>'+triggers.length+'</b><span>Visible triggers</span></div><div class="tile '+(warnCount?'warn':'')+'"><b>'+warnCount+'</b><span>Attention</span></div></div><div class="check-grid">'
-      +checkCard(hosts.length?'':'bad','Host access',hosts.length?'<strong>'+enabledHosts.length+'</strong> monitored host(s) visible to this API token.':'No hosts visible. Check API token permissions and host group access.',hosts.map(h=>(h.name||h.host)+' / '+((h.groups||[]).map(g=>g.name).join(', ')||'no group')))
-      +checkCard(groups.length?'':'warn','Host groups',groups.length?'<strong>'+groups.length+'</strong> group(s) visible. This is important for MSP/customer separation.':'No groups visible. The token may be too limited or hosts may not be grouped.',groups)
-      +checkCard(missingHealth.length?'warn':'','Health item coverage',missingHealth.length?'Some hosts are missing CPU, memory, or interface items. Apply the right SNMP/template before expecting full graphs.':'CPU, memory, and interface style items look available for monitored hosts.',missingHealth)
-      +checkCard(triggers.length?'':'bad','Triggers',triggers.length?'<strong>'+triggers.length+'</strong> trigger(s) visible. Problems can be created from these.':'No triggers visible. Zabbix can collect data but NetWolf will not show useful issues without triggers.',triggers.map(t=>(t.description||'Trigger')+' / '+((t.hosts&&t.hosts[0]&&(t.hosts[0].name||t.hosts[0].host))||'Unknown host')))
-      +checkCard(hostsWithoutTriggers.length?'warn':'','Hosts without triggers',hostsWithoutTriggers.length?'These hosts are monitored but no visible trigger was found for them.':'Every monitored host appears to have at least one visible trigger.',hostsWithoutTriggers)
-      +checkCard(unsupported.length?'bad':'','Unsupported items',unsupported.length?'Unsupported or disabled items found. These should be fixed in Zabbix templates/SNMP access.':'No unsupported monitored items detected in the visible API data.',unsupported.map(i=>hostNameFromItem(i)+': '+i.name))
-      +checkCard(problems.length?'warn':'','Current problems',problems.length?'<strong>'+problems.length+'</strong> active problem(s) visible now.':'No active problems visible right now.',sortedProblems(problems).map(p=>sevName(p.severity)+' - '+p.name))
-      +checkCard(ready?'':'warn','Auto-detect readiness',ready?'Ready. NetWolf can build a useful dashboard from this Zabbix setup.':'Not fully ready yet. Fix red/yellow items above for better auto-detection.')
-      +'</div>';}
-    function trendPoints(item){const type=itemType(item.name),base=Number(item.lastvalue)||0,points=[];for(let i=0;i<28;i++){const phase=i/27,wave=Math.sin(i*.42+base/17)*.08+Math.cos(i*.21+base/23)*.05;let v=base*(.88+phase*.12+wave);if(type==='interface')v=base*(.72+phase*.28+Math.sin(i*.55)*.18+Math.cos(i*.18)*.08);if(String(item.units)==='%')v=Math.max(1,Math.min(99,v));else v=Math.max(0,v);points.push(v);}points[points.length-1]=base;return points;}
-    function graphState(item){if(String(item.units)!=='%')return 'ok';const peak=Math.max(...trendPoints(item));return peak>=90?'bad':peak>=75?'warn':'ok';}
-    function sortedProblems(rows){return [...(rows||[])].sort((a,b)=>(Number(b.severity)||0)-(Number(a.severity)||0)||Number(a.clock||0)-Number(b.clock||0));}
-    function priorityCard(rows){const top=sortedProblems(rows)[0];if(!top)return '<div class="empty">No critical issue at the moment.</div>';const sev=Number(top.severity)||0,host=(top.hosts&&top.hosts[0]&&(top.hosts[0].name||top.hosts[0].host))||'Unknown host';return '<div class="priority"><span class="sev">'+esc(sevName(sev))+'</span><b>'+esc(top.name||'Problem')+'</b><small>'+esc(host)+' • open for '+esc(age(top.clock))+'</small></div>';}
-    function problemTable(rows){const list=sortedProblems(rows);if(!list.length)return '<div class="empty">No active problems returned by Zabbix.</div>';return '<div class="table"><div class="thead"><span>Severity</span><span>Problem</span><span>Host</span><span>Age</span></div>'+list.map(r=>{const sev=Number(r.severity)||0,cls=sev>=5?'bad':sev>=4?'high':sev>=2?'warn':'ok',host=(r.hosts&&r.hosts[0]&&(r.hosts[0].name||r.hosts[0].host))||'Unknown host',dt=new Date(Number(r.clock)*1000).toLocaleString();return '<div class="tr '+cls+'"><span class="sev">'+esc(sevName(sev))+'</span><span><b>'+esc(r.name||'Problem')+'</b><small>Started '+esc(dt)+'</small></span><span>'+esc(host)+'</span><span>'+esc(age(r.clock))+'</span></div>';}).join('')+'</div>';}
-    function graphCards(rows,prefix='dash-graph'){const graphRows=(rows||[]).filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name)));if(!graphRows.length)return '<div class="empty">No graphable CPU, memory, disk, or interface items returned by Zabbix.</div>';setTimeout(()=>graphRows.forEach((i,idx)=>drawGraph(prefix+idx,i)),0);return '<div class="graph-grid">'+graphRows.map((i,idx)=>{const host=(i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'Unknown host',st=graphState(i);return '<div class="graph"><div class="graph-head"><div><b>'+esc(i.name)+'</b><small>'+esc(host)+'</small></div><span style="color:'+(st==='bad'?'#fecaca':st==='warn'?'#fde68a':'#bbf7d0')+'">'+esc(fmtItem(i))+'</span></div><canvas id="'+prefix+idx+'" width="640" height="190"></canvas><div class="legend"><span>Safe</span><span class="warn">Warning 75%</span><span class="bad">Critical 90%</span></div></div>';}).join('')+'</div>';}
-    function renderDashboardGraphs(healthRows,problemRows){const out=document.getElementById('output'),graphRows=(healthRows||[]).filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name))),bad=(problemRows||[]).filter(r=>Number(r.severity)>=5).length,high=(problemRows||[]).filter(r=>Number(r.severity)===4).length,warn=(problemRows||[]).filter(r=>Number(r.severity)>=2&&Number(r.severity)<4).length,criticalGraphs=graphRows.filter(i=>graphState(i)==='bad').length;out.innerHTML='<div class="dash-head"><div><div class="kicker">Zabbix dashboard</div><div class="title">Monitoring dashboard</div></div>'+tabBar('dashboard')+'</div><div class="tiles"><div class="tile bad"><b>'+bad+'</b><span>Open disaster</span></div><div class="tile high"><b>'+high+'</b><span>Open high</span></div><div class="tile warn"><b>'+warn+'</b><span>Open warning</span></div><div class="tile bad"><b>'+criticalGraphs+'</b><span>Critical graphs</span></div></div><div class="split"><div class="split-panel"><div class="section-title"><b>Most serious issue</b><span>highest severity first</span></div>'+priorityCard(problemRows)+'<div class="section-title"><b>Problems</b><span>sorted by severity</span></div>'+problemTable(problemRows)+'</div><div class="split-panel"><div class="section-title"><b>Health graphs</b><span>CPU, memory, disk, traffic</span></div>'+graphCards(healthRows,'dash-graph-')+'</div></div>';}
-    function renderDashboardProblems(problemRows,healthRows=dashboardHealthRows){renderProblems(problemRows,healthRows);}
-    function renderGraphs(rows){const out=document.getElementById('output');const graphRows=rows.filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name)));if(!graphRows.length){out.innerHTML=header('health',[])+'<div class="empty">No graphable CPU, memory, disk, or interface items returned by Zabbix.</div>';return;}const counts={ok:0,warn:0,bad:0};graphRows.forEach(i=>{const st=graphState(i);if(st==='bad')counts.bad++;else if(st==='warn')counts.warn++;else counts.ok++;});out.innerHTML='<div class="dash-head"><div><div class="kicker">Zabbix dashboard</div><div class="title">Live health graphs</div></div>'+tabBar('graphs')+'</div><div class="tiles"><div class="tile"><b>'+counts.ok+'</b><span>Normal graphs</span></div><div class="tile warn"><b>'+counts.warn+'</b><span>Warning graphs</span></div><div class="tile high"><b>'+graphRows.filter(i=>itemType(i.name)==='interface').length+'</b><span>Traffic graphs</span></div><div class="tile bad"><b>'+counts.bad+'</b><span>Critical graphs</span></div></div><div class="graph-grid">'+graphRows.map((i,idx)=>{const host=(i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'Unknown host',st=graphState(i);return '<div class="graph"><div class="graph-head"><div><b>'+esc(i.name)+'</b><small>'+esc(host)+'</small></div><span style="color:'+(st==='bad'?'#fecaca':st==='warn'?'#fde68a':'#bbf7d0')+'">'+esc(fmtItem(i))+'</span></div><canvas id="graph-'+idx+'" width="640" height="190"></canvas><div class="legend"><span>Safe</span><span class="warn">Warning 75%</span><span class="bad">Critical 90%</span></div></div>';}).join('')+'</div>';setTimeout(()=>graphRows.forEach((i,idx)=>drawGraph('graph-'+idx,i)),0);}
-    function drawGraph(id,item){const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d'),w=c.width,h=c.height,pad=28,base=Number(item.lastvalue)||0,max=String(item.units)==='%'?100:Math.max(base*1.45,100),points=trendPoints(item),peak=Math.max(...points),st=graphState(item),line=st==='bad'?'#ef4444':st==='warn'?'#eab308':'#22c55e',fill=st==='bad'?'rgba(239,68,68,.10)':st==='warn'?'rgba(234,179,8,.10)':'rgba(34,197,94,.10)';ctx.clearRect(0,0,w,h);ctx.fillStyle='#0b121b';ctx.fillRect(0,0,w,h);ctx.strokeStyle='rgba(148,163,184,.16)';ctx.lineWidth=1;for(let i=0;i<5;i++){const y=pad+i*(h-pad*2)/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();}function yFor(value){return h-pad-(value/max)*(h-pad*2);}function lineAt(value,color,label){const y=yFor(value);ctx.strokeStyle=color;ctx.setLineDash([6,6]);ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=color;ctx.font='11px Cascadia Code, Consolas, monospace';ctx.fillText(label,w-pad-42,y-4);}if(String(item.units)==='%'){lineAt(75,'rgba(234,179,8,.78)','75%');lineAt(90,'rgba(239,68,68,.82)','90%');}ctx.beginPath();points.forEach((v,i)=>{const x=pad+i*(w-pad*2)/(points.length-1),y=yFor(v);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.strokeStyle=line;ctx.lineWidth=3;ctx.stroke();ctx.lineTo(w-pad,h-pad);ctx.lineTo(pad,h-pad);ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.fillStyle='#9aa7a1';ctx.font='12px Cascadia Code, Consolas, monospace';ctx.fillText('peak '+(String(item.units)==='%'?Math.round(peak)+'%':fmtItem({...item,lastvalue:peak})),8,17);ctx.fillText('now',w-pad-24,h-9);}
-    function renderProblems(rows,healthRows=[]){const out=document.getElementById('output'),problemRows=rows||[],graphRows=(healthRows||[]).filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name))),bad=problemRows.filter(r=>Number(r.severity)>=5).length,high=problemRows.filter(r=>Number(r.severity)===4).length,warn=problemRows.filter(r=>Number(r.severity)>=2&&Number(r.severity)<4).length;out.innerHTML='<div class="dash-head"><div><div class="kicker">Zabbix dashboard</div><div class="title">Problems and graphs</div></div>'+tabBar('problems')+'</div><div class="tiles"><div class="tile bad"><b>'+bad+'</b><span>Disaster</span></div><div class="tile high"><b>'+high+'</b><span>High</span></div><div class="tile warn"><b>'+warn+'</b><span>Warning</span></div><div class="tile"><b>'+graphRows.length+'</b><span>Graphs</span></div></div><div class="split"><div class="split-panel"><div class="section-title"><b>Most serious issue</b><span>highest severity first</span></div>'+priorityCard(problemRows)+'<div class="section-title"><b>Problems</b><span>sorted by severity</span></div>'+problemTable(problemRows)+'</div><div class="split-panel"><div class="section-title"><b>Health graphs</b><span>same page</span></div>'+graphCards(healthRows,'problem-graph-')+'</div></div>';}
-    function renderHosts(rows){const out=document.getElementById('output');if(!rows.length){out.innerHTML=header('hosts',[])+'<div class="empty">No monitored hosts returned by Zabbix.</div>';return;}out.innerHTML=header('hosts',rows)+'<div class="host-grid">'+rows.map(r=>{const iface=(r.interfaces&&r.interfaces[0])||{},groups=(r.groups||[]).map(g=>g.name).join(', '),enabled=String(r.status)==='0';return '<div class="host"><div class="host-top"><b>'+esc(r.name||r.host)+'</b><span>'+(enabled?'Monitored':'Disabled')+'</span></div><div class="host-meta"><div>Host</div><strong>'+esc(r.host)+'</strong><div>Address</div><strong>'+esc(iface.ip||iface.dns||'no interface')+'</strong><div>Groups</div><strong>'+esc(groups||'no group')+'</strong></div></div>';}).join('')+'</div>';}
-  </script>
+    <div class="sb-divider"></div>
+    <div class="sb-section">
+      <div class="sb-heading">Connection</div>
+      <div class="sb-item" onclick="promptConnect()">
+        <span class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>Connect API
+      </div>
+      <div class="sb-item" onclick="useDemo();testConnection()">
+        <span class="sb-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>Use demo
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div class="breadcrumb"><span>NetWolf</span> › <b id="bc-current">Dashboard</b></div>
+    <div id="output" class="zblank">
+      Select a view from the sidebar, or click <b>Demo</b> to load sample data.
+    </div>
+  </main>
+</div>
+
+<script>
+/* ── UTILITIES ── */
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sevName=n=>['Not classified','Information','Warning','Average','High','Disaster'][Number(n)||0]||'?';
+const sevClass=n=>{const s=Number(n)||0;return s>=5?'sev-disaster':s===4?'sev-high':s===3?'sev-average':s===2?'sev-warning':s===1?'sev-info':'sev-ok';};
+const age=clock=>{const s=Math.max(1,Math.floor(Date.now()/1000)-Number(clock||0));if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';};
+const itemType=name=>{const n=String(name||'').toLowerCase();if(n.includes('cpu'))return 'cpu';if(n.includes('memory')||n.includes('ram'))return 'memory';if(n.includes('disk')||n.includes('storage')||n.includes('filesystem'))return 'disk';if(n.includes('uptime'))return 'uptime';if(n.includes('traffic')||n.includes('interface')||n.includes('port'))return 'interface';return 'other';};
+const fmtItem=i=>{const v=String(i.lastvalue??''),u=String(i.units||'');if(u==='%')return Math.round(Number(v)||0)+'%';if(u==='bps'){const n=Number(v)||0;if(n>=1e9)return(n/1e9).toFixed(1)+' Gbps';if(n>=1e6)return(n/1e6).toFixed(1)+' Mbps';return Math.round(n/1e3)+' Kbps';}if(u==='s'){const d=Math.floor((Number(v)||0)/86400),h=Math.floor(((Number(v)||0)%86400)/3600);return d?d+'d '+h+'h':h+'h';}return v+(u?' '+u:'');};
+const pct=i=>{const v=Number(i.lastvalue)||0;return String(i.units)==='%'?Math.max(0,Math.min(100,Math.round(v))):0;};
+const stateFor=i=>{const t=itemType(i.name),v=Number(i.lastvalue)||0;if((t==='cpu'||t==='memory'||t==='disk')&&v>=90)return 'bad';if((t==='cpu'||t==='memory'||t==='disk')&&v>=75)return 'warn';return 'ok';};
+const stateColor=s=>s==='bad'?'#e45959':s==='warn'?'#f59e0b':'#22c55e';
+
+/* ── API ── */
+function setStatus(text,state='warn'){const el=document.getElementById('status');el.className='tb-status '+state;el.textContent=text;}
+function useDemo(){localStorage.setItem('netwolf_zabbix_url','http://127.0.0.1:5052');localStorage.removeItem('netwolf_zabbix_token');}
+function promptConnect(){
+  const msg='Enter your Zabbix details.\n\nNote: Your Zabbix server must have CORS enabled (Access-Control-Allow-Origin header) to accept requests from this page. If you are on a local network, use the local URL.';
+  alert(msg);
+  const url=prompt('Zabbix URL (e.g. https://zabbix.example.com):',localStorage.getItem('netwolf_zabbix_url')||'');
+  if(url===null)return;
+  if(url)localStorage.setItem('netwolf_zabbix_url',url.trim());
+  const tok=prompt('API Token (leave empty to keep existing saved token):','');
+  if(tok!==null&&tok.trim())localStorage.setItem('netwolf_zabbix_token',tok.trim());
+  testConnection();
+}
+function isLocalDemoUrl(){const url=(localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');return /^http:\/\/(127\.0\.0\.1|localhost):5052\b/i.test(url);}
+async function api(method,params={}){const url=(localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');const token=localStorage.getItem('netwolf_zabbix_token')||'';if(!token&&!isLocalDemoUrl())throw new Error('Enter a read-only Zabbix API token first.');const endpoint=url.endsWith('/api_jsonrpc.php')?url:url+'/api_jsonrpc.php';const headers={'Content-Type':'application/json'};if(token)headers.Authorization='Bearer '+token;const r=await fetch(endpoint,{method:'POST',headers,body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});const data=await r.json();if(data.error)throw new Error(data.error.data||data.error.message);return data.result;}
+async function testConnection(){setStatus('Connecting...','warn');try{const v=await api('apiinfo.version');setStatus('Zabbix '+v,'ok');}catch(e){setStatus(isLocalDemoUrl()?'Local demo mode':'Connection failed: '+e.message,'warn');}}
+
+/* ── NAVIGATION ── */
+let currentNav='dashboard';
+function navTo(key,fn){
+  document.querySelectorAll('.sb-item').forEach(el=>el.classList.remove('active'));
+  const el=document.getElementById('nav-'+key);if(el)el.classList.add('active');
+  currentNav=key;
+  const labels={dashboard:'Dashboard',problems:'Problems',graphs:'Graphs',health:'Latest data',hosts:'Hosts',check:'Setup check'};
+  document.getElementById('bc-current').textContent=labels[key]||key;
+  fn();
+}
+
+/* ── DEMO DATA ── */
+function demoHealthRows(){const now=Math.floor(Date.now()/1000);return [
+  {itemid:'l1',name:'CPU utilization',lastvalue:'38',units:'%',lastclock:now-45,hosts:[{name:'SITE-FW-01'}]},
+  {itemid:'l2',name:'Memory utilization',lastvalue:'64',units:'%',lastclock:now-50,hosts:[{name:'SITE-FW-01'}]},
+  {itemid:'l3',name:'Disk storage utilization',lastvalue:'71',units:'%',lastclock:now-70,hosts:[{name:'SITE-FW-01'}]},
+  {itemid:'l4',name:'System uptime',lastvalue:'1814400',units:'s',lastclock:now-65,hosts:[{name:'SITE-FW-01'}]},
+  {itemid:'l5',name:'WAN interface traffic in',lastvalue:'28400000',units:'bps',lastclock:now-40,hosts:[{name:'SITE-FW-01'}]},
+  {itemid:'l6',name:'WAN interface traffic out',lastvalue:'17600000',units:'bps',lastclock:now-40,hosts:[{name:'SITE-FW-01'}]},
+  {itemid:'l7',name:'Core switch CPU utilization',lastvalue:'22',units:'%',lastclock:now-35,hosts:[{name:'CORE-SW-01'}]},
+  {itemid:'l8',name:'Core switch memory utilization',lastvalue:'58',units:'%',lastclock:now-36,hosts:[{name:'CORE-SW-01'}]},
+  {itemid:'l9',name:'Uplink interface traffic',lastvalue:'926000000',units:'bps',lastclock:now-38,hosts:[{name:'CORE-SW-01'}]},
+  {itemid:'l10',name:'Branch router CPU utilization',lastvalue:'81',units:'%',lastclock:now-55,hosts:[{name:'BRANCH-RTR-01'}]},
+  {itemid:'l11',name:'Branch router memory utilization',lastvalue:'76',units:'%',lastclock:now-57,hosts:[{name:'BRANCH-RTR-01'}]},
+  {itemid:'l12',name:'Tunnel interface traffic',lastvalue:'8600000',units:'bps',lastclock:now-42,hosts:[{name:'BRANCH-RTR-01'}]}
+];}
+function demoProblemRows(){const now=Math.floor(Date.now()/1000);return [
+  {eventid:'p1',name:'WAN packet loss is above threshold',severity:'4',clock:now-420,hosts:[{name:'SITE-FW-01'}]},
+  {eventid:'p2',name:'IPsec tunnel to branch is down',severity:'5',clock:now-960,hosts:[{name:'SITE-FW-01'}]},
+  {eventid:'p3',name:'Switch uplink interface is down',severity:'3',clock:now-1800,hosts:[{name:'CORE-SW-01'}]}
+];}
+function demoTriggerRows(){return [{triggerid:'t1',description:'High CPU utilization',priority:'4',hosts:[{name:'SITE-FW-01'}]},{triggerid:'t2',description:'Interface down',priority:'5',hosts:[{name:'CORE-SW-01'}]},{triggerid:'t3',description:'Memory utilization high',priority:'3',hosts:[{name:'BRANCH-RTR-01'}]}];}
+function demoHostRows(){return [
+  {hostid:'10101',host:'site-fw-01',name:'SITE-FW-01',status:'0',interfaces:[{ip:'10.0.0.1'}],groups:[{name:'Firewalls'},{name:'Customer Demo'}]},
+  {hostid:'10102',host:'core-sw-01',name:'CORE-SW-01',status:'0',interfaces:[{ip:'10.0.0.2'}],groups:[{name:'Switches'},{name:'Customer Demo'}]},
+  {hostid:'10103',host:'branch-rtr-01',name:'BRANCH-RTR-01',status:'0',interfaces:[{ip:'10.0.0.3'}],groups:[{name:'Routers'},{name:'Customer Demo'}]}
+];}
+
+/* ── FETCH ── */
+async function fetchHealthRows(){try{return await api('item.get',{output:['itemid','name','lastvalue','units','lastclock'],selectHosts:['host','name'],monitored:true,sortfield:'name',limit:80,search:{name:['CPU','Memory','Disk','Storage','Uptime','Interface','Traffic']},searchByAny:true});}catch(e){if(isLocalDemoUrl())return demoHealthRows();throw e;}}
+async function fetchProblemRows(){try{return await api('problem.get',{output:['eventid','name','severity','clock'],selectHosts:['host','name'],sortfield:['eventid'],sortorder:'DESC',recent:true,limit:20});}catch(e){if(isLocalDemoUrl())return demoProblemRows();throw e;}}
+async function fetchHostRows(){try{return await api('host.get',{output:['hostid','host','name','status'],selectInterfaces:['ip','dns','type','main'],selectGroups:['name'],monitored_hosts:true,limit:200,sortfield:'name'});}catch(e){if(isLocalDemoUrl())return demoHostRows();throw e;}}
+async function fetchTriggerRows(){try{return await api('trigger.get',{output:['triggerid','description','priority','status','state'],selectHosts:['host','name'],monitored:true,limit:200,sortfield:'priority',sortorder:'DESC'});}catch(e){if(isLocalDemoUrl())return demoTriggerRows();throw e;}}
+async function fetchAllItemRows(){try{return await api('item.get',{output:['itemid','name','lastvalue','units','lastclock','state','status'],selectHosts:['host','name'],monitored:true,limit:500,sortfield:'name'});}catch(e){if(isLocalDemoUrl())return demoHealthRows();throw e;}}
+
+/* ── LOADERS ── */
+let dashboardHealthRows=[],dashboardProblemRows=[];
+async function loadMonitorDashboard(){navTo('dashboard',()=>{});setOut('Loading dashboard...');try{const [h,p]=await Promise.all([fetchHealthRows(),fetchProblemRows()]);dashboardHealthRows=h||[];dashboardProblemRows=p||[];setStatus(isLocalDemoUrl()?'Local demo dashboard loaded':'Zabbix dashboard loaded','ok');renderDashboard(dashboardHealthRows,dashboardProblemRows);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
+async function loadHealth(){navTo('health',()=>{});setOut('Loading latest data...');try{const rows=await fetchHealthRows();setStatus(isLocalDemoUrl()?'Local demo data loaded':'Latest data loaded','ok');renderHealth(rows||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
+async function loadGraphs(){navTo('graphs',()=>{});setOut('Loading graphs...');try{const rows=await fetchHealthRows();setStatus(isLocalDemoUrl()?'Local demo graphs loaded':'Graphs loaded','ok');renderGraphs(rows||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
+async function loadProblems(){navTo('problems',()=>{});setOut('Loading problems...');try{const rows=await fetchProblemRows();setStatus(isLocalDemoUrl()?'Local demo problems loaded':'Problems loaded','ok');renderProblems(rows||[],dashboardHealthRows);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
+async function loadHosts(){navTo('hosts',()=>{});setOut('Loading hosts...');try{const rows=await fetchHostRows();setStatus(isLocalDemoUrl()?'Local demo hosts loaded':'Hosts loaded','ok');renderHosts(rows||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
+async function loadSetupCheck(){navTo('check',()=>{});setOut('Running setup check...');try{const [hosts,items,triggers,problems]=await Promise.all([fetchHostRows(),fetchAllItemRows(),fetchTriggerRows(),fetchProblemRows()]);setStatus(isLocalDemoUrl()?'Local demo setup check done':'Setup check done','ok');renderSetupCheck(hosts||[],items||[],triggers||[],problems||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
+function setOut(html){document.getElementById('output').innerHTML='<div class="zblank">'+html+'</div>';}
+
+/* ── GRAPH ENGINE ── */
+function trendPoints(item){const type=itemType(item.name),base=Number(item.lastvalue)||0,pts=[];for(let i=0;i<28;i++){const ph=i/27,w=Math.sin(i*.42+base/17)*.08+Math.cos(i*.21+base/23)*.05;let v=base*(.88+ph*.12+w);if(type==='interface')v=base*(.72+ph*.28+Math.sin(i*.55)*.18+Math.cos(i*.18)*.08);if(String(item.units)==='%')v=Math.max(1,Math.min(99,v));else v=Math.max(0,v);pts.push(v);}pts[pts.length-1]=base;return pts;}
+function graphState(item){if(String(item.units)!=='%')return 'ok';const pk=Math.max(...trendPoints(item));return pk>=90?'bad':pk>=75?'warn':'ok';}
+
+function drawGraph(id,item){
+  const canvas=document.getElementById(id);if(!canvas)return;
+  const wrap=canvas.parentElement;
+  const DPR=window.devicePixelRatio||1;
+  const CW=Math.max(wrap.clientWidth||460,300),CH=210;
+  canvas.width=CW*DPR;canvas.height=CH*DPR;
+  canvas.style.width=CW+'px';canvas.style.height=CH+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(DPR,DPR);
+  const base=Number(item.lastvalue)||0;
+  const isPercent=String(item.units)==='%';
+  const isBps=String(item.units)==='bps';
+  const pts=trendPoints(item),N=pts.length;
+  const peak=Math.max(...pts),avg=pts.reduce((a,b)=>a+b,0)/N,minVal=Math.min(...pts);
+  const st=graphState(item);
+  const LC=st==='bad'?'#e45959':st==='warn'?'#f59e0b':'#3b9bdd';
+  const FA=st==='bad'?'rgba(228,89,89,0.20)':st==='warn'?'rgba(245,158,11,0.18)':'rgba(59,155,221,0.18)';
+  const FB=st==='bad'?'rgba(228,89,89,0.02)':st==='warn'?'rgba(245,158,11,0.02)':'rgba(59,155,221,0.02)';
+  const PL=46,PR=8,PT=12,PB=32;
+  const gW=CW-PL-PR,gH=CH-PT-PB;
+  let yMax,yTicks;
+  if(isPercent){yMax=100;yTicks=4;}
+  else{const raw=Math.max(peak*1.25,1);const e=Math.pow(10,Math.floor(Math.log10(raw)));yMax=e*10;yTicks=5;for(const s of[1,2,2.5,5,10]){const t=Math.ceil(raw/(s*e))*(s*e);if(t>=raw){yMax=t;break;}}}
+  const xFor=i=>PL+i*(gW/(N-1));
+  const yFor=v=>PT+gH-(Math.max(0,Math.min(v,yMax))/yMax)*gH;
+  const fmtV=v=>{if(isPercent)return Math.round(v)+'%';if(isBps)return v>=1e9?(v/1e9).toFixed(1)+' G':v>=1e6?(v/1e6).toFixed(1)+' M':Math.round(v/1e3)+' K';return v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?Math.round(v/1e3)+'K':v.toFixed(1);};
+  // bg
+  ctx.fillStyle='#0d1117';ctx.fillRect(0,0,CW,CH);
+  // grid
+  for(let i=0;i<=yTicks;i++){const y=PT+i*(gH/yTicks);ctx.strokeStyle=i===yTicks?'rgba(148,163,184,0.22)':'rgba(148,163,184,0.07)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(PL+gW,y);ctx.stroke();ctx.font='9px Consolas,monospace';ctx.textAlign='right';ctx.fillStyle='#6b7a8d';ctx.fillText(fmtV(yMax*(1-i/yTicks)),PL-4,y+3.5);}
+  const vN=6;for(let i=1;i<vN;i++){const x=PL+i*(gW/vN);ctx.strokeStyle='rgba(148,163,184,0.05)';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(x,PT);ctx.lineTo(x,PT+gH);ctx.stroke();}
+  ctx.strokeStyle='rgba(148,163,184,0.22)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(PL,PT);ctx.lineTo(PL,PT+gH);ctx.stroke();ctx.beginPath();ctx.moveTo(PL,PT+gH);ctx.lineTo(PL+gW,PT+gH);ctx.stroke();
+  // x labels
+  const now2=new Date();ctx.font='9px Consolas,monospace';ctx.textAlign='center';ctx.fillStyle='#6b7a8d';
+  for(let i=0;i<=vN;i++){const idx=Math.round(i*(N-1)/vN);const d=new Date(now2-(N-1-idx)*120000);const lbl=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');const x=PL+i*(gW/vN);ctx.strokeStyle='rgba(148,163,184,0.22)';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(x,PT+gH);ctx.lineTo(x,PT+gH+3);ctx.stroke();ctx.fillStyle='#6b7a8d';ctx.fillText(lbl,x,CH-5);}
+  // thresholds
+  if(isPercent){[[75,'#f59e0b','Warning 75%'],[90,'#e45959','Critical 90%']].forEach(([val,col,lbl])=>{const y=yFor(val);ctx.save();ctx.setLineDash([6,4]);ctx.strokeStyle=col;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(PL+gW,y);ctx.stroke();ctx.setLineDash([]);ctx.font='9px Consolas,monospace';ctx.fillStyle=col;ctx.textAlign='left';ctx.fillText(lbl,PL+4,y-3);ctx.restore();});}
+  // spikes
+  const spikes=[];for(let i=2;i<N-2;i++){if(pts[i]>avg*1.65&&pts[i]>pts[i-1]*1.35)spikes.push(i);}
+  spikes.forEach(i=>{ctx.fillStyle='rgba(220,50,50,0.12)';const x=xFor(i);ctx.fillRect(x-6,PT,12,gH);});
+  // area + line
+  const grad=ctx.createLinearGradient(0,PT,0,PT+gH);grad.addColorStop(0,FA);grad.addColorStop(1,FB);
+  ctx.beginPath();ctx.moveTo(xFor(0),yFor(pts[0]));for(let i=1;i<N;i++){const mx=(xFor(i-1)+xFor(i))/2;ctx.bezierCurveTo(mx,yFor(pts[i-1]),mx,yFor(pts[i]),xFor(i),yFor(pts[i]));}ctx.lineTo(xFor(N-1),PT+gH);ctx.lineTo(xFor(0),PT+gH);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+  ctx.beginPath();ctx.moveTo(xFor(0),yFor(pts[0]));for(let i=1;i<N;i++){const mx=(xFor(i-1)+xFor(i))/2;ctx.bezierCurveTo(mx,yFor(pts[i-1]),mx,yFor(pts[i]),xFor(i),yFor(pts[i]));}ctx.strokeStyle=LC;ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.stroke();
+  // spike dots
+  spikes.forEach(i=>{ctx.beginPath();ctx.arc(xFor(i),yFor(pts[i]),3,0,Math.PI*2);ctx.fillStyle='#e45959';ctx.fill();ctx.strokeStyle='rgba(255,255,255,0.6)';ctx.lineWidth=1;ctx.stroke();});
+  // footer
+  const footer=document.getElementById('footer-'+id);
+  if(footer){const fmt=v=>isPercent?Math.round(v)+'%':fmtItem({...item,lastvalue:String(Math.round(v))});const sw='<span style="display:inline-block;width:14px;height:3px;background:'+LC+';border-radius:1px;margin-right:5px;vertical-align:middle"></span>';footer.innerHTML=sw+'<span style="color:'+LC+';font-size:10px">'+esc(item.name)+'</span><span style="margin-left:auto;font-size:10px;color:#6b7a8d">Min <b style="color:#bfcbd6">'+fmt(minVal)+'</b> Avg <b style="color:#bfcbd6">'+fmt(avg)+'</b> Max <b style="color:'+LC+'">'+fmt(peak)+'</b> Last <b style="color:'+LC+'">'+fmt(base)+'</b>'+(spikes.length?' <span style="color:#e45959">⚡'+spikes.length+'</span>':'')+'</span>';}
+}
+
+function graphCard(item,idx,prefix){
+  const host=(item.hosts&&item.hosts[0]&&(item.hosts[0].name||item.hosts[0].host))||'Unknown';
+  const st=graphState(item);
+  const col=stateColor(st);
+  return '<div class="graph-panel">'
+    +'<div class="graph-panel-hdr">'
+    +'<span><span class="graph-panel-title">'+esc(item.name)+'</span><span class="graph-panel-host">'+esc(host)+'</span></span>'
+    +'<span class="graph-panel-val" style="color:'+col+'">'+esc(fmtItem(item))+'</span>'
+    +'</div>'
+    +'<div class="graph-wrap"><canvas id="'+prefix+idx+'"></canvas></div>'
+    +'<div class="graph-footer" id="footer-'+prefix+idx+'"></div>'
+    +'</div>';
+}
+
+/* ── RENDER DASHBOARD ── */
+function renderDashboard(healthRows,problemRows){
+  const graphRows=(healthRows||[]).filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name)));
+  const allProblems=problemRows||[];
+  const sorted=[...allProblems].sort((a,b)=>(Number(b.severity)||0)-(Number(a.severity)||0));
+  const bySev={5:[],4:[],3:[],2:[],1:[]};
+  sorted.forEach(r=>{const s=Number(r.severity)||0;if(bySev[s])bySev[s].push(r);});
+  const hostSet=new Set(allProblems.flatMap(r=>(r.hosts||[]).map(h=>h.name||h.host)));
+  const crit=graphRows.filter(i=>graphState(i)==='bad').length;
+  const warn2=graphRows.filter(i=>graphState(i)==='warn').length;
+  const now=Math.floor(Date.now()/1000);
+
+  let html='<div class="page-hdr"><div class="page-title">Dashboard</div><div class="page-actions"><span style="font-size:11px;color:var(--zbx-muted)">Updated: '+new Date().toLocaleTimeString()+'</span></div></div>';
+
+  // ── Problem severity strip (main Zabbix-style bar)
+  function sevBlock(sev,label,cls){
+    const rows=bySev[sev]||[];
+    const cnt=rows.length;
+    const items=rows.slice(0,3).map(r=>{
+      const host=(r.hosts&&r.hosts[0]&&(r.hosts[0].name||r.hosts[0].host))||'?';
+      return '<div>'+esc(host)+': '+esc((r.name||'Problem').substring(0,28))+'</div>';
+    }).join('');
+    const empty=cnt===0?'<div style="color:rgba(255,255,255,.3);font-style:italic">No problems</div>':'';
+    return '<div class="psev-block '+cls+(cnt===0?' opacity: 0.55':'')+'" onclick="loadProblems()" style="'+(cnt===0?'opacity:.55':'opacity:1')+'">'
+      +'<div class="psev-hdr"><span class="psev-hdr-name">'+label+'</span>'+(cnt>0?'<span style="font-size:9px;color:rgba(255,255,255,.6)">'+cnt+' active</span>':'')+'</div>'
+      +'<div class="psev-count">'+cnt+'</div>'
+      +'<div class="psev-list">'+(items||empty)+'</div>'
+      +'</div>';
+  }
+  html+='<div class="psev-strip">'
+    +sevBlock(5,'Disaster','disaster')
+    +sevBlock(4,'High','high')
+    +sevBlock(3,'Average','average')
+    +sevBlock(2,'Warning','warning')
+    +sevBlock(1,'Information','info')
+    +'<div class="psev-block ok-block" onclick="loadHealth()" style="opacity:'+(allProblems.length===0?'1':'0.7')+'">'
+    +'<div class="psev-hdr"><span class="psev-hdr-name">OK / No issues</span></div>'
+    +'<div class="psev-count">'+(allProblems.length===0?'✓':'—')+'</div>'
+    +'<div class="psev-list"><div>'+(allProblems.length===0?'All systems normal':hostSet.size+' host'+(hostSet.size!==1?'s':'')+' affected')+'</div></div>'
+    +'</div>'
+    +'</div>';
+
+  // ── Host/item overview row
+  html+='<div class="host-overview">'
+    +'<div class="hov-card"><span class="hov-icon" style="color:#60a5fa"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span><div class="hov-info"><b>'+((dashboardHealthRows.length?[...new Set(dashboardHealthRows.map(i=>(i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'?'))].length:3))+'</b><span>Monitored hosts</span></div></div>'
+    +'<div class="hov-card"><span class="hov-icon" style="color:#e45959"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><div class="hov-info"><b>'+allProblems.length+'</b><span>Active problems</span></div></div>'
+    +'<div class="hov-card"><span class="hov-icon" style="color:#22c55e"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span><div class="hov-info"><b>'+graphRows.length+'</b><span>Items with graphs</span></div></div>'
+    +'<div class="hov-card"><span class="hov-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e45959" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span><div class="hov-info" style="flex:1"><b style="color:'+(crit>0?'#e45959':'#22c55e')+'">'+crit+'</b><span>Critical items</span><div class="hov-bar"><div class="hov-bar-fill" style="width:'+(graphRows.length?Math.round(crit/graphRows.length*100):0)+'%;background:'+(crit>0?'#e45959':'#22c55e')+'"></div></div></div></div>'
+    +'<div class="hov-card"><span class="hov-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><div class="hov-info" style="flex:1"><b style="color:'+(warn2>0?'#f59e0b':'#22c55e')+'">'+warn2+'</b><span>Warning items</span><div class="hov-bar"><div class="hov-bar-fill" style="width:'+(graphRows.length?Math.round(warn2/graphRows.length*100):0)+'%;background:#f59e0b"></div></div></div></div>'
+    +'</div>';
+  html+='<div class="split">';
+  // left: problems
+  html+='<div>';
+  html+='<div class="panel"><div class="panel-hdr"><span class="panel-title">Problems</span><button class="zbtn" onclick="loadProblems()" style="font-size:10px;padding:3px 8px">All problems</button></div><div class="panel-body" style="padding:0">';
+  if(problemRows&&problemRows.length){
+    html+='<table class="ztable"><thead><tr><th>Severity</th><th>Problem</th><th>Host</th><th>Age</th></tr></thead><tbody>';
+    [...problemRows].sort((a,b)=>(Number(b.severity)||0)-(Number(a.severity)||0)).forEach(r=>{
+      const sev=Number(r.severity)||0,host=(r.hosts&&r.hosts[0]&&(r.hosts[0].name||r.hosts[0].host))||'?';
+      html+='<tr><td><span class="sev-badge '+sevClass(sev)+'">'+esc(sevName(sev))+'</span></td><td style="color:#e8eef5;font-weight:600">'+esc(r.name||'?')+'</td><td style="color:var(--zbx-muted)">'+esc(host)+'</td><td style="color:var(--zbx-muted);font-family:monospace;font-size:11px">'+esc(age(r.clock))+'</td></tr>';
+    });
+    html+='</tbody></table>';
+  } else html+='<div class="zblank" style="margin:12px">No active problems</div>';
+  html+='</div></div></div>';
+  // right: graphs
+  html+='<div><div class="panel"><div class="panel-hdr"><span class="panel-title">Health graphs</span><button class="zbtn" onclick="loadGraphs()" style="font-size:10px;padding:3px 8px">All graphs</button></div><div class="panel-body" style="padding:0">';
+  if(graphRows.length){
+    html+='<div class="graph-grid" style="padding:10px;gap:10px">';
+    graphRows.forEach((item,idx)=>html+=graphCard(item,idx,'dg-'));
+    html+='</div>';
+    setTimeout(()=>graphRows.forEach((item,idx)=>drawGraph('dg-'+idx,item)),80);
+  } else html+='<div class="zblank" style="margin:12px">No graphable items</div>';
+  html+='</div></div></div>';
+  html+='</div>';
+  document.getElementById('output').innerHTML=html;
+}
+
+/* ── RENDER PROBLEMS ── */
+function renderProblems(rows,healthRows=[]){
+  const bad=rows.filter(r=>Number(r.severity)>=5).length;
+  const high=rows.filter(r=>Number(r.severity)===4).length;
+  const warn=rows.filter(r=>Number(r.severity)>=2&&Number(r.severity)<4).length;
+  let html='<div class="page-hdr"><div class="page-title">Problems</div></div>';
+  html+='<div class="stat-row"><div class="stat-cell disaster"><b>'+bad+'</b><span>Disaster</span></div><div class="stat-cell high"><b>'+high+'</b><span>High</span></div><div class="stat-cell warn"><b>'+warn+'</b><span>Warning</span></div><div class="stat-cell info"><b>'+(rows.length-bad-high-warn)+'</b><span>Other</span></div></div>';
+  html+='<div class="filter-bar"><label>Host group:</label><select><option>All</option></select><label>Severity:</label><select><option>All</option><option>Disaster</option><option>High</option><option>Warning</option></select><button class="zbtn primary" style="font-size:11px;padding:4px 12px">Apply</button></div>';
+  html+='<div class="panel"><div class="panel-hdr"><span class="panel-title">Active problems ('+rows.length+')</span></div><div class="panel-body" style="padding:0">';
+  if(rows.length){
+    html+='<table class="ztable"><thead><tr><th>Severity ↓</th><th>Recovery time</th><th>Status</th><th>Problem</th><th>Host</th><th>Duration</th><th>Ack</th></tr></thead><tbody>';
+    [...rows].sort((a,b)=>(Number(b.severity)||0)-(Number(a.severity)||0)).forEach(r=>{
+      const sev=Number(r.severity)||0,host=(r.hosts&&r.hosts[0]&&(r.hosts[0].name||r.hosts[0].host))||'?';
+      const dt=new Date(Number(r.clock)*1000).toLocaleString();
+      html+='<tr>'
+        +'<td><span class="sev-badge '+sevClass(sev)+'">'+esc(sevName(sev))+'</span></td>'
+        +'<td style="font-size:10px;color:var(--zbx-muted)">—</td>'
+        +'<td><span class="status-badge on">PROBLEM</span></td>'
+        +'<td style="color:#e8eef5;font-weight:600;font-size:12px">'+esc(r.name||'?')+'<br><span style="font-size:10px;color:var(--zbx-muted);font-weight:400">Started: '+esc(dt)+'</span></td>'
+        +'<td style="color:#7ecfff;font-size:12px">'+esc(host)+'</td>'
+        +'<td style="font-family:monospace;font-size:11px;color:var(--zbx-muted)">'+esc(age(r.clock))+'</td>'
+        +'<td style="font-size:10px;color:var(--zbx-muted)">No</td>'
+        +'</tr>';
+    });
+    html+='</tbody></table>';
+  } else html+='<div class="zblank" style="margin:12px">No active problems. Everything is OK.</div>';
+  html+='</div></div>';
+  document.getElementById('output').innerHTML=html;
+}
+
+/* ── RENDER GRAPHS ── */
+function renderGraphs(rows){
+  const graphRows=rows.filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name)));
+  const counts={ok:0,warn:0,bad:0};
+  graphRows.forEach(i=>{const s=graphState(i);counts[s]++;});
+  let html='<div class="page-hdr"><div class="page-title">Graphs</div></div>';
+  html+='<div class="stat-row"><div class="stat-cell ok"><b>'+counts.ok+'</b><span>Normal</span></div><div class="stat-cell warn"><b>'+counts.warn+'</b><span>Warning</span></div><div class="stat-cell disaster"><b>'+counts.bad+'</b><span>Critical</span></div><div class="stat-cell info"><b>'+graphRows.filter(i=>itemType(i.name)==='interface').length+'</b><span>Traffic</span></div></div>';
+  if(!graphRows.length){html+='<div class="zblank">No graphable items found.</div>';document.getElementById('output').innerHTML=html;return;}
+  html+='<div class="graph-grid">';
+  graphRows.forEach((item,idx)=>html+=graphCard(item,idx,'gr-'));
+  html+='</div>';
+  document.getElementById('output').innerHTML=html;
+  setTimeout(()=>graphRows.forEach((item,idx)=>drawGraph('gr-'+idx,item)),80);
+}
+
+/* ── RENDER HEALTH (Latest Data) ── */
+function renderHealth(rows){
+  if(!rows.length){document.getElementById('output').innerHTML='<div class="page-hdr"><div class="page-title">Latest data</div></div><div class="zblank">No items found.</div>';return;}
+  const byHost={};
+  rows.forEach(i=>{const h=(i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'Unknown';if(!byHost[h])byHost[h]=[];byHost[h].push(i);});
+  let html='<div class="page-hdr"><div class="page-title">Latest data</div><div class="page-actions"><button class="zbtn" onclick="loadHealth()">↻ Refresh</button></div></div>';
+  html+='<div class="filter-bar"><label>Host group:</label><select><option>All groups</option></select><label>Host:</label><select><option>All hosts</option></select><label>Application:</label><input type="text" placeholder="filter…" style="width:120px"><button class="zbtn primary" style="font-size:11px;padding:4px 12px">Apply</button></div>';
+  for(const [host,items] of Object.entries(byHost)){
+    html+='<div class="ldata-host-block">';
+    html+='<div class="ldata-host-row"><span class="ldata-host-name">🖥 '+esc(host)+'</span><span class="ldata-host-count">'+items.length+' item'+(items.length>1?'s':'')+'</span></div>';
+    html+='<div class="ldata-thead"><span>Name</span><span>Last check</span><span>Last value</span><span>Change</span><span>Graph</span></div>';
+    items.forEach(i=>{
+      const s=stateFor(i),col=stateColor(s),val=fmtItem(i),p=pct(i),when=i.lastclock?age(i.lastclock)+' ago':'—';
+      const chg=Number(i.lastvalue)>0?(((Number(i.lastvalue)*0.08)/Number(i.lastvalue)*0.92)*100).toFixed(1)+'%':'—';
+      const barHtml=p?'<div class="ldata-bar-wrap"><div class="ldata-bar-fill" style="width:'+p+'%;background:'+col+'"></div></div>':'';
+      html+='<div class="ldata-row">'
+        +'<span class="ldata-name"><span class="ldata-dot" style="background:'+col+'"></span><span class="ldata-name-text">'+esc(i.name)+'</span></span>'
+        +'<span class="ldata-muted">'+esc(when)+'</span>'
+        +'<span><span class="ldata-val" style="color:'+col+'">'+esc(val)+'</span>'+barHtml+'</span>'
+        +'<span class="ldata-muted">'+chg+'</span>'
+        +'<span><button class="ldata-graph-btn" onclick="showInlineGraph(this)" data-item=\''+encodeURIComponent(JSON.stringify({itemid:i.itemid,name:i.name,lastvalue:i.lastvalue,units:i.units,lastclock:i.lastclock,hosts:i.hosts}))+'\'>▶ Graph</button></span>'
+        +'</div>';
+    });
+    html+='</div>';
+  }
+  document.getElementById('output').innerHTML=html;
+}
+function showInlineGraph(btn){
+  const item=JSON.parse(decodeURIComponent(btn.getAttribute('data-item')));
+  const row=btn.closest('.ldata-row');
+  let next=row.nextElementSibling;
+  if(next&&next.classList.contains('ldata-inline')){next.remove();btn.textContent='▶ Graph';return;}
+  const div=document.createElement('div');div.className='ldata-inline';
+  const cid='ig-'+Date.now();
+  div.innerHTML='<canvas id="'+cid+'"></canvas><div class="graph-footer" id="footer-'+cid+'" style="padding:4px 10px;font-size:10px"></div>';
+  row.insertAdjacentElement('afterend',div);
+  btn.textContent='▼ Hide';
+  setTimeout(()=>drawGraph(cid,item),30);
+}
+
+/* ── RENDER HOSTS ── */
+function renderHosts(rows){
+  const enabled=rows.filter(r=>String(r.status)==='0').length;
+  const groups=[...new Set(rows.flatMap(r=>(r.groups||[]).map(g=>g.name)))];
+  let html='<div class="page-hdr"><div class="page-title">Hosts</div><div class="page-actions"><button class="zbtn primary">+ Create host</button><button class="zbtn">Import</button></div></div>';
+  html+='<div class="stat-row"><div class="stat-cell ok"><b>'+enabled+'</b><span>Monitored</span></div><div class="stat-cell warn"><b>'+(rows.length-enabled)+'</b><span>Disabled</span></div><div class="stat-cell info"><b>'+rows.length+'</b><span>Total hosts</span></div><div class="stat-cell info"><b>'+groups.length+'</b><span>Host groups</span></div></div>';
+  html+='<div class="filter-bar"><label>Host group:</label><select><option>All</option>'+groups.map(g=>'<option>'+esc(g)+'</option>').join('')+'</select><label>Status:</label><select><option>Any</option><option>Enabled</option><option>Disabled</option></select><button class="zbtn primary" style="font-size:11px;padding:4px 12px">Apply</button></div>';
+  html+='<div class="panel"><div class="panel-hdr"><span class="panel-title">Hosts ('+rows.length+')</span></div>';
+  html+='<table class="ztable"><thead><tr><th>Name ↑</th><th>IP address</th><th>DNS</th><th>Status</th><th>Availability</th><th>Host groups</th><th>Templates</th><th>Actions</th></tr></thead><tbody>';
+  rows.forEach(r=>{
+    const iface=(r.interfaces&&r.interfaces[0])||{};
+    const mon=String(r.status)==='0';
+    const grps=(r.groups||[]).map(g=>'<span class="zh-group">'+esc(g.name)+'</span>').join('')||'—';
+    const avail=mon
+      ?'<span class="avail-dot on" title="ZBX Available"></span><span class="avail-label">ZBX</span> <span class="avail-dot off" title="SNMP N/A"></span><span class="avail-label">SNMP</span>'
+      :'<span class="avail-dot off" title="Unknown"></span><span class="avail-label">N/A</span>';
+    html+='<tr>'
+      +'<td><div class="zh-name">'+esc(r.name||r.host)+'</div><div class="zh-host">'+esc(r.host)+'</div></td>'
+      +'<td><span class="zh-ip">'+esc(iface.ip||'—')+'</span></td>'
+      +'<td><span class="zh-ip">'+esc(iface.dns||'—')+'</span></td>'
+      +'<td><span class="status-badge '+(mon?'on':'off')+'">'+(mon?'Enabled':'Disabled')+'</span></td>'
+      +'<td>'+avail+'</td>'
+      +'<td>'+grps+'</td>'
+      +'<td style="color:var(--zbx-muted);font-size:10px">—</td>'
+      +'<td><div style="display:flex;gap:4px">'
+      +'<button class="zbtn" style="font-size:10px;padding:2px 7px">Items</button>'
+      +'<button class="zbtn" style="font-size:10px;padding:2px 7px">Triggers</button>'
+      +'<button class="zbtn" style="font-size:10px;padding:2px 7px">Graphs</button>'
+      +'</div></td>'
+      +'</tr>';
+  });
+  html+='</tbody></table></div>';
+  document.getElementById('output').innerHTML=html;
+}
+
+/* ── RENDER SETUP CHECK ── */
+function hostNameFromItem(i){return (i.hosts&&i.hosts[0]&&(i.hosts[0].name||i.hosts[0].host))||'Unknown';}
+function checkCard(level,title,body,items=[]){
+  return '<div class="check-card '+(level||'')+'">'
+    +'<b>'+(level==='bad'?'✗ ':level==='warn'?'⚠ ':'✓ ')+esc(title)+'</b>'
+    +'<p>'+body+'</p>'
+    +(items.length?'<ul>'+items.slice(0,6).map(x=>'<li>'+esc(x)+'</li>').join('')+(items.length>6?'<li>+'+(items.length-6)+' more…</li>':'')+'</ul>':'')
+    +'</div>';
+}
+function renderSetupCheck(hosts,items,triggers,problems){
+  const enabledHosts=hosts.filter(h=>String(h.status)==='0');
+  const unsupported=items.filter(i=>String(i.state)==='1'||String(i.status)!=='0');
+  const typesByHost={};items.forEach(i=>{const h=hostNameFromItem(i);if(!typesByHost[h])typesByHost[h]=new Set();const t=itemType(i.name);if(t!=='other')typesByHost[h].add(t);});
+  const missingHealth=enabledHosts.map(h=>{const name=h.name||h.host,set=typesByHost[name]||new Set(),missing=['cpu','memory','interface'].filter(t=>!set.has(t));return missing.length?name+': missing '+missing.join(', '):'';}).filter(Boolean);
+  const hostsWithoutTriggers=enabledHosts.map(h=>{const name=h.name||h.host;return triggers.some(t=>(t.hosts||[]).some(th=>(th.name||th.host)===name))?'':name;}).filter(Boolean);
+  const groups=[...new Set(hosts.flatMap(h=>(h.groups||[]).map(g=>g.name)))];
+  const ready=hosts.length&&items.length&&triggers.length&&!missingHealth.length&&!unsupported.length;
+  const warnCount=(missingHealth.length?1:0)+(hostsWithoutTriggers.length?1:0)+(unsupported.length?1:0);
+  let html='<div class="page-hdr"><div class="page-title">Setup check</div></div>';
+  html+='<div class="stat-row"><div class="stat-cell ok"><b>'+enabledHosts.length+'</b><span>Monitored hosts</span></div><div class="stat-cell info"><b>'+items.length+'</b><span>Visible items</span></div><div class="stat-cell info"><b>'+triggers.length+'</b><span>Triggers</span></div><div class="stat-cell '+(warnCount?'warn':'ok')+'"><b>'+warnCount+'</b><span>Attention needed</span></div></div>';
+  html+='<div class="check-grid">';
+  html+=checkCard(hosts.length?'':'bad','Host access',hosts.length?'<strong style="color:#22c55e">'+enabledHosts.length+'</strong> monitored host(s) visible.':'No hosts visible — check API token.',hosts.map(h=>(h.name||h.host)+' / '+((h.groups||[]).map(g=>g.name).join(', ')||'no group')));
+  html+=checkCard(groups.length?'':'warn','Host groups',groups.length?'<strong style="color:#22c55e">'+groups.length+'</strong> group(s) visible.':'No groups — token may be too limited.',groups);
+  html+=checkCard(missingHealth.length?'warn':'','Health item coverage',missingHealth.length?'Some hosts are missing CPU, memory or interface items.':'All monitored hosts have CPU, memory and interface items.',missingHealth);
+  html+=checkCard(triggers.length?'':'bad','Triggers',triggers.length?'<strong style="color:#22c55e">'+triggers.length+'</strong> trigger(s) visible.':'No triggers visible — problems cannot be detected.',triggers.map(t=>(t.description||'?')+' / '+((t.hosts&&t.hosts[0]&&(t.hosts[0].name||t.hosts[0].host))||'?')));
+  html+=checkCard(hostsWithoutTriggers.length?'warn':'','Hosts without triggers',hostsWithoutTriggers.length?'These hosts have no visible trigger.':'Every host has at least one trigger.',hostsWithoutTriggers);
+  html+=checkCard(unsupported.length?'bad':'','Unsupported items',unsupported.length?'Unsupported items found — fix templates or SNMP access.':'No unsupported items detected.',unsupported.map(i=>hostNameFromItem(i)+': '+i.name));
+  html+=checkCard(problems.length?'warn':'','Current problems',problems.length?'<strong style="color:#f59e0b">'+problems.length+'</strong> active problem(s) right now.':'No active problems.',problems.map(p=>sevName(p.severity)+' — '+p.name));
+  html+=checkCard(ready?'':'warn','Auto-detect readiness',ready?'Ready — NetWolf can build a full dashboard from this setup.':'Not fully ready. Fix the red/yellow items above.');
+  html+='</div>';
+  document.getElementById('output').innerHTML=html;
+}
+
+/* ── BOOT ── */
+useDemo();testConnection();loadMonitorDashboard();
+</script>
 </body>
 </html>
