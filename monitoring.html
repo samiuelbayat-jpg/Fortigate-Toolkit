@@ -310,7 +310,8 @@ const stateColor=s=>s==='bad'?'#e45959':s==='warn'?'#f59e0b':'#22c55e';
 
 /* ── API ── */
 function setStatus(text,state='warn'){const el=document.getElementById('status');el.className='tb-status '+state;el.textContent=text;}
-function useDemo(){localStorage.setItem('netwolf_zabbix_url','http://127.0.0.1:5052');localStorage.removeItem('netwolf_zabbix_token');}
+function resetZabbixToDemo(){localStorage.setItem('netwolf_zabbix_url','http://127.0.0.1:5052');localStorage.removeItem('netwolf_zabbix_token');}
+function useDemo(){resetZabbixToDemo();setStatus('Local demo mode selected','warn');}
 function promptConnect(){
   const msg='Enter your Zabbix details.\n\nNote: Your Zabbix server must have CORS enabled (Access-Control-Allow-Origin header) to accept requests from this page. If you are on a local network, use the local URL.';
   alert(msg);
@@ -321,7 +322,7 @@ function promptConnect(){
   if(tok!==null&&tok.trim())localStorage.setItem('netwolf_zabbix_token',tok.trim());
   testConnection();
 }
-function isLocalDemoUrl(){const url=(localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');return /^http:\/\/(127\.0\.0\.1|localhost):5052\b/i.test(url);}
+function isLocalDemoUrl(){const url=(localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');return !url||/^http:\/\/(127\.0\.0\.1|localhost):5052\b/i.test(url);}
 async function api(method,params={}){const url=(localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');const token=localStorage.getItem('netwolf_zabbix_token')||'';if(!token&&!isLocalDemoUrl())throw new Error('Enter a read-only Zabbix API token first.');const endpoint=url.endsWith('/api_jsonrpc.php')?url:url+'/api_jsonrpc.php';const headers={'Content-Type':'application/json'};if(token)headers.Authorization='Bearer '+token;const r=await fetch(endpoint,{method:'POST',headers,body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});const data=await r.json();if(data.error)throw new Error(data.error.data||data.error.message);return data.result;}
 async function testConnection(){setStatus('Connecting...','warn');try{const v=await api('apiinfo.version');setStatus('Zabbix '+v,'ok');}catch(e){setStatus(isLocalDemoUrl()?'Local demo mode':'Connection failed: '+e.message,'warn');}}
 

@@ -15562,18 +15562,21 @@ function zbxClearSettings(){
   const u=document.getElementById('zbx-url'),t=document.getElementById('zbx-token');if(u)u.value='';if(t)t.value='';
   showToast('Zabbix settings cleared');
 }
+function zbxIsLocalDemoUrl(url){return /^http:\/\/(127\.0\.0\.1|localhost):5052\b/i.test(String(url||''));}
 async function zbxApi(method,params){
-  const url=(document.getElementById('zbx-url')?.value||localStorage.getItem('netwolf_zabbix_url')||'').replace(/\/$/,'');
+  const url=(document.getElementById('zbx-url')?.value||localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');
   const token=document.getElementById('zbx-token')?.value||localStorage.getItem('netwolf_zabbix_token')||'';
-  if(!url||!token)throw new Error('Enter Zabbix URL and API token first.');
+  if(!token&&!zbxIsLocalDemoUrl(url))throw new Error('Enter a read-only Zabbix API token first.');
   const endpoint=url.endsWith('/api_jsonrpc.php')?url:(url+'/api_jsonrpc.php');
-  const resp=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});
+  const headers={'Content-Type':'application/json'};
+  if(token)headers.Authorization='Bearer '+token;
+  const resp=await fetch(endpoint,{method:'POST',headers,body:JSON.stringify({jsonrpc:'2.0',method,params,id:Date.now()})});
   const data=await resp.json();
   if(data.error)throw new Error(data.error.data||data.error.message||'Zabbix API error');
   return data.result;
 }
 function zbxSetStatus(text,state){const el=document.getElementById('zbx-status');if(el){el.className='zbx-status '+(state||'warn');el.innerHTML=text;}}
-async function zbxTestConnection(){zbxSetStatus('Testing Zabbix API connection...','warn');try{const v=await zbxApi('apiinfo.version',{});zbxSetStatus('Connected to Zabbix API. Version: <strong>'+escapeHtml(v)+'</strong>','ok');}catch(e){zbxSetStatus('Connection failed: '+escapeHtml(e.message),'bad');}}
+async function zbxTestConnection(){zbxSetStatus('Testing Zabbix API connection...','warn');try{const v=await zbxApi('apiinfo.version',{});zbxSetStatus('Connected to Zabbix API. Version: <strong>'+escapeHtml(v)+'</strong>','ok');}catch(e){const url=(document.getElementById('zbx-url')?.value||localStorage.getItem('netwolf_zabbix_url')||'http://127.0.0.1:5052').replace(/\/$/,'');zbxSetStatus(zbxIsLocalDemoUrl(url)?'Local demo mode. Start the demo server for live API, or open the standalone dashboard for built-in demo data.':'Connection failed: '+escapeHtml(e.message),zbxIsLocalDemoUrl(url)?'warn':'bad');}}
 async function zbxLoadProblems(){const out=document.getElementById('zbx-output');if(out)out.innerHTML='<div class="zbx-empty">Loading active problems...</div>';try{const rows=await zbxApi('problem.get',{output:['eventid','name','severity','clock'],selectHosts:['host','name'],sortfield:['eventid'],sortorder:'DESC',recent:true,limit:20});zbxRenderProblems(rows||[]);}catch(e){if(out)out.innerHTML='<div class="cdanger">'+escapeHtml(e.message)+'</div>';}}
 async function zbxLoadHosts(){const out=document.getElementById('zbx-output');if(out)out.innerHTML='<div class="zbx-empty">Loading monitored hosts...</div>';try{const rows=await zbxApi('host.get',{output:['hostid','host','name','status'],selectInterfaces:['ip','dns','type','main'],selectGroups:['name'],monitored_hosts:true,limit:50,sortfield:'name'});zbxRenderHosts(rows||[]);}catch(e){if(out)out.innerHTML='<div class="cdanger">'+escapeHtml(e.message)+'</div>';}}
 function zbxSeverity(n){return ['Not classified','Information','Warning','Average','High','Disaster'][Number(n)||0]||'Unknown';}
