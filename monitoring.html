@@ -241,7 +241,9 @@
   </div>
   <div class="tb-right">
     <span id="status" class="tb-status warn">Not connected</span>
-    <button class="zbtn primary" onclick="useDemo();testConnection()">Demo</button>
+    <span id="liveStatus" class="tb-status warn">Live 15s</span>
+    <button class="zbtn success" id="liveBtn" onclick="toggleLive()">Pause live</button>
+    <button class="zbtn primary" onclick="useDemo();testConnection();refreshCurrentView()">Demo</button>
   </div>
 </div>
 
@@ -307,6 +309,12 @@ const fmtItem=i=>{const v=String(i.lastvalue??''),u=String(i.units||'');if(u==='
 const pct=i=>{const v=Number(i.lastvalue)||0;return String(i.units)==='%'?Math.max(0,Math.min(100,Math.round(v))):0;};
 const stateFor=i=>{const t=itemType(i.name),v=Number(i.lastvalue)||0;if((t==='cpu'||t==='memory'||t==='disk')&&v>=90)return 'bad';if((t==='cpu'||t==='memory'||t==='disk')&&v>=75)return 'warn';return 'ok';};
 const stateColor=s=>s==='bad'?'#e45959':s==='warn'?'#f59e0b':'#22c55e';
+let liveEnabled=true,liveBusy=false,liveTimer=null,liveRedrawTimer=null,liveIntervalMs=15000,lastUpdated=null;
+function liveLabel(){const el=document.getElementById('liveStatus');if(el){el.className='tb-status '+(liveEnabled?'ok':'warn');el.textContent=(liveEnabled?'Live ':'Paused ')+(lastUpdated?new Date(lastUpdated).toLocaleTimeString():'15s');}const b=document.getElementById('liveBtn');if(b){b.textContent=liveEnabled?'Pause live':'Resume live';b.className='zbtn '+(liveEnabled?'success':'primary');}}
+function toggleLive(){liveEnabled=!liveEnabled;liveLabel();if(liveEnabled)refreshCurrentView();}
+function refreshCurrentView(){if(liveBusy)return;const fn={dashboard:loadMonitorDashboard,graphs:loadGraphs,health:loadHealth,problems:loadProblems,hosts:loadHosts,check:loadSetupCheck}[currentNav]||loadMonitorDashboard;fn();}
+function startLiveTimers(){if(liveTimer)clearInterval(liveTimer);if(liveRedrawTimer)clearInterval(liveRedrawTimer);liveTimer=setInterval(()=>{if(liveEnabled)refreshCurrentView();},liveIntervalMs);liveRedrawTimer=setInterval(()=>{if(liveEnabled)redrawVisibleGraphs();},3000);liveLabel();}
+function redrawVisibleGraphs(){document.querySelectorAll('canvas[id^=dg-],canvas[id^=gr-],canvas[id^=ig-]').forEach(c=>{const item=window.__graphItems&&window.__graphItems[c.id];if(item)drawGraph(c.id,item);});}
 
 /* ── API ── */
 function setStatus(text,state='warn'){const el=document.getElementById('status');el.className='tb-status '+state;el.textContent=text;}
@@ -365,24 +373,42 @@ function demoHostRows(){return [
 ];}
 
 /* ── FETCH ── */
-async function fetchHealthRows(){try{return await api('item.get',{output:['itemid','name','lastvalue','units','lastclock'],selectHosts:['host','name'],monitored:true,sortfield:'name',limit:80,search:{name:['CPU','Memory','Disk','Storage','Uptime','Interface','Traffic']},searchByAny:true});}catch(e){if(isLocalDemoUrl())return demoHealthRows();throw e;}}
+async function fetchHealthRows(){try{return await api('item.get',{output:['itemid','name','lastvalue','units','lastclock','value_type'],selectHosts:['host','name'],monitored:true,sortfield:'name',limit:80,search:{name:['CPU','Memory','Disk','Storage','Uptime','Interface','Traffic']},searchByAny:true});}catch(e){if(isLocalDemoUrl())return demoHealthRows();throw e;}}
 async function fetchProblemRows(){try{return await api('problem.get',{output:['eventid','name','severity','clock'],selectHosts:['host','name'],sortfield:['eventid'],sortorder:'DESC',recent:true,limit:20});}catch(e){if(isLocalDemoUrl())return demoProblemRows();throw e;}}
 async function fetchHostRows(){try{return await api('host.get',{output:['hostid','host','name','status'],selectInterfaces:['ip','dns','type','main'],selectGroups:['name'],monitored_hosts:true,limit:200,sortfield:'name'});}catch(e){if(isLocalDemoUrl())return demoHostRows();throw e;}}
 async function fetchTriggerRows(){try{return await api('trigger.get',{output:['triggerid','description','priority','status','state'],selectHosts:['host','name'],monitored:true,limit:200,sortfield:'priority',sortorder:'DESC'});}catch(e){if(isLocalDemoUrl())return demoTriggerRows();throw e;}}
-async function fetchAllItemRows(){try{return await api('item.get',{output:['itemid','name','lastvalue','units','lastclock','state','status'],selectHosts:['host','name'],monitored:true,limit:500,sortfield:'name'});}catch(e){if(isLocalDemoUrl())return demoHealthRows();throw e;}}
+async function fetchAllItemRows(){try{return await api('item.get',{output:['itemid','name','lastvalue','units','lastclock','state','status','value_type'],selectHosts:['host','name'],monitored:true,limit:500,sortfield:'name'});}catch(e){if(isLocalDemoUrl())return demoHealthRows();throw e;}}
+async function enrichHistory(rows){
+  const graphRows=(rows||[]).filter(i=>['cpu','memory','disk','interface'].includes(itemType(i.name)));
+  if(!graphRows.length)return rows||[];
+  if(isLocalDemoUrl()){graphRows.forEach(i=>{delete i._points;i._historySource='demo-live';});return rows;}
+  const now=Math.floor(Date.now()/1000),from=now-3600;
+  const byType={};
+  graphRows.forEach(i=>{const h=String(i.value_type)==='3'?3:0;(byType[h]||(byType[h]=[])).push(String(i.itemid));});
+  try{
+    for(const [hist,itemids] of Object.entries(byType)){
+      const data=await api('history.get',{output:['itemid','clock','value'],history:Number(hist),itemids,sortfield:'clock',sortorder:'ASC',time_from:from,limit:itemids.length*80});
+      const map={};(data||[]).forEach(r=>{(map[String(r.itemid)]||(map[String(r.itemid)]=[])).push(Number(r.value)||0);});
+      graphRows.forEach(i=>{const pts=map[String(i.itemid)];if(pts&&pts.length>1){i._points=pts.slice(-60);i._historySource='zabbix-history';}});
+    }
+  }catch(e){console.warn('history.get failed',e);}
+  graphRows.forEach(i=>{if(!i._points)i._points=trendPoints(i);});
+  return rows;
+}
 
 /* ── LOADERS ── */
 let dashboardHealthRows=[],dashboardProblemRows=[];
-async function loadMonitorDashboard(){navTo('dashboard',()=>{});setOut('Loading dashboard...');try{const [h,p]=await Promise.all([fetchHealthRows(),fetchProblemRows()]);dashboardHealthRows=h||[];dashboardProblemRows=p||[];setStatus(isLocalDemoUrl()?'Local demo dashboard loaded':'Zabbix dashboard loaded','ok');renderDashboard(dashboardHealthRows,dashboardProblemRows);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
-async function loadHealth(){navTo('health',()=>{});setOut('Loading latest data...');try{const rows=await fetchHealthRows();setStatus(isLocalDemoUrl()?'Local demo data loaded':'Latest data loaded','ok');renderHealth(rows||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
-async function loadGraphs(){navTo('graphs',()=>{});setOut('Loading graphs...');try{const rows=await fetchHealthRows();setStatus(isLocalDemoUrl()?'Local demo graphs loaded':'Graphs loaded','ok');renderGraphs(rows||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
+async function loadMonitorDashboard(){navTo('dashboard',()=>{});setOut('Loading dashboard...');try{liveBusy=true;const [h,p]=await Promise.all([fetchHealthRows(),fetchProblemRows()]);dashboardHealthRows=await enrichHistory(h||[]);dashboardProblemRows=p||[];lastUpdated=Date.now();liveLabel();setStatus(isLocalDemoUrl()?'Local demo dashboard loaded':'Zabbix dashboard loaded','ok');renderDashboard(dashboardHealthRows,dashboardProblemRows);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}finally{liveBusy=false;}}
+async function loadHealth(){navTo('health',()=>{});setOut('Loading latest data...');try{liveBusy=true;const rows=await enrichHistory(await fetchHealthRows());lastUpdated=Date.now();liveLabel();setStatus(isLocalDemoUrl()?'Local demo data loaded':'Latest data loaded','ok');renderHealth(rows||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}finally{liveBusy=false;}}
+async function loadGraphs(){navTo('graphs',()=>{});setOut('Loading graphs...');try{liveBusy=true;const rows=await enrichHistory(await fetchHealthRows());lastUpdated=Date.now();liveLabel();setStatus(isLocalDemoUrl()?'Local demo graphs loaded':'Graphs loaded','ok');renderGraphs(rows||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}finally{liveBusy=false;}}
 async function loadProblems(){navTo('problems',()=>{});setOut('Loading problems...');try{const rows=await fetchProblemRows();setStatus(isLocalDemoUrl()?'Local demo problems loaded':'Problems loaded','ok');renderProblems(rows||[],dashboardHealthRows);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
 async function loadHosts(){navTo('hosts',()=>{});setOut('Loading hosts...');try{const rows=await fetchHostRows();setStatus(isLocalDemoUrl()?'Local demo hosts loaded':'Hosts loaded','ok');renderHosts(rows||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
 async function loadSetupCheck(){navTo('check',()=>{});setOut('Running setup check...');try{const [hosts,items,triggers,problems]=await Promise.all([fetchHostRows(),fetchAllItemRows(),fetchTriggerRows(),fetchProblemRows()]);setStatus(isLocalDemoUrl()?'Local demo setup check done':'Setup check done','ok');renderSetupCheck(hosts||[],items||[],triggers||[],problems||[]);}catch(e){setStatus('Connection failed: '+e.message,'warn');setOut('Connection failed: '+esc(e.message));}}
 function setOut(html){document.getElementById('output').innerHTML='<div class="zblank">'+html+'</div>';}
 
 /* ── GRAPH ENGINE ── */
-function trendPoints(item){const type=itemType(item.name),base=Number(item.lastvalue)||0,pts=[];for(let i=0;i<28;i++){const ph=i/27,w=Math.sin(i*.42+base/17)*.08+Math.cos(i*.21+base/23)*.05;let v=base*(.88+ph*.12+w);if(type==='interface')v=base*(.72+ph*.28+Math.sin(i*.55)*.18+Math.cos(i*.18)*.08);if(String(item.units)==='%')v=Math.max(1,Math.min(99,v));else v=Math.max(0,v);pts.push(v);}pts[pts.length-1]=base;return pts;}
+function trendPoints(item){if(item&&Array.isArray(item._points)&&item._points.length>1)return item._points;const type=itemType(item.name),base=Number(item.lastvalue)||0,pts=[],tick=Date.now()/3000;for(let i=0;i<36;i++){const ph=i/35,w=Math.sin(i*.42+base/17+tick)*.08+Math.cos(i*.21+base/23+tick*.6)*.05;let v=base*(.88+ph*.12+w);if(type==='interface')v=base*(.72+ph*.28+Math.sin(i*.55+tick)*.18+Math.cos(i*.18+tick*.4)*.08);if(String(item.units)==='%')v=Math.max(1,Math.min(99,v));else v=Math.max(0,v);pts.push(v);}pts[pts.length-1]=base;return pts;}
+function demoLivePoints(item){const copy={...item};delete copy._points;return trendPoints(copy);}
 function graphState(item){if(String(item.units)!=='%')return 'ok';const pk=Math.max(...trendPoints(item));return pk>=90?'bad':pk>=75?'warn':'ok';}
 
 function drawGraph(id,item){
@@ -417,8 +443,8 @@ function drawGraph(id,item){
   const vN=6;for(let i=1;i<vN;i++){const x=PL+i*(gW/vN);ctx.strokeStyle='rgba(148,163,184,0.05)';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(x,PT);ctx.lineTo(x,PT+gH);ctx.stroke();}
   ctx.strokeStyle='rgba(148,163,184,0.22)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(PL,PT);ctx.lineTo(PL,PT+gH);ctx.stroke();ctx.beginPath();ctx.moveTo(PL,PT+gH);ctx.lineTo(PL+gW,PT+gH);ctx.stroke();
   // x labels
-  const now2=new Date();ctx.font='9px Consolas,monospace';ctx.textAlign='center';ctx.fillStyle='#6b7a8d';
-  for(let i=0;i<=vN;i++){const idx=Math.round(i*(N-1)/vN);const d=new Date(now2-(N-1-idx)*120000);const lbl=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');const x=PL+i*(gW/vN);ctx.strokeStyle='rgba(148,163,184,0.22)';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(x,PT+gH);ctx.lineTo(x,PT+gH+3);ctx.stroke();ctx.fillStyle='#6b7a8d';ctx.fillText(lbl,x,CH-5);}
+  const now2=new Date();const stepMs=(item._historySource==='zabbix-history'?60000:120000);ctx.font='9px Consolas,monospace';ctx.textAlign='center';ctx.fillStyle='#6b7a8d';
+  for(let i=0;i<=vN;i++){const idx=Math.round(i*(N-1)/vN);const d=new Date(now2-(N-1-idx)*stepMs);const lbl=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');const x=PL+i*(gW/vN);ctx.strokeStyle='rgba(148,163,184,0.22)';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(x,PT+gH);ctx.lineTo(x,PT+gH+3);ctx.stroke();ctx.fillStyle='#6b7a8d';ctx.fillText(lbl,x,CH-5);}
   // thresholds
   if(isPercent){[[75,'#f59e0b','Warning 75%'],[90,'#e45959','Critical 90%']].forEach(([val,col,lbl])=>{const y=yFor(val);ctx.save();ctx.setLineDash([6,4]);ctx.strokeStyle=col;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(PL+gW,y);ctx.stroke();ctx.setLineDash([]);ctx.font='9px Consolas,monospace';ctx.fillStyle=col;ctx.textAlign='left';ctx.fillText(lbl,PL+4,y-3);ctx.restore();});}
   // spikes
@@ -436,13 +462,14 @@ function drawGraph(id,item){
 }
 
 function graphCard(item,idx,prefix){
+  window.__graphItems=window.__graphItems||{};window.__graphItems[prefix+idx]=item;
   const host=(item.hosts&&item.hosts[0]&&(item.hosts[0].name||item.hosts[0].host))||'Unknown';
   const st=graphState(item);
   const col=stateColor(st);
   return '<div class="graph-panel">'
     +'<div class="graph-panel-hdr">'
     +'<span><span class="graph-panel-title">'+esc(item.name)+'</span><span class="graph-panel-host">'+esc(host)+'</span></span>'
-    +'<span class="graph-panel-val" style="color:'+col+'">'+esc(fmtItem(item))+'</span>'
+    +'<span class="graph-panel-val" style="color:'+col+'">'+esc(fmtItem(item))+(item._historySource==='zabbix-history'?' · live':item._historySource==='demo-live'?' · demo live':'')+'</span>'
     +'</div>'
     +'<div class="graph-wrap"><canvas id="'+prefix+idx+'"></canvas></div>'
     +'<div class="graph-footer" id="footer-'+prefix+idx+'"></div>'
@@ -598,7 +625,7 @@ function renderHealth(rows){
   document.getElementById('output').innerHTML=html;
 }
 function showInlineGraph(btn){
-  const item=JSON.parse(decodeURIComponent(btn.getAttribute('data-item')));
+  const item=JSON.parse(decodeURIComponent(btn.getAttribute('data-item')));if(isLocalDemoUrl()){delete item._points;item._historySource='demo-live';}else item._historySource=item._points?'zabbix-history':'snapshot';
   const row=btn.closest('.ldata-row');
   let next=row.nextElementSibling;
   if(next&&next.classList.contains('ldata-inline')){next.remove();btn.textContent='▶ Graph';return;}
@@ -679,7 +706,7 @@ function renderSetupCheck(hosts,items,triggers,problems){
 }
 
 /* ── BOOT ── */
-useDemo();testConnection();loadMonitorDashboard();
+useDemo();testConnection();loadMonitorDashboard();startLiveTimers();
 </script>
 </body>
 </html>
