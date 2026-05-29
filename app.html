@@ -2667,9 +2667,16 @@ function renderCLISim(el){
     {id:'cisco_nxos',label:'🟠 Cisco NX-OS',  color:'#d45f00', prompt:'NXOS-SW1# '},
     {id:'juniper',   label:'🟣 Juniper JunOS',color:'#84358a', prompt:'admin@Router> '},
     {id:'aruba',     label:'⬛ Aruba/HP',      color:'#ff8300', prompt:'ProCurve# '},
+    {id:'extreme',   label:'⬛ Extreme EXOS',  color:'#7c3aed', prompt:'EXOS-SW1# '},
+    {id:'dell',      label:'🔵 Dell OS10',     color:'#0672cb', prompt:'OS10-SW1# '},
+    {id:'vyos',      label:'🟢 VyOS',          color:'#16a34a', prompt:'vyos@router:~$ '},
   ];
 
-  var currentVendor=vendors[0];
+  function simVendorIdFromPage(id){
+    return ({cisco:'cisco_ios',cisco_sw:'cisco_sw',cisco_nxos:'cisco_nxos',hp_procurve:'aruba',aruba:'aruba',juniper:'juniper',fortigate:'fortigate',extreme:'extreme',dell:'dell',vyos:'vyos'})[id]||id||'fortigate';
+  }
+  var wantedSimVendor=simVendorIdFromPage((window.NW_MV_STATE&&window.NW_MV_STATE.vendor)||'fortigate');
+  var currentVendor=vendors.find(function(v){return v.id===wantedSimVendor;})||vendors[0];
   var cmdHistory=[];
   var histIdx=-1;
   var configMode=false;
@@ -2689,7 +2696,9 @@ function renderCLISim(el){
         if(xb) xb.style.cssText='font-size:11px;padding:5px 14px;background:var(--b3);border:1px solid var(--br);color:var(--t2)';
       });
       this.style.cssText='font-size:11px;padding:5px 14px;background:'+vv.color+';color:#fff';
-      bootDevice(vv);
+      var pageId=({cisco_ios:'cisco',cisco_sw:'cisco_sw',cisco_nxos:'cisco_nxos',aruba:'aruba',juniper:'juniper',fortigate:'fortigate',extreme:'extreme',dell:'dell',vyos:'vyos'})[vv.id]||vv.id;
+      if(typeof window.mvSetV==='function'&&document.getElementById('mvVTabs')) window.mvSetV(pageId);
+      else bootDevice(vv);
     };})(v);
     vendorBar.appendChild(b);
   });
@@ -3161,6 +3170,143 @@ function renderCLISim(el){
       }
     }
   };
+  cmdDB.extreme={
+    title:'⬛ Switch — Extreme EXOS',
+    prompt:'EXOS-SW1# ',
+    promptConfig:'EXOS-SW1# ',
+    color:'#7c3aed',
+    categories:[
+      {name:'System',cmds:[
+        {cmd:'show switch',desc:'Switch summary, uptime and image'},
+        {cmd:'show version',desc:'EXOS version, model and serial'},
+        {cmd:'show memory',desc:'Memory utilisation'},
+        {cmd:'show cpu-monitoring',desc:'CPU monitoring per process'},
+        {cmd:'show log',desc:'System log'}
+      ]},
+      {name:'Interfaces',cmds:[
+        {cmd:'show ports',desc:'All port status summary'},
+        {cmd:'show ports 1 information detail',desc:'Detailed port information'},
+        {cmd:'show ports 1 statistics',desc:'Port packet/error counters'},
+        {cmd:'show lldp neighbors',desc:'LLDP neighbors'},
+        {cmd:'show edp ports all',desc:'Extreme Discovery Protocol neighbors'}
+      ]},
+      {name:'VLAN & Routing',cmds:[
+        {cmd:'show vlan',desc:'All VLANs and membership'},
+        {cmd:'show fdb',desc:'Forwarding database / MAC table'},
+        {cmd:'show iproute',desc:'IPv4 route table'},
+        {cmd:'show iparp',desc:'ARP table'},
+        {cmd:'show ospf neighbor',desc:'OSPF neighbors'}
+      ]},
+      {name:'Configuration',cmds:[
+        {cmd:'create vlan USERS',desc:'Create VLAN'},
+        {cmd:'configure vlan USERS tag 10',desc:'Set VLAN tag'},
+        {cmd:'configure vlan USERS add ports 1:10 untagged',desc:'Add access port'},
+        {cmd:'configure vlan USERS add ports 1:48 tagged',desc:'Add tagged uplink'},
+        {cmd:'configure vlan USERS ipaddress 10.10.10.1 255.255.255.0',desc:'Set VLAN IP'},
+        {cmd:'save configuration',desc:'Save configuration'}
+      ]}
+    ],
+    responses:{
+      'show version':'ExtremeXOS version 31.7.1.4 by release-manager\nSwitch      : X465-48T\nSystem Type : Stackable Ethernet Switch\nSerial Num  : EXOS-DEMO-001\nImage       : primary\nUptime      : 23 days 04:12:11',
+      'show switch':'SysName:          EXOS-SW1\nSysLocation:      Server Room A\nCurrent State:    OPERATIONAL\nImage Booted:     primary\nTemperature:      Normal\nFans:             Normal\nPower Supplies:   OK',
+      'show ports':'Port  Link  Speed Duplex State\n1     A     1000  FULL   READY\n2     A     1000  FULL   READY\n48    A     10G   FULL   READY',
+      'show vlan':'Name        VID  Protocol Addr        Flags  Ports\nDefault     1    --------------------------------  1-48\nUSERS       10   10.10.10.1/24       E      1:10,1:48t\nSERVERS     20   10.10.20.1/24       E      1:11,1:48t',
+      'show iproute':'Ori Destination        Gateway         Mtr Flags VLAN\nS   0.0.0.0/0          203.0.113.1     1   UG    WAN\nD   10.10.10.0/24      10.10.10.1      1   U     USERS',
+      'save configuration':'Saving configuration on master ... done.'
+    }
+  };
+  cmdDB.dell={
+    title:'🔵 Switch — Dell OS10',
+    prompt:'OS10-SW1# ',
+    promptConfig:'OS10-SW1(config)# ',
+    color:'#0672cb',
+    categories:[
+      {name:'System',cmds:[
+        {cmd:'show version',desc:'OS10 version and platform'},
+        {cmd:'show system',desc:'Hardware, PSU and fan status'},
+        {cmd:'show environment',desc:'Environmental sensors'},
+        {cmd:'show logging log-file',desc:'System log file'},
+        {cmd:'show running-configuration',desc:'Running configuration'}
+      ]},
+      {name:'Interfaces',cmds:[
+        {cmd:'show interface status',desc:'Brief interface state'},
+        {cmd:'show interface ethernet 1/1/1',desc:'Interface detail'},
+        {cmd:'show interface ethernet 1/1/1 counters',desc:'Interface counters'},
+        {cmd:'show lldp neighbors',desc:'LLDP neighbors'},
+        {cmd:'show port-channel summary',desc:'Port-channel/LAG summary'}
+      ]},
+      {name:'VLAN & Routing',cmds:[
+        {cmd:'show vlan',desc:'All VLANs'},
+        {cmd:'show mac address-table',desc:'MAC address table'},
+        {cmd:'show ip route',desc:'IPv4 route table'},
+        {cmd:'show ip arp',desc:'ARP table'},
+        {cmd:'show ip bgp summary',desc:'BGP summary'}
+      ]},
+      {name:'Configuration',cmds:[
+        {cmd:'configure terminal',desc:'Enter configuration mode'},
+        {cmd:'interface ethernet 1/1/10',desc:'Enter interface configuration'},
+        {cmd:'switchport mode access',desc:'Set access mode'},
+        {cmd:'switchport access vlan 10',desc:'Assign access VLAN'},
+        {cmd:'switchport trunk allowed vlan 10,20',desc:'Set trunk allowed VLANs'},
+        {cmd:'copy running-configuration startup-configuration',desc:'Save configuration'}
+      ]}
+    ],
+    responses:{
+      'show version':'Dell EMC Networking OS10 Enterprise\nOS Version: 10.5.5.5\nSystem Type: S5248F-ON\nService Tag: OS10DEMO01\nUp Time: 23 days 04:12:44',
+      'show system':'System Description: Dell EMC S5248F-ON\nSystem Status: up\nPSU Status: OK\nFan Status: OK\nTemperature: Normal',
+      'show interface status':'Port          Description  Status  Speed  Duplex  VLAN\nEth 1/1/1     UPLINK       up      25G    full    trunk\nEth 1/1/10    USER         up      1G     full    10',
+      'show vlan':'Codes: * - Default VLAN\nQ: A - Access, T - Tagged\nVLAN  Name       Ports\n1     default    Eth1/1/2-1/1/9\n10    USERS      Eth1/1/10(A), Eth1/1/48(T)\n20    SERVERS    Eth1/1/11(A), Eth1/1/48(T)',
+      'show ip route':'Codes: C - connected, S - static, B - BGP, O - OSPF\nS 0.0.0.0/0 [1/0] via 203.0.113.1\nC 10.10.10.0/24 is directly connected, vlan10',
+      'copy running-configuration startup-configuration':'Copy completed successfully.'
+    }
+  };
+  cmdDB.vyos={
+    title:'🟢 Router — VyOS',
+    prompt:'vyos@router:~$ ',
+    promptConfig:'vyos@router# ',
+    color:'#16a34a',
+    categories:[
+      {name:'System',cmds:[
+        {cmd:'show version',desc:'VyOS version'},
+        {cmd:'show system uptime',desc:'System uptime'},
+        {cmd:'show system memory',desc:'Memory usage'},
+        {cmd:'show system cpu',desc:'CPU usage'},
+        {cmd:'show log',desc:'System logs'}
+      ]},
+      {name:'Interfaces',cmds:[
+        {cmd:'show interfaces',desc:'All interfaces'},
+        {cmd:'show interfaces ethernet eth0',desc:'Interface detail'},
+        {cmd:'show interfaces counters',desc:'Interface counters'},
+        {cmd:'show arp',desc:'ARP table'},
+        {cmd:'monitor interfaces',desc:'Live interface monitor'}
+      ]},
+      {name:'Routing & Firewall',cmds:[
+        {cmd:'show ip route',desc:'IPv4 route table'},
+        {cmd:'show ip bgp summary',desc:'BGP summary'},
+        {cmd:'show ip ospf neighbor',desc:'OSPF neighbors'},
+        {cmd:'show nat source rules',desc:'Source NAT rules'},
+        {cmd:'show firewall',desc:'Firewall rule counters'}
+      ]},
+      {name:'Configuration',cmds:[
+        {cmd:'configure',desc:'Enter candidate configuration'},
+        {cmd:'set interfaces ethernet eth1 address 10.10.10.1/24',desc:'Set interface address'},
+        {cmd:'set protocols static route 0.0.0.0/0 next-hop 203.0.113.1',desc:'Set default route'},
+        {cmd:'set nat source rule 10 translation address masquerade',desc:'Configure masquerade NAT'},
+        {cmd:'commit',desc:'Apply candidate config'},
+        {cmd:'save',desc:'Save config to disk'}
+      ]}
+    ],
+    responses:{
+      'show version':'Version:          VyOS 1.4-rolling-demo\nRelease train:    sagitta\nBuilt by:          NetWolf demo\nSystem type:       bare metal\nBoot via:          installed image',
+      'show interfaces':'Codes: S - State, L - Link, u - Up, D - Down\nInterface        IP Address        S/L  Description\neth0             203.0.113.2/30    u/u  WAN\neth1             10.10.10.1/24     u/u  LAN\nlo               127.0.0.1/8       u/u',
+      'show ip route':'S>* 0.0.0.0/0 [1/0] via 203.0.113.1, eth0\nC>* 10.10.10.0/24 is directly connected, eth1\nC>* 203.0.113.0/30 is directly connected, eth0',
+      'show nat source rules':'Rule 10\n outbound-interface eth0\n source address 10.10.10.0/24\n translation address masquerade',
+      'show firewall':'Name    Rule Action Protocol Packets Bytes\nWAN-IN  10   accept all      12433   9.2M\nWAN-IN  default drop         482     38K',
+      'configure':'Entering configuration mode.\n[edit]\nvyos@router#',
+      'commit':'Commit complete.',
+      'save':'Saving configuration to /config/config.boot... Done'
+    }
+  };
 
   // ── Build reference panel ──
   function buildRef(v){
@@ -3316,6 +3462,9 @@ function renderCLISim(el){
     if(v === 'mikrotik'){
       return db.prompt;
     }
+    if(v === 'vyos'){
+      return accessMode === 'config' ? (db.promptConfig||'vyos@router# ') : db.prompt;
+    }
     // Cisco/Aruba/HP/Huawei style
     var base = db.prompt.replace('# ','').replace('> ','').trim();
     if(accessMode === 'user')   return base + '> ';
@@ -3356,7 +3505,7 @@ function renderCLISim(el){
       return;
     }
 
-    // ── FortiGate / JunOS / MikroTik: simpler mode handling ──
+    // ── FortiGate / JunOS / MikroTik / VyOS / EXOS: simpler mode handling ──
     if(v === 'fortigate' || v === 'mikrotik'){
       if(cmdLow === 'end' || cmdLow === 'exit' || cmdLow === 'abort'){
         if(accessMode === 'config'){ setMode('user'); printLine('<span style="color:#8b949e">Exited config mode.</span>'); }
@@ -3370,6 +3519,39 @@ function renderCLISim(el){
       }
       if(v==='mikrotik' && cmdLow.startsWith('/')){
         printLine('<span style="color:#3fb950">RouterOS command accepted in the simulated running configuration.</span>');
+        return;
+      }
+    }
+    if(v==='vyos'){
+      if(cmdLow==='configure'){
+        setMode('config');
+        printLine('<span style="color:#8b949e">Entering candidate configuration mode.</span>');
+        return;
+      }
+      if(cmdLow==='exit'||cmdLow==='discard'){
+        if(accessMode==='config'){setMode('user');printLine('<span style="color:#8b949e">Leaving configuration mode.</span>');return;}
+      }
+      if(cmdLow.startsWith('set ')||cmdLow.startsWith('delete ')){
+        setMode('config');
+        printLine('<span style="color:#3fb950">Candidate configuration updated.</span>');
+        return;
+      }
+      if(cmdLow==='commit'||cmdLow.startsWith('commit')){
+        printLine('<span style="color:#3fb950">Commit complete.</span>');
+        return;
+      }
+      if(cmdLow==='save'){
+        printLine('<span style="color:#3fb950">Configuration saved to disk.</span>');
+        return;
+      }
+    }
+    if(v==='extreme'){
+      if(cmdLow.startsWith('create ')||cmdLow.startsWith('configure ')||cmdLow.startsWith('enable ')||cmdLow.startsWith('disable ')){
+        printLine('<span style="color:#3fb950">EXOS configuration command accepted in the simulated running configuration.</span>');
+        return;
+      }
+      if(cmdLow==='save configuration'){
+        printLine('<span style="color:#3fb950">Saving configuration on master ... done.</span>');
         return;
       }
     }
@@ -3397,7 +3579,7 @@ function renderCLISim(el){
     }
 
     // ── Cisco / Aruba CX / Huawei / HP ── privilege levels ──
-    var isCiscoStyle = (v==='cisco_ios'||v==='cisco_sw'||v==='cisco_nxos'||v==='aruba'||v==='huawei'||v==='hp_procurve');
+    var isCiscoStyle = (v==='cisco_ios'||v==='cisco_sw'||v==='cisco_nxos'||v==='aruba'||v==='huawei'||v==='hp_procurve'||v==='dell');
 
     if(isCiscoStyle){
       // User mode commands
@@ -3724,6 +3906,22 @@ function renderCLISim(el){
 
   // Focus input on click anywhere in terminal
   termBody.onclick=function(){input.focus();};
+
+  window.mvSelectSimVendor=function(pageVendorId){
+    var target=simVendorIdFromPage(pageVendorId);
+    var vv=vendors.find(function(x){return x.id===target;});
+    if(!vv) return;
+    currentVendor=vv;
+    accessMode='user';
+    configContext='';
+    vendors.forEach(function(x){
+      var xb=document.getElementById('vsim-'+x.id);
+      if(xb) xb.style.cssText='font-size:11px;padding:5px 14px;background:var(--b3);border:1px solid var(--br);color:var(--t2)';
+    });
+    var b=document.getElementById('vsim-'+vv.id);
+    if(b) b.style.cssText='font-size:11px;padding:5px 14px;background:'+vv.color+';color:#fff';
+    bootDevice(vv);
+  };
 
   // ── Boot default device ──
   bootDevice(currentVendor);
@@ -5606,7 +5804,7 @@ function renderNetWolfAssistant(el){
     +'<div class="nwa-field"><label>Agent token (jump server only)</label><input id="nwa-agent-token" name="nw-agent-access-code" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore="true" placeholder="Leave empty for local agent"></div>'
     +'</div>'
     +'<div class="nwa-field" style="margin-top:8px"><label>Read-only check</label><select id="nwa-agent-check"><option value="system_health">System health</option><option value="vpn_ipsec">VPN / IPsec</option><option value="policy_nat">Policy / NAT / VIP</option><option value="sessions_ports">Sessions / Ports</option><option value="routing">Routing / SD-WAN</option><option value="ha_cluster">HA / Cluster</option><option value="dhcp_dns">DHCP / DNS</option><option value="security_profiles">Security profiles / Logs</option><option value="certificates">Certificates / TLS</option><option value="fortianalyzer">FortiAnalyzer / Logging</option></select></div>'
-    +'<div class="nwa-agent-actions"><button class="sbtn" onclick="nwAgentCheckStatus()">Check Agent</button><button class="sbtn" onclick="nwAgentRunCheck()" style="background:#15803D">Dry-run Check</button><button class="sbtn" onclick="nwAgentShowLogs()" style="background:#2563EB">Agent Logs</button><button class="sbtn" onclick="nav(\'liveconnect\')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Live Connect</button><a class="sbtn" href="'+nwToolkitAssetUrl('/netwolf-agent.zip')+'" download style="text-decoration:none;background:#15803D">Download NetWolf Agent</a></div>'
+    +'<div class="nwa-agent-actions"><button class="sbtn" onclick="nwAgentCheckStatus()">Check Agent</button><button class="sbtn" onclick="nwAgentPreviewCommands()" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Preview Commands</button><button class="sbtn" onclick="nwAgentRunCheck()" style="background:#15803D">Dry-run Check</button><button class="sbtn" onclick="nwAgentShowLogs()" style="background:#2563EB">Agent Logs</button><button class="sbtn" onclick="nav(\'liveconnect\')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Live Connect</button><a class="sbtn" href="'+nwToolkitAssetUrl('/netwolf-agent.zip')+'" download style="text-decoration:none;background:#15803D">Download NetWolf Agent</a></div>'
     +'<div class="nwa-agent-note">Default mode is dry-run. The local agent does not call cloud APIs; AI analysis only happens if you copy/paste output and click an AI button.</div>'
     +'<pre id="nwa-agent-output" class="nwa-agent-output" style="display:none"></pre>'
     +'</div></div>'
@@ -5687,6 +5885,26 @@ function nwAgentShowDryRun(data){
   if(assistantInput&&!assistantInput.value.trim())assistantInput.value=text;
   showToast('Level 2 dry-run ready');
 }
+function nwAgentLocalCheckPack(checkId){
+  const packs={
+    system_health:{title:'System health',description:'Read CPU, memory, uptime, FortiOS version, and basic health evidence.',commands:['get system status','get system performance status','diagnose sys top-summary','diagnose hardware sysinfo memory']},
+    vpn_ipsec:{title:'VPN / IPsec',description:'Check tunnel state, phase status, selectors, and IKE gateway evidence.',commands:['get vpn ipsec tunnel summary','diagnose vpn tunnel list','diagnose vpn ike gateway list']},
+    policy_nat:{title:'Policy / NAT / VIP',description:'Show firewall policy, VIP, IP pools, and central NAT configuration for review.',commands:['show firewall policy','show firewall vip','show firewall ippool','show firewall central-snat-map']},
+    sessions_ports:{title:'Sessions / Ports',description:'Inspect active sessions and listening sockets without changing firewall state.',commands:['diagnose sys session list','diagnose sys tcpsock','diagnose sys udpsock']},
+    routing:{title:'Routing / SD-WAN',description:'Read routing table, policy routes, and SD-WAN health.',commands:['get router info routing-table all','get router info kernel','diagnose firewall proute list','diagnose sys sdwan health-check']},
+    ha_cluster:{title:'HA / Cluster',description:'Read HA state, members, sync status, and checksum evidence.',commands:['get system ha status','diagnose sys ha status','diagnose sys ha checksum show']},
+    dhcp_dns:{title:'DHCP / DNS',description:'Read DHCP leases, DHCP server state, and DNS proxy evidence.',commands:['execute dhcp lease-list','diagnose ip dhcp server list','get system dns','diagnose test application dnsproxy 6']},
+    security_profiles:{title:'Security profiles / Logs',description:'Read profile references and log configuration used for security troubleshooting.',commands:['show firewall profile-protocol-options','show webfilter profile','show antivirus profile','show ips sensor','show log setting']},
+    certificates:{title:'Certificates / TLS',description:'Read local and CA certificate configuration for TLS and VPN checks.',commands:['show vpn certificate local','show vpn certificate ca','get vpn certificate local details']},
+    fortianalyzer:{title:'FortiAnalyzer / Logging',description:'Check FortiAnalyzer and log forwarding configuration.',commands:['get log fortianalyzer setting','show log fortianalyzer setting','diagnose test application miglogd 20']}
+  };
+  return packs[checkId]||packs.system_health;
+}
+window.nwAgentPreviewCommands=function(){
+  const checkId=document.getElementById('nwa-agent-check')?.value||'system_health';
+  const pack=nwAgentLocalCheckPack(checkId);
+  nwAgentOutput('Command preview only: no agent call, no firewall connection, no AI.\n\nCheck: '+pack.title+'\nPurpose: '+pack.description+'\n\nRead-only commands:\n'+pack.commands.map(c=>' - '+c).join('\n')+'\n\nTo run a real Level 2 dry-run, fill Firewall host and SSH user, then click Dry-run Check.');
+};
 function nwAgentStatus(text,state){
   const el=document.getElementById('nwa-agent-status');
   if(!el)return;
@@ -5724,17 +5942,17 @@ window.nwAgentCheckStatus=async function(){
 window.nwAgentRunCheck=async function(){
   const out=document.getElementById('nwa-agent-output');
   if(out){out.style.display='block';out.textContent='Preparing safe dry-run request...';}
+  const body={
+    checkId:document.getElementById('nwa-agent-check')?.value||'system_health',
+    dryRun:true,
+    device:{
+      host:document.getElementById('nwa-agent-host')?.value||'',
+      username:document.getElementById('nwa-agent-user')?.value||'',
+      port:Number(document.getElementById('nwa-agent-port')?.value||22),
+      sshKeyPath:document.getElementById('nwa-agent-key')?.value||''
+    }
+  };
   try{
-    const body={
-      checkId:document.getElementById('nwa-agent-check')?.value||'system_health',
-      dryRun:true,
-      device:{
-        host:document.getElementById('nwa-agent-host')?.value||'',
-        username:document.getElementById('nwa-agent-user')?.value||'',
-        port:Number(document.getElementById('nwa-agent-port')?.value||22),
-        sshKeyPath:document.getElementById('nwa-agent-key')?.value||''
-      }
-    };
     const resp=await fetch(nwAgentUrl()+'/run-check',{method:'POST',headers:nwAgentHeaders({'Content-Type':'application/json'}),body:JSON.stringify(body)});
     const data=await resp.json();
     if(!resp.ok||!data.ok)throw new Error((data.errors||[data.error||'Agent request failed']).join('\n'));
@@ -8679,8 +8897,13 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 'extreme':{label:'⬛ Extreme EXOS',cats:{'System & Health':[['show version','EXOS image version, model, serial number','ro'],['show switch','Switch summary — uptime, temperature, image','ro'],['show memory','Memory utilisation','ro'],['show cpu-monitoring','CPU utilisation per process','ro'],['show log','System event log','ro'],['show sntp-client','SNTP client synchronisation status','ro'],['show configuration','Running configuration','ro'],],'Interfaces':[['show ports','All port status summary','ro'],['show ports <PORT> information detail','Detailed port information','ro'],['show ports <PORT> statistics','Port packet and error counters','ro'],['show ports <PORT> rxerrors','Receive error counters','ro'],['show ports transceiver information detail','SFP Tx/Rx optical readings','ro'],['show lldp neighbors','LLDP neighbours','ro'],['show edp ports all','Extreme Discovery Protocol neighbours','ro'],['clear counters ports <PORT>','Reset port counters','caution'],],'VLAN & FDB':[['show vlan','All VLANs','ro'],['show vlan <NAME>','VLAN detail and port membership','ro'],['show fdb','Forwarding database (MAC table)','ro'],['show fdb <MAC>','Lookup a specific MAC address','ro'],['show fdb ports <PORT>','MAC addresses learned on a port','ro'],['show stpd','Spanning tree domains','ro'],['show stpd <NAME> ports','STP port roles and states','ro'],['clear fdb','Clear dynamic MAC entries','caution'],],'Routing & ARP':[['show iproute','IPv4 routing table','ro'],['show iproute origin <PROTO>','Routes by protocol (ospf, bgp, static)','ro'],['show iparp','ARP table','ro'],['show iparp <IP>','ARP entry for a specific IP','ro'],['show ipconfig','IP interface configuration','ro'],['show ospf neighbor','OSPF neighbours','ro'],['show bgp neighbor','BGP neighbours','ro'],['ping <IP>','Ping a destination','ro'],['traceroute <IP>','Traceroute to a destination','ro'],['clear iparp <IP>','Clear a specific ARP entry','caution'],],'Config — Ports & VLAN':[['create vlan <NAME>','Create a VLAN','caution'],['configure vlan <NAME> tag <ID>','Set the VLAN tag (802.1Q ID)','caution'],['configure vlan <NAME> add ports <PORT> untagged','Add an untagged (access) port','caution'],['configure vlan <NAME> add ports <PORT> tagged','Add a tagged (trunk) port','caution'],['configure vlan <NAME> ipaddress <IP> <MASK>','Assign a VLAN IP (SVI)','caution'],['enable ports <PORT>','Enable a port','caution'],['disable ports <PORT>','Disable a port','caution'],['configure ports <PORT> display-string <TEXT>','Set a port description','caution'],['configure ports <PORT> auto off speed 1000 duplex full','Force speed and duplex','caution'],],'Config — Routing & Security':[['configure iproute add default <GW>','Add a default route','caution'],['configure iproute add <DST> <MASK> <GW>','Add a static route','caution'],['enable ipforwarding','Enable Layer 3 routing','caution'],['create account admin <NAME>','Create an admin account','caution'],['configure ssh2','Configure the SSH server','caution'],['enable ssh2','Start the SSH server','caution'],],'Save & Maintenance':[['save configuration','Save the configuration','ro'],['show configuration detail','Full detailed configuration','ro'],['ls','List files on the switch','ro'],['reboot','Reboot the switch','danger'],['unconfigure switch all','Factory reset the switch','danger'],]}},'dell':{label:'🔵 Dell OS10',cats:{'System & Health':[['show version','OS10 version and platform','ro'],['show system','Hardware status — PSU, fans, sensors','ro'],['show processes node-id 1','Process and CPU information','ro'],['show environment','Temperature, fan and power status','ro'],['show logging log-file','System log file','ro'],['show ntp status','NTP synchronisation status','ro'],['show running-configuration','Running configuration','ro'],],'Interfaces':[['show interface status','Brief interface status','ro'],['show interface ethernet <INTF>','Detailed interface stats','ro'],['show interface <INTF> counters','Interface packet/error counters','ro'],['show interface <INTF> transceiver','SFP optical readings','ro'],['show lldp neighbors','LLDP neighbours','ro'],['show port-channel summary','LAG / port-channel status','ro'],['clear counters','Reset all interface counters','caution'],],'VLAN & MAC':[['show vlan','All VLANs','ro'],['show vlan <ID>','Specific VLAN detail','ro'],['show mac address-table','MAC address table','ro'],['show mac address-table address <MAC>','Lookup a specific MAC','ro'],['show spanning-tree brief','STP summary','ro'],['clear mac address-table dynamic','Clear dynamic MAC entries','caution'],],'Routing & ARP':[['show ip route','IPv4 routing table','ro'],['show ip route <IP>','Route lookup for a destination','ro'],['show ip arp','ARP table','ro'],['show ip ospf neighbor','OSPF neighbours','ro'],['show ip bgp summary','BGP peer summary','ro'],['ping <IP>','Ping a destination','ro'],['traceroute <IP>','Traceroute to a destination','ro'],],'Config — Interfaces & VLAN':[['interface ethernet <INTF>','Enter interface configuration','caution'],['description <TEXT>','Set interface description','caution'],['no shutdown','Enable the interface','caution'],['switchport mode access','Set access (untagged) mode','caution'],['switchport access vlan <ID>','Assign an access VLAN','caution'],['switchport mode trunk','Set trunk (tagged) mode','caution'],['switchport trunk allowed vlan <LIST>','Restrict allowed VLANs on trunk','caution'],['interface vlan <ID>','Create a VLAN interface (SVI)','caution'],['ip address <IP/PREFIX>','Assign an IP address','caution'],],'Config — Routing':[['ip route 0.0.0.0/0 <GW>','Add a default route','caution'],['router ospf <ID>','Enter OSPF configuration','caution'],['router bgp <ASN>','Enter BGP configuration','caution'],['neighbor <IP> remote-as <ASN>','Define a BGP neighbour','caution'],],'Save & Maintenance':[['write memory','Save configuration','ro'],['copy running-configuration startup-configuration','Save running config explicitly','ro'],['show boot','Boot image information','ro'],['reload','Reboot the switch','danger'],]}},'vyos':{label:'🟢 VyOS',cats:{'System & Health':[['show version','VyOS version','ro'],['show system uptime','System uptime','ro'],['show system memory','Memory usage','ro'],['show system cpu','CPU usage','ro'],['show log','System logs','ro'],['show ntp','NTP status','ro'],['show configuration','Running configuration','ro'],['show configuration commands','Configuration as set commands','ro'],],'Interfaces & ARP':[['show interfaces','All interfaces summary','ro'],['show interfaces ethernet <INTF>','Interface detail','ro'],['show interfaces counters','Interface counters','ro'],['monitor interfaces','Live interface traffic','ro'],['show arp','ARP table','ro'],['clear interfaces ethernet <INTF> counters','Reset interface counters','caution'],],'Routing & Firewall':[['show ip route','IPv4 routing table','ro'],['show ip route <IP>','Route lookup for a destination','ro'],['show ip bgp summary','BGP peer summary','ro'],['show ip ospf neighbor','OSPF neighbours','ro'],['show nat source rules','Source NAT rules','ro'],['show nat destination rules','Destination NAT rules','ro'],['show firewall','Firewall rule hit counters','ro'],['show vpn ipsec sa','IPsec SA status','ro'],['show dhcp server leases','DHCP server leases','ro'],['ping <IP>','Ping a destination','ro'],['traceroute <IP>','Traceroute to a destination','ro'],],'Config — Interfaces & Routing':[['configure','Enter configuration mode','caution'],['set interfaces ethernet <INTF> address <IP/PREFIX>','Assign an IP address','caution'],['set interfaces ethernet <INTF> description <TEXT>','Set interface description','caution'],['set protocols static route 0.0.0.0/0 next-hop <GW>','Add a default route','caution'],['set protocols ospf area 0 network <PREFIX>','Advertise a network in OSPF','caution'],['set nat source rule 10 outbound-interface <INTF>','Define a source NAT rule','caution'],['set nat source rule 10 translation address masquerade','Masquerade outbound traffic','caution'],['commit','Apply staged configuration changes','caution'],['save','Save configuration to disk','ro'],],'Config — Firewall':[['set firewall name WAN-IN default-action drop','Default-drop ruleset','caution'],['set firewall name WAN-IN rule 10 action accept','Accept rule','caution'],['set firewall name WAN-IN rule 10 state established enable','Allow established/related','caution'],],'Save & Maintenance':[['save','Save running configuration','ro'],['show system commit','Commit history','ro'],['delete <PATH>','Remove a configuration node (config mode)','caution'],['reboot','Reboot the device','danger'],]}}
 };
 
-  let curV='cisco', curC=null;
-  let mvTrack='switch';
+  window.NW_MV_STATE=window.NW_MV_STATE||{vendor:'cisco',cat:null,track:'switch'};
+  let curV=MV_DATA[window.NW_MV_STATE.vendor]?window.NW_MV_STATE.vendor:'cisco';
+  let curC=window.NW_MV_STATE.cat&&MV_DATA[curV].cats[window.NW_MV_STATE.cat]?window.NW_MV_STATE.cat:null;
+  let mvTrack=window.NW_MV_STATE.track||'switch';
+  function mvSaveState(){
+    window.NW_MV_STATE={vendor:curV,cat:curC,track:mvTrack};
+  }
 
   function getFirstCat(vid){ return Object.keys(MV_DATA[vid].cats)[0]; }
 
@@ -8704,7 +8927,7 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
       h+=`<div class="mv-cat-group">${lbl}</div>`;
       for(const k of keys){
         const active=k===(curC||getFirstCat(vid));
-        h+=`<div class="mv-cat ${active?'active':''}" onclick="mvSetC('${k.replace(/'/g,"\'")}','${vid}')" title="${k}">${k}</div>`;
+        h+=`<div class="mv-cat ${active?'active':''}" onclick="mvSetC(decodeURIComponent('${encodeURIComponent(k)}'),'${vid}')" title="${mvEsc(k)}">${mvEsc(k)}</div>`;
       }
     }
     return h;
@@ -8846,6 +9069,51 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
     ['Verify','Check routes, NAT, firewall, and connectivity.','/ip route print\n/ip firewall nat print\n/ip firewall filter print\n/ping 8.8.8.8','ro']
   ]};
   LEARN.hp_procurve={name:'HP / Aruba ProCurve',switch:LEARN.aruba.switch,router:LEARN.aruba.router};
+  LEARN.extreme={name:'Extreme EXOS',switch:[
+    ['Enter EXOS configuration context','EXOS commands are normally entered directly from the privileged prompt; there is no Cisco-style conf t mode.','show switch\nshow version\nshow configuration','ro'],
+    ['Create VLANs','Create VLANs and assign 802.1Q tags before adding ports.','create vlan USERS\nconfigure vlan USERS tag 10\ncreate vlan SERVERS\nconfigure vlan SERVERS tag 20','caution'],
+    ['Add access and trunk ports','Untagged ports are access ports. Tagged ports are trunks/uplinks carrying VLAN tags.','configure vlan USERS add ports 1:10 untagged\nconfigure vlan SERVERS add ports 1:11 untagged\nconfigure vlan USERS add ports 1:48 tagged\nconfigure vlan SERVERS add ports 1:48 tagged','caution'],
+    ['Configure management or SVI IP','Assign an IP address to the VLAN used for management or routing.','configure vlan USERS ipaddress 10.10.10.2 255.255.255.0\nenable ipforwarding vlan USERS','caution'],
+    ['Secure management access','Enable SSH and create a named admin account.','configure ssh2 key 2048\nenable ssh2\ncreate account admin netwolf-admin','caution'],
+    ['Verify and save','Check VLAN membership, port state, neighbors, routes, and save the configuration.','show vlan\nshow ports\nshow lldp neighbors\nshow iproute\nsave configuration','ro']
+  ],router:[
+    ['Check platform and interfaces','Start by confirming software, ports, and existing IP configuration.','show switch\nshow ports\nshow ipconfig\nshow iproute','ro'],
+    ['Create routed VLAN interfaces','EXOS routes through VLAN interfaces; assign IPs and enable forwarding.','create vlan LAN\nconfigure vlan LAN tag 10\nconfigure vlan LAN ipaddress 10.10.10.1 255.255.255.0\nenable ipforwarding vlan LAN','caution'],
+    ['Add static routing','Point the default route and any remote routes to the correct next hop.','configure iproute add default 203.0.113.1\nconfigure iproute add 10.20.0.0 255.255.0.0 10.10.10.254','caution'],
+    ['Optional OSPF','Use OSPF when EXOS exchanges routes dynamically with other routers.','enable ospf\nconfigure ospf add vlan LAN area 0.0.0.0\nenable ospf vlan LAN','caution'],
+    ['Verify routing','Confirm route table, ARP, and reachability.','show iproute\nshow iparp\nshow ospf neighbor\nping 8.8.8.8\ntraceroute 8.8.8.8','ro'],
+    ['Save','Write the running configuration after verification.','save configuration','ro']
+  ]};
+  LEARN.dell={name:'Dell OS10',switch:[
+    ['Enter configuration mode','Dell OS10 uses a Cisco-like command style with OS10-specific save commands.','configure terminal','caution'],
+    ['Set identity and management','Set hostname and keep management access predictable.','hostname SW-ACCESS-01\nusername admin password REPLACE_WITH_PASSWORD role sysadmin\nip ssh server enable','caution'],
+    ['Create VLANs','Create VLANs and name them clearly.','interface vlan 10\n description USERS\n no shutdown\ninterface vlan 20\n description SERVERS\n no shutdown','caution'],
+    ['Configure access and trunk ports','Use access mode for endpoints and trunk mode for uplinks.','interface ethernet 1/1/10\n description USER-PORT\n switchport mode access\n switchport access vlan 10\n no shutdown\ninterface ethernet 1/1/48\n description UPLINK\n switchport mode trunk\n switchport trunk allowed vlan 10,20\n no shutdown','caution'],
+    ['Configure L3 SVI if needed','Assign an IP address to the VLAN interface only when the switch routes for that VLAN.','interface vlan 10\n ip address 10.10.10.2/24\n no shutdown','caution'],
+    ['Verify and save','Check interfaces, VLANs, MAC table, neighbors, and save startup configuration.','show interface status\nshow vlan\nshow mac address-table\nshow lldp neighbors\ncopy running-configuration startup-configuration','ro']
+  ],router:[
+    ['Enter configuration mode','Prepare OS10 for routed interface and routing changes.','configure terminal','caution'],
+    ['Configure routed interfaces','Use no switchport on physical interfaces used for routing.','interface ethernet 1/1/1\n no switchport\n ip address <WAN_IP>/<PREFIX>\n no shutdown\ninterface ethernet 1/1/2\n no switchport\n ip address <LAN_GW_IP>/<PREFIX>\n no shutdown','caution'],
+    ['Add static routes','Add default and remote routes with the correct next hop.','ip route 0.0.0.0/0 <UPSTREAM_GW>\nip route <REMOTE_PREFIX> <NEXT_HOP>','caution'],
+    ['Optional dynamic routing','Enable OSPF or BGP when the design needs route exchange.','router ospf 10\n router-id <ROUTER_ID>\n network <LAN_PREFIX> area 0.0.0.0\nrouter bgp <ASN>\n neighbor <IP> remote-as <PEER_ASN>','caution'],
+    ['Verify routing','Confirm interfaces, ARP, route table, and neighbors.','show ip interface brief\nshow ip route\nshow ip arp\nshow ip ospf neighbor\nshow ip bgp summary','ro'],
+    ['Save','Save after the route and reachability checks are correct.','copy running-configuration startup-configuration','ro']
+  ]};
+  LEARN.vyos={name:'VyOS',switch:[
+    ['Enter candidate configuration','VyOS changes are staged and become active only after commit.','configure','caution'],
+    ['Set identity and management','Set hostname and a management address.','set system host-name vyos-edge-01\nset interfaces ethernet eth1 address 10.10.10.2/24\nset interfaces ethernet eth1 description MANAGEMENT','caution'],
+    ['Create VLAN interfaces','VyOS handles VLANs as subinterfaces on Ethernet links.','set interfaces ethernet eth1 vif 10 address 10.10.10.1/24\nset interfaces ethernet eth1 vif 10 description USERS\nset interfaces ethernet eth1 vif 20 address 10.10.20.1/24\nset interfaces ethernet eth1 vif 20 description SERVERS','caution'],
+    ['Add DHCP or firewall if needed','VyOS is often used as a router/firewall instead of a classic switch.','set service dhcp-server shared-network-name USERS subnet 10.10.10.0/24 default-router 10.10.10.1\nset firewall name LAN-IN default-action accept','caution'],
+    ['Commit safely','Preview, commit, and save only after checking the candidate configuration.','compare\ncommit-confirm 5\ncommit\nsave','caution'],
+    ['Verify','Check interfaces, routes, ARP, and commit history.','show interfaces\nshow ip route\nshow arp\nshow system commit','ro']
+  ],router:[
+    ['Enter candidate configuration','All routing/firewall changes are staged until commit.','configure','caution'],
+    ['Configure WAN and LAN interfaces','Set interface addresses and descriptions.','set interfaces ethernet eth0 address <WAN_IP>/<PREFIX>\nset interfaces ethernet eth0 description WAN\nset interfaces ethernet eth1 address <LAN_GW_IP>/<PREFIX>\nset interfaces ethernet eth1 description LAN','caution'],
+    ['Add default route and NAT','Default route sends traffic upstream; masquerade provides basic internet NAT.','set protocols static route 0.0.0.0/0 next-hop <UPSTREAM_GW>\nset nat source rule 10 outbound-interface eth0\nset nat source rule 10 source address <LAN_PREFIX>\nset nat source rule 10 translation address masquerade','caution'],
+    ['Add firewall baseline','Allow established traffic and restrict unsolicited WAN access.','set firewall name WAN-IN default-action drop\nset firewall name WAN-IN rule 10 action accept\nset firewall name WAN-IN rule 10 state established enable\nset firewall name WAN-IN rule 10 state related enable\nset interfaces ethernet eth0 firewall in name WAN-IN','caution'],
+    ['Commit safely','Use commit-confirm first so mistakes can auto-rollback.','compare\ncommit-confirm 5\ncommit\nsave','caution'],
+    ['Verify','Check routes, NAT, firewall counters, and reachability.','show ip route\nshow nat source rules\nshow firewall\nping 8.8.8.8\ntraceroute 8.8.8.8','ro']
+  ]};
 
   function mvLearnHTML(vid){
     const p=LEARN[vid]||LEARN.cisco;
@@ -8955,14 +9223,17 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
 
   window.mvSetV=function(vid){
     curV=vid; curC=getFirstCat(vid);
+    mvSaveState();
     document.getElementById('mvVTabs').innerHTML=vendorTabsHTML();
     document.getElementById('mvLearn').innerHTML=mvLearnHTML(vid);
     document.getElementById('mvCats').innerHTML=catsHTML(vid);
     document.getElementById('mvCmds').innerHTML=cmdsHTML(vid,curC);
+    if(typeof window.mvSelectSimVendor==='function') window.mvSelectSimVendor(vid);
   };
 
   window.mvSetTrack=function(track){
     mvTrack=track;
+    mvSaveState();
     const learn=document.getElementById('mvLearn');
     if(learn) learn.innerHTML=mvLearnHTML(curV);
   };
@@ -8970,6 +9241,7 @@ const MV_DATA={'cisco':{label:'🟡 Cisco IOS / IOS-XE',cats:{'System & Health':
   window.mvSetC=function(cat,vid){
     if(window.innerWidth<=768) mvCloseCats();
     curC=cat; curV=vid||curV;
+    mvSaveState();
     document.getElementById('mvCats').innerHTML=catsHTML(curV);
     document.getElementById('mvCmds').innerHTML=cmdsHTML(curV,cat);
   };
