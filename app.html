@@ -15526,10 +15526,45 @@ const NW_NOTES_ACTIVE_KEY='netwolf_daily_notes_active_v1';
 let nwNotesAutosaveTimer=null;
 function nwNoteToday(){return new Date().toISOString().slice(0,10);}
 function nwNoteNow(){return new Date().toISOString();}
+function nwNotesAccountId(){
+  try{
+    const user=fbAuth&&fbAuth.currentUser;
+    if(user&&user.uid)return nwSafeKey(user.uid);
+    if(user&&user.email)return nwSafeKey(user.email.toLowerCase());
+  }catch(e){}
+  return 'signed_out';
+}
+function nwNotesAccountLabel(){
+  try{
+    const user=fbAuth&&fbAuth.currentUser;
+    if(user&&(user.email||user.displayName))return user.email||user.displayName;
+  }catch(e){}
+  return 'current browser session';
+}
+function nwNotesStorageKey(){return NW_NOTES_KEY+'_'+nwNotesAccountId();}
+function nwNotesActiveKey(){return NW_NOTES_ACTIVE_KEY+'_'+nwNotesAccountId();}
 function nwNotesLoad(){
+  try{const notes=JSON.parse(localStorage.getItem(nwNotesStorageKey())||'[]');return Array.isArray(notes)?notes:[];}catch(e){return [];}
+}
+function nwNotesSaveAll(notes){try{localStorage.setItem(nwNotesStorageKey(),JSON.stringify(notes));}catch(e){showToast('Notes storage is full');}}
+function nwNotesLegacyLoad(){
   try{const notes=JSON.parse(localStorage.getItem(NW_NOTES_KEY)||'[]');return Array.isArray(notes)?notes:[];}catch(e){return [];}
 }
-function nwNotesSaveAll(notes){try{localStorage.setItem(NW_NOTES_KEY,JSON.stringify(notes));}catch(e){showToast('Notes storage is full');}}
+function nwNotesLegacyAvailable(){return nwNotesLegacyLoad().length>0&&nwNotesStorageKey()!==NW_NOTES_KEY;}
+function nwNotesImportLegacy(){
+  const legacy=nwNotesLegacyLoad();
+  if(!legacy.length){showToast('No old browser notes found');return;}
+  if(!confirm('Import old browser notes into this signed-in account?'))return;
+  const current=nwNotesLoad();
+  const seen=new Set(current.map(n=>n.id));
+  const imported=legacy.filter(n=>n&&n.id&&!seen.has(n.id)).map(n=>Object.assign({},n,{updated:nwNoteNow(),importedFrom:'legacy-browser-notes'}));
+  const merged=imported.concat(current);
+  nwNotesSaveAll(merged);
+  if(imported[0])localStorage.setItem(nwNotesActiveKey(),imported[0].id);
+  nwNotesRenderList();
+  nwNotesLoadEditor(nwNotesActiveId(merged));
+  showToast(imported.length+' note(s) imported');
+}
 function nwNoteNew(seed){
   const now=nwNoteNow();
   return Object.assign({id:'note-'+Date.now()+'-'+Math.random().toString(16).slice(2),created:now,updated:now,date:nwNoteToday(),customer:'',title:'Daily task note',status:'open',priority:'normal',type:'Daily Task',details:'',nextAction:''},seed||{});
@@ -15540,10 +15575,10 @@ function nwNotesEnsure(){
   return notes;
 }
 function nwNotesActiveId(notes){
-  const saved=localStorage.getItem(NW_NOTES_ACTIVE_KEY);
+  const saved=localStorage.getItem(nwNotesActiveKey());
   return notes.some(n=>n.id===saved)?saved:(notes[0]&&notes[0].id);
 }
-function nwNotesSetActive(id){localStorage.setItem(NW_NOTES_ACTIVE_KEY,id);nwNotesRenderList();nwNotesLoadEditor(id);}
+function nwNotesSetActive(id){localStorage.setItem(nwNotesActiveKey(),id);nwNotesRenderList();nwNotesLoadEditor(id);}
 function nwNotesFiltered(){
   const q=(document.getElementById('nw-note-search')&&document.getElementById('nw-note-search').value||'').toLowerCase().trim();
   const filter=(document.getElementById('nw-note-filter')&&document.getElementById('nw-note-filter').value)||'all';
@@ -15572,7 +15607,7 @@ function nwNotesRenderList(){
 function nwNotesLoadEditor(id){
   const notes=nwNotesEnsure(), note=notes.find(n=>n.id===id)||notes[0];
   if(!note)return;
-  localStorage.setItem(NW_NOTES_ACTIVE_KEY,note.id);
+  localStorage.setItem(nwNotesActiveKey(),note.id);
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
   set('nw-note-id',note.id);set('nw-note-customer',note.customer);set('nw-note-title',note.title);set('nw-note-date',note.date||nwNoteToday());set('nw-note-status',note.status||'open');set('nw-note-priority',note.priority||'normal');set('nw-note-type',note.type||'Daily Task');set('nw-note-details',note.details);set('nw-note-next',note.nextAction);
   const saved=document.getElementById('nw-note-saved');
@@ -15583,18 +15618,27 @@ function nwNotesCollect(){
   return {id:val('nw-note-id'),customer:val('nw-note-customer').trim(),title:val('nw-note-title').trim()||'Untitled note',date:val('nw-note-date')||nwNoteToday(),status:val('nw-note-status')||'open',priority:val('nw-note-priority')||'normal',type:val('nw-note-type')||'Daily Task',details:val('nw-note-details'),nextAction:val('nw-note-next')};
 }
 function nwNotesSaveCurrent(silent){
-  const current=nwNotesCollect(); if(!current.id)return;
+  clearTimeout(nwNotesAutosaveTimer);
+  const current=nwNotesCollect();
   let notes=nwNotesEnsure();
+  if(!current.id){
+    const fresh=nwNoteNew();
+    current.id=fresh.id;
+    const idEl=document.getElementById('nw-note-id');
+    if(idEl)idEl.value=fresh.id;
+    notes.unshift(fresh);
+  }
   const idx=notes.findIndex(n=>n.id===current.id);
-  const old=idx>=0?notes[idx]:nwNoteNew();
+  const old=idx>=0?notes[idx]:nwNoteNew({id:current.id});
   const saved=Object.assign({},old,current,{updated:nwNoteNow()});
   if(idx>=0)notes[idx]=saved; else notes.unshift(saved);
   nwNotesSaveAll(notes);
-  localStorage.setItem(NW_NOTES_ACTIVE_KEY,saved.id);
+  localStorage.setItem(nwNotesActiveKey(),saved.id);
   const el=document.getElementById('nw-note-saved');
-  if(el)el.textContent='Auto-saved '+new Date(saved.updated).toLocaleTimeString();
+  if(el)el.textContent=(silent?'Auto-saved ':'Saved ')+new Date(saved.updated).toLocaleTimeString();
   nwNotesRenderList();
   if(!silent)showToast('Note saved');
+  return saved;
 }
 function nwNotesAutoSave(){
   const el=document.getElementById('nw-note-saved'); if(el)el.textContent='Saving...';
@@ -15672,7 +15716,7 @@ function renderNotesTab(el){
   .nw-note-empty{font-size:12px;color:var(--t3);padding:14px;text-align:center}
   @media(max-width:850px){.nw-notes{grid-template-columns:1fr;height:auto;min-height:0}.nw-note-list{max-height:260px}.nw-note-form{grid-template-columns:1fr}.nw-note-head{align-items:flex-start;flex-direction:column}.nw-note-actions .sbtn{flex:1}.nw-note-details textarea{min-height:190px}}
   </style>
-  <div class="sh"><span class="stitle">📝 Daily Notes</span><span class="sev good">local auto-save</span></div>
+  <div class="sh"><span class="stitle">📝 Daily Notes</span><span class="sev good">account scoped</span></div>
   <div class="nw-notes">
     <div class="nw-notes-panel nw-notes-side">
       <div class="nw-notes-toolbar"><input id="nw-note-search" placeholder="Search customer, task, details..." oninput="nwNotesRenderList()" autocomplete="off"><select id="nw-note-filter" onchange="nwNotesRenderList()"><option value="all">All</option><option value="today">Today</option><option value="open">Open</option><option value="waiting">Waiting</option><option value="done">Done</option></select><button class="sbtn" onclick="nwNotesCreate()">New</button></div>
@@ -15680,7 +15724,7 @@ function renderNotesTab(el){
       <div id="nw-note-list" class="nw-note-list"></div>
     </div>
     <div class="nw-notes-panel nw-note-editor">
-      <div class="nw-note-head"><h3>Customer task note</h3><span id="nw-note-saved" class="nw-note-saved">Auto-save ready</span></div>
+      <div class="nw-note-head"><div><h3>Customer task note</h3><div style="font-size:10.5px;color:var(--t3);margin-top:3px">Linked locally to: ${escapeHtml(nwNotesAccountLabel())}</div></div><span id="nw-note-saved" class="nw-note-saved">Auto-save ready</span></div>
       <div class="nw-note-form">
         <input id="nw-note-id" type="hidden">
         <div class="nw-note-field"><label>Customer name</label><input id="nw-note-customer" placeholder="Customer or site" oninput="nwNotesAutoSave()" autocomplete="off" data-lpignore="true" data-1p-ignore="true"></div>
@@ -15692,7 +15736,7 @@ function renderNotesTab(el){
         <div class="nw-note-field nw-note-wide nw-note-details"><label>Details</label><textarea id="nw-note-details" placeholder="Write the work note, CLI findings, customer request, action taken, result..." oninput="nwNotesAutoSave()"></textarea><div class="nw-note-templates"><button onclick="nwNotesTemplate('daily')">Daily</button><button onclick="nwNotesTemplate('incident')">Incident</button><button onclick="nwNotesTemplate('change')">Change</button><button onclick="nwNotesTemplate('call')">Call</button></div></div>
         <div class="nw-note-field nw-note-wide"><label>Next action / follow-up</label><textarea id="nw-note-next" placeholder="Next step, owner, due date, waiting for..." oninput="nwNotesAutoSave()"></textarea></div>
       </div>
-      <div class="nw-note-actions"><button class="sbtn" onclick="nwNotesSaveCurrent()">Save now</button><button class="sbtn" onclick="nwNotesCopy()" style="background:#2563EB">Copy note</button><button class="sbtn" onclick="nwNotesExport()" style="background:#0F766E">Export all</button><button class="sbtn" onclick="nwNotesDelete()" style="background:#991B1B">Delete</button><span style="font-size:10px;color:var(--t3);align-self:center">Saved in this browser only. Nothing is sent outside NetWolf.</span></div>
+      <div class="nw-note-actions"><button class="sbtn" onclick="nwNotesSaveCurrent()">Save now</button><button class="sbtn" onclick="nwNotesCopy()" style="background:#2563EB">Copy note</button><button class="sbtn" onclick="nwNotesExport()" style="background:#0F766E">Export all</button>${nwNotesLegacyAvailable()?'<button class="sbtn" onclick="nwNotesImportLegacy()" style="background:#7C3AED">Import old notes</button>':''}<button class="sbtn" onclick="nwNotesDelete()" style="background:#991B1B">Delete</button><span style="font-size:10px;color:var(--t3);align-self:center">Saved only for this signed-in account in this browser. Nothing is sent outside NetWolf.</span></div>
     </div>
   </div>`;
   const notes=nwNotesEnsure();
@@ -15811,7 +15855,7 @@ function renderSecurityTab(el){
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
             <td style="padding:8px 10px;color:var(--t2)">📝 Daily Notes</td>
-            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#d29922">●</span> Customer names, task notes, dates, status, priority, and follow-up fields are auto-saved in <code>localStorage</code> on this browser only. They are never sent to NetWolf, AI, or the internet.</td>
+            <td style="padding:8px 10px;color:var(--t2)"><span style="color:#d29922">●</span> Customer names, task notes, dates, status, priority, and follow-up fields are auto-saved in an account-specific <code>localStorage</code> key on this browser only. Another signed-in user gets a different notes database. Notes are never sent to NetWolf, AI, or the internet.</td>
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
             <td style="padding:8px 10px;color:var(--t2)">🧭 Guided Steps</td>
@@ -15928,8 +15972,8 @@ function renderSecurityTab(el){
             <td style="padding:8px 10px;color:var(--t2)">IP Masking tab → <strong>🗑️ Delete all</strong></td>
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
-            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">netwolf_daily_notes_v1</td>
-            <td style="padding:8px 10px;color:var(--t2)">Daily Notes content, customer field, task details, date, status, priority and follow-up</td>
+            <td style="padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--a)">netwolf_daily_notes_v1_&lt;user_id&gt;</td>
+            <td style="padding:8px 10px;color:var(--t2)">Daily Notes content, customer field, task details, date, status, priority and follow-up for one signed-in account</td>
             <td style="padding:8px 10px;color:var(--t2)">Daily Notes tab → delete notes, or browser settings → Clear site data</td>
           </tr>
           <tr style="border-bottom:1px solid var(--br)">
