@@ -1152,9 +1152,6 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('monitoring')" id="tab-monitoring" title="Monitoring / Zabbix">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Monitoring</span>
             </button>
-            <button class="tab" onclick="stab('automation')" id="tab-automation" title="Automation / Ansible / Terraform">
-              <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Automation</span>
-            </button>
             <button class="tab" onclick="stab('ciscofirewall')" id="tab-ciscofirewall" title="Cisco Secure Firewall Toolkit">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Cisco FW</span>
             </button>
@@ -4611,7 +4608,7 @@ function hasHighRisk(cmds){return cmds.some(c=>cmdSafety(c)==='danger');}
 function hasCaution(cmds){return cmds.some(c=>cmdSafety(c)==='caution');}
 
 let cur='vpn',tab='guide',chat=[],loading=false;
-const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','passgen','notes','monitoring','automation','ciscofirewall','liveconnect','emailgen','swcfg','devices']);
+const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','passgen','notes','monitoring','ciscofirewall','liveconnect','emailgen','swcfg','devices']);
 function normalizeTab(t){return VALID_TABS.has(t)?t:'guide';}
 let freeAIPrompt='',freeAIHistory=[];
 
@@ -4767,7 +4764,6 @@ function upgradeTabIcons(){
     'tab-passgen':'<rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path><path d="M8 16h.01"></path><path d="M12 16h.01"></path><path d="M16 16h.01"></path>',
     'tab-notes':'<path d="M5 3h11l3 3v15H5z"></path><path d="M16 3v4h4"></path><path d="M8 10h8"></path><path d="M8 14h8"></path><path d="M8 18h5"></path>',
     'tab-monitoring':'<path d="M3 3v18h18"></path><path d="M7 15l3-3 3 2 5-7"></path><circle cx="7" cy="15" r="1"></circle><circle cx="10" cy="12" r="1"></circle><circle cx="13" cy="14" r="1"></circle><circle cx="18" cy="7" r="1"></circle>',
-    'tab-automation':'<path d="M4 7h16"></path><path d="M7 7v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7"></path><path d="M9 11h6"></path><path d="M9 15h4"></path><path d="M8 3h8l2 4H6l2-4Z"></path>',
     'tab-ciscofirewall':'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path><path d="M8 9h8"></path><path d="M8 13h8"></path><path d="M10 17h4"></path>',
     'tab-liveconnect':'<path d="M4 12h4l2-5 4 10 2-5h4"></path><circle cx="12" cy="12" r="9"></circle>',
     'tab-emailgen':'<path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path>',
@@ -5310,7 +5306,7 @@ function render(){const el=document.getElementById('mc');
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+escapeHtml(cur)+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='passgen')renderPasswordGenerator(el);else if(tab==='notes')renderNotesTab(el);else if(tab==='monitoring')renderMonitoringTab(el);else if(tab==='automation')renderAutomationTab(el);else if(tab==='ciscofirewall')renderCiscoFirewallTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='passgen')renderPasswordGenerator(el);else if(tab==='notes')renderNotesTab(el);else if(tab==='monitoring')renderMonitoringTab(el);else if(tab==='ciscofirewall')renderCiscoFirewallTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -14951,7 +14947,7 @@ function initSidebar(){
     {section:"AI Tools",items:["freeai","nwassistant","ai","claudechat"]},
     {section:"Cloud Learning",items:["azure"]},
     {section:"Reference",items:["ref","multivendor","hwref","devices"]},
-    {section:"Builders & Utilities",items:["psmaker","topology","cfggen","swcfg","cfgmigrate","labsetup","security","passgen","notes","monitoring","automation","ciscofirewall","liveconnect","emailgen"]},
+    {section:"Builders & Utilities",items:["psmaker","topology","cfggen","swcfg","cfgmigrate","labsetup","security","passgen","notes","monitoring","ciscofirewall","liveconnect","emailgen"]},
     {section:"Config Guides",items:["cfg-init","cfg-vdom","cfg-ipsec","cfg-sslvpn","cfg-sdwan","cfg-ha","cfg-intervdom","cfg-portfwd","cfg-ospfbgp","cfg-sec","cfg-fortiswitch","cfg-ztna","cfg-netflow","cfg-wifi","cfg-webfilter","cfg-dns","cfg-serverlb","cfg-fsso"]}
   ];
   let labelMap={
@@ -14977,7 +14973,7 @@ function initSidebar(){
     ai:"💬 AI Assistant",claudechat:"🧠 Claude Chat",ref:"📚 Quick Reference",multivendor:"🔁 Multi-Vendor CLI",
     hwref:"🧱 Hardware Reference",devices:"🖥️ Device Catalog",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
     cfggen:"🧩 Config Generator",swcfg:"🔧 SW/Router Config",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
-    security:"🛡️ Security & Privacy",passgen:"🔐 Password Generator",notes:"📝 Daily Notes",monitoring:"📈 Monitoring / Zabbix",automation:"🧰 Automation",ciscofirewall:"🛡️ Cisco Firewall",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
+    security:"🛡️ Security & Privacy",passgen:"🔐 Password Generator",notes:"📝 Daily Notes",monitoring:"📈 Monitoring / Zabbix",ciscofirewall:"🛡️ Cisco Firewall",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
     azure:"☁️ Azure Scripting",
     conserve:"🧠 Conserve / Memory",sslinspect:"🔓 SSL Inspection",dns:"🌐 DNS / FQDN",fsso:"🪪 FSSO / SSO",serverlb:"⚖️ Server Load Balance",
     "cfg-wifi":"📶 Wireless / FortiAP","cfg-webfilter":"🌐 Web Filter + SSL","cfg-dns":"📮 DNS Server/Filter","cfg-serverlb":"⚖️ Server Load Balancing","cfg-fsso":"🪪 FSSO Setup"
