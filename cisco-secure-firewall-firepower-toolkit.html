@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cisco Secure Firewall Toolkit</title>
+<style>
+:root{
+  --a:#17a2d4;--ad:#0b6f99;--bg:#0d1117;--b2:#161b22;--b3:#202734;--br:#303a48;
+  --t:#e6edf3;--t2:#a7b2bf;--t3:#6f7e8e;--g:#3fb950;--y:#d29922;--r:#f85149;
+  --panel:linear-gradient(180deg,rgba(22,27,34,.96),rgba(13,18,25,.98));
+  --chrome:linear-gradient(180deg,rgba(20,35,49,.98),rgba(13,20,29,.98));
+  --rail:linear-gradient(180deg,rgba(17,27,39,.98),rgba(10,16,24,.98));
+  --wall:radial-gradient(circle at 14% 10%,rgba(23,162,212,.16),transparent 28%),
+         radial-gradient(circle at 88% 12%,rgba(63,185,80,.08),transparent 26%),
+         linear-gradient(135deg,#0d1117 0%,#08121d 100%);
+  --shadow:0 14px 30px rgba(0,0,0,.28);
+  --radius:8px;
+  --mono:Consolas,"Courier New",monospace;
+}
+[data-theme="light"]{
+  --a:#0369a1;--ad:#075985;--bg:#f6f8fb;--b2:#ffffff;--b3:#eef3f8;--br:#d5dee8;
+  --t:#152033;--t2:#4b5b6d;--t3:#8492a3;--g:#16803b;--y:#a35f00;--r:#c62828;
+  --panel:linear-gradient(180deg,#ffffff,#f7f9fb);--chrome:linear-gradient(180deg,#ffffff,#eef4f8);
+  --rail:linear-gradient(180deg,#f8fbfd,#edf4f8);
+  --wall:radial-gradient(circle at 14% 10%,rgba(3,105,161,.10),transparent 28%),
+         radial-gradient(circle at 88% 12%,rgba(22,128,59,.07),transparent 26%),
+         linear-gradient(135deg,#f8fafc 0%,#edf4f8 100%);
+  --shadow:0 12px 24px rgba(15,23,42,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;width:100vw;height:100vh;overflow:hidden;background:var(--wall);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+.shell{height:100vh;display:flex;flex-direction:column}
+.tbar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--chrome);border-bottom:1px solid rgba(23,162,212,.28);box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}.dot.r{background:#ff5f57}.dot.y{background:#ffbd2e}.dot.g{background:#28c840}
+.title{font-family:var(--mono);font-size:14px;font-weight:800;letter-spacing:.02em}.title span{color:var(--a)}
+.version{margin-left:auto;color:var(--t3);font-family:var(--mono);font-size:11px}
+.theme{border:1px solid var(--br);background:var(--b3);color:var(--t2);border-radius:18px;padding:4px 10px;font-size:11px;cursor:pointer}
+.kbar{display:flex;align-items:center;gap:9px;padding:8px 16px;background:var(--rail);border-bottom:1px solid rgba(23,162,212,.20)}
+.kbar label{font-size:12px;color:var(--t2);white-space:nowrap}
+.kbar input{flex:1;min-width:120px;background:var(--bg);border:1px solid var(--br);border-radius:6px;color:var(--t);padding:7px 10px;font-family:var(--mono);font-size:12px;outline:none}
+.kbar input:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(23,162,212,.12)}
+.layout{display:grid;grid-template-columns:250px 1fr;min-height:0;flex:1}
+.sidebar{background:var(--rail);border-right:1px solid rgba(23,162,212,.25);padding:9px 8px;overflow:auto}
+.slbl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);font-weight:800;padding:10px 9px 5px}
+.cb{width:100%;display:flex;align-items:center;gap:8px;text-align:left;background:transparent;border:0;color:var(--t2);padding:7px 9px;border-radius:6px;cursor:pointer;font-size:12px}
+.cb:hover{background:var(--b3);color:var(--t)}
+.cb.active{background:rgba(23,162,212,.15);color:var(--a);font-weight:800;border-left:2px solid var(--a);padding-left:7px}
+.ic{width:18px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--a)}
+.main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.tabs{display:flex;gap:8px;overflow:auto;padding:9px 12px;background:var(--chrome);border-bottom:1px solid rgba(23,162,212,.22)}
+.tab{flex:none;border:1px solid transparent;background:transparent;color:var(--t2);border-radius:7px;padding:7px 11px;cursor:pointer;font-size:11px;min-height:32px}
+.tab:hover{background:rgba(255,255,255,.045);color:var(--t);border-color:rgba(255,255,255,.08)}
+.tab.active{background:linear-gradient(180deg,rgba(23,162,212,.24),rgba(23,162,212,.09));border-color:rgba(23,162,212,.35);color:var(--t);font-weight:800}
+.content{flex:1;overflow:auto;padding:16px}
+.hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);gap:14px;margin-bottom:14px}
+.cblock{background:var(--panel);border:1px solid var(--br);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px}
+.chdr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border-bottom:1px solid rgba(23,162,212,.18);background:linear-gradient(180deg,rgba(255,255,255,.035),transparent)}
+.chdr-l{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
+.cbody{padding:13px 14px;color:var(--t2);font-size:12.5px;line-height:1.68}
+.stitle{font-size:16px;font-weight:900;color:var(--t)}
+.small{font-size:11px;color:var(--t3)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
+.quick-card{background:var(--panel);border:1px solid var(--br);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.quick-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);border:0;border-bottom:1px solid rgba(23,162,212,.18);color:var(--t);padding:11px 13px;text-align:left;cursor:pointer}
+.quick-head:hover{background:rgba(23,162,212,.08)}
+.quick-title{font-size:13px;font-weight:900;color:var(--t)}
+.quick-desc{font-size:11px;color:var(--t3);margin-top:3px;line-height:1.35}
+.quick-meta{display:flex;align-items:center;gap:6px;flex:none}
+.quick-body{display:none;padding:6px 13px 12px}
+.quick-card.open .quick-body{display:block}
+.quick-card.open .quick-head{border-bottom-color:rgba(23,162,212,.34)}
+.metric{background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:12px}
+.metric b{display:block;color:var(--t);font-size:13px;margin-bottom:5px}
+.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--br);background:var(--b3);border-radius:20px;padding:4px 9px;margin:3px 4px 3px 0;font-size:11px;color:var(--t2)}
+.badge{font-size:10px;padding:3px 8px;border-radius:4px;font-weight:900;white-space:nowrap;border:1px solid}
+.ro{color:var(--g);background:rgba(63,185,80,.12);border-color:rgba(63,185,80,.30)}
+.caution{color:var(--y);background:rgba(210,153,34,.12);border-color:rgba(210,153,34,.32)}
+.danger{color:var(--r);background:rgba(248,81,73,.12);border-color:rgba(248,81,73,.34)}
+.cmdrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start;border-bottom:1px solid var(--br);padding:8px 0}
+.cmdrow:last-child{border-bottom:0}
+.cmd{font-family:var(--mono);font-size:12px;white-space:pre-wrap;word-break:break-word;line-height:1.55}
+.cmd.ro{color:var(--g);background:transparent;border:0;padding:0}.cmd.caution{color:var(--y);background:transparent;border:0;padding:0}.cmd.danger{color:var(--r);background:transparent;border:0;padding:0}
+.why{font-size:11.5px;color:var(--t3);margin-top:3px}
+.mode{display:inline-block;margin-top:5px;font-size:10.5px;color:var(--t2);border:1px solid var(--br);background:var(--bg);border-radius:4px;padding:2px 6px;font-family:var(--mono)}
+.copybtn{border:1px solid var(--br);background:var(--b3);color:var(--t2);border-radius:5px;padding:4px 9px;font-size:11px;cursor:pointer}
+.copybtn:hover{border-color:var(--a);color:var(--a)}
+.note{border-left:3px solid var(--a);background:rgba(23,162,212,.08);padding:9px 11px;border-radius:5px;margin:8px 0;color:var(--t2)}
+.warn{border-left:3px solid var(--y);background:rgba(210,153,34,.08);padding:9px 11px;border-radius:5px;margin:8px 0;color:var(--t2)}
+.alert{border-left:3px solid var(--r);background:rgba(248,81,73,.08);padding:9px 11px;border-radius:5px;margin:8px 0;color:var(--t2)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{border:1px solid var(--br);padding:8px 9px;vertical-align:top}
+th{background:var(--b3);color:var(--t);text-align:left}
+.flow{display:grid;gap:8px}
+.step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;background:var(--b2);border:1px solid var(--br);border-radius:8px;padding:10px}
+.num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(23,162,212,.16);color:var(--a);font-weight:900;font-family:var(--mono);font-size:12px}
+.run-title{font-weight:900;color:var(--t);font-size:13px;margin-bottom:4px}
+.run-do{color:var(--t2);font-size:12.5px;line-height:1.55}
+.run-next{margin-top:6px;color:var(--t3);font-size:11.5px;border-left:2px solid var(--a);padding-left:8px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:860px){
+  body{overflow:auto;height:auto}.shell{height:auto;min-height:100vh}.layout{grid-template-columns:1fr}.sidebar{max-height:220px;border-right:0;border-bottom:1px solid rgba(23,162,212,.25)}
+  .hero,.two{grid-template-columns:1fr}.content{padding:12px}.title{font-size:12px}.version{display:none}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="tbar">
+    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+    <div class="title">CISCO <span>SECURE FIREWALL</span> TOOLKIT</div>
+    <button class="theme" onclick="toggleTheme()">Theme</button>
+    <div class="version">Firepower 1000 to Secure Firewall 6100 | verified 2026-06-26</div>
+  </div>
+  <div class="kbar">
+    <label>Search toolkit</label>
+    <input id="search" placeholder="Example: NAT, VPN, packet-tracer, FMC, FDM, high CPU" oninput="runSearch(this.value)">
+  </div>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <section class="main">
+      <div class="tabs" id="tabs"></div>
+      <main class="content" id="content"></main>
+    </section>
+  </div>
+</div>
+
+<script>
+const modules=[
+  {group:"01 Foundation",id:"start",icon:"01",title:"Start Here",tabs:["Roadmap","Packet Flow","Study Plan"]},
+  {group:"01 Foundation",id:"platforms",icon:"02",title:"Platforms",tabs:["Families","Management","Licensing"]},
+  {group:"02 Architecture",id:"design",icon:"03",title:"Design Modes",tabs:["Routed","Transparent","Zones","Multi-instance"]},
+  {group:"02 Architecture",id:"platformops",icon:"04",title:"Platform / FXOS",tabs:["Chassis","Interfaces","Resource Profiles","Health"]},
+  {group:"02 Architecture",id:"ha",icon:"05",title:"HA / Clustering",tabs:["Failover","Clustering","Checks","Runbook"]},
+  {group:"03 Build",id:"setup",icon:"06",title:"Initial Setup",tabs:["Console","FMC Register","FDM Setup"]},
+  {group:"03 Build",id:"gui",icon:"07",title:"GUI Workflows",tabs:["FMC","FDM","Deploy"]},
+  {group:"03 Build",id:"config",icon:"08C",title:"Configuration Cookbook",tabs:["Policy Build","NAT Build","Site-to-Site VPN","Remote Access VPN","Objects","Interfaces & Routes","Logging","Change Workflow"]},
+  {group:"03 Build",id:"interfaces",icon:"08",title:"Interfaces",tabs:["Physical","VLANs","Port-channel","MTU"]},
+  {group:"03 Build",id:"routing",icon:"09",title:"Routing",tabs:["Static","OSPF","BGP","Multicast"]},
+  {group:"03 Build",id:"policy",icon:"10",title:"Policies",tabs:["Access","Inspection","Objects"]},
+  {group:"03 Build",id:"nat",icon:"11",title:"NAT",tabs:["Concept","Recipes","Verify"]},
+  {group:"03 Build",id:"vpn",icon:"12",title:"VPN",tabs:["Site-to-Site","Remote Access","Verify","Certificates"]},
+  {group:"04 Security Services",id:"ips",icon:"13",title:"IPS / Snort",tabs:["Policy","Tuning","Events","Performance"]},
+  {group:"04 Security Services",id:"webfile",icon:"14",title:"URL / File / Malware",tabs:["URL","File Policy","Malware","TLS"]},
+  {group:"04 Security Services",id:"identity",icon:"15",title:"Identity / ISE",tabs:["Identity","ISE","User Rules","Troubleshoot"]},
+  {group:"04 Security Services",id:"remote",icon:"16",title:"Remote Access",tabs:["AnyConnect","Posture","MFA","Duo"]},
+  {group:"05 Operations",id:"cli",icon:"17",title:"CLI Toolkit",tabs:["Health","Traffic","Risky","Expert"]},
+  {group:"05 Operations",id:"logging",icon:"18",title:"Logging / SIEM",tabs:["FMC Events","Syslog","Splunk","Evidence"]},
+  {group:"05 Operations",id:"upgrade",icon:"19",title:"Backup / Upgrade",tabs:["Backups","Upgrade","Rollback","Advisories"]},
+  {group:"05 Operations",id:"api",icon:"20",title:"Automation / API",tabs:["FMC API","Objects","Deploy","Safe Use"]},
+  {group:"05 Operations",id:"ops",icon:"21",title:"Operations Runbook",tabs:["Daily","Hardening","Change"]},
+  {group:"06 Troubleshooting",id:"trouble",icon:"22",title:"Troubleshooting",tabs:["Decision Tree","Internet","Server","NAT","Policy","VPN","DNS","High CPU","Drops","HA","GUI"]},
+  {group:"07 Ecosystem",id:"cloud",icon:"23",title:"Cloud / Virtual",tabs:["Public Cloud","Private Cloud","Containers","SD-WAN"]},
+  {group:"07 Ecosystem",id:"migration",icon:"24",title:"Migration",tabs:["ASA","FortiGate","Palo Alto","Validation"]},
+  {group:"08 Practice",id:"labs",icon:"25",title:"Labs",tabs:["Beginner","Engineer","Pro","Enterprise"]},
+  {group:"09 Reference",id:"quick",icon:"26",title:"Quick Reference",tabs:["Command Bundles","CLI Modes","GUI Map","Safety Colors","Sources"]}
+];
+let current="start",tab=0;
+
+const commandSets={
+  setup:[
+    ["ro","show version","Confirm model, software, uptime, and image."],
+    ["ro","show managers","See whether the device is managed by FMC."],
+    ["ro","show network","Check management IP, gateway, DNS, and hostname."],
+    ["ro","show interface ip brief","Quick interface and IP status."],
+    ["caution","configure network ipv4 manual <mgmt-ip> <netmask> <gateway>","Changes the management address."],
+    ["caution","configure manager add <fmc-ip-or-fqdn> <registration-key> <nat-id-if-needed>","Registers FTD to FMC."],
+    ["danger","configure manager delete","Removes current FMC manager relationship."],
+    ["danger","configure factory-reset","Erases configuration and returns device to factory state."]
+  ],
+  cliHealth:[
+    ["ro","show version","Software, model, uptime, serial, and deployment clues."],
+    ["ro","show inventory","Hardware inventory and modules."],
+    ["ro","show managers","FMC registration state."],
+    ["ro","show interface ip brief","Interface state and IP summary."],
+    ["ro","show route","Routing table."],
+    ["ro","show arp","ARP table for directly connected neighbors."],
+    ["ro","show conn count","Connection table size."],
+    ["ro","show cpu","CPU usage."],
+    ["ro","show memory","Memory usage."],
+    ["ro","show failover","High availability state, if configured."],
+    ["ro","show ntp","Time synchronization."],
+    ["ro","show logging","Recent local logs."]
+  ],
+  traffic:[
+    ["ro","packet-tracer input inside tcp 10.1.10.25 54321 172.16.20.10 443 detailed","Simulate packet flow and show route, NAT, ACL, and drop phase."],
+    ["ro","packet-tracer input outside tcp 198.51.100.50 55555 203.0.113.10 443 detailed","Test published server flow from outside."],
+    ["ro","show conn address <ip-address>","Find active connections for one host."],
+    ["ro","show nat","Review NAT rules."],
+    ["ro","show xlate","Review active translations."],
+    ["ro","show asp drop","See drop counters."],
+    ["caution","capture CAP interface inside match ip host <src> host <dst>","Starts a packet capture. Keep it narrow."],
+    ["caution","show capture CAP","Displays capture output."],
+    ["caution","no capture CAP","Stops and removes the capture."],
+    ["caution","clear conn address <ip-address>","Clears active sessions for a host."],
+    ["caution","clear xlate local <ip-address>","Clears translations for a host."]
+  ],
+  nat:[
+    ["ro","show route <destination-ip>","Confirm the firewall knows where the destination lives."],
+    ["ro","show nat","Check NAT rule order and hit counts."],
+    ["ro","show xlate","See active translations."],
+    ["ro","packet-tracer input inside tcp <src-ip> 50000 8.8.8.8 443 detailed","Confirm inside-to-internet NAT and policy."],
+    ["ro","packet-tracer input outside tcp <test-ip> 55555 <public-ip> 443 detailed","Confirm static NAT to a published server."],
+    ["caution","clear xlate local <ip-address>","Useful after NAT changes, but breaks matching sessions."]
+  ],
+  vpn:[
+    ["ro","show vpn-sessiondb l2l","Site-to-site VPN sessions."],
+    ["ro","show vpn-sessiondb anyconnect","Remote access VPN sessions."],
+    ["ro","show crypto ikev2 sa","IKE phase status."],
+    ["ro","show crypto ipsec sa","IPsec encrypt/decrypt counters."],
+    ["ro","show nat","Confirm NAT exemption for VPN traffic."],
+    ["ro","packet-tracer input inside icmp <local-host> 8 0 <remote-host> detailed","Test VPN interesting traffic path."],
+    ["caution","clear crypto ikev2 sa peer <peer-ip>","Clears IKE SA for one peer."],
+    ["caution","clear crypto ipsec sa peer <peer-ip>","Clears IPsec SA for one peer."],
+    ["caution","vpn-sessiondb logoff name <username>","Disconnects a remote access VPN user."]
+  ],
+  platform:[
+    ["ro","show version","Confirm FTD software, build, model, and uptime."],
+    ["ro","show inventory","Hardware inventory, serials, and modules."],
+    ["ro","show chassis detail","Platform/chassis details where supported."],
+    ["ro","show environment","Power, fan, and temperature health where supported."],
+    ["ro","show interface","Physical interface counters and errors."],
+    ["ro","show port-channel summary","EtherChannel status where configured."],
+    ["ro","show resource usage","Resource use for firewall processes where supported."]
+  ],
+  routing:[
+    ["ro","show route","Full routing table."],
+    ["ro","show route <ip-address>","Route lookup for one destination."],
+    ["ro","show ospf neighbor","OSPF neighbor state."],
+    ["ro","show ospf database","OSPF LSDB visibility."],
+    ["ro","show bgp summary","BGP neighbor state and prefixes."],
+    ["ro","show bgp","BGP table."],
+    ["ro","show asp table routing","Low-level route table view for packet forwarding."],
+    ["caution","clear ospf process","Restarts OSPF process. Can flap routes."],
+    ["caution","clear bgp <neighbor-ip>","Resets BGP peering. Can interrupt traffic."]
+  ],
+  ha:[
+    ["ro","show failover","Failover state, unit role, and peer health."],
+    ["ro","show failover state","Compact HA state."],
+    ["ro","show failover history","Recent failover events."],
+    ["ro","show interface ip brief","Confirm monitored interface state."],
+    ["ro","show conn count","Connection count before planned failover."],
+    ["danger","failover active","Forces this unit active."],
+    ["danger","failover reload-standby","Reloads standby unit."],
+    ["danger","no failover active","Can change active/standby role depending on context."]
+  ],
+  ips:[
+    ["ro","show snort statistics","Snort inspection counters and health."],
+    ["ro","show asp drop","Check packet drop counters that may indicate inspection drops."],
+    ["ro","show conn count","Connection volume before tuning inspection."],
+    ["ro","show cpu","CPU impact of inspection."],
+    ["ro","show memory","Memory pressure that can affect inspection."],
+    ["caution","system support diagnostic-cli","Enter diagnostic CLI for deeper checks. Know how to exit."],
+    ["caution","capture IPSCHECK interface inside match ip host <src> host <dst>","Use narrow capture to compare pre/post inspection."]
+  ],
+  logging:[
+    ["ro","show logging","Local log buffer."],
+    ["ro","show running-config logging","Logging configuration."],
+    ["ro","show conn address <ip-address>","Evidence for active traffic."],
+    ["ro","show access-list","ACL/rule hit evidence where available."],
+    ["caution","clear logging","Clears local log buffer. Preserve evidence first."]
+  ],
+  expert:[
+    ["caution","expert","Enter Linux expert shell on FTD. Use only for supported troubleshooting."],
+    ["ro","sudo pmtool status","Process status from expert shell, when permitted."],
+    ["ro","df -h","Filesystem usage from expert shell."],
+    ["ro","top","Real-time process view. Exit with q."],
+    ["caution","sudo sf_troubleshoot.pl","Collect troubleshooting bundle; can take time and disk space."],
+    ["danger","sudo reboot","Reboots from expert shell."]
+  ],
+  api:[
+    ["ro","GET /api/fmc_platform/v1/info/serverversion","Check FMC API version."],
+    ["ro","GET /api/fmc_config/v1/domain/{domainUUID}/object/networks","List network objects."],
+    ["caution","POST /api/fmc_config/v1/domain/{domainUUID}/object/networks","Create a network object."],
+    ["caution","PUT /api/fmc_config/v1/domain/{domainUUID}/object/networks/{objectUUID}","Modify a network object."],
+    ["caution","POST /api/fmc_config/v1/domain/{domainUUID}/deployment/deploymentrequests","Deploy pending changes."],
+    ["danger","DELETE /api/fmc_config/v1/domain/{domainUUID}/object/networks/{objectUUID}","Deletes an object. Check dependencies first."]
+  ],
+  upgrade:[
+    ["ro","show version","Current version and uptime."],
+    ["ro","show managers","Confirm FMC relationship before upgrade."],
+    ["ro","show failover","Confirm HA status before upgrade."],
+    ["ro","show disk","Check disk space."],
+    ["ro","show cpu","Baseline CPU before upgrade."],
+    ["ro","show memory","Baseline memory before upgrade."],
+    ["danger","reboot","Only inside approved maintenance or recovery plan."]
+  ],
+  danger:[
+    ["danger","reboot","Restarts the firewall."],
+    ["danger","shutdown","Can stop an interface or system context depending on mode."],
+    ["danger","failover active","Forces HA role change."],
+    ["danger","failover reload-standby","Reloads standby unit."],
+    ["danger","clear configure all","Removes configuration in ASA-style contexts."],
+    ["danger","configure factory-reset","Factory reset. Last resort only."]
+  ]
+};
+
+const content={
+ start:[
+  {
+    title:"Toolkit roadmap",
+    body:`<div class="cblock"><div class="chdr"><div class="chdr-l">How this toolkit is structured</div><span class="badge ro">start here</span></div><div class="cbody">
+    This toolkit follows the way a Cisco firewall engineer works: learn the product, design the firewall, build the configuration, enable security services, operate it, troubleshoot it, then use labs and quick references.
+    <div class="note"><b>Use order:</b> New learners should follow phases 01 to 09 in the left sidebar. For an outage, jump to 05 Operations, 06 Troubleshooting, or 09 Reference.</div>
+    </div></div>
+    <div class="grid">
+      <button class="metric" onclick="openModule('platforms',0)"><b>01 Foundation</b>Platforms, management, licensing, and firewall thinking.</button>
+      <button class="metric" onclick="openModule('design',0)"><b>02 Architecture</b>Routed mode, transparent mode, zones, FXOS/platform, HA, clustering.</button>
+      <button class="metric" onclick="openModule('setup',0)"><b>03 Build</b>Initial setup, FMC/FDM, interfaces, routing, NAT, policies, VPN.</button>
+      <button class="metric" onclick="openModule('ips',0)"><b>04 Security Services</b>IPS/Snort, URL, file, malware, TLS, identity, ISE, remote access.</button>
+      <button class="metric" onclick="openModule('cli',0)"><b>05 Operations</b>CLI modes, health checks, logging, backups, upgrades, automation.</button>
+      <button class="metric" onclick="openModule('trouble',0)"><b>06 Troubleshooting</b>Decision tree, internet, servers, NAT, policy, VPN, DNS, drops, HA.</button>
+      <button class="metric" onclick="openModule('cloud',0)"><b>07 Ecosystem</b>Cloud, virtual firewall, containers, SD-WAN, and migrations.</button>
+      <button class="metric" onclick="openModule('labs',0)"><b>08 Practice</b>Beginner, engineer, pro, and enterprise labs.</button>
+      <button class="metric" onclick="openModule('quick',0)"><b>09 Reference</b>Readable command bundles, CLI modes, GUI map, safety colors, sources.</button>
+    </div>
+    <div class="warn">Every command includes a safety color and the CLI mode where the command should be typed.</div>`
+  },
+  {
+    title:"Firewall mental model",
+    body:`<div class="grid">
+      <div class="metric"><b>FMC</b>Central manager for multiple firewalls. Use it for enterprise policy, events, backups, upgrades, and reporting.</div>
+      <div class="metric"><b>FDM</b>Local web GUI on a single firewall. Good for branch, small business, and labs.</div>
+      <div class="metric"><b>CLI</b>Best for setup, checking health, packet-tracer, captures, and emergency recovery.</div>
+      <div class="metric"><b>FTD</b>Firewall Threat Defense software: firewall plus next-generation security inspection.</div>
+    </div><div class="note">If a device is managed by FMC or FDM, do normal policy work in the GUI. CLI is mainly for verification and troubleshooting.</div>`
+  },
+  {
+    title:"Study plan and learning options",
+    body:`<div class="cblock"><div class="chdr"><div class="chdr-l">Choose how you want to learn</div><span class="badge ro">learning paths</span></div><div class="cbody">
+      Do not use the same path for every learner. A beginner needs concepts and GUI practice first; an operator needs CLI and troubleshooting; a future engineer needs design, policy, VPN, security services, and change control.
+      <div class="note"><b>Best order for a new learner:</b> Beginner foundation, GUI builder, CLI operator, troubleshooting, security services, cloud/migration, then labs.</div>
+    </div></div>
+    <div class="grid">
+      <button class="metric" onclick="openModule('start',1)"><b>Beginner foundation</b>Open the mental model tab, draw inside/outside/DMZ/management, then trace one packet through route, NAT, policy, and inspection.</button>
+      <button class="metric" onclick="openModule('gui',0)"><b>GUI builder path</b>Open FMC/FDM workflows, create interfaces, routes, NAT, access rules, deploy changes, then prove the match in events.</button>
+      <button class="metric" onclick="openModule('cli',0)"><b>CLI operator path</b>Use the CLI Toolkit tab to enter the right mode, run read-only checks, packet-tracer, captures, health checks, and safe caution commands.</button>
+      <button class="metric" onclick="openModule('policy',0)"><b>Policy engineer path</b>Build objects, access control, logging, rule order, IPS inspection, URL, file, malware, and TLS policy.</button>
+      <button class="metric" onclick="openModule('vpn',0)"><b>VPN engineer path</b>Build and troubleshoot site-to-site VPN, remote access VPN, certificates, NAT exemption, and split tunnel.</button>
+      <button class="metric" onclick="openModule('trouble',0)"><b>Troubleshooter path</b>Diagnose internet, server publishing, NAT, policy, VPN, DNS, drops, high CPU, HA, and GUI issues.</button>
+      <button class="metric" onclick="openModule('cloud',0)"><b>Cloud and migration path</b>Follow the ordered cloud and migration runbooks, map interfaces/zones, rebuild policy/NAT/VPN, then validate top flows before cutover.</button>
+      <button class="metric" onclick="openModule('labs',0)"><b>Hands-on lab path</b>Practice beginner, engineer, pro, and enterprise tasks until you can build and prove each result without guessing.</button>
+    </div>
+    ${runbook("30-day Cisco Secure Firewall learning path",[
+      ["Days 1-5: Network and firewall basics","Write a small IP plan: client subnet, server subnet, outside next hop, DNS server, and management IP. Draw inside, outside, DMZ, and management. Then trace one TCP/443 flow and label where route lookup, NAT, access rule, and inspection happen.","Build a small lab diagram and continue only when you can explain how one client reaches one server through a firewall."],
+      ["Days 6-10: First firewall build","In FMC/FDM set management IP, DNS, NTP, license, inside/outside interfaces, security zones, default route, internal route, dynamic PAT, and one inside-to-outside access rule with logging enabled.","Deploy the policy and prove internet access with packet-tracer, connection events, and a real client test."],
+      ["Days 11-15: Real policy and NAT work","Create reusable network/service objects, publish one DMZ server with static NAT, add a narrow outside-to-DMZ rule, enable logging, and understand rule order.","Test from outside to inside with packet-tracer and events, then document the matching NAT rule and access rule."],
+      ["Days 16-20: VPN skills","Build a site-to-site VPN with matching proposals, protected networks, NAT exemption, routes, and access rules. Then build a remote access VPN plan with users, pool, DNS, split tunnel, and certificate basics.","Generate traffic and verify VPN sessions, IKE/IPsec counters, packet-tracer, NAT exemption, and one real application flow."],
+      ["Days 21-25: Troubleshooting skills","Practice a repeatable order: define symptom, collect five-tuple, check route, NAT, policy, inspection, logs, then captures. Break and fix internet, DNS, server, VPN, and policy issues in a lab.","For each issue, save the evidence that proves the cause instead of only saying it works now."],
+      ["Days 26-30: Professional operations","Day 26: in FMC go to Policies > Intrusion and apply a balanced IPS policy to one access rule, then check Analysis > Intrusions. Day 27: create URL and file policies, attach them to one web rule, download a safe test file, and check URL/File events. Day 28: design TLS decryption with bypass categories and test only a pilot user group. Day 29: configure identity or VPN user mapping, then verify the user field appears in connection events. Day 30: take an FMC backup, review upgrade readiness, send logs to syslog/SIEM, test one read-only FMC API call, and write a change plan with rollback.","Finish only when you can show evidence for each item: IPS event, URL/File event, TLS bypass/decrypt result, user identity match, backup file, health/upgrade check, SIEM log, API output, and rollback notes."]
+    ])}
+    ${runbook("How to practice the professional operations topics",[
+      ["IPS / Snort practice","Open FMC > Policies > Access Control. Edit one lab allow rule and attach an Intrusion Policy such as Balanced Security and Connectivity. Deploy. Generate allowed test traffic, then open Analysis > Intrusions and filter by source/destination/time. Do not start with aggressive blocking in production.","Next: tune one noisy event by making a narrow exception, not by disabling the whole IPS policy."],
+      ["URL filtering practice","Open FMC > Policies > Access Control. On a web rule, add URL categories or reputation controls. Start with monitor/logging or block only clearly risky categories. Deploy, browse to test websites, then check Analysis > Connections for URL category and action.","Next: create one business exception for a specific group or destination and prove the exception matched."],
+      ["File and malware practice","Create or edit a File Policy, choose protocols and file types to detect first, then attach it to an access rule. Download a safe test file through the firewall and check Analysis > Files and Analysis > Malware for filename, SHA, disposition, and action.","Next: change only one file type from detect to block in the lab and verify the user experience plus event record."],
+      ["TLS decryption practice","Plan certificates before enabling it. Create or import an internal CA, define bypass for banking, healthcare, certificate pinning, and critical apps, then apply TLS policy only to a pilot source network. Monitor decrypt errors and CPU.","Next: document which traffic is decrypted, which traffic is bypassed, and which applications failed during pilot."],
+      ["Identity practice","Connect the identity source such as AD/ISE/VPN realm, confirm NTP time sync, then create one user-based access rule. Generate traffic from that user and check Analysis > Connections for the user and rule name.","Next: test an unknown user case and keep a non-identity fallback rule for critical infrastructure."],
+      ["Backup and upgrade practice","In FMC, create a backup before major changes and store it outside FMC. Before upgrade, read release notes, confirm FMC/FTD compatibility, run health checks, clear failed deployments, and define validation tests.","Next: write rollback criteria before the upgrade: when to continue, when to pause, and when to revert."],
+      ["Logging and SIEM practice","Configure syslog or event forwarding with correct severity, timestamp, hostname, and facility. Generate one allow, one block, one VPN login, and one admin change, then confirm they appear in the SIEM with correct fields.","Next: build a small dashboard for blocked traffic, VPN logins, IPS hits, and deployment/admin changes."],
+      ["API practice","Start read-only. Use FMC API to list domains, devices, objects, or policies. Do not automate deploys first. Save the output and compare object names and UUIDs with the GUI.","Next: create a dry-run plan for any future write automation so the change can be reviewed before deployment."],
+      ["Change and rollback practice","Write the change goal, affected firewall, exact policy/rule/object changes, test plan, maintenance window, backup location, rollback steps, and owner approval. After deployment, attach screenshots/events/commands as evidence.","Next: close the change only after business validation is complete and rollback is no longer needed."]
+    ])}
+    ${table(["Learning option","Use this when","You should be able to do"],[
+      ["GUI-first","You are new or responsible for daily FMC/FDM policy work.","Create zones, interfaces, routes, NAT, access rules, deploy changes, and prove rule matches in events."],
+      ["CLI-first","You support outages or need confidence at the console.","Use the correct CLI mode, run safe checks, packet-tracer, captures, health commands, and collect evidence."],
+      ["Troubleshooting-first","Users report broken applications, VPN, DNS, NAT, drops, or slowness.","Follow a decision tree and identify the first failing phase without random changes."],
+      ["Security-services","You manage IPS, URL, file, malware, TLS, identity, or ISE integration.","Enable controls carefully, monitor impact, tune exceptions, and avoid breaking business traffic."],
+      ["Cloud/migration","You deploy virtual firewalls or replace ASA/FortiGate/Palo Alto.","Follow ordered deployment/migration steps with validation and rollback evidence."],
+      ["Job-ready","You want professional engineer behavior, not only configuration memory.","Document designs, change plans, validation, backups, rollback, and operational handover."]
+    ])}`
+  }
+ ],
+ platforms:[
+  {title:"Cisco Secure Firewall families",body:table(["Family","Typical place","Engineer notes"],[
+    ["Firepower 1000","Small business, branch, edge","1010/1120/1140/1150. Good learning platform for FMC or FDM."],
+    ["Secure Firewall 1200 / 200","Newer branch options","Compact current portfolio choices for distributed sites."],
+    ["Secure Firewall 3100","Medium enterprise","Common campus/edge platform, usually FMC-managed."],
+    ["Secure Firewall 4200","Large campus and data center","4215/4225/4245. Higher throughput and clustering options."],
+    ["Secure Firewall 6100","Ultra-high-end data center","High performance density for large data center and telecom use."],
+    ["Virtual / cloud","Private cloud and public cloud","Same firewall concepts, but interface mapping depends on platform."]
+  ])},
+  {title:"Management methods",body:`<div class="grid"><div class="metric"><b>Use FMC when...</b>You have multiple firewalls, central rules, central events, HA, enterprise change control, and reporting.</div><div class="metric"><b>Use FDM when...</b>You manage one firewall locally and need a simpler GUI.</div><div class="metric"><b>Use CLI when...</b>You need initial setup, packet-tracer, health checks, captures, or recovery.</div></div>`},
+  {title:"Licensing checklist",body:steps([
+    "Base firewall functions: In FMC/FDM open licensing or Smart Licensing and confirm the device is registered and base firewall functions are active.",
+    "Threat/IPS subscription: Confirm Threat license before attaching intrusion policy to access rules.",
+    "Malware/file inspection: Confirm Malware license before creating file policy or expecting malware disposition events.",
+    "URL filtering: Confirm URL license and cloud connectivity before using URL categories or reputation in rules.",
+    "Remote access VPN licensing: Confirm Secure Client/RA VPN licensing, user count, and entitlement before production rollout.",
+    "Cisco account and Smart Licensing reachability: Confirm FMC/firewall can reach the required Cisco licensing services through DNS, route, and access policy."
+  ])}
+ ],
+ design:[
+  {title:"Routed firewall mode",body:`<div class="grid"><div class="metric"><b>Use when</b>The firewall is the Layer 3 gateway or routed hop between networks.</div><div class="metric"><b>Common design</b>inside, outside, DMZ, guest, VPN, server, management zones.</div><div class="metric"><b>Engineer focus</b>Routes, NAT, access policy, asymmetric routing, and default gateway placement.</div></div><div class="note">Most Firepower/FTD deployments are routed mode because it is easy to understand and troubleshoot.</div>`},
+  {title:"Transparent firewall mode",body:`<div class="grid"><div class="metric"><b>Use when</b>You need inline filtering without changing IP gateways.</div><div class="metric"><b>Common design</b>Bridge groups between switch/router segments.</div><div class="metric"><b>Engineer focus</b>MAC learning, bridge groups, BVI management, allowed EtherTypes, and bypass plan.</div></div><div class="warn">Transparent mode is powerful but less obvious to beginners. Document the physical path carefully.</div>`},
+  {title:"Zones and segmentation",body:table(["Zone","Typical members","Policy idea"],[
+    ["outside","internet-facing interface","Permit only published services and VPN."],
+    ["inside","users and trusted LAN","Allow business apps, inspect web/file traffic."],
+    ["dmz","public servers","Allow only required inbound and outbound flows."],
+    ["guest","guest Wi-Fi","Internet only, no internal access."],
+    ["vpn","remote access pool or tunnel networks","Least privilege to apps, not full LAN by default."],
+    ["management","admin networks","Firewall/FMC access only from trusted admin systems."]
+  ])},
+  {title:"Multi-instance thinking",body:steps(["Use only when the platform and license support it.","Separate tenants or security domains before you separate small use cases.","Plan resource allocation, interfaces, management, backups, and upgrade ownership.","Keep a clear owner for each instance and avoid shared undocumented dependencies."])}
+ ],
+ platformops:[
+  {title:"Chassis and platform checks",body:`<div class="note">Some larger Cisco Secure Firewall platforms include FXOS/chassis concepts below the FTD application. Small 1000-series deployments feel simpler; data center platforms require more platform awareness.</div>`+cmdBlock(commandSets.platform)},
+  {title:"Interface module planning",body:steps(["Confirm interface types: copper, SFP/SFP+, QSFP, breakout, management, HA, or data.","Map every cable to switch port, VLAN, speed, duplex, and zone.","For port-channels, confirm LACP mode and switch-side bundle.","For high availability, keep interface naming and cabling symmetric."])},
+  {title:"Resource profiles",body:steps(["Document expected throughput, VPN users, TLS decryption, IPS policy, and connection count.","Avoid enabling every inspection feature blindly; performance depends on traffic mix.","Use health policy and FMC dashboards to track load after each major feature is enabled.","For multi-instance or clustering, reserve capacity for failover and growth."])},
+  {title:"Platform health",body:cmdBlock(commandSets.platform.concat(commandSets.upgrade.slice(3,6)))}
+ ],
+ ha:[
+  {title:"Failover design",body:steps(["Use matching models, compatible software, licenses, interfaces, and modules.","Connect failover/state links according to Cisco design guidance.","Mirror interface names, zones, IP addressing pattern, routes, NAT, and policies.","Test failover during a window before production reliance.","Document normal active unit and recovery decision process."])+cmdBlock(commandSets.ha)},
+  {title:"Clustering design",body:steps(["Use clustering for large-scale throughput and resiliency where supported.","Plan control link, data interfaces, switch design, spanned or individual interfaces, and traffic symmetry.","Understand that cluster troubleshooting is more complex than simple HA.","Before enabling clustering, confirm application behavior, VPN limitations, NAT behavior, and upgrade process for your version."])},
+  {title:"HA checks",body:cmdBlock(commandSets.ha.slice(0,5).concat(commandSets.cliHealth.slice(3,9)))},
+  {title:"Failover runbook",body:`<div class="alert"><b>Do not improvise HA changes.</b> Use a written runbook during a maintenance window.</div>`+steps(["Confirm both units healthy.","Save/export configuration and FMC backup.","Record active/standby roles and interface state.","Notify stakeholders.","Force failover only if required.","Verify traffic, VPN, NAT, routes, and critical apps.","If failed, revert role and escalate with collected evidence."])+cmdBlock(commandSets.ha)}
+ ],
+ setup:[
+  {title:"Console setup checklist",body:steps(["Connect console cable and management cable.","Record model, serial, software version, management IP plan, inside/outside/DMZ design.","Configure management IP, gateway, DNS, NTP, hostname.","Decide FMC or FDM before building policies.","Back up after first working deployment."])+cmdBlock(commandSets.setup)},
+  {title:"Register to FMC",body:steps(["In FTD CLI, add FMC manager with registration key.","In FMC, go to Devices > Device Management > Add Device.","Enter management IP, registration key, access control policy, license, and device group.","Wait for registration, then configure interfaces, routes, NAT, and policies.","Deploy and verify."])+cmdBlock(commandSets.setup.slice(0,6))},
+  {title:"FDM first login",body:steps(["Open browser to the firewall management IP.","Complete setup wizard: admin password, time, DNS, outside, inside, and licensing.","Build basic route, NAT, and access control.","Deploy changes.","Run packet-tracer or GUI packet trace to verify."])}
+ ],
+ gui:[
+  {title:"FMC workflow",body:steps(["Devices > Device Management: add or edit firewall.","Interfaces: enable ports, assign names, zones, and IP addresses.","Routing: add default/static/dynamic routing.","Objects: build reusable networks, hosts, ports, URLs, and zones.","Policies > Access Control: create rules from specific to broad.","Deploy: review pending changes and push to device.","Analysis: use connection and intrusion events for proof."])},
+  {title:"FDM workflow",body:steps(["Device > Interfaces: configure inside/outside/DMZ.","Device > Routing: configure default route and internal routes.","Policies > NAT: dynamic PAT or static NAT.","Policies > Access Control: allow required traffic only.","Monitoring: check events and packet trace.","Deploy: confirm the change list before commit."])},
+  {title:"Deploy discipline",body:`<div class="warn"><b>Deployment is the commit.</b> In FMC/FDM, a saved rule is not active until deployed.</div>${steps(["Read the change summary.","Confirm affected device.","Confirm policy name and rule order.","Deploy during approved window for risky changes.","After deploy, test with real traffic and event logs."])}`}
+ ],
+ config:[
+  {title:"Create firewall access policy rule",body:`<div class="note"><b>Use this for daily permit/block requests.</b> Example: allow inside users to an internal app, allow DMZ server to DNS, or block a bad host.</div>`+runbook("FMC access rule build order",[
+    ["Collect the request","Write the source IP/subnet or user group, destination IP/FQDN, protocol/port, application name, business owner, change window, and expiry date. Example: source NET_INSIDE_USERS to HOST_APP01 TCP/443.","Create objects next so the rule is readable and reusable."],
+    ["Create objects","In FMC open Objects > Object Management. Create Network objects such as NET_INSIDE_USERS and HOST_APP01, and Port objects such as SVC_HTTPS_TCP_443. Add descriptions with ticket number and owner.","After objects exist, open the access policy."],
+    ["Open the correct access policy","Go to Policies > Access Control, edit the policy assigned to the firewall, and choose Add Rule. Confirm the target firewall uses this policy under Devices > Device Management.","Build the rule conditions next."],
+    ["Fill rule conditions","Set Action Allow or Block. Set Source Zone, Destination Zone, Source Networks/Users, Destination Networks, Ports, Applications or URLs if needed. Keep conditions specific; avoid any-any except emergency containment.","Enable logging before saving."],
+    ["Enable logging and inspection","On the rule, enable Log at End of Connection. Attach IPS/File/URL/TLS policy only if required and licensed. Put the rule above broader allows and below emergency blocks.","Save and review rule order."],
+    ["Deploy and validate","Click Deploy, review pending changes, deploy to the correct device, then test from the real source. In Analysis > Connections, filter source/destination/time and confirm the rule name and action.","Document event proof and close the change."]
+  ])+cmdBlock([["ro","packet-tracer input inside tcp <src-ip> 50000 <dst-ip> 443 detailed","Diagnostic CLI: simulate the access rule before or after deploy."],["ro","show access-list","Diagnostic CLI: view rule hit evidence where available."],["ro","show conn address <src-ip>","Diagnostic CLI: confirm active sessions from the source."],["ro","show route <dst-ip>","Confirm routing before blaming policy."]])},
+  {title:"Create NAT rule",body:`<div class="note"><b>NAT must match the traffic before policy proof makes sense.</b> Build NAT using original source/destination and then verify translation.</div>`+runbook("NAT build order",[
+    ["Decide NAT type","Choose Dynamic PAT for inside users to internet, Static NAT for publishing a server, NAT exemption for VPN, or Policy NAT for partner/overlap cases. Record original and translated source/destination.","Create needed objects next."],
+    ["Create original and translated objects","In Objects > Object Management create real inside network, real server, public IP, VPN remote network, or translated pool. Name clearly: HOST_DMZ_WEB01_REAL and HOST_DMZ_WEB01_PUBLIC.","Open NAT policy after objects exist."],
+    ["Open NAT policy","Go to Devices > NAT or Policies > NAT depending on version. Edit the NAT policy assigned to the firewall. Use Manual NAT when order matters, especially VPN exemption and policy NAT.","Place the rule correctly."],
+    ["Build the NAT rule","Set source/destination interface zones, original source/destination, translated source/destination, service if required, and no-proxy-arp/route-lookup options only when the design requires them.","Move specific NAT above broad PAT."],
+    ["Add matching access rule","For published servers, access policy normally permits traffic to the real/private destination with the required port. For outbound PAT, allow inside-to-outside services. For VPN exemption, allow VPN networks as needed.","Deploy and test."],
+    ["Validate translation","Use packet-tracer, show nat, show xlate, and FMC connection events. Confirm the translated address is exactly what the design requires.","If wrong NAT matches, adjust rule order before changing policy."]
+  ])+cmdBlock(commandSets.nat.concat([["caution","clear xlate local <ip-address>","Diagnostic CLI: clear only one host translation while testing NAT changes."]]))},
+  {title:"Create site-to-site VPN",body:`<div class="warn"><b>Both peers must match.</b> Most site-to-site failures are mismatch, NAT exemption, route, or wrong protected networks.</div>`+runbook("Site-to-site VPN build order",[
+    ["Collect peer information","Get local public IP, peer public IP, local protected networks, remote protected networks, IKE version, encryption, integrity, DH group, lifetime, IPsec proposal, PFS, pre-shared key or certificate, and contact for the peer engineer.","Create objects for all protected networks."],
+    ["Create network objects","In Objects > Object Management create local and remote protected network objects. Use names like NET_LOCAL_DC_SERVERS and NET_REMOTE_PARTNER_APP.","Build the VPN topology next."],
+    ["Create VPN topology","Go to Devices > VPN > Site To Site. Add a topology, choose route-based or policy-based according to design/version, add local firewall, peer IP, and authentication method.","Configure IKE/IPsec proposals."],
+    ["Set IKE and IPsec parameters","Match IKE version, encryption, integrity, DH group, lifetime, IPsec proposal, PFS, and pre-shared key/certificate with the peer. One mismatch can stop the tunnel.","Add protected networks and routes."],
+    ["Add protected networks, route, and NAT exemption","Set local/remote networks. Add static route to remote network if required. Create NAT exemption from local protected networks to remote protected networks above internet PAT.","Allow VPN traffic in access policy."],
+    ["Create access rules","Permit only required traffic between local and remote VPN networks. Enable logging so every VPN flow can be proven in connection events.","Deploy and generate interesting traffic."],
+    ["Bring up and verify","Generate traffic from local protected network to remote protected network. Check IKE/IPsec sessions, encaps/decaps counters, packet-tracer, show nat, show route, and FMC events.","If it fails, compare proposals, NAT exemption, routes, and protected networks first."]
+  ])+cmdBlock(commandSets.vpn)},
+  {title:"Create remote access VPN",body:`<div class="note"><b>Remote access is a user service.</b> Build identity, pool, DNS, routes, certificate, MFA, and internal access together.</div>`+runbook("Remote access VPN build order",[
+    ["Plan the user experience","Choose VPN FQDN, outside interface, certificate, authentication source, MFA method, VPN address pool, DNS servers, split tunnel networks, and allowed applications.","Prepare certificate and identity next."],
+    ["Install certificate and identity","Import or generate the VPN certificate and trusted CA chain. Configure AAA/LDAP/RADIUS/SAML/Duo as required. Confirm time sync before testing authentication.","Create VPN policy."],
+    ["Create RA VPN policy","In FMC go to Devices > VPN > Remote Access. Select the firewall, outside interface, certificate, authentication method, and address pool.","Create group policy settings next."],
+    ["Configure group policy","Set DNS, domain suffix, split tunnel include/exclude, banner, session timeout, client profile, and posture/MFA options if used.","Create access rules for the VPN pool."],
+    ["Permit internal applications","In Access Control, allow VPN_POOL to only required internal destinations and ports. Enable logging. Avoid giving full network access by default.","Deploy and pilot."],
+    ["Test one pilot user","Connect from outside network, authenticate, confirm assigned VPN IP, DNS, routes, split tunnel behavior, and access to required apps.","Review sessions and logs before broad rollout."]
+  ])+cmdBlock(commandSets.vpn.filter(x=>x[1].includes("anyconnect")||x[1].includes("vpn-sessiondb")||x[1].includes("packet-tracer")))},
+  {title:"Create objects and groups",body:runbook("Object creation order",[
+    ["Define naming standard","Use prefixes: NET_ for subnets, HOST_ for hosts, GRP_ for groups, SVC_ for services, URL_ for URL objects. Include site/app name and avoid vague names like SERVER1.","Search for existing objects next."],
+    ["Search before creating","In Objects > Object Management search IP, subnet, FQDN, and service port. Reuse correct existing objects and remove duplicates only through change control.","Create missing objects."],
+    ["Create network objects","Create host, network, range, FQDN, URL, or service objects. Add description with owner, ticket, date, and purpose.","Group related objects carefully."],
+    ["Create groups","Use groups for readable rules, for example GRP_APP_PAYROLL_SERVERS or GRP_SVC_WEB. Avoid deep nested groups that make troubleshooting hard.","Use objects in policy/NAT/VPN."],
+    ["Validate object impact","Before delete or change, check object usage/dependencies in FMC. Changing one shared object can affect many rules.","Document dependencies before deployment."]
+  ])+cmdBlock([["ro","GET /api/fmc_config/v1/domain/{domainUUID}/object/networks","FMC API: list network objects before automation."],["ro","GET /api/fmc_config/v1/domain/{domainUUID}/policy/accesspolicies","FMC API: identify policies that may use objects."]])},
+  {title:"Configure interfaces and routes",body:runbook("Interface and routing build order",[
+    ["Map the cable first","Document firewall interface, switch port, VLAN, IP/subnet, zone, speed/duplex, trunk/access mode, and HA standby IP if used.","Configure interface after the physical map is known."],
+    ["Configure interface","In FMC open Devices > Device Management > edit device > Interfaces. Enable interface, set name, zone, IP, VLAN tag/subinterface or port-channel membership, and description.","Deploy or continue to routing depending on workflow."],
+    ["Add routes","In device Routing, add default route toward ISP/upstream router and internal routes toward core/distribution. For OSPF/BGP, configure neighbors and filters carefully.","Validate route lookup before NAT/policy."],
+    ["Connect switch side","On the switch, match access VLAN, trunk allowed VLANs, LACP, speed, duplex, and MTU. Cabling mismatch creates firewall symptoms that policy cannot fix.","Deploy and test link."],
+    ["Verify path","Use show interface ip brief, show interface, show arp, show route <destination>, packet-tracer, and FMC health. Confirm return path from destination side.","Only then build NAT and access rules."]
+  ])+cmdBlock([["ro","show interface ip brief","FTD/Diagnostic CLI: interface state and IP summary."],["ro","show interface","Interface counters, errors, drops."],["ro","show arp","Layer 2 neighbor check."],["ro","show route <destination-ip>","Route lookup for destination."],["ro","packet-tracer input inside tcp <src-ip> 50000 <dst-ip> 443 detailed","Full path simulation."]])},
+  {title:"Configure logging for rules",body:runbook("Logging build order",[
+    ["Decide what must be logged","For business rules log at end of connection. For denies/security events log enough to investigate without creating noise. Avoid debug-level logging permanently.","Enable rule logging next."],
+    ["Enable access rule logging","In Access Control rule, enable Log at End of Connection and optionally beginning only when needed for troubleshooting. Include rule names that describe the business purpose.","Configure platform/syslog if needed."],
+    ["Send logs to SIEM","In Platform Settings configure syslog destination, severity, facility, timestamp, and hostname. Deploy platform settings to the firewall.","Generate test events."],
+    ["Generate evidence","Create one allowed connection, one blocked connection, one VPN login if relevant, and one deployment/admin event. Check FMC Analysis pages and SIEM ingestion.","Tune noise and dashboards."],
+    ["Build operational views","Create filters or dashboards for top denies, IPS hits, malware, URL blocks, VPN logins, admin changes, and failed deployments.","Review daily during operations."]
+  ])+cmdBlock(commandSets.logging)},
+  {title:"Day-to-day change workflow",body:runbook("Professional change workflow",[
+    ["Intake the request","Record requester, business owner, source, destination, port, app, reason, expiry, risk, and maintenance window. Reject vague requests like allow server to network.","Design the exact config."],
+    ["Prepare objects and rule plan","Create or reuse objects, decide zones, NAT, route, access rule position, logging, inspection, and validation traffic. Write rollback before deployment.","Build in FMC/FDM."],
+    ["Pre-check current state","Before changing, collect show route, show nat, packet-tracer, existing events, and backup/export if risk is medium or high.","Deploy during the approved window."],
+    ["Deploy and test","Deploy only to intended devices. Test with real source/destination. Check packet-tracer and Analysis > Connections for rule name, NAT, action, and inspection result.","Decide success or rollback."],
+    ["Close with evidence","Attach screenshots/events/commands, note exact rule/NAT/object names, confirm business owner validation, and set review date for temporary access.","Remove temporary rules when expired."]
+  ])+cmdBlock([["ro","packet-tracer input <interface> tcp <src-ip> <src-port> <dst-ip> <dst-port> detailed","Pre/post change packet flow proof."],["ro","show route <dst-ip>","Route proof."],["ro","show nat","NAT order proof."],["ro","show conn address <src-ip>","Live session proof."],["caution","clear conn address <src-ip>","Only if approved and needed to retest policy/NAT after a change."]])}
+ ],
+ interfaces:[
+  {title:"Physical interfaces",body:steps(["Name interfaces clearly: outside, inside, dmz, guest, wan2, transit-core.","Assign security zones based on trust boundary, not just cable location.","Set IP address, standby IP for HA if used, speed/duplex only when required.","Check counters for errors, drops, duplex mismatch, and link flaps."])+cmdBlock([commandSets.cliHealth[3],["ro","show interface","Detailed interface counters."],["ro","show arp","Layer 2 neighbor confirmation."]])},
+  {title:"VLAN subinterfaces",body:steps(["Use subinterfaces when one physical trunk carries multiple VLANs.","Match VLAN ID with switch trunk allowed VLANs.","Use one security zone per trust area.","Avoid too many unrelated zones on one link unless design is documented."])+table(["Field","Example","Meaning"],[["Parent interface","Ethernet1/3","Physical trunk."],["Subinterface","Ethernet1/3.20","Logical VLAN interface."],["VLAN ID","20","802.1Q tag."],["Zone","dmz","Policy boundary."]])},
+  {title:"Port-channel",body:steps(["Use LACP for resiliency and bandwidth.","Both switch and firewall must match speed, member ports, VLAN/trunking, and LACP mode.","In HA, port-channel design must be symmetric.","Troubleshoot with physical member status first, then bundle status."])+cmdBlock([["ro","show port-channel summary","Port-channel and member state."],["ro","show interface","Counters for member interfaces."],["ro","show lacp","LACP state where available."]])},
+  {title:"MTU and fragmentation",body:steps(["Default MTU works for most LAN/WAN paths.","VPN, cloud, PPPoE, GRE, and IPsec paths can reduce usable MTU.","Symptoms include some websites/apps hanging while ping works.","Test with DF-bit ping from endpoints and adjust carefully."])}
+ ],
+ routing:[
+  {title:"Static routing",body:steps(["Add default route toward ISP or upstream router.","Add internal routes toward core/distribution networks.","Add specific routes for VPN or partner networks if needed.","Check return path from destination back to source."])+cmdBlock(commandSets.routing.slice(0,3))},
+  {title:"OSPF",body:steps(["Use OSPF when firewall participates in internal dynamic routing.","Keep areas simple; avoid making firewall the routing brain unless required.","Use passive interfaces where neighbors should not form.","Filter or summarize carefully to avoid black holes."])+cmdBlock(commandSets.routing.filter(x=>x[1].includes("ospf")||x[1].includes("route")))},
+  {title:"BGP",body:steps(["Use BGP for ISP, data center edge, cloud, or complex route control.","Plan ASN, neighbors, prefixes, route maps, and failover behavior.","Use prefix filters. Never advertise more than intended.","Check both received and advertised routes."])+cmdBlock(commandSets.routing.filter(x=>x[1].includes("bgp")||x[1].includes("route")))},
+  {title:"Multicast",body:steps(["Confirm multicast is truly required; many apps do not need firewall multicast support.","Document source, receiver, group address, RP/PIM design, and zones.","Check TTL, routing, and inspection behavior.","Test with a narrow lab before production."])}
+ ],
+ policy:[
+  {title:"Access policy layout",body:table(["Order","Rule type","Purpose"],[
+    ["1","Emergency blocks","Known bad IPs, compromised hosts, critical containment."],
+    ["2","Infrastructure allows","DNS, NTP, monitoring, authentication, update servers."],
+    ["3","Business application allows","User or server access that the business needs."],
+    ["4","VPN rules","Remote access and site-to-site permitted destinations."],
+    ["5","Default deny","Block and log everything not explicitly allowed."]
+  ])},
+  {title:"Inspection policy layers",body:`<div class="grid"><div class="metric"><b>Security Intelligence</b>Reputation-based IP, URL, and domain blocking.</div><div class="metric"><b>Intrusion</b>Snort inspection for exploit and attack behavior.</div><div class="metric"><b>File/Malware</b>Detect and block malicious downloads.</div><div class="metric"><b>URL</b>Category and reputation control for web browsing.</div><div class="metric"><b>TLS</b>Decrypt or inspect encrypted flows when legal and technical requirements are met.</div><div class="metric"><b>Identity</b>Use user or group information in rules.</div></div>`},
+  {title:"Object hygiene",body:steps(["Use clear object names: NET_INSIDE_USERS, HOST_DMZ_WEB01, SVC_HTTPS.","Avoid duplicate objects for the same IP or subnet.","Add description fields so future engineers know why the object exists.","Review unused rules and objects regularly.","Use groups carefully; large nested groups can make troubleshooting harder."])}
+ ],
+ nat:[
+  {title:"NAT concept",body:`<div class="note"><b>Route, NAT, policy.</b> Check in that order. NAT changes addresses; access policy allows or blocks traffic; routing chooses the next hop.</div>`+table(["Type","Use case","Example"],[
+    ["Dynamic PAT","Inside users to internet","10.10.10.0/24 uses outside interface IP."],
+    ["Static NAT","Publish internal server","203.0.113.10 maps to 10.10.20.10."],
+    ["Policy NAT","Translate only for selected destination","Partner or overlapping networks."],
+    ["NAT exemption","VPN traffic must not translate","Inside subnet to remote VPN subnet no NAT."]
+  ])},
+  {title:"NAT recipes",body:steps(["Internet access: inside zone to outside zone dynamic PAT.","DMZ server publish: static NAT plus outside-to-DMZ access rule.","Site-to-site VPN: NAT exemption before generic internet PAT.","Overlapping networks: policy NAT only for the partner path."])},
+  {title:"Verify NAT",body:cmdBlock(commandSets.nat)}
+ ],
+ vpn:[
+  {title:"Site-to-site VPN build",body:steps(["Confirm peer public IP and routing.","Match IKE version, encryption, integrity, DH group, and lifetime.","Match IPsec proposal and PFS setting.","Define local and remote protected networks.","Create NAT exemption.","Allow VPN traffic in access control policy.","Generate traffic and verify IKE/IPsec counters."])+cmdBlock(commandSets.vpn.slice(0,7))},
+  {title:"Remote access VPN build",body:steps(["Plan user identity source and MFA.","Create address pool.","Create group policy: DNS, split tunnel, routes, and access permissions.","Install certificate if required.","Allow VPN pool to internal applications.","Test with one pilot user before rollout."])+cmdBlock(commandSets.vpn.filter(x=>x[1].includes("anyconnect")||x[1].includes("vpn-sessiondb")))},
+  {title:"VPN verification",body:cmdBlock(commandSets.vpn)},
+  {title:"Certificates",body:steps(["Use certificates for remote access VPN, site-to-site VPN at scale, and TLS inspection trust chains.","Track certificate owner, expiry, issuer, private key protection, and renewal process.","For RA VPN, users must trust the VPN certificate to avoid warning prompts.","For TLS decryption, endpoints must trust the internal CA or decryption will break applications."])}
+ ],
+ ips:[
+  {title:"IPS policy",body:steps(["Start with a balanced intrusion policy before aggressive tuning.","Apply IPS only where it adds value; do not inspect traffic twice unnecessarily.","Use FMC intrusion events to identify rule, generator, impact, and recommended action.","Tune by exception, not by disabling the whole policy."])+cmdBlock(commandSets.ips)},
+  {title:"Tuning workflow",body:steps(["Identify exact event and business application affected.","Confirm whether block is true positive or false positive.","Create a narrow exception: source, destination, port, or rule suppress condition.","Document why the exception exists.","Review exceptions periodically."])},
+  {title:"IPS event reading",body:table(["Field","Meaning","Engineer action"],[
+    ["Impact","How serious Cisco rates the event","Prioritize high impact first."],
+    ["Generator / SID","Snort rule identity","Use for tuning and research."],
+    ["Inline result","Allowed, would have dropped, dropped","Shows enforcement result."],
+    ["Application","Detected app context","Validate app detection is correct."],
+    ["Initiator / responder","Flow direction","Confirms if source/destination assumption is right."]
+  ])},
+  {title:"Performance impact",body:steps(["IPS, TLS decryption, URL filtering, and malware inspection all consume resources.","Check CPU, memory, connection count, Snort statistics, and interface drops after enabling features.","Use phased deployment: monitor-only, limited scope, then broader enforcement.","Keep a rollback policy ready."])+cmdBlock(commandSets.ips.slice(0,5))}
+ ],
+ webfile:[
+  {title:"URL filtering",body:steps(["Confirm URL license and cloud connectivity.","Start with monitor/logging to understand user behavior.","Block high-risk categories first: malware, phishing, command-and-control, newly seen domains if appropriate.","Create business exceptions by group or destination, not broad bypasses.","Use events to verify category and reputation."])},
+  {title:"File policy",body:steps(["Decide which protocols and directions need file inspection.","Detect first, then block risky file types after business review.","Use file events to identify filename, SHA, disposition, and action.","Avoid blocking broad file categories without testing."])},
+  {title:"Malware protection",body:steps(["Use malware inspection where downloads enter the network.","Understand clean, malicious, unknown, and retrospective disposition.","Investigate retrospective malware events quickly because files may have been allowed before later verdict changed.","Correlate with endpoint telemetry if available."])},
+  {title:"TLS decryption",body:`<div class="alert"><b>TLS decryption is a project, not a checkbox.</b> It touches privacy, certificates, legal policy, application compatibility, and performance.</div>`+steps(["Create internal CA or subordinate CA plan.","Define bypass categories: banking, healthcare, privacy-sensitive, certificate pinning, critical apps.","Pilot with IT users first.","Monitor decrypt errors and application failures.","Scale gradually and measure CPU/throughput impact."])}
+ ],
+ identity:[
+  {title:"Identity basics",body:steps(["Identity lets rules use users or groups instead of only IP addresses.","Common sources include Active Directory, ISE, passive identity, VPN authentication, and directory integrations.","Identity mapping must be accurate; stale mappings cause wrong policy results.","Always keep a non-identity emergency rule path for critical infrastructure."])},
+  {title:"ISE integration",body:steps(["Define what ISE will provide: user, device, SGT/security group, posture, or pxGrid context.","Confirm time sync between ISE, FMC, and firewalls.","Use security groups for scalable segmentation when the organization is ready.","Document identity source ownership with the security/access team."])},
+  {title:"User-based rules",body:steps(["Use user rules for human access, not infrastructure dependencies.","Place identity rules after emergency blocks and before broad network rules.","Log identity-matched rules to prove which user matched.","Have fallback handling for unknown users."])},
+  {title:"Identity troubleshooting",body:steps(["Check if the user is mapped to the correct IP.","Check time sync and authentication source.","Check whether traffic is matching a rule above the user rule.","Check FMC events for user field, realm, and rule match.","Test with a single user and single destination."])}
+ ],
+ remote:[
+  {title:"AnyConnect / Secure Client",body:steps(["Plan VPN FQDN, certificate, address pool, authentication, MFA, DNS, split tunnel, and access policy.","Use a pilot group before all users.","Limit VPN users to required internal apps, not the full network by default.","Monitor failed logins, unusual countries, and impossible travel patterns."])+cmdBlock(commandSets.vpn.filter(x=>x[1].includes("anyconnect")||x[1].includes("vpn-sessiondb")))},
+  {title:"Posture",body:steps(["Posture checks verify endpoint health before access.","Define minimum OS, disk encryption, endpoint protection, certificates, and compliance rules.","Start in audit/monitor mode.","Have a helpdesk process for users who fail posture."])},
+  {title:"MFA",body:steps(["Use MFA for remote access VPN whenever possible.","Confirm fail-open/fail-closed behavior before outage scenarios.","Document break-glass accounts and protect them strongly.","Test enrollment, lost phone recovery, and lockout process."])},
+  {title:"Duo",body:steps(["Duo is a common Cisco MFA path for VPN.","Decide push, passcode, phone, or hardware token methods.","Integrate with authentication flow and test timeout behavior.","Create admin runbook for user device replacement."])}
+ ],
+ cli:[
+  {title:"Health commands",body:cmdBlock(commandSets.cliHealth)},
+  {title:"Traffic commands",body:cmdBlock(commandSets.traffic)},
+  {title:"Risky commands",body:`<div class="alert"><b>Use only with approval.</b> These can interrupt users, reset sessions, reload devices, or erase configuration.</div>`+cmdBlock(commandSets.danger)},
+  {title:"Expert shell",body:`<div class="warn"><b>Expert mode is not normal configuration mode.</b> Use it for supported troubleshooting, file checks, and TAC-guided evidence collection.</div>`+cmdBlock(commandSets.expert)}
+ ],
+ logging:[
+  {title:"FMC events",body:steps(["Use Analysis > Connections to prove allow/block rule matches.","Use intrusion/file/malware/URL event pages for security verdicts.","Filter by source, destination, user, application, rule, and time window.","Export evidence for incidents or change validation."])+cmdBlock(commandSets.logging)},
+  {title:"Syslog",body:steps(["Send firewall and FMC logs to a central syslog/SIEM platform.","Decide facility, severity, timestamp, hostname, and log retention.","Avoid debug-level logging permanently in production.","Test log reception after every logging change."])+cmdBlock(commandSets.logging)},
+  {title:"Splunk",body:steps(["Decide whether Splunk receives FMC event data, syslog, eStreamer, or cloud integrations.","Normalize fields: source, destination, user, rule, action, intrusion SID, URL category, malware disposition.","Build dashboards for blocked traffic, VPN logins, top talkers, IPS hits, admin changes, and health.","Alert on high-confidence security events, not noisy low-value logs."])},
+  {title:"Evidence collection",body:steps(["Record exact time zone and time window.","Collect five-tuple and username if available.","Export connection event and matching policy rule.","Collect packet-tracer output when packet flow is unclear.","Preserve logs before clearing buffers or restarting services."])+cmdBlock(commandSets.logging)}
+ ],
+ upgrade:[
+  {title:"Backups",body:steps(["Back up FMC before upgrades and major policy changes.","Export device configuration where supported.","Store backups outside the device/FMC.","Test restore process in lab or documented recovery procedure.","Record software versions, licenses, and manager relationship."])+cmdBlock(commandSets.upgrade.slice(0,6))},
+  {title:"Upgrade plan",body:steps(["Read release notes and upgrade path.","Check model compatibility, FMC/FTD version compatibility, Snort version impact, and known caveats.","Run health checks and clear old failed deployments.","Upgrade standby first where HA process supports it.","Validate critical traffic, VPN, NAT, policy deploy, and events after upgrade."])+cmdBlock(commandSets.upgrade)},
+  {title:"Rollback",body:`<div class="alert"><b>Rollback must be planned before upgrade.</b> A reboot is not a rollback.</div>`+steps(["Know whether the release supports revert for your device/version.","Keep backups and previous images available.","Define traffic validation tests.","Define decision time: when to continue, pause, or revert.","Keep console or out-of-band access ready."])},
+  {title:"Advisories",body:steps(["Monitor Cisco Security Advisories for ASA/FTD/FMC vulnerabilities.","Prioritize management-plane and VPN vulnerabilities because they are often exposed.","Patch FMC and firewalls through supported release paths.","If you cannot patch immediately, apply Cisco-documented mitigations and reduce exposure."])}
+ ],
+ api:[
+  {title:"FMC API",body:steps(["Use API for repeatable object, policy, audit, and deployment tasks.","Start read-only: list domains, devices, objects, and policies.","Use a dedicated API account with least privilege.","Never automate deploys without a preview and approval gate."])+cmdBlock(commandSets.api)},
+  {title:"Objects automation",body:steps(["Create consistent naming: NET_, HOST_, GRP_, SVC_, URL_.","Check if object already exists before creating duplicates.","Track object ID/UUID, not only name.","Check dependencies before deleting objects."])+cmdBlock(commandSets.api.slice(1,5))},
+  {title:"Deploy automation",body:`<div class="warn"><b>API deploy is a real production change.</b> Treat it like a GUI deploy with approval, preview, and rollback.</div>`+cmdBlock(commandSets.api.filter(x=>x[1].includes("deployment")||x[1].startsWith("GET")))},
+  {title:"Safe API use",body:steps(["Use read-only calls first.","Write to lab FMC before production.","Add dry-run output showing exact objects and policies to change.","Log every API action.","Use source control for automation scripts and change records."])}
+ ],
+ trouble:[
+  {title:"Troubleshooting decision tree",body:steps(["Define exact symptom: who, what application, source, destination, port, time.","Collect five-tuple and affected zone/interface.","Check route first, NAT second, policy third, inspection fourth, logs fifth.","Use packet-tracer to identify the first failing phase.","Use FMC/FDM events to prove the rule/action.","Use captures only when packet-tracer and events are not enough."])+cmdBlock([["ro","packet-tracer input <src-interface> tcp <src-ip> <src-port> <dst-ip> <dst-port> detailed","Best first proof for packet flow."],["ro","show route <dst-ip>","Check forwarding path."],["ro","show nat","Check NAT rule order."],["ro","show conn address <src-ip>","Check active sessions."],["ro","show asp drop","Check dataplane drops."]])},
+  {title:"User cannot reach internet",body:steps(["Confirm user IP, gateway, DNS, and VLAN.","Check inside interface status.","Check default route.","Check dynamic PAT.","Run packet-tracer from user to internet.","Check FMC/FDM connection events."])+cmdBlock([commandSets.cliHealth[3],commandSets.cliHealth[4],...commandSets.nat.slice(1,5)])},
+  {title:"Published server unreachable",body:steps(["Confirm public DNS record and public IP.","Confirm static NAT maps to correct private server.","Confirm outside access rule permits only the required port.","Run outside-to-inside packet-tracer.","Check server gateway and host firewall."])+cmdBlock([commandSets.nat[1],commandSets.traffic[1],commandSets.traffic[2]])},
+  {title:"NAT troubleshooting",body:steps(["Confirm original source/destination and translated source/destination.","Check NAT rule order; specific rules must be above broad PAT rules.","Check VPN NAT exemption before internet PAT.","Clear only the affected xlate if testing a NAT change.","Prove with packet-tracer and xlate table."])+cmdBlock(commandSets.nat.concat([["caution","clear xlate local <ip-address>","Clear only one host translation if possible."]]))},
+  {title:"Policy troubleshooting",body:steps(["Check whether the traffic matches a rule above the expected rule.","Confirm source/destination zones, objects, ports, users, URL, application, and time range.","Check default action at bottom of access policy.","Check security intelligence, IPS, file, URL, and TLS policy after access rule.","Use FMC connection event details as the source of truth."])+cmdBlock([["ro","packet-tracer input <interface> tcp <src-ip> <src-port> <dst-ip> <dst-port> detailed","Shows policy phase and action."],["ro","show access-list","Rule hit evidence where available."],["ro","show running-config","Read config context where supported."],["ro","show conn address <src-ip>","Check active sessions."]])},
+  {title:"VPN down",body:steps(["Check peer reachability.","Check IKE phase.","Check IPsec counters.","Check NAT exemption.","Check interesting traffic and routes.","Clear only the affected peer if needed."])+cmdBlock(commandSets.vpn)},
+  {title:"DNS troubleshooting",body:steps(["Decide whether DNS failure is client-side, firewall policy, DNS server, or upstream resolver.","Test by IP address and by hostname to separate routing from DNS.","Check access rule for UDP/TCP 53 and DNS security policy if used.","Confirm DNS server is reachable from the client network.","Check events for blocked DNS, malware domain, or security intelligence."])+cmdBlock([["ro","packet-tracer input inside udp <client-ip> 53000 <dns-server-ip> 53 detailed","Test DNS flow."],["ro","show conn address <client-ip>","Look for DNS sessions."],["ro","show asp drop","Check if DNS is being dropped."],["ro","show route <dns-server-ip>","Confirm route to resolver."]])},
+  {title:"High CPU or slow firewall",body:steps(["Confirm whether issue is data plane, control plane, or management plane.","Check CPU, memory, connection count, interface errors, drops, and Snort statistics.","Look for recent policy changes: TLS decryption, IPS, logging, URL filtering.","Collect evidence before rebooting unless service is already down."])+cmdBlock([commandSets.cliHealth[7],commandSets.cliHealth[8],commandSets.cliHealth[6],commandSets.cliHealth[3],commandSets.traffic[5],["ro","show snort statistics","Snort inspection counters and health."],["danger","reboot","Only after approval or emergency decision."]])},
+  {title:"Drops",body:steps(["Start with packet-tracer to locate drop phase.","Check FMC connection event action and rule.","Check NAT, route, access control, intrusion, URL, SSL, and security intelligence.","Check asp drop counters for dataplane clues.","Capture only the exact flow if events are not enough."])+cmdBlock(commandSets.traffic)},
+  {title:"HA troubleshooting",body:steps(["Confirm active/standby roles and last failover reason.","Check monitored interfaces on both units.","Check failover/state link health.","Compare software, licensing, interface names, and cabling symmetry.","Do not force failover until you know which unit is healthy."])+cmdBlock(commandSets.ha.concat([["ro","show interface ip brief","Check monitored interfaces."],["ro","show logging","Look for failover events."]]))},
+  {title:"GUI issues",body:steps(["If FMC/FDM feels broken, confirm browser, DNS, certificate, time, and user role first.","Check device health and manager connectivity.","Look for failed deployments or pending tasks.","Avoid refreshing during deployment unless clearly stuck.","For production outage, collect screenshots and CLI health output before rebooting."])+cmdBlock([["ro","show managers","Device-to-FMC relationship."],["ro","show network","Management IP/DNS/gateway."],["ro","show time","Clock accuracy."],["ro","show disk","Disk space."],["danger","reboot","Only after approval or emergency decision."]])}
+  ],
+ cloud:[
+  {title:"Public cloud",body:`<div class="note"><b>Goal:</b> Run Cisco Secure Firewall Virtual/Cloud Firewall in AWS, Azure, GCP, or a multicloud design. The firewall is usually inserted between public, private, and workload subnets by cloud route tables.</div>`+table(["Cloud item","What to configure","Why it matters"],[
+    ["Management subnet","Management interface, admin source IPs, DNS/NTP, FMC reachability","If management is wrong, you cannot register, license, deploy, or troubleshoot."],
+    ["Outside/untrust subnet","Public-facing interface, cloud security group, public IP/load balancer if needed","Receives internet/VPN/ingress traffic."],
+    ["Inside/trust subnet","Workload-facing interface and route table next hop","Forces protected workload traffic through the firewall."],
+    ["Cloud route tables","Default route or specific routes pointing to firewall interface/load balancer","Cloud routing controls whether traffic ever reaches the firewall."],
+    ["Security groups / NSGs","Allow only required management and data-plane flows","Cloud security controls can block traffic before the firewall sees it."],
+    ["HA design","Availability zones, load balancer, route automation, or cloud-native failover","A single virtual firewall can become a cloud outage point."]
+  ])+runbook("Public cloud sequential build order",[
+    ["Deploy the firewall image","Launch the Cisco Secure Firewall image from the AWS/Azure/GCP marketplace or approved template. Choose the instance size from Cisco sizing guidance, not the smallest VM.","Do not attach policies yet. First make sure the VM boots and you can reach console or management."],
+    ["Attach interfaces in the right order","Attach management, outside/untrust, inside/trust, optional DMZ, and optional HA/data interfaces. Put each NIC in the correct subnet/VPC/VNet. Disable source/destination check in AWS where routing through the firewall is required.","After NICs are attached, map them inside FTD/FMC/FDM before creating zones or policies."],
+    ["Assign IPs and cloud security controls","Assign static private IPs. Add public IP only where required. Security groups/NSGs should allow admin access only from trusted sources and allow data ports only where traffic must reach the firewall.","After management access is allowed, configure DNS, NTP, gateway, and manager registration."],
+    ["Configure management and register","Set management IP/gateway/DNS/NTP. For FMC: Devices > Device Management > Add Device with registration key. For FDM: browse to management IP and complete the wizard.","After registration, create zones and bind cloud NICs to readable interface names."],
+    ["Build firewall interfaces, routes, NAT, and policy","FMC: Devices > Interfaces, Devices > Routing, Devices > NAT, Policies > Access Control. FDM: Device > Interfaces/Routing, Policies > NAT, Policies > Access Control. Start with minimal inside-to-outside allow and required DNS/NTP.","After deployment succeeds, cloud route tables must be pointed toward the firewall path."],
+    ["Update cloud route tables","AWS: VPC route tables. Azure: UDR route tables. GCP: custom routes/tags. Protected workload subnets must send default or specific routes to the firewall inside NIC or load-balancer path.","After routing is changed, validate traffic in both the firewall and the cloud flow logs."],
+    ["Validate end-to-end","Test outbound web, DNS, inbound published service, VPN if used, and failover/HA if used. Test allowed and blocked traffic.","Save packet-tracer, FMC event screenshots, NAT/xlate, connection table, and cloud flow-log evidence as deployment proof."]
+  ])+cmdBlock([["ro","show managers","Confirm FMC registration after cloud deployment."],["ro","show network","Verify management IP, DNS, gateway."],["ro","show interface ip brief","Confirm cloud NIC/interface state."],["ro","show route","Confirm routes learned/static inside the firewall."],["ro","show nat","Confirm cloud NAT rules and order."],["ro","show xlate","Confirm active translations after testing."],["ro","show conn address <workload-ip>","Confirm active workload sessions."],["ro","packet-tracer input inside tcp <workload-ip> 50000 <internet-ip> 443 detailed","Validate workload egress path."],["ro","packet-tracer input outside tcp <test-ip> 50000 <public-ip> 443 detailed","Validate inbound published app path."]])},
+  {title:"Private cloud",body:`<div class="note"><b>Goal:</b> Run Cisco Secure Firewall Virtual in VMware, KVM, Hyper-V, or private cloud to protect data center workloads.</div>`+table(["Virtual design item","Recommended structure","Common mistake"],[
+    ["vNIC 0 / Management","Dedicated management network reachable from FMC/admin jump host","Putting management in a user VLAN with poor access control."],
+    ["Outside vNIC","WAN, internet, or upstream router port group","Wrong VLAN/port group assignment."],
+    ["Inside vNIC","Server/workload protected network","Forgetting that workload gateway/route must point through firewall."],
+    ["DMZ vNIC","Published services segment","Mixing DMZ and inside in one flat network."],
+    ["HA/state vNIC","Dedicated low-latency HA/state network when HA is supported","Sharing HA traffic with busy production VLANs."],
+    ["Resources","Reserve CPU/RAM as required by model and throughput","Oversubscribing CPU and blaming policy for performance."]
+  ])+runbook("Private cloud sequential build order",[
+    ["Create and size the VM","Deploy the Cisco-supported virtual image and assign CPU/RAM/disk according to throughput, VPN, and inspection needs.","After VM creation, map vNICs before powering production traffic through it."],
+    ["Map vNICs to networks","Connect management, outside, inside, DMZ, and optional HA/state vNICs to the correct virtual switches or port groups.","After vNIC mapping, configure management reachability and verify link/IP state."],
+    ["Configure management","Set management IP, gateway, DNS, NTP, hostname, and admin access. Register to FMC or complete FDM setup.","After the device is managed, build zones and routing."],
+    ["Build interfaces and routing","Assign interface names, zones, IPs, static routes, or dynamic routing. Confirm workload gateway/route points through the firewall where required.","After routes are correct, create NAT and access policy."],
+    ["Build NAT and access policy","Create internet PAT, static NAT for published services, VPN exemptions, and least-privilege access control rules.","After deployment, test north-south and east-west flows separately."],
+    ["Validate and protect recovery","Use packet-tracer, connection events, and VM/hypervisor monitoring. Use FMC/device backups as recovery source; snapshots only according to Cisco guidance.","After validation, document vNIC mapping and backup/restore process."]
+  ])+cmdBlock([["ro","show version","Confirm virtual model/version."],["ro","show interface ip brief","Check vNIC mapping and status."],["ro","show route","Confirm private-cloud routing."],["ro","show conn count","Check connection load."],["ro","show cpu","Check CPU pressure."],["ro","show memory","Check memory pressure."]])},
+  {title:"Containers",body:`<div class="warn"><b>Container security is not the same as a normal perimeter firewall.</b> Use Cisco firewall/container options only when the product and platform support the specific design.</div>`+table(["Use case","Configuration focus","Validation"],[
+    ["North-south app protection","Ingress/egress route path through firewall, service exposure, TLS policy","Can external clients reach only intended services?"],
+    ["East-west segmentation","Workload labels, namespaces, network policy, firewall zones, service identities","Can app A reach only approved app B ports?"],
+    ["Dev/test isolation","Separate lab namespaces/VPCs/VNETs and limited outbound access","Can test workloads reach production? They should not."],
+    ["Logging","Map pod/workload identity to firewall events or SIEM metadata","Can incident response identify the real workload?"]
+  ])+runbook("Container security sequential design order",[
+    ["Confirm supported insertion model","Verify Cisco product support for the container platform and whether traffic is enforced at ingress, egress, service mesh, CNI, or firewall path.","After the insertion model is known, document the application flows."],
+    ["Document workload flows","List namespaces, labels, services, ports, ingress, egress, DNS, and external dependencies.","After flows are known, decide which control enforces each flow."],
+    ["Choose enforcement point","Decide whether enforcement is firewall policy, Kubernetes network policy, service mesh, or a combination.","After enforcement ownership is clear, build least-privilege policy."],
+    ["Build least-privilege rules","Create rules by application dependency, not broad subnet. Keep dev/test/prod separated.","After rules exist, connect logging to workload identity."],
+    ["Add logging and identity context","Send firewall and platform events to SIEM with namespace/workload labels where possible.","After visibility works, test scale and change events."],
+    ["Test rolling updates and autoscale","Confirm policy still works when pods move, scale, or redeploy.","After tests pass, document ownership between network, security, and platform teams."]
+  ])},
+  {title:"SD-WAN",body:`<div class="note"><b>Goal:</b> Combine WAN path selection with firewall security without confusing the two jobs. SD-WAN decides path quality; firewall policy decides whether traffic is allowed and inspected.</div>`+table(["Design area","Configuration questions","Troubleshooting proof"],[
+    ["Underlay","Which ISP/MPLS/DIA circuits exist and where is the default route?","Traceroute, route table, interface status."],
+    ["Overlay","Which tunnels/VPNs carry branch-to-HQ/cloud traffic?","Tunnel status, route advertisement, VPN counters."],
+    ["Segmentation","Which users/apps belong to which VPN/VRF/zone?","Zone match, route table, policy event."],
+    ["Internet breakout","Local DIA, centralized breakout, or split by app?","Packet-tracer and connection events."],
+    ["Security inspection","Which traffic gets IPS, URL, malware, TLS decryption?","FMC security events and performance counters."]
+  ])+runbook("SD-WAN and firewall sequential design order",[
+    ["Draw underlay and overlay","Document ISP/MPLS/DIA circuits, tunnels, VPN/VRF/segments, zones, and internet breakout points.","After paths are drawn, decide where traffic must be inspected."],
+    ["Define inspection location","Choose local branch inspection, centralized inspection, cloud inspection, or mixed design by application type.","After inspection locations are chosen, protect every active path."],
+    ["Prevent bypass paths","Make sure SD-WAN route changes cannot send traffic around the firewall or around required security services.","After route behavior is clear, build NAT and policy for each path."],
+    ["Create access and NAT for each path","Build rules for primary, backup, DIA, overlay, and failover paths. Do not configure only the normal path.","After policies are deployed, test path failover."],
+    ["Test failover and logging","Force or simulate path changes and confirm FMC events still show expected zone, rule, NAT, and action.","After failover works, monitor performance impact."],
+    ["Monitor throughput and CPU","Track CPU, Snort, connection count, and interface drops after enabling inspection on DIA or high-volume traffic.","After monitoring is stable, document operational ownership and escalation steps."]
+  ])+cmdBlock([["ro","show route","Confirm current forwarding path."],["ro","show interface ip brief","Confirm WAN interface state."],["ro","packet-tracer input inside tcp <branch-host> 50000 <app-ip> 443 detailed","Validate chosen path through firewall."],["ro","show conn address <branch-host>","Check active sessions after path change."],["ro","show asp drop","Check drops during failover or path shift."]])}
+ ],
+ migration:[
+  {title:"ASA migration",body:`<div class="note"><b>Goal:</b> Move from ASA configuration style to FTD/FMC policy style without losing NAT, ACL, VPN, or routing behavior.</div>`+table(["ASA item","FTD/FMC destination","Migration note"],[
+    ["nameif/security-level/interfaces","FMC device interfaces and zones","FTD policy is zone/object driven; do not rely on security-level thinking only."],
+    ["access-list/access-group","Access Control Policy rules","Convert by source zone, destination zone, source, destination, service, action, logging."],
+    ["object/object-group","FMC network/service objects","Clean duplicate and unused objects before import if possible."],
+    ["nat/manual/auto NAT","FMC NAT policy","Preserve order; NAT rule order is critical."],
+    ["crypto map / tunnel-group","Site-to-site VPN policy","Rebuild IKE/IPsec settings and protected networks carefully."],
+    ["failover","FTD HA configuration","HA behavior and commands differ; test failover separately."]
+  ])+runbook("ASA to FTD sequential migration order",[
+    ["Export and inventory ASA","Run ASA inventory commands and save outputs: running config, interfaces, routes, ACL hit counts, NAT, xlate, VPN sessions, crypto SAs, logging, and failover.","Build the migration workbook before creating anything in FMC."],
+    ["Review usage and remove noise","Use ACL/NAT hit counts to mark unused rules, temporary rules, duplicate objects, stale VPNs, and old service groups.","Get business approval for what will be migrated, disabled, or removed."],
+    ["Map interfaces to FTD zones","Map ASA nameif, VLAN/subinterface, IP, security-level, connected switch port, and route role to FTD interfaces and zones.","Create the interfaces and zones in FMC/FDM before objects, NAT, or access policy."],
+    ["Create objects and services","Recreate clean network, host, group, and service objects in FMC. Use consistent names and avoid duplicates.","After objects exist, recreate NAT in the correct order."],
+    ["Recreate NAT","Preserve ASA NAT order: VPN exemptions first where needed, static NAT for published services, policy/twice NAT, then broad dynamic PAT.","After NAT is built, create access rules that match the translated design."],
+    ["Recreate access policy","Convert ASA ACLs into FMC access rules by source zone, destination zone, source, destination, service, action, and logging.","After access policy is built, recreate routes and VPNs."],
+    ["Recreate routes and VPN","Rebuild static/dynamic routing, site-to-site VPN, remote-access design if needed, IKE/IPsec proposals, protected networks, and NAT exemption.","After routing and VPN are built, configure logging, management, and monitoring."],
+    ["Recreate operations settings","Configure syslog/SIEM, SNMP/monitoring, NTP, DNS, admin access, health policy, backup, and management restrictions.","After operations settings are complete, validate top flows before cutover."],
+    ["Validate top flows","Run packet-tracer on ASA and matching packet-tracer on FTD. Test internet, DMZ, DNS, VPN, monitoring, management, and critical apps.","Only move production traffic after the expected rule, NAT, route, and event proof is saved."],
+    ["Prepare rollback and cutover","Document cable moves, route changes, DNS/NAT reversions, old ASA config, maintenance window, and rollback decision time.","Cut over only when rollback is ready and business validation owners are present."]
+  ])+cmdBlock([["ro","show running-config","ASA source inventory before migration.","ASA CLI"],["ro","show interface ip brief","ASA interface/nameif/IP inventory.","ASA CLI"],["ro","show route","ASA route table inventory.","ASA CLI"],["ro","show access-list","ASA ACL hit counts and rule evidence.","ASA CLI"],["ro","show nat","ASA NAT rules and hit counts.","ASA CLI"],["ro","show xlate","ASA active translations for live traffic evidence.","ASA CLI"],["ro","show vpn-sessiondb l2l","ASA site-to-site VPN sessions.","ASA CLI"],["ro","show vpn-sessiondb anyconnect","ASA remote access VPN sessions.","ASA CLI"],["ro","show crypto ikev2 sa","ASA VPN phase status.","ASA CLI"],["ro","show crypto ipsec sa","ASA VPN encrypt/decrypt counters.","ASA CLI"],["ro","packet-tracer input inside tcp <src-ip> <src-port> <dst-ip> <dst-port> detailed","Compare ASA result with FTD result.","ASA or Diagnostic CLI"],["ro","packet-tracer input outside tcp <test-ip> <src-port> <public-ip> 443 detailed","Validate published server behavior before cutover.","ASA or Diagnostic CLI"]])},
+  {title:"FortiGate migration",body:`<div class="note"><b>Goal:</b> Translate FortiGate intent into Cisco Secure Firewall policy. Do not copy line-by-line blindly because features do not map one-to-one.</div>`+table(["FortiGate concept","Cisco mapping","Watch out"],[
+    ["Interface/Zone","FTD interface and security zone","Zone names may match, but behavior must be validated."],
+    ["Firewall policy","FMC Access Control rule","FortiGate top-down policy maps conceptually, but inspection/profile behavior differs."],
+    ["VIP","Static NAT plus access rule","Publishing servers needs both NAT and access policy."],
+    ["IP Pool / Central NAT","FMC NAT policy","Ordering and NAT exemption must be reviewed."],
+    ["Security profiles","IPS, URL, file, malware, TLS policies","Profiles do not map perfectly; rebuild by security objective."],
+    ["IPsec VPN","Site-to-site VPN policy","Check proxy IDs, proposals, NAT exemption, and routing."]
+  ])+runbook("FortiGate to Cisco sequential migration order",[
+    ["Export FortiGate inventory","Collect policies, VIPs, IP pools, routes, VPN tunnels, address objects, service objects, and security profiles with hit counts.","Build the flow matrix before creating Cisco objects."],
+    ["Create a flow matrix","Document source zone, destination zone, source, destination, service, NAT/VIP/IP pool, VPN, and security profile for each important rule.","After flow ownership is clear, create FMC objects and services."],
+    ["Rebuild objects and services","Create clean FMC network, host, service, URL, and group objects. Remove duplicate or stale FortiGate objects.","After objects exist, recreate NAT/VIP behavior."],
+    ["Recreate NAT and publishing","Map FortiGate VIPs to Cisco static NAT plus access rules. Map IP pools/central NAT to FMC NAT policy. Preserve VPN NAT exemptions.","After NAT exists, recreate access rules."],
+    ["Recreate access and inspection","Build FMC Access Control rules in Cisco order. Rebuild IPS, URL, file, malware, and TLS policies by security objective, not by FortiGate profile name.","After policy is deployed, rebuild VPNs and routes."],
+    ["Recreate VPNs and routes","Rebuild IPsec proposals, peers, protected networks, static/dynamic routing, and NAT exemption.","After tunnels and routes are ready, validate top flows."],
+    ["Validate and cut over","Test published services, user internet, DNS, site-to-site VPN, remote access, and critical apps.","Cut over only after Cisco packet-tracer and FMC events match the intended FortiGate behavior."]
+  ])+cmdBlock([["ro","show firewall policy","FortiGate policy inventory.","FortiGate CLI"],["ro","show firewall vip","FortiGate published services inventory.","FortiGate CLI"],["ro","show firewall ippool","FortiGate source NAT pool inventory.","FortiGate CLI"],["ro","get router info routing-table all","FortiGate route inventory.","FortiGate CLI"],["ro","diagnose vpn tunnel list","FortiGate VPN tunnel inventory.","FortiGate CLI"],["ro","packet-tracer input <interface> tcp <src-ip> <src-port> <dst-ip> <dst-port> detailed","Validate rebuilt flow on Cisco.","Diagnostic CLI (ASA/LINA)"]])},
+  {title:"Palo Alto migration",body:`<div class="note"><b>Goal:</b> Convert Palo Alto zone/App-ID/security-profile design into Cisco zones, access control, application detection, and inspection policies.</div>`+table(["Palo Alto concept","Cisco mapping","Watch out"],[
+    ["Zones","FTD security zones","Zone mapping is usually straightforward."],
+    ["Address/service objects","FMC objects","Clean duplicates and nested groups before importing."],
+    ["Security policies","FMC Access Control rules","App-ID and Cisco app detection are not identical."],
+    ["NAT policies","FMC NAT policy","Check source NAT, destination NAT, U-turn, and VPN exemption."],
+    ["Security profiles","IPS, URL, malware/file, TLS policies","Rebuild based on security objective and test false positives."],
+    ["GlobalProtect","Remote Access VPN","Authentication, MFA, posture, split tunnel, and client behavior differ."]
+  ])+runbook("Palo Alto to Cisco sequential migration order",[
+    ["Export Palo Alto inventory","Collect security policy, NAT policy, routes, VPN, zones, objects, URL/decryption/security profiles, and rule hit counts.","Build the flow and App-ID dependency matrix before building in FMC."],
+    ["Map zones and objects","Create equivalent FTD security zones, network objects, service objects, and groups.","After base objects exist, recreate NAT and route behavior."],
+    ["Recreate NAT and routing","Map source NAT, destination NAT, U-turn NAT, VPN exemption, and routing into FMC/FTD design.","After routing/NAT is clear, recreate access policy."],
+    ["Recreate access policy","Translate Palo security policies into FMC Access Control rules. Be careful with App-ID-only rules because Cisco application detection is not identical.","After access policy works by port/service, add application and inspection controls."],
+    ["Recreate security services","Rebuild URL, IPS, malware/file, and TLS/decryption policies by business/security intent, not profile names.","After inspection is enabled, pilot critical users and apps."],
+    ["Pilot and cut over","Test critical apps, GlobalProtect replacement/RA VPN, DNS, internet, DMZ, and VPN before full cutover.","Proceed only when FMC events prove expected rule, app, NAT, and action."]
+  ])+cmdBlock([["ro","show running security-policy","Palo policy inventory.","Palo Alto CLI"],["ro","show running nat-policy","Palo NAT inventory.","Palo Alto CLI"],["ro","show routing route","Palo route inventory.","Palo Alto CLI"],["ro","show vpn ike-sa","Palo VPN IKE state.","Palo Alto CLI"],["ro","packet-tracer input <interface> tcp <src-ip> <src-port> <dst-ip> <dst-port> detailed","Validate rebuilt flow on Cisco.","Diagnostic CLI (ASA/LINA)"]])},
+  {title:"Validation",body:`<div class="warn"><b>Migration is not complete when config is imported.</b> It is complete only when critical traffic is tested and business owners confirm service.</div>`+table(["Validation area","Test example","Proof"],[
+    ["Internet egress","User to web/DNS/NTP/update services","Packet-tracer, FMC connection event, user test."],
+    ["Published servers","Internet to DMZ HTTPS/app ports","Outside packet-tracer, server logs, FMC event."],
+    ["VPN","Site-to-site and remote access","IKE/IPsec counters, sessiondb, app test."],
+    ["Identity","User/group-based rule","FMC event shows user and expected rule."],
+    ["Security inspection","IPS/URL/file/TLS","Security event and no false-positive on critical app."],
+    ["Rollback","Return traffic to old firewall if needed","Documented cable/route/DNS rollback steps."]
+  ])+runbook("Migration validation sequence",[
+    ["Create top-flow list","Before migration, identify top 50 flows: internet, DMZ, VPN, DNS, identity, management, monitoring, and critical applications.","Build a test case for every top flow."],
+    ["Build test cases","For each flow, record source, destination, port, expected NAT, expected rule, expected inspection, and business owner.","Run pre-cutover packet-tracer and event checks."],
+    ["Pre-test on Cisco","Use packet-tracer and FMC events to validate representative flows before traffic is moved.","Fix route, NAT, or policy gaps before cutover."],
+    ["Cut over by business priority","During cutover, test highest-value business apps first, not every firewall feature first.","Compare old and new logs for source, destination, action, NAT, and rule."],
+    ["Hold rollback window","Keep old firewall, cable path, route changes, DNS changes, and NAT rollback ready until business validation is complete.","Close the migration only after owners sign off."]
+  ])+cmdBlock([["ro","packet-tracer input <interface> tcp <src-ip> <src-port> <dst-ip> <dst-port> detailed","Validate each top flow."],["ro","show conn address <src-ip>","Confirm active session."],["ro","show nat","Confirm NAT rule hits/order."],["ro","show vpn-sessiondb l2l","Confirm site-to-site tunnels."],["ro","show vpn-sessiondb anyconnect","Confirm remote access sessions."],["ro","show logging","Collect local evidence if FMC event view is delayed."]])}
+ ],
+ ops:[
+  {title:"Daily operations",body:steps(["Check FMC/FDM device health.","Review critical intrusion, malware, URL, VPN, and deployment alerts.","Confirm latest backup status.","Check license and cloud service reachability.","Review failed logins and admin activity."])},
+  {title:"Hardening",body:steps(["Restrict management access to admin networks only.","Use named admin accounts and MFA where possible.","Use NTP and correct timezone.","Keep software on a supported release.","Back up before upgrades and major policy changes.","Use least-privilege rules and remove unused rules."])},
+  {title:"Change management",body:steps(["Write problem statement and business owner.","Document current state with screenshots or command output.","Define exact change and rollback.","Test in a maintenance window if risk is medium or high.","Deploy, verify, and record result."])}
+ ],
+ labs:[
+  {title:"Beginner labs",body:table(["Lab","Goal","You learn"],[
+    ["1","Inside users to internet","Interfaces, route, dynamic PAT, access policy."],
+    ["2","DMZ web server","Static NAT, outside rule, packet-tracer."],
+    ["3","Basic FMC events","Connection event proof and rule matching."]
+  ])},
+  {title:"Engineer labs",body:table(["Lab","Goal","You learn"],[
+    ["4","Site-to-site VPN","IKE/IPsec, NAT exemption, tunnel counters."],
+    ["5","Remote access VPN","User pool, split tunnel, DNS, access rules."],
+    ["6","IPS tuning","Intrusion events, false positives, exception handling."]
+  ])},
+  {title:"Pro labs",body:table(["Lab","Goal","You learn"],[
+    ["7","High CPU case","Data collection and safe escalation."],
+    ["8","TLS policy planning","Certificates, privacy, bypasses, performance risk."],
+    ["9","Upgrade rehearsal","Backup, health check, compatibility, rollback."]
+  ])},
+  {title:"Enterprise labs",body:table(["Lab","Goal","You learn"],[
+    ["10","HA failover rehearsal","Active/standby validation, failover runbook, post-checks."],
+    ["11","Identity policy with ISE","User/device context, fallback rules, event validation."],
+    ["12","SIEM integration","Syslog/event pipeline, incident evidence, dashboards."],
+    ["13","Migration validation","ASA/FortiGate/Palo flow mapping and rollback plan."],
+    ["14","API object workflow","Read, create, update, deploy with approval gates."]
+  ])}
+ ],
+ quick:[
+  {title:"Command bundles",body:refBundles([
+    ["Health baseline","First commands to understand device health before changing anything.",commandSets.cliHealth],
+    ["Platform / FXOS","Hardware, chassis, environment, interface module, and resource checks.",commandSets.platform],
+    ["Interfaces and traffic","Packet-tracer, captures, connection table, drops, and interface evidence.",commandSets.traffic],
+    ["Routing","Static route checks, OSPF, BGP, and routing-table lookups.",commandSets.routing],
+    ["NAT","Translation rules, active xlate table, and NAT packet-tracer tests.",commandSets.nat],
+    ["VPN","Site-to-site and remote-access VPN session, IKE, IPsec, and tunnel checks.",commandSets.vpn],
+    ["HA / clustering","Failover checks and high-risk role-change commands.",commandSets.ha],
+    ["IPS / Snort","Inspection health, Snort counters, and performance evidence.",commandSets.ips],
+    ["Logging and evidence","Local logs, logging config, and evidence-preservation commands.",commandSets.logging],
+    ["Backup / upgrade","Pre-upgrade checks, disk/CPU/memory baselines, and reboot warning.",commandSets.upgrade],
+    ["Expert shell","Linux-level checks and TAC-style troubleshooting bundle commands.",commandSets.expert],
+    ["FMC API","API endpoints for object automation and deployment workflows.",commandSets.api]
+  ])},
+  {title:"CLI modes",body:table(["Mode","How you get there","Use it for","Prompt clue"],[
+    ["FTD CLI","SSH/console to the FTD management IP","Management setup, manager registration, network settings, basic show commands, entering expert/diagnostic modes","Usually >"],
+    ["Diagnostic CLI / ASA-LINA","From FTD CLI run <code>system support diagnostic-cli</code>","ASA-style dataplane troubleshooting: packet-tracer, captures, conn/xlate, NAT, ASP drops, VPN SAs, failover checks","Often > or ASA-like diagnostic prompt"],
+    ["Expert shell","From FTD CLI run <code>expert</code>","Linux-level troubleshooting, process checks, disk checks, TAC-guided bundles","Usually $ or #"],
+    ["FXOS / chassis CLI","Console/SSH to chassis or platform context on supported larger appliances","Chassis, supervisor, interface modules, hardware/platform operations","Platform/chassis prompt varies by model"],
+    ["FMC GUI","Browser to Secure Firewall Management Center","Policy creation, device management, deployment, events, backups, upgrades","Web interface"],
+    ["FMC REST API","HTTPS API to FMC","Automation for objects, policies, deployment requests, inventory","HTTP methods like GET/POST/PUT/DELETE"]
+  ])+`<div class="warn"><b>Why this matters:</b> If a command is pasted into the wrong mode, Cisco will often return invalid input even when the command itself is correct.</div>`},
+  {title:"GUI map",body:table(["Task","FMC path","FDM path"],[
+    ["Device management","Devices > Device Management","Device dashboard"],
+    ["Interfaces","Devices > Device Management > Edit > Interfaces","Device > Interfaces"],
+    ["Routing","Devices > Device Management > Routing","Device > Routing"],
+    ["NAT","Devices > NAT","Policies > NAT"],
+    ["Access policy","Policies > Access Control","Policies > Access Control"],
+    ["IPS","Policies > Intrusion","Policy rule inspection options"],
+    ["URL/File/Malware","Policies > Access Control and related policies","Policy rule inspection options"],
+    ["VPN","Devices/VPN menus depending on type","Device > Remote Access VPN / Site-to-site VPN"],
+    ["Events","Analysis > Connections/Intrusions/File/Malware","Monitoring / Events"],
+    ["Deploy","Deploy button / Deployment page","Deploy button"]
+  ])},
+  {title:"Safety colors",body:`<div class="grid"><div class="metric"><b><span class="badge ro">GREEN</span> Read-only</b>Use for inspection and evidence collection.</div><div class="metric"><b><span class="badge caution">YELLOW</span> Caution</b>Can change state, start captures, clear sessions, or affect management.</div><div class="metric"><b><span class="badge danger">RED</span> Alert</b>Can interrupt service, reboot, erase, or change HA state.</div></div>`},
+  {title:"Official Cisco sources",body:`<div class="cbody" style="padding:0">
+    <a href="https://www.cisco.com/site/us/en/products/security/firewalls/index.html" target="_blank" rel="noopener noreferrer">Cisco Firewall portfolio</a><br>
+    <a href="https://www.cisco.com/site/us/en/products/security/firewalls/firepower-1000-series/index.html" target="_blank" rel="noopener noreferrer">Firepower 1000 Series</a><br>
+    <a href="https://www.cisco.com/site/us/en/products/security/firewalls/secure-firewall-4200-series/index.html" target="_blank" rel="noopener noreferrer">Secure Firewall 4200 Series</a><br>
+    <a href="https://www.cisco.com/site/us/en/products/security/firewalls/secure-firewall-6100-series/index.html" target="_blank" rel="noopener noreferrer">Secure Firewall 6100 Series</a><br>
+    <a href="https://www.cisco.com/c/en/us/support/security/firepower-ngfw/products-installation-and-configuration-guides-list.html" target="_blank" rel="noopener noreferrer">Threat Defense configuration guides</a><br>
+    <a href="https://www.cisco.com/c/en/us/support/security/firepower-ngfw/products-command-reference-list.html" target="_blank" rel="noopener noreferrer">Threat Defense command references</a>
+  </div>`}
+ ]
+};
+
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
+function sentenceParts(raw){
+  const s=String(raw).replace(/\s+/g," ").trim();
+  return s.split(/(?<=[.;])\s+/).map(x=>x.trim()).filter(Boolean);
+}
+function stepTitle(raw){
+  const s=String(raw).replace(/\s+/g," ").trim();
+  const colon=s.indexOf(":");
+  let t=colon>0&&colon<70?s.slice(0,colon):sentenceParts(s)[0]||s;
+  t=t.replace(/[.;]$/,"");
+  return t.length>78?t.slice(0,75)+"...":t;
+}
+function stepDetail(raw){
+  const s=String(raw).replace(/\s+/g," ").trim();
+  const colon=s.indexOf(":");
+  if(colon>0&&colon<70) return s.slice(colon+1).trim()||s;
+  const parts=sentenceParts(s);
+  if(parts.length>1) return parts.slice(1).join(" ");
+  return s;
+}
+function stepWhere(raw){
+  const s=String(raw).toLowerCase();
+  if(s.includes("fmc")||s.includes("devices >")||s.includes("policies >")||s.includes("analysis >")) return "FMC GUI: use the menu path shown in the step.";
+  if(s.includes("fdm")||s.includes("device >")||s.includes("monitoring")) return "FDM GUI: use the local firewall web UI.";
+  if(s.includes("packet-tracer")||s.includes("capture")||s.includes("asp drop")||s.includes("xlate")||s.includes("show conn")) return "Diagnostic CLI: from FTD CLI type system support diagnostic-cli.";
+  if(s.includes("configure manager")||s.includes("configure network")||s.includes("show managers")||s.includes("show network")) return "FTD CLI: console or SSH to the firewall management IP.";
+  if(s.includes("api")) return "FMC REST API: HTTPS to FMC /api endpoints with an API account.";
+  if(s.includes("intrusion")||s.includes("ips")||s.includes("snort")) return "FMC GUI: Policies > Access Control and Policies > Intrusion.";
+  if(s.includes("url")) return "FMC GUI: Policies > Access Control, then URL tab/condition on the rule.";
+  if(s.includes("file")||s.includes("malware")) return "FMC GUI: Policies > Access Control plus Policies > File.";
+  if(s.includes("tls")||s.includes("decrypt")||s.includes("certificate")||s.includes("ca ")) return "FMC GUI: Devices/Objects for certificates and Policies for SSL/TLS handling.";
+  if(s.includes("identity")||s.includes("user")||s.includes("ise")||s.includes("realm")||s.includes("duo")||s.includes("mfa")) return "FMC GUI: Integration/Identity settings, then Policies > Access Control.";
+  if(s.includes("interface")||s.includes("zone")||s.includes("vlan")||s.includes("port-channel")) return "FMC GUI: Devices > Device Management > edit device > Interfaces.";
+  if(s.includes("route")||s.includes("gateway")||s.includes("ospf")||s.includes("bgp")) return "FMC GUI: Devices > Device Management > edit device > Routing.";
+  if(s.includes("nat")||s.includes("pat")||s.includes("translated")) return "FMC GUI: Devices > NAT or Policies > NAT, depending on version/management.";
+  if(s.includes("vpn")||s.includes("ike")||s.includes("ipsec")||s.includes("anyconnect")||s.includes("remote access")) return "FMC GUI: Devices > VPN for site-to-site or Remote Access VPN policy.";
+  if(s.includes("backup")||s.includes("upgrade")) return "FMC GUI: System > Tools/Updates/Backup, plus device Health Monitor.";
+  if(s.includes("log")||s.includes("event")||s.includes("siem")||s.includes("syslog")||s.includes("splunk")) return "FMC GUI: Analysis pages and Platform Settings > Syslog.";
+  if(s.includes("ha")||s.includes("failover")||s.includes("cluster")) return "FMC GUI: Devices > Device Management > High Availability/Cluster, plus CLI verification.";
+  return "Use the tab's topic area: FMC/FDM for configuration, CLI for proof and troubleshooting.";
+}
+function stepHow(raw){
+  const s=String(raw).toLowerCase();
+  if(s.includes("console cable")||s.includes("management cable")) return "Connect console to the appliance console port and management Ethernet to the management switch. Open a terminal at the device's required serial settings, log in, then cable inside/outside only after the management plan is recorded.";
+  if(s.includes("model")||s.includes("serial")||s.includes("software version")) return "Run show version and show inventory, then write down model, serial number, FTD/FMC version, licenses, management IP, gateway, DNS, NTP, and intended inside/outside/DMZ interfaces.";
+  if(s.includes("management ip")||s.includes("dns")||s.includes("ntp")||s.includes("hostname")) return "In FTD CLI use configure network for management IP/gateway, configure manager for FMC registration, and set DNS/NTP in the platform or FMC device settings. Use real NTP because certificates, identity, and events depend on correct time.";
+  if(s.includes("add fmc manager")||s.includes("registration key")) return "On the firewall run configure manager add <fmc-ip> <registration-key>. In FMC open Devices > Device Management > Add Device, enter the firewall management IP and the same key, then select license and initial access policy.";
+  if(s.includes("complete setup wizard")) return "In FDM browse to https://<management-ip>, set admin password, management services, time/DNS, outside and inside interface IPs, default route, licensing, then finish the wizard and deploy.";
+  if(s.includes("interface")||s.includes("zone")||s.includes("vlan")) return "Edit the interface, enable it, set nameif/name, IP or DHCP/static value, VLAN tag if subinterface, security zone, and standby IP for HA if used. On the switch, match access/trunk VLAN and speed/duplex.";
+  if(s.includes("port-channel")||s.includes("lacp")) return "Create the port-channel on both switch and firewall, add the same member ports, use LACP active/passive consistently, then put VLANs or routed IP on the bundle, not on individual members.";
+  if(s.includes("mtu")||s.includes("fragmentation")) return "Find the smallest path MTU with DF-bit tests from an endpoint, account for VPN/cloud overhead, then change MTU or TCP MSS only for the affected path during a window.";
+  if(s.includes("default route")) return "Add 0.0.0.0/0 toward the ISP/upstream next hop on the outside interface. Then add more-specific internal routes toward the core for RFC1918 or server networks.";
+  if(s.includes("ospf")) return "Create OSPF process, set router ID, add networks/interfaces, choose area, mark non-neighbor interfaces passive, then filter/summarize only after neighbors and routes are stable.";
+  if(s.includes("bgp")) return "Set local ASN, neighbor IP/remote ASN, update-source if needed, prefix lists, route maps, and advertised networks. Never enable broad redistribution until received and advertised routes are reviewed.";
+  if(s.includes("multicast")) return "Identify source, receivers, group, RP/PIM design, TTL, and zones. Enable only the needed multicast handling and test one source-to-receiver flow in a lab first.";
+  if(s.includes("objects")||s.includes("object names")||s.includes("duplicate objects")) return "Create Objects for networks, hosts, ports, URLs, and groups using a naming standard such as NET_, HOST_, SVC_, GRP_. Search before creating, add descriptions, and reuse existing objects.";
+  if(s.includes("internet access")||s.includes("dynamic pat")) return "Create Auto NAT or Manual NAT from inside zone/source network to outside interface using interface PAT. Add an access rule from inside to outside for required services and enable logging.";
+  if(s.includes("dmz server")||s.includes("static nat")||s.includes("published server")) return "Create static NAT from public IP to private DMZ host, then create outside-to-DMZ access rule for only the required port, for example TCP/443 to the real server.";
+  if(s.includes("vpn nat exemption")||s.includes("nat exemption")) return "Create identity/no-NAT rule for local protected network to remote protected network and place it above generic internet PAT. Use original source/destination, not translated public IPs.";
+  if(s.includes("ike")||s.includes("ipsec")||s.includes("site-to-site")) return "Create site-to-site VPN with peer public IP, IKE version, encryption/integrity/DH/lifetime, IPsec proposal/PFS, local and remote protected networks, NAT exemption, and route to the peer or remote networks.";
+  if(s.includes("remote access")||s.includes("anyconnect")||s.includes("address pool")||s.includes("split tunnel")) return "Create Remote Access VPN policy with outside interface, certificate, AAA/MFA source, VPN pool, group policy, DNS servers, split-tunnel ACL, and access rules from VPN pool to internal apps.";
+  if(s.includes("certificate")||s.includes("internal ca")||s.includes("trust")) return "Generate CSR or import certificate with private key, assign it to VPN/TLS feature, import trusted CA chain, check expiry/subject/SAN, and confirm clients trust the issuing CA.";
+  if(s.includes("intrusion")||s.includes("ips")||s.includes("snort")) return "Attach an intrusion policy to a specific access rule, start with Balanced Security and Connectivity or monitor-only, deploy, generate test traffic, then tune one rule/event with a narrow exception.";
+  if(s.includes("url")) return "Edit the web access rule, add URL category/reputation conditions, enable logging, start with monitor or block high-risk categories, deploy, browse test sites, then check category/action in events.";
+  if(s.includes("file policy")||s.includes("file inspection")||s.includes("malware")) return "Create a File Policy, select protocols and file types, use detect before block, attach it to an access rule, deploy, transfer a safe test file, then review filename/SHA/disposition/action.";
+  if(s.includes("tls")||s.includes("decrypt")) return "Create/import CA, deploy trust to pilot endpoints, define bypass categories and pinned/critical apps, apply TLS policy only to pilot users, then watch decrypt errors and CPU before expanding.";
+  if(s.includes("identity")||s.includes("user-based")||s.includes("user is mapped")||s.includes("ise")||s.includes("sgt")) return "Integrate AD/ISE/VPN identity source, verify time sync, confirm user-to-IP mapping, then create one user/group rule above broad network rules and enable logging.";
+  if(s.includes("mfa")||s.includes("duo")) return "Integrate Duo/MFA with the VPN authentication flow, choose push/passcode/token behavior, define timeout/fail behavior, create break-glass accounts, and test enrollment plus lost-device recovery.";
+  if(s.includes("syslog")||s.includes("siem")||s.includes("splunk")) return "Configure syslog destination, facility, severity, timestamp, and hostname. Send connection, intrusion, VPN, deployment, and admin events, then normalize fields in SIEM dashboards.";
+  if(s.includes("backup")||s.includes("export")) return "In FMC run a backup before changes, export device/config data where available, download or store it off-box, label it with device/version/date, and record restore location.";
+  if(s.includes("upgrade")) return "Read release notes, confirm upgrade path and model compatibility, run health checks, clear failed deployments, back up FMC, upgrade in the supported order, and validate critical apps after each device.";
+  if(s.includes("rollback")||s.includes("revert")) return "Before change, write exact rollback trigger, previous image/config location, commands or GUI steps to revert, expected outage time, and who decides to stop or continue.";
+  if(s.includes("api")) return "Authenticate to FMC API, get domain UUID, list devices/objects/policies first with GET, save object UUIDs, and use POST/PUT only after a dry-run review and approval.";
+  if(s.includes("deploy")) return "Open Deploy, review pending changes by device and policy, confirm rule order/object changes, check the maintenance window, deploy, then immediately test traffic and events.";
+  if(s.includes("packet-tracer")) return "Run packet-tracer input <interface> <protocol> <src-ip> <src-port> <dst-ip> <dst-port> detailed and read each phase: route lookup, NAT, access control, inspection, and final action.";
+  if(s.includes("capture")) return "Create a narrow capture filter for one source, destination, and port. Start capture, reproduce the issue once, stop capture, download/read packets, then remove the capture.";
+  if(s.includes("failover")||s.includes("standby")||s.includes("ha")) return "Check both units with show failover, show interface ip brief, show route, show conn count, and FMC health. Only force failover after confirming the standby unit is healthy.";
+  if(s.includes("cluster")) return "Confirm platform support, control link, data interfaces, switch design, traffic symmetry, NAT/VPN limitations, and upgrade process before enabling cluster.";
+  if(s.includes("health")||s.includes("cpu")||s.includes("memory")||s.includes("snort statistics")) return "Use FMC Health Monitor plus CLI commands show cpu, show memory, show conn count, show interface, show asp drop, and show snort statistics. Compare with the time of the reported issue.";
+  if(s.includes("five-tuple")||s.includes("symptom")) return "Write source IP, destination IP, protocol, source port, destination port, user, time, and application. Without this, packet-tracer, events, and captures cannot be trusted.";
+  if(s.includes("public dns")) return "Resolve the public FQDN from outside, confirm it points to the NAT public IP, then test the exact service port from an external source.";
+  if(s.includes("return path")) return "From the destination side, confirm its default gateway or route sends replies back through the firewall path. Asymmetric return traffic makes policy and NAT look broken.";
+  return "Turn the sentence into values: identify the source, destination, zone, interface, IP/subnet, port, rule name, owner, and test traffic. Configure those values in FMC/FDM, deploy if needed, then prove with CLI/events.";
+}
+function stepVerify(raw){
+  const s=String(raw).toLowerCase();
+  if(s.includes("packet-tracer")) return "Packet-tracer should show the expected input interface, route, NAT, access rule, inspection phase, and final allow/drop result.";
+  if(s.includes("interface")||s.includes("vlan")) return "Check link state, interface counters, ARP, route visibility, and FMC device health.";
+  if(s.includes("route")||s.includes("ospf")||s.includes("bgp")) return "Use route lookup, neighbor status, and a return-path test from the destination side.";
+  if(s.includes("nat")||s.includes("pat")) return "Use packet-tracer, show nat, show xlate, and connection events to confirm the correct translation.";
+  if(s.includes("vpn")||s.includes("anyconnect")||s.includes("ike")||s.includes("ipsec")) return "Check VPN session/IKE/IPsec counters, NAT exemption, route, and one real application test through the tunnel.";
+  if(s.includes("policy")||s.includes("rule")||s.includes("access")) return "Use FMC/FDM connection events to confirm the exact rule name, action, zones, ports, user/app, and logging.";
+  if(s.includes("deploy")) return "Confirm deployment completes successfully, then test real traffic and check events for the expected rule/action.";
+  if(s.includes("backup")||s.includes("export")) return "Confirm the backup/export exists outside the firewall and that the restore owner/location is documented.";
+  if(s.includes("log")||s.includes("event")||s.includes("monitor")) return "Confirm the event appears with correct timestamp, hostname, source, destination, rule, and action.";
+  if(s.includes("ha")||s.includes("failover")||s.includes("cluster")) return "Confirm active/standby or cluster health, monitored interfaces, state link, and critical traffic after the change.";
+  return "Collect one proof point: command output, screenshot, event record, or successful application test.";
+}
+function stepNext(i,total){
+  if(i+1>=total) return "Finish by recording the result, saved evidence, rollback status, and any follow-up cleanup.";
+  return "Continue to step "+(i+2)+" only after the verification is clean.";
+}
+function steps(items){
+  return `<div class="flow">${items.map((x,i)=>`<div class="step"><div class="num">${i+1}</div><div><div class="run-title">${esc(stepTitle(x))}</div><div class="run-do">${esc(stepDetail(x))}</div><div class="run-next"><b>Where:</b> ${esc(stepWhere(x))}<br><b>How:</b> ${esc(stepHow(x))}<br><b>Verify:</b> ${esc(stepVerify(x))}<br><b>Next:</b> ${esc(stepNext(i,items.length))}</div></div></div>`).join("")}</div>`;
+}
+function runbook(title,items){return `<div class="cblock"><div class="chdr"><div class="chdr-l">${esc(title)}</div><span class="badge caution">ordered</span></div><div class="cbody"><div class="flow">${items.map((x,i)=>`<div class="step"><div class="num">${i+1}</div><div><div class="run-title">${esc(x[0])}</div><div class="run-do">${esc(x[1])}</div><div class="run-next"><b>Next:</b> ${esc(x[2])}</div></div></div>`).join("")}</div></div></div>`;}
+function table(head,rows){return `<div class="cblock"><div class="cbody" style="padding:0"><table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;}
+function cliMode(cmd){
+  const c=String(cmd).trim();
+  if(/^(GET|POST|PUT|DELETE)\s+\/api\//.test(c)) return "FMC REST API, not firewall CLI";
+  if(c==="expert") return "FTD CLI: type this to enter Expert shell";
+  if(/^(sudo |df -h$|top$)/.test(c)) return "Expert shell (Linux): enter from FTD CLI with expert";
+  if(c==="system support diagnostic-cli") return "FTD CLI: enters Diagnostic CLI";
+  if(/^(configure network|configure manager|configure factory-reset|show managers|show network|show ntp|show dns|show time|show disk)/.test(c)) return "FTD CLI";
+  if(/^(packet-tracer|capture |no capture|clear conn|clear xlate|clear crypto|vpn-sessiondb|failover |no failover|show asp|show access-list|show nat|show xlate|show conn|show crypto|show vpn-sessiondb|show failover|show ospf|show bgp|show arp|show route|show running-config|show access-control-config|show snort|show port-channel|show lacp|show chassis|show environment|show resource)/.test(c)) return "Diagnostic CLI (ASA/LINA): from FTD CLI run system support diagnostic-cli";
+  if(/^(show interface|show cpu|show memory|show logging|show inventory|show version)/.test(c)) return "FTD CLI; also commonly available in Diagnostic CLI";
+  if(/^(reboot|shutdown|clear configure all)/.test(c)) return "Confirm current CLI context first; disruptive command";
+  return "Confirm CLI mode for your FTD/FMC version";
+}
+function cmdBlock(cmds){
+  return `<div class="cblock"><div class="chdr"><div class="chdr-l">Commands</div><button class="copybtn" onclick="copyBlock(this)">Copy all</button></div><div class="cbody">${cmds.map(([s,c,w,m])=>`<div class="cmdrow" data-copy="${esc(c)}"><div><div class="cmd ${s}">${esc(c)}</div><div class="mode">Mode: ${esc(m||cliMode(c))}</div><div class="why">${esc(w||"")}</div></div><div><span class="badge ${s}">${s==="ro"?"GREEN":s==="caution"?"YELLOW":"RED"}</span> <button class="copybtn" onclick="copyOne(this)">Copy</button></div></div>`).join("")}</div></div>`;
+}
+function refBundles(bundles){
+  return `<div class="note"><b>Quick Reference is bundled.</b> Click a category to open only the commands you need. Each command still shows safety color and CLI mode.</div><div class="quick-grid">${bundles.map(([title,desc,cmds],i)=>`<div class="quick-card cblock ${i===0?"open":""}"><button class="quick-head" onclick="toggleQuick(this)"><div><div class="quick-title">${esc(title)}</div><div class="quick-desc">${esc(desc)}</div></div><div class="quick-meta"><span class="badge ro">${cmds.length} cmds</span><span class="copybtn" onclick="event.stopPropagation();copyBlock(this)">Copy all</span></div></button><div class="quick-body">${cmds.map(([s,c,w,m])=>`<div class="cmdrow" data-copy="${esc(c)}"><div><div class="cmd ${s}">${esc(c)}</div><div class="mode">Mode: ${esc(m||cliMode(c))}</div><div class="why">${esc(w||"")}</div></div><div><span class="badge ${s}">${s==="ro"?"GREEN":s==="caution"?"YELLOW":"RED"}</span> <button class="copybtn" onclick="copyOne(this)">Copy</button></div></div>`).join("")}</div></div>`).join("")}</div>`;
+}
+function toggleQuick(btn){btn.closest(".quick-card").classList.toggle("open");}
+function renderSidebar(){
+  const sb=document.getElementById("sidebar");let last="",h="";
+  modules.forEach(m=>{if(m.group!==last){last=m.group;h+=`<div class="slbl">${m.group}</div>`}h+=`<button class="cb ${m.id===current?"active":""}" onclick="openModule('${m.id}',0)"><span class="ic">${m.icon}</span>${m.title}</button>`});
+  sb.innerHTML=h;
+}
+function renderTabs(){
+  const m=modules.find(x=>x.id===current);
+  document.getElementById("tabs").innerHTML=m.tabs.map((t,i)=>`<button class="tab ${i===tab?"active":""}" onclick="openModule('${current}',${i})">${esc(t)}</button>`).join("");
+}
+function renderContent(){
+  const m=modules.find(x=>x.id===current), item=content[current][tab]||content[current][0];
+  document.getElementById("content").innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px"><div><div class="stitle">${esc(m.title)} - ${esc(item.title)}</div><div class="small">Use the sidebar for modules and tabs for focused subtopics.</div></div><span class="badge ro">toolkit</span></div>${item.body}`;
+}
+function openModule(id,t){current=id;tab=t||0;renderSidebar();renderTabs();renderContent();document.getElementById("search").value="";}
+function copyText(text,btn){navigator.clipboard.writeText(text).then(()=>{const old=btn.textContent;btn.textContent="Copied";setTimeout(()=>btn.textContent=old,900);});}
+function copyOne(btn){const row=btn.closest(".cmdrow");copyText(row.dataset.copy,btn);}
+function copyBlock(btn){const block=btn.closest(".cblock");const lines=[...block.querySelectorAll(".cmdrow")].map(r=>r.dataset.copy).join("\n");copyText(lines,btn);}
+function runSearch(q){
+  q=q.trim().toLowerCase(); if(!q){renderContent();return;}
+  const all=[];
+  Object.keys(content).forEach(id=>content[id].forEach((it,i)=>{const plain=(modules.find(m=>m.id===id).title+" "+it.title+" "+it.body).replace(/<[^>]+>/g," "); if(plain.toLowerCase().includes(q))all.push({id,i,title:modules.find(m=>m.id===id).title+" - "+it.title});}));
+  document.getElementById("content").innerHTML=`<div class="cblock"><div class="chdr"><div class="chdr-l">Search results</div><span class="badge ro">${all.length} found</span></div><div class="cbody">${all.length?all.map(r=>`<button class="cb" style="border:1px solid var(--br);margin-bottom:7px;background:var(--b2)" onclick="openModule('${r.id}',${r.i})">${esc(r.title)}</button>`).join(""):"No matching module found."}</div></div>`;
+}
+function toggleTheme(){document.documentElement.dataset.theme=document.documentElement.dataset.theme==="light"?"dark":"light";}
+renderSidebar();renderTabs();renderContent();
+</script>
+</body>
+</html>

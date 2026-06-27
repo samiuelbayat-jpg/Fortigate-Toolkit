@@ -1155,6 +1155,9 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
             <button class="tab" onclick="stab('automation')" id="tab-automation" title="Automation / Ansible / Terraform">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Automation</span>
             </button>
+            <button class="tab" onclick="stab('ciscofirewall')" id="tab-ciscofirewall" title="Cisco Secure Firewall Toolkit">
+              <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Cisco FW</span>
+            </button>
             <button class="tab" onclick="stab('liveconnect')" id="tab-liveconnect" title="FortiGate Live Connect">
               <span class="tab-icon" aria-hidden="true"></span><span class="tab-lbl">Live</span>
             </button>
@@ -4608,7 +4611,7 @@ function hasHighRisk(cmds){return cmds.some(c=>cmdSafety(c)==='danger');}
 function hasCaution(cmds){return cmds.some(c=>cmdSafety(c)==='caution');}
 
 let cur='vpn',tab='guide',chat=[],loading=false;
-const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','passgen','notes','monitoring','automation','liveconnect','emailgen','swcfg','devices']);
+const VALID_TABS=new Set(['guide','analyze','advdiag','mostused','psmaker','topology','pkttools','freeai','nwassistant','ai','claudechat','masking','bulkAnon','subnetcalc','dhcpdiag','azure','ref','multivendor','hwref','cfggen','cfgmigrate','labsetup','security','passgen','notes','monitoring','automation','ciscofirewall','liveconnect','emailgen','swcfg','devices']);
 function normalizeTab(t){return VALID_TABS.has(t)?t:'guide';}
 let freeAIPrompt='',freeAIHistory=[];
 
@@ -4765,6 +4768,7 @@ function upgradeTabIcons(){
     'tab-notes':'<path d="M5 3h11l3 3v15H5z"></path><path d="M16 3v4h4"></path><path d="M8 10h8"></path><path d="M8 14h8"></path><path d="M8 18h5"></path>',
     'tab-monitoring':'<path d="M3 3v18h18"></path><path d="M7 15l3-3 3 2 5-7"></path><circle cx="7" cy="15" r="1"></circle><circle cx="10" cy="12" r="1"></circle><circle cx="13" cy="14" r="1"></circle><circle cx="18" cy="7" r="1"></circle>',
     'tab-automation':'<path d="M4 7h16"></path><path d="M7 7v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7"></path><path d="M9 11h6"></path><path d="M9 15h4"></path><path d="M8 3h8l2 4H6l2-4Z"></path>',
+    'tab-ciscofirewall':'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path><path d="M8 9h8"></path><path d="M8 13h8"></path><path d="M10 17h4"></path>',
     'tab-liveconnect':'<path d="M4 12h4l2-5 4 10 2-5h4"></path><circle cx="12" cy="12" r="9"></circle>',
     'tab-emailgen':'<path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path>',
     'tab-swcfg':'<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.8 1.8 0 0 0 .4 2l.1.1-2.8 2.8-.1-.1a1.8 1.8 0 0 0-2-.4 1.8 1.8 0 0 0-1 1.6V21h-4v-.1a1.8 1.8 0 0 0-1-1.6 1.8 1.8 0 0 0-2 .4l-.1.1-2.8-2.8.1-.1a1.8 1.8 0 0 0 .4-2 1.8 1.8 0 0 0-1.6-1H3v-4h.1a1.8 1.8 0 0 0 1.6-1 1.8 1.8 0 0 0-.4-2l-.1-.1 2.8-2.8.1.1a1.8 1.8 0 0 0 2 .4 1.8 1.8 0 0 0 1-1.6V3h4v.1a1.8 1.8 0 0 0 1 1.6 1.8 1.8 0 0 0 2-.4l.1-.1 2.8 2.8-.1.1a1.8 1.8 0 0 0-.4 2 1.8 1.8 0 0 0 1.6 1h.1v4h-.1a1.8 1.8 0 0 0-1.6 1Z"></path>',
@@ -5293,7 +5297,7 @@ const QREF=[
 function render(){const el=document.getElementById('mc');
   // Toggle chat-fill class so chat tabs fill the full content area
   const chatTabs=['ai','claudechat','masking','bulkAnon','topology'];
-  const wideTabs=['analyze','freeai','nwassistant','monitoring','liveconnect','emailgen','mostused','advdiag','pkttools','cfggen','cfgmigrate','swcfg','psmaker','notes'];
+  const wideTabs=['analyze','freeai','nwassistant','monitoring','liveconnect','emailgen','mostused','advdiag','pkttools','cfggen','cfgmigrate','swcfg','psmaker','notes','ciscofirewall'];
   el.classList.toggle('chat-fill', chatTabs.includes(tab));
   el.classList.toggle('wide-tool', wideTabs.includes(tab));
   if(tab==='topology'){
@@ -5306,7 +5310,7 @@ function render(){const el=document.getElementById('mc');
   if(!d){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ Category data not found for: '+escapeHtml(cur)+'</div>';return;}
   if(d.type==='config') renderCfg(el,d);
   else renderGuide(el,d);
-}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='passgen')renderPasswordGenerator(el);else if(tab==='notes')renderNotesTab(el);else if(tab==='monitoring')renderMonitoringTab(el);else if(tab==='automation')renderAutomationTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
+}else if(tab==='analyze')renderAnalyze(el);else if(tab==='ai')renderAI(el);else if(tab==='nwassistant')renderNetWolfAssistant(el);else if(tab==='claudechat')renderClaudeChat(el);else if(tab==='ref')renderRef(el);else if(tab==='masking')renderMaskingTab(el);else if(tab==='freeai')renderFreeAITab(el);else if(tab==='multivendor')renderMultiVendorTab(el);else if(tab==='bulkAnon')renderBulkAnonTab(el);else if(tab==='subnetcalc')renderSubnetCalc(el);else if(tab==='dhcpdiag')renderDHCPDiag(el);else if(tab==='advdiag')renderAdvDiag(el);else if(tab==='cfggen')renderCfgGen(el);else if(tab==='cfgmigrate')renderCfgMigrate(el);else if(tab==='labsetup')renderLabSetup(el);else if(tab==='hwref')renderHWRef(el);else if(tab==='devices')renderDevices(el);else if(tab==='security')renderSecurityTab(el);else if(tab==='passgen')renderPasswordGenerator(el);else if(tab==='notes')renderNotesTab(el);else if(tab==='monitoring')renderMonitoringTab(el);else if(tab==='automation')renderAutomationTab(el);else if(tab==='ciscofirewall')renderCiscoFirewallTab(el);else if(tab==='liveconnect')renderLiveConnect(el);else if(tab==='emailgen')renderEmailGen(el);else if(tab==='swcfg')renderSwCfg(el);else if(tab==='mostused')renderMostUsed(el);else if(tab==='psmaker')renderPSMaker(el);else if(tab==='topology')renderTopology(el);else if(tab==='pkttools')renderPacketTools(el);else if(tab==='azure')renderAzureLearn(el);}
 
 function renderGuide(el,d){
   if(!d||!d.steps){el.innerHTML='<div class="cdanger" style="padding:20px">⚠️ No data found.</div>';return;}
@@ -14947,7 +14951,7 @@ function initSidebar(){
     {section:"AI Tools",items:["freeai","nwassistant","ai","claudechat"]},
     {section:"Cloud Learning",items:["azure"]},
     {section:"Reference",items:["ref","multivendor","hwref","devices"]},
-    {section:"Builders & Utilities",items:["psmaker","topology","cfggen","swcfg","cfgmigrate","labsetup","security","passgen","notes","monitoring","automation","liveconnect","emailgen"]},
+    {section:"Builders & Utilities",items:["psmaker","topology","cfggen","swcfg","cfgmigrate","labsetup","security","passgen","notes","monitoring","automation","ciscofirewall","liveconnect","emailgen"]},
     {section:"Config Guides",items:["cfg-init","cfg-vdom","cfg-ipsec","cfg-sslvpn","cfg-sdwan","cfg-ha","cfg-intervdom","cfg-portfwd","cfg-ospfbgp","cfg-sec","cfg-fortiswitch","cfg-ztna","cfg-netflow","cfg-wifi","cfg-webfilter","cfg-dns","cfg-serverlb","cfg-fsso"]}
   ];
   let labelMap={
@@ -14973,7 +14977,7 @@ function initSidebar(){
     ai:"💬 AI Assistant",claudechat:"🧠 Claude Chat",ref:"📚 Quick Reference",multivendor:"🔁 Multi-Vendor CLI",
     hwref:"🧱 Hardware Reference",devices:"🖥️ Device Catalog",psmaker:"⌨️ PS Maker",topology:"🕸️ Topology Designer",
     cfggen:"🧩 Config Generator",swcfg:"🔧 SW/Router Config",cfgmigrate:"🔀 Config Migrator",labsetup:"🧪 Lab Setup",
-    security:"🛡️ Security & Privacy",passgen:"🔐 Password Generator",notes:"📝 Daily Notes",monitoring:"📈 Monitoring / Zabbix",automation:"🧰 Automation",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
+    security:"🛡️ Security & Privacy",passgen:"🔐 Password Generator",notes:"📝 Daily Notes",monitoring:"📈 Monitoring / Zabbix",automation:"🧰 Automation",ciscofirewall:"🛡️ Cisco Firewall",liveconnect:"🟢 Live Connect",emailgen:"📝 Email Generator",
     azure:"☁️ Azure Scripting",
     conserve:"🧠 Conserve / Memory",sslinspect:"🔓 SSL Inspection",dns:"🌐 DNS / FQDN",fsso:"🪪 FSSO / SSO",serverlb:"⚖️ Server Load Balance",
     "cfg-wifi":"📶 Wireless / FortiAP","cfg-webfilter":"🌐 Web Filter + SSL","cfg-dns":"📮 DNS Server/Filter","cfg-serverlb":"⚖️ Server Load Balancing","cfg-fsso":"🪪 FSSO Setup"
@@ -15045,6 +15049,7 @@ function globalSearchFn(query){
     {id:'security',title:'Security & Privacy',match:'Tool: Privacy and safety information'},
     {id:'passgen',title:'Password Generator',match:'Tool: strong passwords passphrases wifi keys api tokens pins batch multi user credentials'},
     {id:'notes',title:'Daily Notes',match:'Tool: OneNote style customer notes daily tasks auto date autosave MSP NOC tickets follow up'},
+    {id:'ciscofirewall',title:'Cisco Secure Firewall Toolkit',match:'Tool: Cisco Secure Firewall Firepower FMC FTD ASA migration troubleshooting policy NAT VPN HA ACP intrusion malware events'},
     {id:'liveconnect',title:'Live Connect',match:'Tool: FortiGate live connection'},
     {id:'emailgen',title:'Customer Email Generator',match:'Tool: Customer email drafting'},
     {id:'azure',title:'Azure Scripting',match:'Learning: Microsoft Azure PowerShell, Azure CLI, networking and security scripts'}
@@ -16230,6 +16235,28 @@ function renderAutomationTab(el){
         <button class="sbtn" onclick="navigator.clipboard.writeText('automation.html');showToast('Filename copied')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Copy filename</button>
       </div>
       <div class="cnote" style="margin-top:12px"><strong>Safe model:</strong> generate files here, review them, then run <code>ansible-playbook --check</code> or <code>terraform plan</code> from a controlled workstation or automation runner.</div>
+    </div>
+  </div>`;
+}
+
+function renderCiscoFirewallTab(el){
+  const file='cisco-secure-firewall-firepower-toolkit.html';
+  el.innerHTML=`
+  <div class="sh"><span class="stitle">🛡️ Cisco Secure Firewall</span><span class="sev info">Firepower · FMC · FTD</span></div>
+  <div class="cblock">
+    <div class="chdr"><div class="chdr-l">Standalone Cisco Firewall Toolkit</div><span class="cbadge ro">opens in new tab</span></div>
+    <div class="cbody" style="font-size:12px;color:var(--t2);line-height:1.75">
+      <p style="margin-top:0">Open the Cisco Secure Firewall / Firepower toolkit from NetWolf. It covers Cisco firewall learning, platform overview, policy design, NAT, VPN, HA, events, troubleshooting, and operational workflows.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0">
+        <div style="border:1px solid var(--br);border-radius:8px;padding:12px;background:rgba(34,197,94,.05)"><strong style="color:#bbf7d0">Green</strong><br>Learning, read-only checks, inventory, events, and validation guidance.</div>
+        <div style="border:1px solid var(--br);border-radius:8px;padding:12px;background:rgba(234,179,8,.05)"><strong style="color:#fde68a">Yellow</strong><br>Policy, NAT, VPN, and HA changes that need approval and rollback planning.</div>
+        <div style="border:1px solid var(--br);border-radius:8px;padding:12px;background:rgba(248,81,73,.05)"><strong style="color:#fecaca">Red</strong><br>Production-impacting firewall actions, deletes, reboots, or traffic interruption.</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="sbtn" href="${file}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;background:#0F766E">Open Cisco Firewall Toolkit</a>
+        <button class="sbtn" onclick="navigator.clipboard.writeText('${file}');showToast('Filename copied')" style="background:var(--b3);border:1px solid var(--br);color:var(--t2)">Copy filename</button>
+      </div>
+      <div class="cnote" style="margin-top:12px"><strong>Upload note:</strong> keep <code>${file}</code> in the same GitHub/web folder as <code>app.html</code>, otherwise the new tab cannot open the standalone Cisco toolkit.</div>
     </div>
   </div>`;
 }
