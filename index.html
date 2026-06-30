@@ -915,7 +915,7 @@ footer a:hover{color:var(--a)}
       <div class="feat-icon"><svg class="ic"><use href="#i-sparkles"/></svg></div>
       <div class="feat-title">AI CLI Analyzer</div>
       <div class="feat-desc">Paste raw firewall output — get an instant AI diagnosis with root cause, fix commands and explanation. No more staring at debug output wondering what went wrong. Works with any OS version.</div>
-      <div class="feat-tags"><span class="feat-tag">Claude AI</span><span class="feat-tag">LLaMA 3.3 70B</span><span class="feat-tag">root cause</span><span class="feat-tag">fix commands</span></div>
+      <div class="feat-tags"><span class="feat-tag">Claude AI</span><span class="feat-tag">GPT OSS 120B</span><span class="feat-tag">Qwen3.6 27B</span><span class="feat-tag">root cause</span><span class="feat-tag">fix commands</span></div>
     </div>
     <div class="feat-card">
       <div class="feat-icon"><svg class="ic"><use href="#i-settings"/></svg></div>
@@ -1159,10 +1159,10 @@ footer a:hover{color:var(--a)}
           </div>
 
           <div class="anim-scene" id="ascene2" style="display:none">
-            <div class="scene-hdr"><svg class="ic"><use href="#i-sparkles"/></svg><span class="title">AI CLI Analyzer</span><span class="meta">Claude AI + Groq LLaMA 3.3 70B</span></div>
+            <div class="scene-hdr"><svg class="ic"><use href="#i-sparkles"/></svg><span class="title">AI CLI Analyzer</span><span class="meta">Claude AI + Groq GPT OSS 120B</span></div>
             <div style="background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:12px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.5);line-height:1.9;margin-bottom:12px"><div style="font-size:9.5px;color:rgba(255,255,255,.25);margin-bottom:8px;letter-spacing:.06em;display:flex;align-items:center;gap:5px"><svg class="ic"><use href="#i-chevron-right"/></svg>PASTED CLI OUTPUT</div><span style="color:rgba(255,255,255,.3)"># get vpn ipsec tunnel summary</span><br><span style="color:#e6edf3">Tunnel name &nbsp;: SiteA-HQ</span><br><span style="color:#f85149">Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: down</span><br><span style="color:rgba(255,255,255,.4)">Local IP &nbsp;&nbsp;&nbsp;&nbsp;: 203.0.113.1 &nbsp;Remote: 198.51.100.5</span><br><span style="color:#d29922">Last error &nbsp;&nbsp;: no proposal chosen</span></div>
             <div id="aiThinking" style="padding:8px 14px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:8px"><div style="display:flex;gap:4px"><span class="anim-dot"></span><span class="anim-dot" style="animation-delay:.2s"></span><span class="anim-dot" style="animation-delay:.4s"></span></div>Analyzing output with AI...</div>
-            <div id="aiResult" style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:9px;padding:14px;font-size:12px;color:rgba(255,255,255,.8);line-height:1.8;display:none"><div style="font-size:10.5px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic" style="font-size:12px"><use href="#i-sparkles"/></svg>AI Diagnosis — Claude AI + LLaMA 3.3 70B</div><strong style="color:#58a6ff">Root cause:</strong> Phase 1 IKE proposal mismatch. The error <span style="font-family:var(--mono);font-size:10.5px;background:rgba(0,0,0,.4);padding:1px 5px;border-radius:3px;color:#3fb950">no proposal chosen</span> means the initiator is advertising encryption/DH-group combinations the remote peer cannot accept.<br><br><strong style="color:#58a6ff">Fix commands:</strong><br><span style="font-family:var(--mono);font-size:10.5px;color:#3fb950;display:block;margin:3px 0">show vpn ipsec phase1-interface SiteA-HQ</span><span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug application ike -1</span><span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug enable</span><br><strong style="color:#58a6ff">Resolution:</strong> Align <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set proposal aes256-sha256</span> and <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set dhgrp 14</span> on both peers. Switch to IKEv2.</div>
+            <div id="aiResult" style="background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.12);border-radius:9px;padding:14px;font-size:12px;color:rgba(255,255,255,.8);line-height:1.8;display:none"><div style="font-size:10.5px;font-weight:700;color:var(--a);font-family:var(--mono);letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic" style="font-size:12px"><use href="#i-sparkles"/></svg>AI Diagnosis — Claude AI + GPT OSS 120B</div><strong style="color:#58a6ff">Root cause:</strong> Phase 1 IKE proposal mismatch. The error <span style="font-family:var(--mono);font-size:10.5px;background:rgba(0,0,0,.4);padding:1px 5px;border-radius:3px;color:#3fb950">no proposal chosen</span> means the initiator is advertising encryption/DH-group combinations the remote peer cannot accept.<br><br><strong style="color:#58a6ff">Fix commands:</strong><br><span style="font-family:var(--mono);font-size:10.5px;color:#3fb950;display:block;margin:3px 0">show vpn ipsec phase1-interface SiteA-HQ</span><span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug application ike -1</span><span style="font-family:var(--mono);font-size:10.5px;color:#d29922;display:block;margin:3px 0">diagnose debug enable</span><br><strong style="color:#58a6ff">Resolution:</strong> Align <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set proposal aes256-sha256</span> and <span style="font-family:var(--mono);font-size:10.5px;color:#3fb950">set dhgrp 14</span> on both peers. Switch to IKEv2.</div>
           </div>
 
           <div class="anim-scene" id="ascene3" style="display:none">
@@ -1225,7 +1225,7 @@ footer a:hover{color:var(--a)}
           </div>
 
           <div class="anim-scene" id="ascene7" style="display:none">
-            <div class="scene-hdr"><svg class="ic"><use href="#i-windows"/></svg><span class="title">Smart PowerShell Script Maker</span><span class="meta">Claude AI + Groq LLaMA 3.3 70B</span></div>
+            <div class="scene-hdr"><svg class="ic"><use href="#i-windows"/></svg><span class="title">Smart PowerShell Script Maker</span><span class="meta">Claude AI + Groq GPT OSS 120B</span></div>
             <div style="background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:11px 14px;margin-bottom:10px;font-size:11.5px;color:#e6edf3;line-height:1.6">
               <span style="color:rgba(255,255,255,.3);font-family:var(--mono);font-size:9.5px;display:flex;align-items:center;gap:4px;margin-bottom:5px"><svg class="ic"><use href="#i-chevron-right"/></svg>YOU TYPE</span>
               My Windows Server is slow — check CPU, memory, top processes and event log errors from last 24 hours
@@ -1331,7 +1331,7 @@ footer a:hover{color:var(--a)}
       </div>
       <div style="height:2px;background:rgba(255,255,255,.05)"><div id="animProgress" style="height:100%;background:linear-gradient(90deg,var(--a),var(--a2));width:0;transition:width .1s linear"></div></div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 18px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.05)">
-        <span id="animStatus" style="font-family:var(--mono);font-size:10.5px;color:rgba(255,255,255,.32)">50+ playbooks · AI-powered</span>
+        <span id="animStatus" style="font-family:var(--mono);font-size:10.5px;color:rgba(255,255,255,.32)">50+ playbooks · GPT OSS 120B-ready</span>
         <span style="font-family:var(--mono);font-size:10.5px;color:var(--a);display:flex;align-items:center;gap:6px"><span style="width:5px;height:5px;border-radius:50%;background:var(--g);display:inline-block;box-shadow:0 0 8px var(--g)"></span>netwolffortigate.com</span>
       </div>
       <div style="padding:12px 20px;background:rgba(29,158,117,.05);border-top:1px solid rgba(29,158,117,.12)">
@@ -1359,7 +1359,7 @@ footer a:hover{color:var(--a)}
         <ul class="price-feats" style="margin-top:16px">
           <li><svg class="ic"><use href="#i-check"/></svg>50+ guided troubleshoot playbooks</li>
           <li><svg class="ic"><use href="#i-check"/></svg>12 firewall configuration guides</li>
-          <li><svg class="ic"><use href="#i-check"/></svg>AI CLI Analyzer — powered by Claude AI &amp; Groq</li>
+          <li><svg class="ic"><use href="#i-check"/></svg>AI CLI Analyzer — powered by Claude AI &amp; Groq GPT OSS 120B</li>
           <li><svg class="ic"><use href="#i-check"/></svg>NetWolf Assistant — 7-mode AI workbench</li>
           <li><svg class="ic"><use href="#i-check"/></svg>IP Masking &amp; Bulk Anonymizer</li>
           <li><svg class="ic"><use href="#i-check"/></svg>Subnet Calculator + Quick Reference</li>
@@ -1763,3 +1763,4 @@ if(document.getElementById('animatedDemo')){bindDemoTabs();runLoop();startProgre
 </script>
 </body>
 </html>
+

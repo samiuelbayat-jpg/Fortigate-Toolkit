@@ -774,7 +774,7 @@ textarea#groqPrompt::placeholder{color:#8b949e!important}
           <div class="nwl-card-icon">🪛</div>
           <div class="nwl-card-body">
             <div class="nwl-card-title">PS Script Maker</div>
-            <div class="nwl-card-desc">AI-powered PowerShell with READ/WRITE annotations</div>
+            <div class="nwl-card-desc">GPT OSS 120B-powered PowerShell with READ/WRITE annotations</div>
           </div>
           <div class="nwl-card-arrow">→</div>
         </button>
@@ -1217,7 +1217,7 @@ const NW_CHANGELOG=[
     'Full-page layout — no empty margins',
   ]},
   {v:'1.1.0',date:'2025-04-15',changes:[
-    'Added AI CLI Analyzer powered by Groq LLaMA 3.3 70B',
+    'Added AI CLI Analyzer powered by Groq GPT OSS 120B',
     'Added Bulk IP Anonymizer with RFC 5737 mapping table',
     'Added Advanced Diagnostics tab with fnsysctl commands',
     'Added Multi-Vendor CLI — Cisco IOS-XE, ArubaOS-CX, Huawei VRP',
@@ -1760,7 +1760,7 @@ function renderPSMaker(el){
           method:'POST',
           headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
           body:JSON.stringify({
-            model:'llama-3.3-70b-versatile',
+            model:GROQ_MODEL_RECOMMENDED,
             max_tokens:2500,
             messages:[{role:'system',content:sysPrompt}].concat(psHistory)
           })
@@ -4412,7 +4412,7 @@ function renderPacketTools(el){
         var resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
           method:'POST',
           headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
-          body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1500,
+          body:JSON.stringify({model:GROQ_MODEL_RECOMMENDED,max_tokens:1500,
             messages:[{role:'user',content:prompt}]})
         });
         if(!resp.ok) throw new Error('API error '+resp.status);
@@ -4427,7 +4427,7 @@ function renderPacketTools(el){
       // Parse and display visually
       var outCard=document.createElement('div');
       outCard.className='cblock';
-      outCard.innerHTML='<div class="chdr"><div class="chdr-l" style="color:var(--a)">🤖 AI Traceroute Analysis</div><span style="font-size:10px;color:var(--t3);font-family:var(--mono)">Groq LLaMA 3.3 70B</span></div>'
+      outCard.innerHTML='<div class="chdr"><div class="chdr-l" style="color:var(--a)">🤖 AI Traceroute Analysis</div><span style="font-size:10px;color:var(--t3);font-family:var(--mono)">Groq GPT OSS 120B</span></div>'
         +'<div class="cbody">'
         +'<div style="background:#0a0e14;border:1px solid #30363d;border-radius:8px;padding:14px 16px;font-size:12px;color:#c9d1d9;line-height:1.9;white-space:pre-wrap;font-family:\'Courier New\',monospace;overflow-x:auto">'
         +escH(analysis)
@@ -4634,6 +4634,8 @@ function _loadKey(k){try{const v=localStorage.getItem(k);return v?_dob(v):'';}ca
 function _removeKey(k){try{localStorage.removeItem(k);}catch(e){}}
 let groqApiKey=_loadKey('groq_key')||'';
 let claudeApiKey=_loadKey('claude_key')||'';
+const GROQ_MODEL_RECOMMENDED='openai/gpt-oss-120b';
+const GROQ_MODEL_FAST='qwen/qwen3.6-27b';
 let _kbarActiveProv='groq';
 function kbarUpdatePills(){
   const gDot=document.getElementById('kst-groq-dot');
@@ -5633,7 +5635,7 @@ async function sendMsg(){const inp=document.getElementById('chi');if(!inp||loadi
       if(data.error)throw new Error(data.error.message);
       reply=data.content[0].text;
     } else {
-      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1200,messages:[{role:'system',content:sys},...chat]})});
+      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${groqApiKey}`},body:JSON.stringify({model:GROQ_MODEL_RECOMMENDED,max_tokens:1200,messages:[{role:'system',content:sys},...chat]})});
       const data=await resp.json();
       if(data.error)throw new Error(data.error.message);
       reply=data.choices[0].message.content;
@@ -6045,7 +6047,7 @@ window.nwAssistantAI=async function(){
       const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1800,system:'You are NetWolf Assistant for FortiGate troubleshooting. Be precise, safe, and practical.',messages:[{role:'user',content:prompt}]})});
       const data=await resp.json(); if(data.error) throw new Error(data.error.message); reply=data.content[0].text;
     }else{
-      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1800,messages:[{role:'system',content:'You are NetWolf Assistant for FortiGate troubleshooting. Be precise, safe, and practical.'},{role:'user',content:prompt}]})});
+      const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({model:GROQ_MODEL_RECOMMENDED,max_tokens:1800,messages:[{role:'system',content:'You are NetWolf Assistant for FortiGate troubleshooting. Be precise, safe, and practical.'},{role:'user',content:prompt}]})});
       const data=await resp.json(); if(data.error) throw new Error(data.error.message); reply=data.choices[0].message.content;
     }
     nwAssistantRenderResult('AI deep analysis',nwAssistantLocalFindings(kind,raw,symptom,cmd),reply);
@@ -6176,9 +6178,8 @@ function renderFreeAITab(el){
       <option value="claude-haiku-4-5">Claude Haiku 4.5 — Fastest</option>
       <option value="claude-opus-4-5">Claude Opus 4 — Most powerful</option>
       `:`
-      <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B — Most accurate (recommended)</option>
-      <option value="mixtral-8x7b-32768">Mixtral 8x7B — Fast &amp; balanced</option>
-      <option value="llama-3.1-8b-instant">LLaMA 3.1 8B — Fastest response</option>
+      <option value="${GROQ_MODEL_RECOMMENDED}">GPT OSS 120B — Recommended replacement</option>
+      <option value="${GROQ_MODEL_FAST}">Qwen3.6 27B — Fast balanced replacement</option>
       `}
     </select>
     <span style="font-size:10px;color:var(--t3)">${freeAIProvider==='claude'?'Anthropic API':'All free via Groq'}</span>
@@ -13660,9 +13661,9 @@ function showGroqGuide(){
           <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:10px">✅ What you get with a free Groq account</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
             ${[
-              ['LLaMA 3.3 70B','Most accurate model for CLI diagnosis'],
-              ['Mixtral 8x7B','Fast balanced model'],
-              ['LLaMA 3.1 8B','Fastest responses'],
+              ['GPT OSS 120B','Recommended replacement for CLI diagnosis'],
+              ['Qwen3.6 27B','Fast balanced replacement model'],
+              ['Current models','Availability depends on your Groq account tier'],
               ['Free tier','Generous daily limits for personal use'],
               ['No credit card','Account creation requires no payment'],
               ['Instant access','Key works immediately after creation'],
